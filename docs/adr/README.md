@@ -1,13 +1,13 @@
 # ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R3の説明は[Docsの根拠表](../README.md)にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R4の説明は[Docsの根拠表](../README.md)にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
-| [0001 Coreと統合リポジトリ](0001-core-and-repository.md) | 確定 | R2・R3 |
+| [0001 Coreと統合リポジトリ](0001-core-and-repository.md) | 基本構成は確定。Subsystem独立性の詳細は提案 | R2・R3・R4 |
 | [0002 実行モデル](0002-execution-model.md) | ハイブリッドは確定、Python asyncio・軽量なメソッド呼び出しは方向性確定 | R2 |
-| [0003 通信経路](0003-communication-routing.md) | Core経由のみが正式採用済み、直接接続緩和は未採用・要決定 | R2 |
-| [0004 活動の決定権](0004-activity-authority.md) | 確定 | R2 |
+| [0003 通信経路](0003-communication-routing.md) | Core経由のみが正式採用済み、直接接続緩和は未採用・要決定 | R2・R4 |
+| [0004 活動の決定権](0004-activity-authority.md) | 決定権の境界は確定。時間・優先度・変更操作の具体策は要決定 | R2・R4 |
 | [0005 初期実装の範囲](0005-initial-scope.md) | 確定 | R2・R3 |
 
 ## 記録方法
