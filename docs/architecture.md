@@ -1,5 +1,13 @@
 # Architecture
 
+## 最終ビジョンとの関係
+
+NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格Nymphを支える基盤を目指す。[Project Vision](vision.md)を長期目標の本文とし、[ADR 0010](adr/0010-project-vision.md)で現在の実装範囲との関係を記録する。
+
+記憶・言語獲得・機能的な自己認識・活動選択・人格・睡眠はNymph側の長期能力として扱う。内部状態・動機・情動やSelf-Modelの具体的な配置は未決であり、Coreへ認知・価値判断を追加する根拠にしない。再起動後の記憶・発達状態の維持は長期目標で、Coreの永続化方式と実装時期は別途判断する。
+
+言語理解・文章生成の中核を既存LLMに代行させず、経験からの獲得過程を研究する。ASR・音声合成・形態素解析・文書解析などの補助技術は利用を許容する。PC環境の観測・操作は将来のAdapterを通じ、明示的な権限管理と必要に応じた承認を設計する。Desktop Adapterの時期や権限管理の配置・APIは未決である。
+
 ## 採用された構成
 
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
@@ -72,7 +80,15 @@ R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大�
 
 各連携はADR 0003の採用経路を使う。Discord音声の取得・保存・学習は告知、適切な同意、権限、保持・削除方針を設計時に扱う。名称・順序・配分と検証範囲の判断は[ADR 0007](adr/0007-v1-release-roadmap.md)、研究方針・責務・音声の扱いは[ADR 0008](adr/0008-subsystem-adapter-boundaries.md)に記録する。複製・移植・伝播機構は初期開発の対象外である。
 
-## フォルダ構成
+## 配布方針とフォルダ構成
+
+R6で、単一リポジトリを維持し、CoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する方針を採用した。[ADR 0009](adr/0009-package-distribution.md)に判断を記録する。
+
+配布パッケージはインストール・配布の単位を指す。初期はルートの `pyproject.toml` でCoreとContractsを同梱し、ソース上では `src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` に分ける。リポジトリ名、配布パッケージ名、Pythonのimport名は区別し、配布パッケージの正式名称は実装開始時に決める。
+
+ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要なものから配置する。v1.0.0で公開接続契約として体系化する。依存方向の設計案として、Core・Subsystem・Adapterが公開Contractsを参照し、Contractsを具体的な実装から独立させる。契約の型やAPIはADR 0006で具体化する。
+
+### 初期の配置
 
 文書とGit設定は公開準備時に配置する。以下の `LICENSE` はライセンス決定後、`pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
 
@@ -87,6 +103,7 @@ nymph-toolkit/
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
+│  ├─ vision.md
 │  ├─ architecture.md
 │  ├─ roadmap.md
 │  ├─ acceptance.md
@@ -101,24 +118,41 @@ nymph-toolkit/
 │     ├─ 0005-initial-scope.md
 │     ├─ 0006-core-connection-contracts.md
 │     ├─ 0007-v1-release-roadmap.md
-│     └─ 0008-subsystem-adapter-boundaries.md
+│     ├─ 0008-subsystem-adapter-boundaries.md
+│     ├─ 0009-package-distribution.md
+│     └─ 0010-project-vision.md
 ├─ src/
 │  └─ nymph_toolkit/
-│     └─ core/
+│     ├─ core/
+│     └─ contracts/
 └─ tests/
    ├─ core/
+   ├─ contracts/
    └─ doubles/
 ```
 
-この配置はR3で指定された文書・開発配置案である。4責務は `core/` 内のモジュールとして始める案とし、クラス名と公開API名は実装時に決定する。ダミーは `tests/doubles/`、単体・結合・受入シナリオは `tests/core/` に置く案とする。
+R3の文書・開発配置案へ、R5のADR 0006〜0008、R6のContracts・ADR 0009、R7のvision・ADR 0010を反映した。4責務は `core/` 内のモジュールとして始める案とし、クラス名と公開API名は実装時に決定する。ダミーは `tests/doubles/`、Coreの検証は `tests/core/`、共有契約の検証は `tests/contracts/` に置く案とする。テスト用ディレクトリも対象の実装・検証が必要になった段階で作成する。
 
-R5に対応するADR 0006〜0008を追加した。Subsystem・Adapterの本実装用フォルダとパッケージ構成は各段階の契約・名称の判断に合わせて決める。
+### Subsystem・Adapterを追加する際の配置案
+
+同梱する場合と、別配布にする場合の例を以下に示す。将来の配置・名称は提案であり、個別の分割を決定したものではない。
+
+| 扱い | ソースの配置例 | 配布設定・検証の配置例 |
+|---|---|---|
+| 初期配布物へ同梱するSubsystem | `src/nymph_toolkit/subsystems/<名称>/` | ルートの `pyproject.toml`、`tests/subsystems/` |
+| 初期配布物へ同梱するAdapter | `src/nymph_toolkit/adapters/<名称>/` | ルートの `pyproject.toml`、`tests/adapters/` |
+| 別配布にするSubsystem・Adapter | `packages/<配布ディレクトリ>/src/<import名>/` | 対象ディレクトリ内の `pyproject.toml`、`tests/` |
+
+別配布の場合も同じ `nymph-toolkit` リポジトリで管理する。CoreとContractsは初期のルート配下を基準とし、分割対象ごとに依存関係、Core・Contractsの対応バージョン、公開import名、ビルド・検証手順を記録する。共有の設計・ADRは引き続き `docs/` と `docs/adr/` に置く。
+
+依存ライブラリや対応OS、更新頻度、単独導入の必要性を基に分割を判断する。任意依存による同梱も比較対象とし、分割後のバージョンを同期するか独立させるかは後続ADRで決める。配布単位は実行プロセスと通信経路を決定しない。同梱・別配布のいずれも、実行配置はADR 0002、通信経路はADR 0003に従う。
 
 ## 実装前の判断一覧
 
 | 判断 | 判断する時点の案 | 記録先 |
 |---|---|---|
-| Python対応版、パッケージ・テストツール、Runtimeのライフサイクル | V0.2着手時 | developmentと後続ADR |
+| Python対応版、配布パッケージの正式名称、ビルド・テストツール、Runtimeのライフサイクル | V0.2着手時 | development、ADR 0009と後続ADR |
+| Subsystem・Adapterの同梱・分割対象、任意依存、公開import名、バージョン管理 | 各対象の実装・配布を設計する時点 | ADR 0009に関連付ける後続ADR |
 | 登録ID、重複、稼働中の着脱、機能的依存の採否・宣言、解除による利用不能の検出と通知 | V0.3着手時 | ADR 0001と後続ADR |
 | Core経由維持・直接接続緩和、経路別の許可条件 | Connections実装前 | ADR 0003 |
 | 呼び出し契約、同期・非同期境界、失敗通知 | V0.4着手時 | 後続ADR |

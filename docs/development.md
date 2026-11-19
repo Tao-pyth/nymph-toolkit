@@ -6,6 +6,14 @@
 
 現在の成果物は資料とGit設定である。Coreのインストール・起動・実行テストのコマンドは実装後に掲載する。
 
+## 実装開始時の配布構成
+
+[ADR 0009](adr/0009-package-distribution.md)に従い、初期はCoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。Contractsは必要な契約から追加する。配布パッケージの正式名称、ビルドツール、対応Python版、依存・テストツールは実装開始時に記録する。
+
+検証手順案として、ビルドした配布物を新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。開発用ソースへの参照だけで成功していないことを確認する。具体的なコマンドはツール採用・実装後に掲載し、結果をacceptanceの形式で残す。
+
+Subsystem・Adapterは必要に応じて同じリポジトリ内で別配布にする。分割時は対象の `pyproject.toml`、ソース・テストを配置する案とし、依存宣言、Core・Contractsの対応バージョン、公開import名、ビルド・インストール・組合せ検証の手順を後続ADRへ記録する。配置例は[architecture.md](architecture.md)を参照する。
+
 ## Git未初期化からの準備
 
 以下はPowerShellでリポジトリ直下から実行する手順である。各コマンドの結果を確認し、失敗した場合は原因を解消してから次へ進む。作業フォルダは利用環境に合わせる。

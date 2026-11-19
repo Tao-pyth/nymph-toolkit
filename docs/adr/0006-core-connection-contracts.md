@@ -25,6 +25,8 @@ v1.0.0はCore接続契約の確立を目指す。本番Subsystemの完成はこ�
 
 公開APIの文書化、接続用の開発補助機能、ダミーによる契約テストの整備を検討する。v0.9.0までのAPI・受入結果を確認し、契約として公開する範囲を定める。
 
+R6で採用した初期配布方針に従い、CoreとContractsは一つの配布パッケージに含める。ソースは `core/` と `contracts/` に分け、v0.xで必要な契約から用意し、v1.0.0で体系化する。配布方針の詳細は[ADR 0009](0009-package-distribution.md)を参照する。
+
 ## 影響
 
 CoreはRuntime、Registry、Connections、TaskManagerを中心とする実行・接続・活動管理の基盤である。認知・意思決定はNymph側が担当する。軽量なPythonメソッド呼び出しとasyncioの方向性、およびハイブリッド実行を前提とする。

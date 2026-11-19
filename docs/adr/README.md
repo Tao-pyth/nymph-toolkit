@@ -1,17 +1,19 @@
 # ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R5の説明は[Docsの根拠表](../README.md)にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R7の説明は[Docsの根拠表](../README.md)にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
-| [0001 Coreと統合リポジトリ](0001-core-and-repository.md) | 基本構成は確定。Subsystem独立性の詳細は提案 | R2・R3・R4 |
+| [0001 Coreと統合リポジトリ](0001-core-and-repository.md) | 基本構成は確定。Subsystem独立性の詳細は提案。配布方針は0009で具体化 | R2・R3・R4・R6 |
 | [0002 実行モデル](0002-execution-model.md) | ハイブリッドは確定、Python asyncio・軽量なメソッド呼び出しは方向性確定 | R2・R5 |
 | [0003 通信経路](0003-communication-routing.md) | Core経由のみが正式採用済み、直接接続緩和は未採用・要決定 | R2・R4・R5 |
 | [0004 活動の決定権](0004-activity-authority.md) | 決定権の境界は確定。時間・優先度・変更操作の具体策は要決定 | R2・R4・R5 |
 | [0005 初期実装の範囲](0005-initial-scope.md) | 確定。R5で適用段階と伝播機構の除外を補足 | R2・R3・R5 |
-| [0006 v1.0.0のCore接続契約](0006-core-connection-contracts.md) | 目標は確定。契約詳細・公開API・補助機能・契約テストは提案・要決定 | R5 |
-| [0007 v1.x以降のリリース運用と開発順序](0007-v1-release-roadmap.md) | 提案・未採用。名称・順序・機能配分は暫定 | R5 |
-| [0008 v1.xのSubsystem・Adapter責務案](0008-subsystem-adapter-boundaries.md) | 設計提案。R5の研究方針・責務境界を前提とする | R5 |
+| [0006 v1.0.0のCore接続契約](0006-core-connection-contracts.md) | 目標は確定。契約詳細・公開API・補助機能・契約テストは提案・要決定。初期配布は0009で採用 | R5・R6 |
+| [0007 v1.x以降のリリース運用と開発順序](0007-v1-release-roadmap.md) | 提案・未採用。名称・順序・機能配分は暫定。配布方針の後続判断を0009へ参照 | R5・R6 |
+| [0008 v1.xのSubsystem・Adapter責務案](0008-subsystem-adapter-boundaries.md) | 設計提案。R5の研究方針・責務境界を前提とし、R7の長期構想を補足 | R5・R7 |
+| [0009 単一リポジトリと段階的な配布パッケージ分割](0009-package-distribution.md) | 採用。CoreとContractsを同梱して開始し、Subsystem・Adapterを必要に応じて分割 | R6 |
+| [0010 Nymphの最終ビジョンと実装範囲の区別](0010-project-vision.md) | 長期ビジョンとして採用。具体的な実装方式・時期・受入条件は後続判断 | R7 |
 
 ## 記録方法
 

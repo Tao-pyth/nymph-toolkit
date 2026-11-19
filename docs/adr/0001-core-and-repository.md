@@ -16,6 +16,8 @@ Coreを中心にSubsystem・Adapterを着脱する。Core Runtime、Registry、C
 
 Coreの初期開発、設計、ADR、検証を統合リポジトリで管理する。具体的なコード配置はarchitectureの案を用いる。
 
+R6で配布方針を具体化した。CoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて同じリポジトリ内で分割する。採用内容と分割時の判断事項は[ADR 0009](0009-package-distribution.md)に記録する。
+
 ## Subsystem独立性の整理案
 
 R4を受け、次の点をV0.3の設計判断に追加する。着脱可能性に関する既存決定を補う提案として記録する。
