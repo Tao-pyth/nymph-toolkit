@@ -54,6 +54,24 @@ Coreが管理する活動状態はNymph自身の活動を対象とする。外�
 
 配置間で通信契約を共通化するか、その共通範囲、IPC方式、シリアライズ方式、同期・非同期境界は要決定。別プロセス対応をV0.7で実装する配分は提案である。
 
+## v1.0.0以降の構成案
+
+R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。具体的な契約は[ADR 0006](adr/0006-core-connection-contracts.md)で判断対象を管理する。
+
+以下はv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。実装順序、各バージョンへの機能配分、契約の型やAPIは未確定。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+
+| 構成案 | 役割と境界 |
+|---|---|
+| MemoryとDocument Adapter | 経験・知識の最小保存・取得と文書入力。複雑な知識グラフ・高度な記憶統合は初期の必須条件にしない |
+| CognitionとText Interaction / Web Adapter | 語彙・構文・概念の初期学習、文章観測・出力・ユーザー訂正。既存LLMを言語理解・文章生成の中核とする方式は現在の研究方針に含めない |
+| AgencyとTaskManager | AgencyがNymph側の活動内容・開始時刻・期間・優先度・変更を決め、Coreが登録・実行・状態追跡・変更要求の適用を担当 |
+| PersonaとAgency | Personaが人格特性を保持・返却し、外部の修正値を契約に沿って適用する。自発的な人格修正の開始は行わず、Agencyが参照した特性を行動選択へ反映 |
+| SleepとMemory・Persona | 経験統合・忘却・夢・人格修正値の生成を段階的に検討。Personaへ接続契約を通じて修正値を渡し、内部状態を直接変更しない基本案 |
+| Discord Voice Adapter | 他者同士の音声会話の観測。ASRによる文字起こしと音響特徴の併用を基本案とする |
+| Desktop Adapter | PC全体の稼働状況取得・操作の将来候補。v1.10.0までの配分外 |
+
+各連携はADR 0003の採用経路を使う。Discord音声の取得・保存・学習は告知、適切な同意、権限、保持・削除方針を設計時に扱う。名称・順序・配分と検証範囲の判断は[ADR 0007](adr/0007-v1-release-roadmap.md)、研究方針・責務・音声の扱いは[ADR 0008](adr/0008-subsystem-adapter-boundaries.md)に記録する。複製・移植・伝播機構は初期開発の対象外である。
+
 ## フォルダ構成
 
 文書とGit設定は公開準備時に配置する。以下の `LICENSE` はライセンス決定後、`pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
@@ -80,7 +98,10 @@ nymph-toolkit/
 │     ├─ 0002-execution-model.md
 │     ├─ 0003-communication-routing.md
 │     ├─ 0004-activity-authority.md
-│     └─ 0005-initial-scope.md
+│     ├─ 0005-initial-scope.md
+│     ├─ 0006-core-connection-contracts.md
+│     ├─ 0007-v1-release-roadmap.md
+│     └─ 0008-subsystem-adapter-boundaries.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     └─ core/
@@ -90,6 +111,8 @@ nymph-toolkit/
 ```
 
 この配置はR3で指定された文書・開発配置案である。4責務は `core/` 内のモジュールとして始める案とし、クラス名と公開API名は実装時に決定する。ダミーは `tests/doubles/`、単体・結合・受入シナリオは `tests/core/` に置く案とする。
+
+R5に対応するADR 0006〜0008を追加した。Subsystem・Adapterの本実装用フォルダとパッケージ構成は各段階の契約・名称の判断に合わせて決める。
 
 ## 実装前の判断一覧
 
@@ -105,3 +128,5 @@ nymph-toolkit/
 | 永続化、再試行、自動復旧の必要性と採否 | 必要な設計段階、遅くともV0.8の検証範囲確定前 | 後続ADR |
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
+
+v1.xでは、各Contractの公開範囲・互換性、Subsystemの正式名称と学習・意思決定方式、Adapterの対応形式と権限、Personaへの修正値、Sleepの処理範囲、音声受信・ASRの実現方法を追加の判断対象とする。具体化はroadmapとADR 0006〜0008に従う。
