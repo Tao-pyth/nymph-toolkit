@@ -1,0 +1,76 @@
+# 開発準備とGit運用
+
+## 公開準備時の環境
+
+2026年11月19日の作業環境ではGit 2.56.0.windows.4とPython 3.8が存在した。このPython版はNTKの対応版を意味しない。対応Python版、依存管理、テストツールはV0.2着手時に決め、`pyproject.toml` と本書に記録する。
+
+現在の成果物は資料とGit設定である。Coreのインストール・起動・実行テストのコマンドは実装後に掲載する。
+
+## Git未初期化からの準備
+
+以下はPowerShellでリポジトリ直下から実行する手順である。各コマンドの結果を確認し、失敗した場合は原因を解消してから次へ進む。作業フォルダは利用環境に合わせる。
+
+```powershell
+Set-Location -LiteralPath 'D:\NYMPH-toolkit'
+git --version
+git rev-parse --show-toplevel
+```
+
+`rev-parse` がリポジトリを返した場合は、そのルートを確認して既存Gitを使用する。未初期化の場合は以下を実行する。
+
+```powershell
+git init -b main
+git config --show-origin --get user.name
+git config --show-origin --get user.email
+```
+
+名前・メールが未設定の場合は、作成者本人の情報を確認してこのリポジトリに設定する。以下の仮の値を実際の値に置き換える。
+
+```powershell
+git config --local user.name 'YOUR_NAME'
+git config --local user.email 'YOUR_COMMIT_EMAIL'
+```
+
+GitHubのnoreplyアドレスを使う場合は、GitHubのメール設定で値を確認できる。ID形式は `ID+USERNAME@users.noreply.github.com` である。今回のローカル設定は、許可されたGitHubプラグインで確認した表示名 `Tao` とID・ユーザー名から構成した `54444867+Tao-pyth@users.noreply.github.com` を使用する。GitHubへのコミット帰属は公開後に確認する。[GitHubのメールアドレス仕様](https://docs.github.com/en/account-and-profile/reference/email-addresses-reference)
+
+## 対象確認と初回コミット
+
+`.gitignore` で仮想環境、Python生成物、キャッシュ、ローカル設定を除外する。`.gitattributes` でMarkdown・Python・設定ファイルをLFに統一する。ライセンス決定後に `LICENSE` を追加する。
+
+```powershell
+git status --short --untracked-files=all
+git add -- .gitignore .gitattributes README.md CHANGELOG.md docs
+git diff --cached --stat
+git diff --cached --check
+git diff --cached
+```
+
+差分を読み、公開する資料と設定が揃っていること、認証情報・ローカル環境・意図しない生成物を含まないことを確認する。除外設定は既に追跡しているファイルには適用されないため、ステージした一覧も確認する。
+
+```powershell
+git commit -m 'docs: prepare NTK Core design and release roadmap'
+git log -1 --format=fuller
+git status --short --branch
+```
+
+この手順は初回コミット用である。既に履歴がある場合は変更対象と履歴を確認し、その変更に対応するコミットを作る。
+
+## 日常の作業案
+
+設計判断・文書更新・実装を目的が分かる単位でコミットする。関連するADR・実装・受入条件は同じ作業で整合させる。変更が複数に分かれる場合は作業ブランチを使用する案とする。
+
+```powershell
+git status --short --branch
+git switch -c docs/refine-core-design
+# ファイル編集後、対象パスを指定してgit addする
+git diff --cached --check
+git diff --cached
+```
+
+実装開始後は、本書に環境構築、テスト、ダミー受入シナリオの実行コマンドを追加する。新しい作業環境で再現し、OS・Python版・依存版と結果をacceptanceの記録形式で残す。
+
+## 文書更新時の確認
+
+ローカルリンク先の存在、ADRの状態と根拠、ロードマップと受入IDの対応、READMEの実装状況を確認する。単一配布用引継ぎ書はDocs索引に示した順序・変換方法で再作成し、収録元の本文と照合する。将来の配置予定はarchitectureのツリーに記載し、リンクは実在するファイルへ向ける。
+
+公開準備と公開後の状態は[release.md](release.md)で確認する。
