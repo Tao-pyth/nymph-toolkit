@@ -144,6 +144,7 @@ nymph-toolkit/
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
 │  ├─ validation/v0.3.md
+│  ├─ validation/v0.4.md             # 開発中の検証経過・未完了項目
 │  ├─ development.md
 │  ├─ issue-workflow.md
 │  ├─ release.md

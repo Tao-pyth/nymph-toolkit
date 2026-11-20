@@ -19,6 +19,7 @@
 | [acceptance.md](acceptance.md) | バージョン別の検証シナリオと結果の記録方法 |
 | [validation/v0.2.md](validation/v0.2.md) | v0.2の受入結果、環境・再現手順、制約 |
 | [validation/v0.3.md](validation/v0.3.md) | v0.3のA03、回帰・配布検証、後続へ残す範囲 |
+| [validation/v0.4.md](validation/v0.4.md) | v0.4の検証経過、ダミーと実ファイルの検証範囲、A04の未完了項目 |
 | [development.md](development.md) | Git、環境構築、日常開発、文書更新 |
 | [issue-workflow.md](issue-workflow.md) | マイルストーン・親子Issueによるコード変更の前提と登録済み課題 |
 | [release.md](release.md) | 公開前の判断欄、GitHub公開、タグ・リリースの手順 |
