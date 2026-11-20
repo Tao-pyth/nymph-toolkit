@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "docs/NTK-Core-v0.1-Handoff-ja.md"
 HEADER = """# Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R12を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R13を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -28,7 +28,7 @@ R10により、コード変更はマイルストーン、親Issue、対応単位
 def sources():
     result = [
         "README.md", "CONTRIBUTING.md", "AGENTS.md", "docs/README.md",
-        "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/adr/README.md",
+        "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md", "docs/adr/README.md",
     ]
     result += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/adr").glob("[0-9]*.md"))]
     result += ["docs/roadmap.md", "docs/acceptance.md"]

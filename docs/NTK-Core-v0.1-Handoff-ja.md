@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R12を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R13を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -21,30 +21,32 @@ R10により、コード変更はマイルストーン、親Issue、対応単位
 5. [Project Vision — 人工人格Nymphの最終到達目標](#section-5)
 6. [Architecture](#section-6)
 7. [v0.2 Runtimeの使い方](#section-7)
-8. [ADR索引と更新方法](#section-8)
-9. [ADR 0001 Coreと統合リポジトリ](#section-9)
-10. [ADR 0002 実行モデル](#section-10)
-11. [ADR 0003 通信経路](#section-11)
-12. [ADR 0004 活動の決定権](#section-12)
-13. [ADR 0005 初期実装の範囲](#section-13)
-14. [ADR 0006 v1.0.0のCore接続契約](#section-14)
-15. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-15)
-16. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-16)
-17. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-17)
-18. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-18)
-19. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-19)
-20. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-20)
-21. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-21)
-22. [ADR 0014 v0.2の開発環境と最小Runtime](#section-22)
-23. [ADR 0015 Coreが許可する直接通信の採用](#section-23)
-24. [NTK開発ロードマップ](#section-24)
-25. [受入基準案と検証記録](#section-25)
-26. [v0.2 Runtime受入記録](#section-26)
-27. [開発準備とGit運用](#section-27)
-28. [マイルストーンと親子Issueの運用](#section-28)
-29. [公開準備とリリース手順](#section-29)
-30. [変更履歴](#section-30)
-31. [Apache License 2.0（原文）](#section-31)
+8. [RegistryとModuleGroup](#section-8)
+9. [ADR索引と更新方法](#section-9)
+10. [ADR 0001 Coreと統合リポジトリ](#section-10)
+11. [ADR 0002 実行モデル](#section-11)
+12. [ADR 0003 通信経路](#section-12)
+13. [ADR 0004 活動の決定権](#section-13)
+14. [ADR 0005 初期実装の範囲](#section-14)
+15. [ADR 0006 v1.0.0のCore接続契約](#section-15)
+16. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-16)
+17. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-17)
+18. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-18)
+19. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-19)
+20. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-20)
+21. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-21)
+22. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-22)
+23. [ADR 0014 v0.2の開発環境と最小Runtime](#section-23)
+24. [ADR 0015 Coreが許可する直接通信の採用](#section-24)
+25. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-25)
+26. [NTK開発ロードマップ](#section-26)
+27. [受入基準案と検証記録](#section-27)
+28. [v0.2 Runtime受入記録](#section-28)
+29. [開発準備とGit運用](#section-29)
+30. [マイルストーンと親子Issueの運用](#section-30)
+31. [公開準備とリリース手順](#section-31)
+32. [変更履歴](#section-32)
+33. [Apache License 2.0（原文）](#section-33)
 
 ---
 
@@ -194,6 +196,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | vision.md（`docs/vision.md`） | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | architecture.md（`docs/architecture.md`） | Coreの責務、境界、フォルダ構成、未決事項 |
 | runtime.md（`docs/runtime.md`） | v0.2の実装済みRuntime・Contractsの使い方と制約 |
+| registry.md（`docs/registry.md`） | v0.3のRegistry・ModuleGroup契約、着脱・依存管理の境界 |
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
 | roadmap.md（`docs/roadmap.md`） | 各段階の着手条件、作業、成果物、完了条件 |
 | acceptance.md（`docs/acceptance.md`） | バージョン別の検証シナリオと結果の記録方法 |
@@ -219,6 +222,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | R10 | 本チャットのコード変更に先立つ課題管理の指示 | バージョン別マイルストーン、親Issue、対応単位の子Issue登録の順に整備してから対応することを、コード変更の前提として採用 |
 | R11 | 本チャットの「v0.2までの作業」指示 | 登録済みのv0.2課題を設計判断・環境構築・実装・受入・公開の順に進める実施指示。具体的な実装判断はADR 0014へ記録し、過去に確定済みだった仕様と区別する |
 | R12 | 本チャットの「直接通信の緩和は採用ください」という指示 | Coreが管理・許可した接続で直接通信を認める既存の緩和案を採用。許可対象・API・解除時の動作などの詳細は今回の指示では未決 |
+| R13 | 本チャットの「v 0.3まで進行してください」という実施指示 | 登録済みのv0.3課題を設計・実装・受入・公開まで進める。具体的な実装判断はADR 0016へ記録し、過去の確定事項と区別する |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -238,6 +242,8 @@ R11に伴うv0.2のPython・配布・Runtimeの実装判断はADR 0014に記録�
 
 R12による後続判断で直接通信の緩和を採用し、ADR 0015へ記録する。ADR 0003のCore経由のみという旧判断は履歴として保持する。Coreが管理・許可した経路での直接通信とCore経由の通信を認め、具体的な許可範囲・接続契約は実装前に判断する。採用判断と通信機能の実装状況を区別する。
 
+R13に伴うv0.3の登録・依存・着脱・Runtime連携の判断はADR 0016に記録する。v0.4以降の通信契約・活動管理・IPCや本番Subsystem・Adapterを先行採用する指示とは扱わない。
+
 ### 状態の読み方
 
 | 表記 | 扱い |
@@ -249,7 +255,7 @@ R12による後続判断で直接通信の緩和を採用し、ADR 0015へ記録
 | 長期ビジョン | R7で示された最終到達目標・研究方針。具体的な実装要件・時期・合格基準は段階ごとに判断する |
 | 初期スコープ外 | 今回計画するCore初期開発の対象から除く事項 |
 
-計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014で具体化し、v0.3〜v0.8への機能配分と受入方法は提案として扱う。
+計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で具体化し、v0.4〜v0.8への機能配分と受入方法は提案として扱う。
 
 R4で列挙された時間・優先度の変更、中断・再開、取消・終了は採否を判断する対象として追記する。Subsystemの機能的依存と独立性の整理は提案として扱う。Coreが扱う機械的な実行順序と、Nymphが決める活動の価値・優先度の境界を明示し、優先度機能や実行枠の方式は後続判断へ残す。
 
@@ -693,6 +699,8 @@ Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Reg
 
 4責務の採用と、上表の詳細なAPI分担は別々に状態を管理する。TaskManagerの活動決定権に関する境界は確定事項である。
 
+R13のv0.3実施に伴い、登録・ID単位の必須依存・変更結果の通知・不変スナップショットをADR 0016（`docs/adr/0016-v0.3-registry.md`）で具体化する。Runtime側のModuleGroupが複数のダミーを一つのRuntimeServiceとして束ね、依存順の初期化と逆順の後処理を行う。Registryのavailableは登録された依存先の有無を表し、実行状態や通信許可とは区別する。実体の着脱は実行前に行い、起動から停止完了まで構成を固定する。稼働中の実体交換はConnectionsの解除・失効契約と合わせて後続で判断する。
+
 ### 活動と実行の境界
 
 Nymphが活動内容・時刻・期間・変更を決め、Coreが実行管理を担う。例えばNymph役のダミーが活動A、開始時刻T、期間Dを指定し、その後に期間をD2へ変更する。Coreで入力、予定、実行結果を照合する。このT・D・D2は検証用の値で、既定値や公開APIの型は要決定である。
@@ -839,7 +847,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 |---|---|---|
 | Python対応版、配布パッケージの正式名称、ビルド・テストツール、Runtimeのライフサイクル | v0.2で採用済み | development、ADR 0014 |
 | Subsystem・Adapterの同梱・分割対象、任意依存、公開import名、バージョン管理 | 各対象の実装・配布を設計する時点 | ADR 0009に関連付ける後続ADR |
-| 登録ID、重複、稼働中の着脱、機能的依存の採否・宣言、解除による利用不能の検出と通知 | V0.3着手時 | ADR 0001と後続ADR |
+| 登録ID、重複、必須依存・解除による利用不能の通知、スナップショット、ModuleGroup | v0.3で採用。稼働中実体着脱は延期 | ADR 0016 |
 | Coreが許可する直接通信の採否 | R12で採用済み | ADR 0003の履歴とADR 0015 |
 | 経路別の許可条件・API、接続状態と解除・許可撤回の具体的な扱い | Connectionsの対象経路の実装前 | ADR 0015と後続ADR |
 | 呼び出し契約、同期・非同期境界、失敗通知 | V0.4着手時 | 後続ADR |
@@ -936,11 +944,64 @@ RuntimeServiceはv0.2の実行入口であり、Subsystem・Adapterの登録や�
 
 <a id="section-8"></a>
 
+収録元 `docs/registry.md`
+
+## RegistryとModuleGroup
+
+v0.3の採用契約はADR 0016（`docs/adr/0016-v0.3-registry.md`）に記録する。実装・公開の状態はREADME（`README.md`）を参照する。CoreとContractsは一つのパッケージに含める。
+
+### 登録情報と依存関係
+
+`nymph_toolkit.core.Registry` に `nymph_toolkit.contracts.ModuleSpec` を登録する。ModuleKind.SUBSYSTEMとModuleKind.ADAPTERを同じ契約で扱う。IDは利用側が指定する、前後空白のない空でない文字列である。
+
+| 操作・情報 | 契約 |
+|---|---|
+| `ModuleSpec(module_id, kind, requires=frozenset())` | 不変の登録情報。requiresをID集合へコピー。自己依存はRegistryで拒否 |
+| `registry.register(spec)` | 登録しRegistryUpdateを返す。重複・循環は変更せず拒否 |
+| `registry.unregister(module_id)` | 解除しRegistryUpdateを返す。未登録IDは変更せず拒否 |
+| `registry.get(module_id)` | 不変のRegistryEntry。実体や通信ハンドルは返さない |
+| `registry.entries()` | ID順のEntryのtuple |
+| `registry.revision` | 成功した変更の通し番号。失敗では進めない |
+| `entry.generation` | 登録時のrevision。同じIDの再登録を区別できる |
+| `entry.available` | 推移的な不足依存がないこと。稼働状態・正常性・通信許可を意味しない |
+| `entry.missing_dependencies` | 直接・間接に不足しているIDのfrozenset |
+| `update.changes` | ID順のRegistryChange。before/afterは変更前後のEntry。登録前・解除後はNone |
+
+依存先が未登録でも登録できる。不足先を登録すれば利用可能となり、解除すれば依存元が利用不能になる。その変化は操作結果に同梱して通知する。継続購読や通知の永続保存は提供しないため、利用側は返された変更結果を処理する。
+
+すべての操作はRegistryを作成したスレッドで呼ぶ。awaitやコールバックは含まれない。返されたスナップショットは後続の登録・解除で書き換わらない。最新情報は再照会する。
+
+### Runtimeから複数対象を動かす
+
+`nymph_toolkit.core.ModuleGroup` に、ModuleSpecとRuntimeServiceを満たすダミーを `register(spec, service)` で登録する。ModuleGroupを既存の `Runtime(group)` に渡し、通常のstart・wait・stopで制御する。
+
+ModuleGroupのregister・unregister・get・entries・revisionはRegistryと同じ情報を扱う。実体は内部に保持し、外部へ返さない。不足依存があれば初期化を始める前に失敗する。依存順（同順位はID順）にstartし、全初期化が成功してから各runをタスクとして実行する。正常時はwaitがID別の戻り値を返す。
+
+startに入ってからstopの完了まで構成を固定する。この期間の登録・解除はRegistryStateErrorとする。実体の稼働中着脱はConnectionsの解除・失効契約を扱う後続段階へ延期する。停止後も登録情報は残り、明示的にunregisterできる。開始後の追加登録と再起動は拒否し、再実行には新しいModuleGroupとRuntimeを使う。
+
+### 失敗と後処理
+
+RegistryErrorの派生としてDuplicateModuleError、UnknownModuleError、DependencyCycleError、DependencyUnavailableError、RegistryStateErrorを使う。不正な型・IDはTypeError／ValueErrorで通知する。
+
+ModuleGroup内のサービス失敗は、対象ID・LifecyclePhase・元例外を持つModuleFailureへ記録し、ModuleGroupFailureにまとめる。外側のRuntimeFailureの各LifecycleFailure.exceptionから確認できる。初期化失敗時も、その対象を含めて初期化に入った順の逆順でstopする。実行中の失敗は他対象の停止につながり、複数失敗も保持する。
+
+呼出側の取消・Runtimeの状態・停止完了はRuntimeの契約（`docs/runtime.md`）に従う。ModuleGroupが作るタスクを完了させ、サービスのstopは各サービスが所有するタスク・接続を終了させる。stopの通常の失敗があっても他対象の後処理を続ける。無関係な呼出側タスクは停止しない。
+
+### 通信・活動管理との境界
+
+ADR 0015（`docs/adr/0015-core-authorized-direct-communication.md`）でCoreが管理・許可した直接通信は採用済みである。Registryの登録・照会は通信の許可操作ではなく、v0.3ではConnections・許可API・直接通信を実装しない。依存IDの宣言も、他の具体的実装への参照を与えるものではない。
+
+Nymphが活動を決定し、Coreが実行管理する。ModuleGroupのライフサイクル管理に、活動の価値評価・時間指定・優先度生成を追加しない。
+
+---
+
+<a id="section-9"></a>
+
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R12の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R13の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -959,6 +1020,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0013 マイルストーン・親子Issueを前提とするコード変更（`docs/adr/0013-milestone-issue-workflow.md`） | 採用。マイルストーン、親Issue、対応単位の子Issue登録後にコード変更へ着手 | R10 |
 | 0014 v0.2の開発環境と最小Runtime（`docs/adr/0014-v0.2-runtime.md`） | R11の実施に伴う実装判断として採用。Python・配布・Runtimeライフサイクル・失敗と後処理を具体化 | R11・#22 |
 | 0015 Coreが許可する直接通信の採用（`docs/adr/0015-core-authorized-direct-communication.md`） | 採用。Coreが管理・許可した接続で直接通信を認める。許可範囲・API・解除時の動作等は要決定 | R12・#34 |
+| 0016 v0.3のRegistryと複数対象のライフサイクル（`docs/adr/0016-v0.3-registry.md`） | R13の実施に伴う実装判断として採用。登録・スナップショット・必須依存・変更通知・ModuleGroupを具体化。稼働中実体着脱は延期 | R13・#27 |
 
 ### 記録方法
 
@@ -970,7 +1032,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 
 ---
 
-<a id="section-9"></a>
+<a id="section-10"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -1024,7 +1086,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-10"></a>
+<a id="section-11"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -1060,7 +1122,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-11"></a>
+<a id="section-12"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -1123,7 +1185,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-12"></a>
+<a id="section-13"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -1182,7 +1244,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-13"></a>
+<a id="section-14"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -1218,7 +1280,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-14"></a>
+<a id="section-15"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -1267,7 +1329,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-15"></a>
+<a id="section-16"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -1314,7 +1376,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-16"></a>
+<a id="section-17"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -1370,7 +1432,7 @@ R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンに
 
 ---
 
-<a id="section-17"></a>
+<a id="section-18"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -1425,7 +1487,7 @@ R6の「単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -1478,7 +1540,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -1532,7 +1594,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -1572,7 +1634,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-21"></a>
+<a id="section-22"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -1615,7 +1677,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-22"></a>
+<a id="section-23"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -1684,7 +1746,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-23"></a>
+<a id="section-24"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -1749,7 +1811,81 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-24"></a>
+<a id="section-25"></a>
+
+収録元 `docs/adr/0016-v0.3-registry.md`
+
+## ADR 0016 v0.3のRegistryと複数対象のライフサイクル
+
+### 状態・根拠
+
+採用。記録日2026年11月20日。R13「v 0.3まで進行してください」の実施に伴う設計・実装判断としてCodexが記録する。過去の会話で既に確定していた仕様とは区別する。親Issue #3、設計 #27、Contracts #28、Registry #29、依存管理 #30、Runtime連携 #31、受入 #32、公開 #33を対象とする。
+
+ADR 0001・0005のv0.3範囲を具体化する。ADR 0014のRuntime APIを維持し、ADR 0015のCoreが許可する直接通信の採用を前提とする。Connectionsの許可API・経路実装は本ADRで決定しない。
+
+### 背景
+
+v0.2のRuntimeは一つのRuntimeServiceを実行する。v0.3では登録情報の管理と、登録対象の初期化・実行・後処理を分離する。複数対象はRuntimeServiceを満たすModuleGroupで束ね、既存Runtimeから実行できるようにする。
+
+### RegistryとContracts
+
+- `ModuleKind` は `SUBSYSTEM` と `ADAPTER`。`ModuleSpec(module_id, kind, requires)` は不変の登録情報で、requiresは必須依存先のID集合へコピーする。IDは前後空白のない空でない文字列で、大文字小文字を区別する。呼出側が指定し、自動生成しない。
+- `Registry` は作成したスレッドで使う同期APIとする。操作中にawaitや利用側コールバックを呼ばず、イベントループの生成・所有を行わない。別スレッドでの操作・照会は `RegistryStateError` とする。
+- `register(spec)` と `unregister(module_id)` は成功時に `RegistryUpdate(revision, changes)` を返す。各 `RegistryChange` はIDと変更前・変更後の `RegistryEntry` を含む。新規登録のbefore、解除のafterはNone。影響を受けた依存先利用可否の変化も同じ結果に含め、ID順で返す。これを呼出側への変更通知とし、イベントバス・永続キュー・購読APIは追加しない。
+- `get(module_id)` と `entries()` は不変のスナップショットを返す。entriesはID順。実体・通信ハンドルを返さない。`revision` は成功した変更ごとに増え、失敗では変えない。
+- Entryの `generation` は登録時のrevisionで、解除後に同じIDを再登録すると変わる。過去のEntryは取得時点の情報として保持され、現在の照会結果と混同しない。通信許可の失効方式はv0.4へ残す。
+- 重複登録は `DuplicateModuleError`、未登録IDの照会・解除は `UnknownModuleError`。自己依存・循環依存は `DependencyCycleError`。いずれもRegistryErrorの派生とし、失敗時は登録状態・revisionを変更しない。型やIDなど不正な登録値はTypeError／ValueErrorで通知する。
+
+### 機能的依存の採用範囲
+
+依存はモジュールID単位の必須依存として採用する。Capability単位、任意依存、バージョン条件、自動代替は後続判断とする。具体的な相手実装へ依存しない。
+
+依存先が未登録でも登録できる。Entryの `missing_dependencies` に推移的に不足するIDを含め、空なら `available` がTrueになる。availableは「必要な依存先が登録されている」ことを表し、起動済み・稼働中・通信許可済み・正常稼働を意味しない。
+
+Registry単独では依存先の解除を許可する。解除によって直接・間接の依存元を利用不能とし、操作結果へ変化を含める。依存先を再登録した場合も再計算して通知する。登録済み部分の依存グラフに循環を作る登録は拒否する。例えばA→BをB不在のまま登録することはできるが、続けてB→Aを登録することはできない。
+
+### ModuleGroupとRuntimeの連携
+
+`ModuleGroup` はRuntimeServiceを満たすCore Runtime側の構成要素であり、第5のCore責務を追加しない。内部にRegistryとID別のサービス実体を保持し、`register(spec, service)`、`unregister(id)`、`get(id)`、`entries()`、`revision` を公開する。Registryの変更結果はそのまま返す。サービス実体や変更可能な内部Registryを公開しない。
+
+1. Runtimeの起動前にダミーSubsystem・Adapterを登録する。依存先不在の登録はできるが、起動前に全依存が揃う必要がある。
+2. ModuleGroup.startで構成を固定し、不足依存を検査する。不足時は `DependencyUnavailableError` を通知し、サービスのフックを一つも実行しない。
+3. 依存先から順にstartを呼ぶ。同順位はID順。startに入った対象は部分初期化の後処理対象に含める。すべての初期化が成功してからrunへ進む。start内で他対象のrun開始を待ってはならない。
+4. ModuleGroup.runは各対象のrunを同一イベントループのタスクとして実行する。全対象が正常終了したらID別の戻り値をdictで返す。一つが失敗した場合はRuntimeへ通知し、Runtimeのstop経由で残りを停止する。対象自身による予期しないCancelledErrorも失敗に含める。
+5. ModuleGroup.stopは所有する実行タスクを取消して完了を待ち、初期化に入った対象のstopを逆順に一度ずつ呼ぶ。途中の通常の失敗があっても他対象の後処理を続ける。サービス自身が所有するタスク・接続はサービスのstopが終了させる。
+
+失敗は `ModuleFailure(module_id, phase, exception)` を `ModuleGroupFailure` にまとめ、外側のRuntimeFailureから追跡できる。先に通知したrun失敗をstopで重複報告せず、後から発生したrun失敗・後処理失敗も失わない。プロセス制御例外はv0.2と同様に通常の失敗契約の対象外とする。
+
+### 着脱・取消・状態の境界
+
+稼働中の実体着脱はv0.3で採用しない。Connectionsの解除・許可撤回・通信中処理を未決のまま実体交換に組み込まないためである。ModuleGroupはstartに入ってからstopが終わるまで登録・解除を `RegistryStateError` で拒否する。Registry単独は同期の登録情報管理として利用できる。
+
+ModuleGroupは一回の実行に用いる。停止後は明示的な解除ができ、登録情報は解除するまで残る。実行開始後の追加登録と再起動は拒否し、次の実行には新しいModuleGroupとRuntimeを用意する。登録状態を稼働状態と混同しない。
+
+Runtimeの開始待機・停止待機が取消された場合もADR 0014の後処理契約に従う。開始・停止と着脱が競合した場合は、同期の構成固定を境に操作を許可・拒否する。stop完了までは固定を解除しない。協調的停止の制約は維持し、無応答の処理を強制終了する機能は追加しない。
+
+### 受入と具体例
+
+| シナリオ | 期待結果 |
+|---|---|
+| A→B、B→Cを先に登録しCが不在 | A・Bのmissing_dependenciesにC、available=False |
+| Cを登録／解除／再登録 | A・Bの利用可否変化を各RegistryUpdateで通知し、Cの再登録generationは変わる |
+| 重複・未登録解除・循環を作る登録 | 例外、状態とrevisionは不変 |
+| 過去の照会結果を保持して変更 | 旧スナップショットは不変、最新照会で変化を観察できる |
+| 不足依存のあるModuleGroupを起動 | 初期化フック0回で失敗を通知 |
+| A→Bの正常起動と停止 | B→Aで初期化、A→Bで後処理。残存所有タスク0件 |
+| 初期化途中失敗／実行失敗／複数後処理失敗 | 対象ID・段階・元例外を保持し、初期化に入った対象を後処理 |
+| 起動中・実行中・停止中の着脱 | 状態を変えず拒否。停止完了後は明示解除できる |
+
+これらとv0.2の回帰、wheel・sdistからのダミー実行、Windows/Linux・CPython 3.12〜3.15をA03の検証対象とする。時刻待ちに依存せずEventで同期する。
+
+### 未採用・延期事項
+
+稼働中の実体着脱、Capability・任意依存・版制約、永続化、自動探索・自動復旧・代替機能、スレッド間同期、IPC、Connections、TaskManager、本番Subsystem・Adapterを追加しない。Coreが管理・許可した直接通信はADR 0015で採用済みだが、その実装・許可契約はv0.4以降に残す。Nymphの意思決定、PC状況取得Adapter、複製・移植・伝播の初期対象外という境界を維持する。
+
+---
+
+<a id="section-26"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -1819,6 +1955,8 @@ R11の実施指示により、この段階の範囲をADR 0014（`docs/adr/0014-
 - **完了条件** — A02を満たす。READMEとdevelopmentのコマンドで実行できる。
 
 ### V0.3 Registry
+
+R13の実施指示により、この段階の契約をADR 0016（`docs/adr/0016-v0.3-registry.md`）で具体化した。同期Registry、ID単位の必須依存、不変スナップショットと変更通知、既存Runtimeから複数対象を動かすModuleGroupを採用する。実体の稼働中着脱はConnectionsの解除・失効契約を設計する後続段階へ残し、v0.3では実行前の着脱と、起動から停止完了までの構成固定を検証する。
 
 - **着手条件** — Runtimeを起動・停止できる。
 - **作業** — ダミーSubsystem・Adapterの登録、識別、状態確認、解除を実装する。登録ID、重複、未登録解除、稼働中着脱の対応範囲を先に記録する。機能的依存を許容する方向で検討し、具体的実装への依存を避けて交換できる接続契約を設計する案を用いる。
@@ -1963,13 +2101,13 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-25"></a>
+<a id="section-27"></a>
 
 収録元 `docs/acceptance.md`
 
 ## 受入基準案と検証記録
 
-以下は各段階の**受入案**である。v0.2のA02はADR 0014で具体化し、Runtimeの実行検証を行う。他の段階の操作例や観察方法は引き続き提案とし、対象のAPI・失敗時動作を判断してから期待結果を具体化する。
+以下は各段階の**受入案**である。v0.2のA02はADR 0014、v0.3のA03はADR 0016で具体化する。他の段階の操作例や観察方法は引き続き提案とし、対象のAPI・失敗時動作を判断してから期待結果を具体化する。
 
 ### バージョン別シナリオ
 
@@ -2004,7 +2142,23 @@ ADR 0014（`docs/adr/0014-v0.2-runtime.md`）に従い、起動・ダミー実�
 
 wheelとsdistをビルドし、新しい仮想環境へwheelを通常インストールする。リポジトリ外の作業ディレクトリから公開importとダミーを実行し、ソースツリーの参照に依存しないことを確認する。sdistからの再ビルド、同梱LICENSE、配布名・版・Python下限・依存メタデータも照合する。
 
+### A03 v0.3の具体化
+
+ADR 0016（`docs/adr/0016-v0.3-registry.md`）に従い、次を検証する。
+
+- Subsystem・Adapterの登録・ID順照会・解除・同一ID再登録とgeneration更新。
+- 重複、未登録照会・解除、不正値、自己依存・循環登録の拒否と、失敗時の状態・revision維持。
+- 直接・推移的な不足依存、依存先登録・解除・再登録による利用可否変化の通知。不変スナップショットと、稼働状態・通信許可との区別。
+- 所有スレッド以外での操作・照会の拒否。
+- ModuleGroupと既存Runtimeによる依存順初期化、全対象の実行、戻り値、逆順後処理。依存不足時はフックを実行しない。
+- 初期化途中失敗、実行失敗、予期しないサービス側取消、複数の失敗、後処理途中の失敗でも、必要な後処理と失敗の保持を行う。
+- 起動中・実行中・停止中の構成変更を拒否し、停止後に解除できる。開始待機・停止待機の取消や重複停止でも後処理を完了し、所有する残存タスクがない。
+- v0.2の既存Runtimeテスト、Windows/Linux・CPython 3.12〜3.15、wheel・sdistのメタデータ・LICENSE・新規環境へのインストール・ダミー再現。
+
+稼働中の実体交換とConnectionsの通信許可・直接通信は、この受入の対象外として記録する。登録・利用可否の管理と、実行・通信の状態を混同しない。
+
 ### A05・A06の責務境界と時間の確認案
+
 
 | 観点 | 操作・観察 | 期待結果 |
 |---|---|---|
@@ -2084,7 +2238,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-26"></a>
+<a id="section-28"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -2154,7 +2308,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-27"></a>
+<a id="section-29"></a>
 
 収録元 `docs/development.md`
 
@@ -2283,7 +2437,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ---
 
-<a id="section-28"></a>
+<a id="section-30"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -2377,7 +2531,7 @@ Registryの設計判断は[#27](https://github.com/Tao-pyth/nymph-toolkit/issues
 
 ---
 
-<a id="section-29"></a>
+<a id="section-31"></a>
 
 収録元 `docs/release.md`
 
@@ -2520,7 +2674,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-30"></a>
+<a id="section-32"></a>
 
 収録元 `CHANGELOG.md`
 
@@ -2564,7 +2718,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-31"></a>
+<a id="section-33"></a>
 
 収録元 `LICENSE`
 
