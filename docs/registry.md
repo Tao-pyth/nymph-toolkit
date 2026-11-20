@@ -39,6 +39,8 @@ ModuleGroup内のサービス失敗は、対象ID・LifecyclePhase・元例外�
 
 呼出側の取消・Runtimeの状態・停止完了は[Runtimeの契約](runtime.md)に従う。ModuleGroupが作るタスクを完了させ、サービスのstopは各サービスが所有するタスク・接続を終了させる。stopの通常の失敗があっても他対象の後処理を続ける。無関係な呼出側タスクは停止しない。
 
+初期化中のCancelledErrorはRuntimeへそのまま伝播し、対象IDを例外のnoteへ残す。停止要求による取消と予期しないサービス側取消の区別を既存Runtimeに委ねるためである。ModuleGroupのライフサイクルメソッドは一つのRuntimeの監督タスクから呼び、別Runtimeで同じGroupを同時に実行しない。
+
 ## 通信・活動管理との境界
 
 [ADR 0015](adr/0015-core-authorized-direct-communication.md)でCoreが管理・許可した直接通信は採用済みである。Registryの登録・照会は通信の許可操作ではなく、v0.3ではConnections・許可API・直接通信を実装しない。依存IDの宣言も、他の具体的実装への参照を与えるものではない。

@@ -987,6 +987,8 @@ ModuleGroup内のサービス失敗は、対象ID・LifecyclePhase・元例外�
 
 呼出側の取消・Runtimeの状態・停止完了はRuntimeの契約（`docs/runtime.md`）に従う。ModuleGroupが作るタスクを完了させ、サービスのstopは各サービスが所有するタスク・接続を終了させる。stopの通常の失敗があっても他対象の後処理を続ける。無関係な呼出側タスクは停止しない。
 
+初期化中のCancelledErrorはRuntimeへそのまま伝播し、対象IDを例外のnoteへ残す。停止要求による取消と予期しないサービス側取消の区別を既存Runtimeに委ねるためである。ModuleGroupのライフサイクルメソッドは一つのRuntimeの監督タスクから呼び、別Runtimeで同じGroupを同時に実行しない。
+
 ### 通信・活動管理との境界
 
 ADR 0015（`docs/adr/0015-core-authorized-direct-communication.md`）でCoreが管理・許可した直接通信は採用済みである。Registryの登録・照会は通信の許可操作ではなく、v0.3ではConnections・許可API・直接通信を実装しない。依存IDの宣言も、他の具体的実装への参照を与えるものではない。
@@ -1855,6 +1857,8 @@ Registry単独では依存先の解除を許可する。解除によって直接
 5. ModuleGroup.stopは所有する実行タスクを取消して完了を待ち、初期化に入った対象のstopを逆順に一度ずつ呼ぶ。途中の通常の失敗があっても他対象の後処理を続ける。サービス自身が所有するタスク・接続はサービスのstopが終了させる。
 
 失敗は `ModuleFailure(module_id, phase, exception)` を `ModuleGroupFailure` にまとめ、外側のRuntimeFailureから追跡できる。先に通知したrun失敗をstopで重複報告せず、後から発生したrun失敗・後処理失敗も失わない。プロセス制御例外はv0.2と同様に通常の失敗契約の対象外とする。
+
+初期化中のCancelledErrorは、要求された停止か否かを既存Runtimeが判断できるよう、そのまま伝播させる。元例外のnoteへ初期化中の対象IDを付け、予期しない取消の場合は外側のRuntimeFailureから確認できる。ModuleGroupのstart・run・stopは同じRuntimeの監督タスクで呼ぶ。別のRuntimeによる共有・二重起動を拒否し、その失敗の後処理が元の実行を停止しないようにする。
 
 ### 着脱・取消・状態の境界
 
