@@ -27,7 +27,8 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 - 全体を一つの文書で読む場合は、[日本語初期設計・Codex引継ぎ書](docs/NTK-Core-v0.1-Handoff-ja.md)を参照してください。
 - 個別の設計や判断を更新する場合は、[Docs一覧と根拠の扱い](docs/README.md)から進んでください。
 - 開発の段階と完了条件は、[ロードマップ](docs/roadmap.md)と[受入基準案](docs/acceptance.md)にあります。
-- Gitの用意は[開発手順](docs/development.md)、公開先などの未決事項と公開手順は[リリース手順](docs/release.md)にあります。
+- Gitの用意は[開発手順](docs/development.md)、公開先と公開手順は[リリース手順](docs/release.md)にあります。
+- 提案・修正への参加方法は[CONTRIBUTING](CONTRIBUTING.md)を参照してください。公開先は個人アカウント配下の `Tao-pyth/nymph-toolkit`（public）に決定しています。
 
 将来のPC状況取得はAdapterで扱います。Desktop Adapterはv1.10.0までの配分に含めず将来課題とします。複製・移植・伝播機構は初期スコープ外です。
 

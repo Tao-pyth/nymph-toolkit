@@ -55,7 +55,7 @@ GitHubのnoreplyアドレスを使う場合は、GitHubのメール設定で値�
 
 ```powershell
 git status --short --untracked-files=all
-git add -- .gitignore .gitattributes LICENSE README.md CHANGELOG.md docs
+git add -- .gitignore .gitattributes LICENSE README.md CONTRIBUTING.md CHANGELOG.md docs
 git diff --cached --stat
 git diff --cached --check
 git diff --cached

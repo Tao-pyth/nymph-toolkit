@@ -7,27 +7,30 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 | 項目 | 現在の状態 | 公開前に記録する内容 |
 |---|---|---|
 | リポジトリ名 | 確定 | `nymph-toolkit` |
-| 公開先アカウント | 要決定 | 所有者のアカウントまたは組織。接続アカウント `Tao-pyth` は確認済み |
-| 公開範囲 | 要決定 | publicで公開するか、private準備を経てpublicにするか。private準備はV0.1公開前として扱う案 |
+| 公開先アカウント | 採用済み（R9） | 個人アカウント `Tao-pyth`。GitHub接続でも確認済み |
+| 公開範囲 | 採用済み（R9） | 最初からpublicで公開する |
 | ライセンス | 採用済み（R8、2026年11月20日） | 自作コード・Contracts・設計文書へApache-2.0を適用。[LICENSE](../LICENSE)と[ADR 0011](adr/0011-apache-2.0-license.md)を配置済み |
-| 公開対象 | 準備済み資料を確認する段階 | README、Docs・ADR、CHANGELOG、Git設定、LICENSE |
-| 公開URL・remote | 未設定 | 実際の所有者・リポジトリURLと `origin` |
+| 公開対象 | 資料中心で確定（R9） | README、CONTRIBUTING、Docs・ADR、CHANGELOG、Git設定、LICENSE。Core未実装を明記 |
+| 公開URL・remote | 設定予定 | `https://github.com/Tao-pyth/nymph-toolkit` と `origin` |
 | V0.1タグ・公開日 | 未作成・未記入 | `v0.1.0`、対象コミットSHA、実際の公開日 |
 
-公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスはR8のユーザー指示によりApache-2.0へ確定した。公開先アカウント・公開範囲の選定と、GitHub上の公開作業は引き続き未完了である。
+公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスはR8でApache-2.0、公開先と公開範囲はR9で `Tao-pyth/nymph-toolkit` のpublic公開へ確定した。判断記録は[ADR 0012](adr/0012-v0.1-publication.md)。公開・タグ・Releaseの完了は実際の結果を確認して記録する。
 
 ## 公開前チェックリスト
 
 - [x] Apache-2.0の採用・適用範囲を記録し、公式本文のLICENSEを追加する。
-- [ ] 公開先アカウント・公開範囲の判断欄を埋める。
-- [ ] 公開する成果物にLICENSEを含め、第三者成果物がある場合は元の許諾・帰属表示・NOTICE等の要件を確認する。
-- [ ] READMEにその時点の実装状況を記載する。
-- [ ] Docs・ADRの確定事項、未決事項、根拠を確認する。
-- [ ] 単一配布用引継ぎ書を個別Docsと同期する。
-- [ ] ステージした一覧と差分を読み、公開対象を確認する。
-- [ ] 初回コミットとローカルGitの作成者設定を確認する。
-- [ ] 文書リンク、文字コード、改行、受入IDの対応を確認する。
-- [ ] README・CHANGELOG・本書の公開時の更新を準備する。
+- [x] 公開先アカウント・公開範囲の判断欄を埋める。
+- [x] 簡潔な参加方針をCONTRIBUTINGに記載する。
+- [x] 公開する成果物にLICENSEを含め、第三者成果物がある場合は元の許諾・帰属表示・NOTICE等の要件を確認する。
+- [x] READMEにその時点の実装状況を記載する。
+- [x] Docs・ADRの確定事項、未決事項、根拠を確認する。
+- [x] 単一配布用引継ぎ書を個別Docsと同期する。
+- [x] ステージした一覧と差分を読み、公開対象を確認する。
+- [x] 初回コミットとローカルGitの作成者設定を確認する。
+- [x] 文書リンク、文字コード、改行、受入IDの対応を確認する。
+- [x] README・CHANGELOG・本書の公開時の更新を準備する。
+
+ローカルでの公開前確認は2026年11月20日に実施した。GitHubのリポジトリ作成・push・タグ・Releaseの公開と、公開後の取得確認は次の手順で行う。
 
 ## ライセンスと配布内容の確認
 
@@ -41,11 +44,11 @@ LICENSEは[Apache公式テキスト](https://www.apache.org/licenses/LICENSE-2.0
 
 GitHubで、決定済みの所有者の配下に `nymph-toolkit` を作成する。ローカル履歴から開始する場合はREADME・LICENSE・gitignoreの自動作成を選ばず、空のリポジトリを用意する。既存リポジトリがある場合は内容と履歴を確認してから接続する。
 
-以下はPowerShellの例。`OWNER` は決定した所有者へ置き換える。認証には設定済みのGit認証手段を使う。
+以下は採用した公開先に対するPowerShellの例。認証には設定済みのGit認証手段を使う。
 
 ```powershell
 git remote -v
-git remote add origin https://github.com/OWNER/nymph-toolkit.git
+git remote add origin https://github.com/Tao-pyth/nymph-toolkit.git
 git remote -v
 git ls-remote origin
 ```
@@ -65,7 +68,7 @@ git ls-remote origin refs/heads/main
 公開内容を確認したら、READMEの状態を「V0.1公開済み」に更新し、実装状況を具体的に記す。CHANGELOGの未リリース項目に実際の公開日を記録し、本書の判断欄・公開URLを埋める。単一配布用引継ぎ書も同期してコミット・pushする。
 
 ```powershell
-git add -- LICENSE README.md CHANGELOG.md docs
+git add -- LICENSE README.md CONTRIBUTING.md CHANGELOG.md docs
 git diff --cached --check
 git diff --cached
 git commit -m 'docs: record v0.1.0 publication'

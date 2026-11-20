@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R6・R7・R8反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R6〜R9反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。NTKは、その成長を可能にするSubsystemとAdapterのソフトウェア基盤を目指す。R7の添付Project Visionを長期ビジョンとして収録し、完成を特定のバージョンに固定しない。
 
@@ -14,30 +14,34 @@ R6で、単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 R8で、自作コード・Contracts・設計文書へのApache-2.0適用を採用した。本書も対象とし、末尾にLICENSEの公式本文を収録する。第三者成果物と会話・記憶・人格などの個体データの条件は別途扱う。
 
+R9で、個人アカウント Tao-pyth 配下の nymph-toolkit を資料中心にpublic公開し、簡潔な参加方針を添えてv0.1.0とする方針を採用した。公開作業の完了状況は収録したreleaseで確認する。
+
 ## 収録文書
 
 1. [Nymph Toolkit（NTK）](#section-1)
-2. [Docsの読み方と根拠](#section-2)
-3. [Project Vision — 人工人格Nymphの最終到達目標](#section-3)
-4. [Architecture](#section-4)
-5. [ADR索引と更新方法](#section-5)
-6. [ADR 0001 Coreと統合リポジトリ](#section-6)
-7. [ADR 0002 実行モデル](#section-7)
-8. [ADR 0003 通信経路](#section-8)
-9. [ADR 0004 活動の決定権](#section-9)
-10. [ADR 0005 初期実装の範囲](#section-10)
-11. [ADR 0006 v1.0.0のCore接続契約](#section-11)
-12. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-12)
-13. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-13)
-14. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-14)
-15. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-15)
-16. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-16)
-17. [NTK開発ロードマップ](#section-17)
-18. [受入基準案と検証記録](#section-18)
-19. [開発準備とGit運用](#section-19)
-20. [公開準備とリリース手順](#section-20)
-21. [変更履歴](#section-21)
-22. [Apache License 2.0（原文）](#section-22)
+2. [NTKへの参加](#section-2)
+3. [Docsの読み方と根拠](#section-3)
+4. [Project Vision — 人工人格Nymphの最終到達目標](#section-4)
+5. [Architecture](#section-5)
+6. [ADR索引と更新方法](#section-6)
+7. [ADR 0001 Coreと統合リポジトリ](#section-7)
+8. [ADR 0002 実行モデル](#section-8)
+9. [ADR 0003 通信経路](#section-9)
+10. [ADR 0004 活動の決定権](#section-10)
+11. [ADR 0005 初期実装の範囲](#section-11)
+12. [ADR 0006 v1.0.0のCore接続契約](#section-12)
+13. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-13)
+14. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-14)
+15. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-15)
+16. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-16)
+17. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-17)
+18. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-18)
+19. [NTK開発ロードマップ](#section-19)
+20. [受入基準案と検証記録](#section-20)
+21. [開発準備とGit運用](#section-21)
+22. [公開準備とリリース手順](#section-22)
+23. [変更履歴](#section-23)
+24. [Apache License 2.0（原文）](#section-24)
 
 ---
 
@@ -74,7 +78,8 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 - 全体を一つの文書で読む場合は、日本語初期設計・Codex引継ぎ書（`docs/NTK-Core-v0.1-Handoff-ja.md`）を参照してください。
 - 個別の設計や判断を更新する場合は、Docs一覧と根拠の扱い（`docs/README.md`）から進んでください。
 - 開発の段階と完了条件は、ロードマップ（`docs/roadmap.md`）と受入基準案（`docs/acceptance.md`）にあります。
-- Gitの用意は開発手順（`docs/development.md`）、公開先などの未決事項と公開手順はリリース手順（`docs/release.md`）にあります。
+- Gitの用意は開発手順（`docs/development.md`）、公開先と公開手順はリリース手順（`docs/release.md`）にあります。
+- 提案・修正への参加方法はCONTRIBUTING（`CONTRIBUTING.md`）を参照してください。公開先は個人アカウント配下の `Tao-pyth/nymph-toolkit`（public）に決定しています。
 
 将来のPC状況取得はAdapterで扱います。Desktop Adapterはv1.10.0までの配分に含めず将来課題とします。複製・移植・伝播機構は初期スコープ外です。
 
@@ -88,6 +93,37 @@ NTKの自作コード、Contracts、設計文書には **Apache License 2.0（SP
 
 <a id="section-2"></a>
 
+収録元 `CONTRIBUTING.md`
+
+## NTKへの参加
+
+NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェクトです。現在は資料・設計を中心とした初期段階で、Coreコードと実行テストは未実装です。
+
+### 提案・報告
+
+質問、文書の誤り、設計提案は[GitHub Issues](https://github.com/Tao-pyth/nymph-toolkit/issues)へお願いします。関連する文書・ADR、現状の問題、提案する変更とその理由を記載してください。日本語での投稿を歓迎します。
+
+実装に着手する前にREADME（`README.md`）、Project Vision（`docs/vision.md`）、ロードマップ（`docs/roadmap.md`）、ADR索引（`docs/adr/README.md`）を確認してください。確定事項と提案・未決事項を区別し、設計や開発範囲を変える場合は先にIssueで相談してください。
+
+### Pull Request
+
+- 文書修正は小さな単位で送れます。変更した内容と理由、確認した項目を記載してください。
+- 設計変更はメンテナーと議論し、採用された判断をADRへ記録します。提案段階の内容を確定仕様として記載しないでください。
+- 実装変更は合意した段階・範囲に合わせ、必要な検証結果と関連Docsの更新を含めてください。
+- Docsを変更した場合は文書の更新方法（`docs/README.md`）に従い、単一配布用引継ぎ書との整合を確認してください。
+
+変更の採否とマージはメンテナーが判断します。提案やPRの提出だけで採用とはなりません。
+
+### ライセンスと投稿内容
+
+自作コード・Contracts・設計文書への貢献は、プロジェクトのApache-2.0ライセンス（`LICENSE`）を前提とします。第三者の成果物を含める場合は、出典と利用条件を示し、元の権利表示を保持してください。
+
+IssueやPRには、認証情報や他者の非公開データを含めないでください。再現にデータが必要な場合は、共有できるダミーデータを使用してください。
+
+---
+
+<a id="section-3"></a>
+
 収録元 `docs/README.md`
 
 ## Docsの読み方と根拠
@@ -99,6 +135,7 @@ NTKの自作コード、Contracts、設計文書には **Apache License 2.0（SP
 | 文書 | 用途 |
 |---|---|
 | ルートREADME（`README.md`） | プロジェクト概要と現在の実装状況 |
+| CONTRIBUTING（`CONTRIBUTING.md`） | Issue・Pull Requestによる参加と設計判断の扱い |
 | 単一配布用の引継ぎ書（`docs/NTK-Core-v0.1-Handoff-ja.md`） | 以下のDocs・ADRを一つに収録したスナップショット |
 | vision.md（`docs/vision.md`） | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | architecture.md（`docs/architecture.md`） | Coreの責務、境界、フォルダ構成、未決事項 |
@@ -121,6 +158,7 @@ NTKの自作コード、Contracts、設計文書には **Apache License 2.0（SP
 | R6 | 本チャットの配布方針の採用・資料反映指示 | 単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する方針を明示的に採用 |
 | R7 | 添付「Project Vision — 人工人格Nymphの最終到達目標」と反映指示 | 添付本文全16節とVision Statementを確認。最終ビジョンは同内容に沿う。完成像・研究方針として扱い、各能力を確定した実装要件へ一括追加しない |
 | R8 | 本チャットのApache-2.0採用・資料反映指示 | 自作コード・Contracts・設計文書へのApache-2.0適用、LICENSE追加、README・ADR・公開準備資料・引継ぎ書への反映を明示的に指示 |
+| R9 | 本チャットの個人アカウントでのpublic公開指示 | `Tao-pyth/nymph-toolkit` を資料中心にpublic公開し、簡潔な参加方針とv0.1.0タグ・リリースを整える方針を採用 |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -132,11 +170,13 @@ R7の最終ビジョンはvisionに収録し、ADR 0010で長期ビジョンと�
 
 R8によりApache-2.0を採用し、ADR 0011に適用範囲を記録する。R7反映時点では未決だったライセンス選定は解消済みである。第三者成果物と個体データの条件、公開先・公開範囲の判断は別途扱う。
 
+R9により公開先を個人アカウント `Tao-pyth`、公開範囲をpublicへ確定し、ADR 0012へ記録する。公開の判断と作業の完了は区別し、実際の状態はreleaseで管理する。
+
 ### 状態の読み方
 
 | 表記 | 扱い |
 |---|---|
-| 確定・採用 | R2・R3の設計・開発目標、R5のv1.0.0目標、R6の配布方針、R8のApache-2.0採用など、明示的に決めた事項 |
+| 確定・採用 | R2・R3の設計・開発目標、R5のv1.0.0目標、R6の配布方針、R8のApache-2.0、R9の公開・参加方針など、明示的に決めた事項 |
 | 方向性確定 | 技術の方向が採用済み。具体的なAPI・内部方式は要設計 |
 | 提案 | 実装順、検証方法、責務の詳細整理などの案 |
 | 要決定 | 対象の実装や公開に先立ち、判断を記録する事項 |
@@ -153,11 +193,11 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
 
 ---
 
-<a id="section-3"></a>
+<a id="section-4"></a>
 
 収録元 `docs/vision.md`
 
@@ -552,7 +592,7 @@ NTKの目標は、単に便利なAIアシスタントを作ることではない
 
 ---
 
-<a id="section-4"></a>
+<a id="section-5"></a>
 
 収録元 `docs/architecture.md`
 
@@ -653,6 +693,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 ```text
 nymph-toolkit/
 ├─ README.md
+├─ CONTRIBUTING.md
 ├─ .gitignore
 ├─ .gitattributes
 ├─ LICENSE
@@ -679,7 +720,8 @@ nymph-toolkit/
 │     ├─ 0008-subsystem-adapter-boundaries.md
 │     ├─ 0009-package-distribution.md
 │     ├─ 0010-project-vision.md
-│     └─ 0011-apache-2.0-license.md
+│     ├─ 0011-apache-2.0-license.md
+│     └─ 0012-v0.1-publication.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -726,13 +768,13 @@ v1.xでは、各Contractの公開範囲・互換性、Subsystemの正式名称�
 
 ---
 
-<a id="section-5"></a>
+<a id="section-6"></a>
 
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R8の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R9の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -747,6 +789,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0009 単一リポジトリと段階的な配布パッケージ分割（`docs/adr/0009-package-distribution.md`） | 採用。CoreとContractsを同梱して開始し、Subsystem・Adapterを必要に応じて分割。ライセンスは0011で採用 | R6・R8 |
 | 0010 Nymphの最終ビジョンと実装範囲の区別（`docs/adr/0010-project-vision.md`） | 長期ビジョンとして採用。具体的な実装方式・時期・受入条件は後続判断。ライセンスは0011で採用 | R7・R8 |
 | 0011 自作コード・Contracts・設計文書へのApache-2.0適用（`docs/adr/0011-apache-2.0-license.md`） | 採用。第三者成果物と個体データの条件は別途扱う | R8 |
+| 0012 個人アカウントでのv0.1.0公開と参加方針（`docs/adr/0012-v0.1-publication.md`） | 採用。Tao-pyth配下で資料を中心にpublic公開し、参加方針・v0.1.0を整える | R9 |
 
 ### 記録方法
 
@@ -758,7 +801,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 
 ---
 
-<a id="section-6"></a>
+<a id="section-7"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -798,7 +841,9 @@ R4を受け、次の点をV0.3の設計判断に追加する。着脱可能性�
 
 ### 未決事項
 
-Subsystem・Adapterの公開API、登録ID、機能的依存の採否と宣言形式、稼働中着脱の可否、依存先解除時の検出・通知・解除許可条件、進行中活動の処理。公開先アカウントはreleaseの判断欄で管理する。
+Subsystem・Adapterの公開API、登録ID、機能的依存の採否と宣言形式、稼働中着脱の可否、依存先解除時の検出・通知・解除許可条件、進行中活動の処理。
+
+公開先の後続判断はR9・ADR 0012（`docs/adr/0012-v0.1-publication.md`）で確定し、`Tao-pyth/nymph-toolkit` をpublicで公開する。実際の状態はreleaseで管理する。
 
 ### ライセンスの後続判断
 
@@ -810,7 +855,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-7"></a>
+<a id="section-8"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -844,7 +889,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-8"></a>
+<a id="section-9"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -904,7 +949,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-9"></a>
+<a id="section-10"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -963,7 +1008,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-10"></a>
+<a id="section-11"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -999,7 +1044,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-11"></a>
+<a id="section-12"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -1048,7 +1093,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-12"></a>
+<a id="section-13"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -1095,7 +1140,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-13"></a>
+<a id="section-14"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -1151,7 +1196,7 @@ R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンに
 
 ---
 
-<a id="section-14"></a>
+<a id="section-15"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -1204,7 +1249,7 @@ R6の「単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 ---
 
-<a id="section-15"></a>
+<a id="section-16"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -1257,7 +1302,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-16"></a>
+<a id="section-17"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -1299,7 +1344,9 @@ Coreの責務、通信経路、契約の具体的なAPI、各段階の実装範�
 
 ### 残る判断事項
 
-新たな第三者成果物の導入時の互換性・利用条件・帰属表示、実装開始時のビルド設定、各配布物へのライセンス収録方法。公開先・公開範囲はrelease（`docs/release.md`）で引き続き判断する。ライセンス種別そのものは確定済みである。
+新たな第三者成果物の導入時の互換性・利用条件・帰属表示、実装開始時のビルド設定、各配布物へのライセンス収録方法。ライセンス種別そのものは確定済みである。
+
+公開先・公開範囲は後続のR9・ADR 0012（`docs/adr/0012-v0.1-publication.md`）で、個人アカウント `Tao-pyth` 配下のpublic公開へ確定した。release（`docs/release.md`）で実際の公開状況を管理する。
 
 ### 根拠
 
@@ -1309,7 +1356,45 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-17"></a>
+<a id="section-18"></a>
+
+収録元 `docs/adr/0012-v0.1-publication.md`
+
+## ADR 0012 個人アカウントでのv0.1.0公開と参加方針
+
+### 状態
+
+採用。採用日2026年11月20日。判断者はプロジェクト所有者（R9のユーザー明示指示）。ADR 0001・0005の初回公開を具体化する。実際の公開・タグ・リリースの完了状況はrelease（`docs/release.md`）で管理する。
+
+### 背景
+
+最終ビジョン、Core初期設計、配布方針とApache-2.0の採用が記録された。資料を中心としたv0.1.0の公開先・公開方法を決め、外部からの提案・修正の入口を用意する。
+
+### 決定
+
+- 接続確認済みの個人アカウント `Tao-pyth` 配下に、単一リポジトリ `nymph-toolkit` をpublicで公開する。
+- 初回公開は現在の設計・ビジョン・ロードマップ・開発資料とGit設定、LICENSEを中心とする。Core未実装をREADMEとリリース記録に明記する。
+- ルートの `CONTRIBUTING.md` に簡潔な参加方針を置き、質問・提案・報告はGitHub Issues、変更の提出はPull Requestを入口とする。
+- 設計変更は議論し、メンテナーが採用した判断をADRへ記録する。既存の未決事項を公開作業の都合で確定しない。
+- 公開内容を確認したコミットに `v0.1.0` タグを付け、同じタグのGitHub Releaseに実装状況・検証結果・未決事項・次の段階を記録する。
+
+### 影響
+
+GitHub公開がV0.1という既存目標を実施する。公開のために本番Subsystem・Adapterや動作デモを追加する要件は設けない。CoreとContractsの初期配布方針はADR 0009、ライセンスはADR 0011に従う。
+
+リポジトリの作成、既存Git履歴のpush、タグ・Releaseの公開を行い、publicで取得できることを確認する。公開済みタグを移動せず、その後の変更は次のコミット・リリースで記録する。
+
+### 残る判断事項
+
+Python対応版・開発ツール・Core API・通信経路の維持または緩和など、各実装段階の未決事項は従来のADRとロードマップで扱う。詳細な参加手順や検証の自動化は、開発・参加状況に応じて追加する。
+
+### 根拠
+
+R9の「個人アカウント配下で、現在の資料を中心にpublic公開し、簡潔な参加方針を添えてv0.1.0とする」というユーザー指示。Docsの根拠表（`docs/README.md`）
+
+---
+
+<a id="section-19"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -1349,7 +1434,7 @@ R6で採用した配布方針は、単一リポジトリでCoreとContractsを�
 - **着手条件** — R2・R3を根拠とした資料と既存ファイルを確認できる。
 - **作業** — 確定事項と未決事項を記載し、Docs・ADRを配置する。除外・改行設定を整え、Gitを `main` で初期化し、作成者設定、差分確認、初回コミットを行う。
 - **成果物** — 単一配布用引継ぎ書、個別Docs・ADR、Git履歴、公開前判断欄。
-- **判断事項** — 公開先アカウント・公開範囲をreleaseに記録する。ライセンスはR8・ADR 0011でApache-2.0を採用済み。公開対象へのLICENSE収録と適用範囲を確認する。
+- **判断事項** — 公開先はR9・ADR 0012で `Tao-pyth/nymph-toolkit` のpublic公開、ライセンスはR8・ADR 0011でApache-2.0を採用済み。公開対象へのLICENSE収録と適用範囲を確認し、作業結果をreleaseへ記録する。
 - **完了条件** — P0を確認でき、公開前判断欄が埋まっている。未記入項目がある間は公開準備として扱う。
 
 ### V0.1 GitHub公開
@@ -1357,7 +1442,7 @@ R6で採用した配布方針は、単一リポジトリでCoreとContractsを�
 - **着手条件** — 公開準備の完了条件を満たし、公開するコミットが確認済み。
 - **作業** — `nymph-toolkit` をGitHubへ公開し、remoteを確認してpushする。READMEに実装状況を明記し、CHANGELOG、`v0.1.0` タグ、リリース記録を整える。
 - **成果物** — GitHubから読める資料一式、公開URL、リリース対象コミット。
-- **判断事項** — 公開範囲が目標と一致することを確認する。privateで準備する場合はpublicへの変更時点をV0.1とする案を用いる。
+- **判断事項** — R9で採用したpublic公開と、資料中心・Core未実装という公開内容が一致することを確認する。
 - **完了条件** — A01を満たす。Core未実装の状態で公開する場合はその状態を明記する。
 
 ### V0.2 Runtime
@@ -1513,7 +1598,7 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-18"></a>
+<a id="section-20"></a>
 
 収録元 `docs/acceptance.md`
 
@@ -1622,7 +1707,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-19"></a>
+<a id="section-21"></a>
 
 収録元 `docs/development.md`
 
@@ -1683,7 +1768,7 @@ GitHubのnoreplyアドレスを使う場合は、GitHubのメール設定で値�
 
 ```powershell
 git status --short --untracked-files=all
-git add -- .gitignore .gitattributes LICENSE README.md CHANGELOG.md docs
+git add -- .gitignore .gitattributes LICENSE README.md CONTRIBUTING.md CHANGELOG.md docs
 git diff --cached --stat
 git diff --cached --check
 git diff --cached
@@ -1721,7 +1806,7 @@ git diff --cached
 
 ---
 
-<a id="section-20"></a>
+<a id="section-22"></a>
 
 収録元 `docs/release.md`
 
@@ -1734,27 +1819,30 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 | 項目 | 現在の状態 | 公開前に記録する内容 |
 |---|---|---|
 | リポジトリ名 | 確定 | `nymph-toolkit` |
-| 公開先アカウント | 要決定 | 所有者のアカウントまたは組織。接続アカウント `Tao-pyth` は確認済み |
-| 公開範囲 | 要決定 | publicで公開するか、private準備を経てpublicにするか。private準備はV0.1公開前として扱う案 |
+| 公開先アカウント | 採用済み（R9） | 個人アカウント `Tao-pyth`。GitHub接続でも確認済み |
+| 公開範囲 | 採用済み（R9） | 最初からpublicで公開する |
 | ライセンス | 採用済み（R8、2026年11月20日） | 自作コード・Contracts・設計文書へApache-2.0を適用。LICENSE（`LICENSE`）とADR 0011（`docs/adr/0011-apache-2.0-license.md`）を配置済み |
-| 公開対象 | 準備済み資料を確認する段階 | README、Docs・ADR、CHANGELOG、Git設定、LICENSE |
-| 公開URL・remote | 未設定 | 実際の所有者・リポジトリURLと `origin` |
+| 公開対象 | 資料中心で確定（R9） | README、CONTRIBUTING、Docs・ADR、CHANGELOG、Git設定、LICENSE。Core未実装を明記 |
+| 公開URL・remote | 設定予定 | `https://github.com/Tao-pyth/nymph-toolkit` と `origin` |
 | V0.1タグ・公開日 | 未作成・未記入 | `v0.1.0`、対象コミットSHA、実際の公開日 |
 
-公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスはR8のユーザー指示によりApache-2.0へ確定した。公開先アカウント・公開範囲の選定と、GitHub上の公開作業は引き続き未完了である。
+公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスはR8でApache-2.0、公開先と公開範囲はR9で `Tao-pyth/nymph-toolkit` のpublic公開へ確定した。判断記録はADR 0012（`docs/adr/0012-v0.1-publication.md`）。公開・タグ・Releaseの完了は実際の結果を確認して記録する。
 
 ### 公開前チェックリスト
 
 - [x] Apache-2.0の採用・適用範囲を記録し、公式本文のLICENSEを追加する。
-- [ ] 公開先アカウント・公開範囲の判断欄を埋める。
-- [ ] 公開する成果物にLICENSEを含め、第三者成果物がある場合は元の許諾・帰属表示・NOTICE等の要件を確認する。
-- [ ] READMEにその時点の実装状況を記載する。
-- [ ] Docs・ADRの確定事項、未決事項、根拠を確認する。
-- [ ] 単一配布用引継ぎ書を個別Docsと同期する。
-- [ ] ステージした一覧と差分を読み、公開対象を確認する。
-- [ ] 初回コミットとローカルGitの作成者設定を確認する。
-- [ ] 文書リンク、文字コード、改行、受入IDの対応を確認する。
-- [ ] README・CHANGELOG・本書の公開時の更新を準備する。
+- [x] 公開先アカウント・公開範囲の判断欄を埋める。
+- [x] 簡潔な参加方針をCONTRIBUTINGに記載する。
+- [x] 公開する成果物にLICENSEを含め、第三者成果物がある場合は元の許諾・帰属表示・NOTICE等の要件を確認する。
+- [x] READMEにその時点の実装状況を記載する。
+- [x] Docs・ADRの確定事項、未決事項、根拠を確認する。
+- [x] 単一配布用引継ぎ書を個別Docsと同期する。
+- [x] ステージした一覧と差分を読み、公開対象を確認する。
+- [x] 初回コミットとローカルGitの作成者設定を確認する。
+- [x] 文書リンク、文字コード、改行、受入IDの対応を確認する。
+- [x] README・CHANGELOG・本書の公開時の更新を準備する。
+
+ローカルでの公開前確認は2026年11月20日に実施した。GitHubのリポジトリ作成・push・タグ・Releaseの公開と、公開後の取得確認は次の手順で行う。
 
 ### ライセンスと配布内容の確認
 
@@ -1768,11 +1856,11 @@ LICENSEは[Apache公式テキスト](https://www.apache.org/licenses/LICENSE-2.0
 
 GitHubで、決定済みの所有者の配下に `nymph-toolkit` を作成する。ローカル履歴から開始する場合はREADME・LICENSE・gitignoreの自動作成を選ばず、空のリポジトリを用意する。既存リポジトリがある場合は内容と履歴を確認してから接続する。
 
-以下はPowerShellの例。`OWNER` は決定した所有者へ置き換える。認証には設定済みのGit認証手段を使う。
+以下は採用した公開先に対するPowerShellの例。認証には設定済みのGit認証手段を使う。
 
 ```powershell
 git remote -v
-git remote add origin https://github.com/OWNER/nymph-toolkit.git
+git remote add origin https://github.com/Tao-pyth/nymph-toolkit.git
 git remote -v
 git ls-remote origin
 ```
@@ -1792,7 +1880,7 @@ git ls-remote origin refs/heads/main
 公開内容を確認したら、READMEの状態を「V0.1公開済み」に更新し、実装状況を具体的に記す。CHANGELOGの未リリース項目に実際の公開日を記録し、本書の判断欄・公開URLを埋める。単一配布用引継ぎ書も同期してコミット・pushする。
 
 ```powershell
-git add -- LICENSE README.md CHANGELOG.md docs
+git add -- LICENSE README.md CONTRIBUTING.md CHANGELOG.md docs
 git diff --cached --check
 git diff --cached
 git commit -m 'docs: record v0.1.0 publication'
@@ -1842,7 +1930,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-21"></a>
+<a id="section-23"></a>
 
 収録元 `CHANGELOG.md`
 
@@ -1864,12 +1952,13 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 - ADR 0010で長期ビジョンを採用し、言語獲得、記憶、Self-Model、内部状態・人格・睡眠・夢、権限下のPC操作、継続性の目標と、段階ごとの実装・受入範囲を区別。最終完成のバージョンは固定しない。
 - R8により、自作コード・Contracts・設計文書へApache-2.0を採用。公式本文のLICENSEとADR 0011を追加し、README・公開準備資料・関連Docsの採用状態を更新。
 - 第三者成果物と個体データの条件を適用範囲から区別し、分割後の配布物にもLICENSEを含める方針を記録。単一配布用引継ぎ書へライセンス原文を収録。
+- R9・ADR 0012で `Tao-pyth/nymph-toolkit` のpublic公開を採用し、Issue・Pull Requestでの参加方針をCONTRIBUTINGへ追加。
 
 V0.1の公開時に、この項目を実際の公開日と `v0.1.0` に対応するリリース記録へ更新する。
 
 ---
 
-<a id="section-22"></a>
+<a id="section-24"></a>
 
 収録元 `LICENSE`
 

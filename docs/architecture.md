@@ -95,6 +95,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 ```text
 nymph-toolkit/
 ├─ README.md
+├─ CONTRIBUTING.md
 ├─ .gitignore
 ├─ .gitattributes
 ├─ LICENSE
@@ -121,7 +122,8 @@ nymph-toolkit/
 │     ├─ 0008-subsystem-adapter-boundaries.md
 │     ├─ 0009-package-distribution.md
 │     ├─ 0010-project-vision.md
-│     └─ 0011-apache-2.0-license.md
+│     ├─ 0011-apache-2.0-license.md
+│     └─ 0012-v0.1-publication.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
