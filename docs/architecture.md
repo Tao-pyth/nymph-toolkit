@@ -96,6 +96,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 nymph-toolkit/
 ├─ README.md
 ├─ CONTRIBUTING.md
+├─ AGENTS.md
 ├─ .gitignore
 ├─ .gitattributes
 ├─ LICENSE
@@ -109,6 +110,7 @@ nymph-toolkit/
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ development.md
+│  ├─ issue-workflow.md
 │  ├─ release.md
 │  └─ adr/
 │     ├─ README.md
@@ -123,7 +125,8 @@ nymph-toolkit/
 │     ├─ 0009-package-distribution.md
 │     ├─ 0010-project-vision.md
 │     ├─ 0011-apache-2.0-license.md
-│     └─ 0012-v0.1-publication.md
+│     ├─ 0012-v0.1-publication.md
+│     └─ 0013-milestone-issue-workflow.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -151,6 +154,8 @@ R3の文書・開発配置案へ、R5のADR 0006〜0008、R6のContracts・ADR 0
 依存ライブラリや対応OS、更新頻度、単独導入の必要性を基に分割を判断する。任意依存による同梱も比較対象とし、分割後のバージョンを同期するか独立させるかは後続ADRで決める。配布単位は実行プロセスと通信経路を決定しない。同梱・別配布のいずれも、実行配置はADR 0002、通信経路はADR 0003に従う。
 
 ## 実装前の判断一覧
+
+R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変更前に対象バージョンのマイルストーン、親Issue、対応単位の子Issueを整備する。以下の設計判断は対象のIssueから追跡し、必要な判断を記録してから実装へ進む。具体的な運用は[issue-workflow.md](issue-workflow.md)を参照する。
 
 | 判断 | 判断する時点の案 | 記録先 |
 |---|---|---|

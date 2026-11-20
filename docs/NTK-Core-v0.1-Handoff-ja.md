@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R6〜R9反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R6〜R10反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。NTKは、その成長を可能にするSubsystemとAdapterのソフトウェア基盤を目指す。R7の添付Project Visionを長期ビジョンとして収録し、完成を特定のバージョンに固定しない。
 
@@ -16,32 +16,37 @@ R8で、自作コード・Contracts・設計文書へのApache-2.0適用を採�
 
 R9で、個人アカウント Tao-pyth 配下の nymph-toolkit を資料中心にpublic公開し、簡潔な参加方針を添えてv0.1.0とする方針を採用した。公開作業の完了状況は収録したreleaseで確認する。
 
+R10で、コード変更に先立ちマイルストーン、親Issue、対応単位の子Issueを順に登録するルールを採用した。本書はv0.1.0公開後の未リリース更新を含む。公開済みReleaseの添付は初回公開時のスナップショットとして保持する。
+
 ## 収録文書
 
 1. [Nymph Toolkit（NTK）](#section-1)
 2. [NTKへの参加](#section-2)
-3. [Docsの読み方と根拠](#section-3)
-4. [Project Vision — 人工人格Nymphの最終到達目標](#section-4)
-5. [Architecture](#section-5)
-6. [ADR索引と更新方法](#section-6)
-7. [ADR 0001 Coreと統合リポジトリ](#section-7)
-8. [ADR 0002 実行モデル](#section-8)
-9. [ADR 0003 通信経路](#section-9)
-10. [ADR 0004 活動の決定権](#section-10)
-11. [ADR 0005 初期実装の範囲](#section-11)
-12. [ADR 0006 v1.0.0のCore接続契約](#section-12)
-13. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-13)
-14. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-14)
-15. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-15)
-16. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-16)
-17. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-17)
-18. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-18)
-19. [NTK開発ロードマップ](#section-19)
-20. [受入基準案と検証記録](#section-20)
-21. [開発準備とGit運用](#section-21)
-22. [公開準備とリリース手順](#section-22)
-23. [変更履歴](#section-23)
-24. [Apache License 2.0（原文）](#section-24)
+3. [NTKの作業ルール](#section-3)
+4. [Docsの読み方と根拠](#section-4)
+5. [Project Vision — 人工人格Nymphの最終到達目標](#section-5)
+6. [Architecture](#section-6)
+7. [ADR索引と更新方法](#section-7)
+8. [ADR 0001 Coreと統合リポジトリ](#section-8)
+9. [ADR 0002 実行モデル](#section-9)
+10. [ADR 0003 通信経路](#section-10)
+11. [ADR 0004 活動の決定権](#section-11)
+12. [ADR 0005 初期実装の範囲](#section-12)
+13. [ADR 0006 v1.0.0のCore接続契約](#section-13)
+14. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-14)
+15. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-15)
+16. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-16)
+17. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-17)
+18. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-18)
+19. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-19)
+20. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-20)
+21. [NTK開発ロードマップ](#section-21)
+22. [受入基準案と検証記録](#section-22)
+23. [開発準備とGit運用](#section-23)
+24. [マイルストーンと親子Issueの運用](#section-24)
+25. [公開準備とリリース手順](#section-25)
+26. [変更履歴](#section-26)
+27. [Apache License 2.0（原文）](#section-27)
 
 ---
 
@@ -77,6 +82,8 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 
 ### 開発を始める方へ
 
+コード変更は、**対象バージョンのマイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順を必須とします。Issue運用と登録済み課題（`docs/issue-workflow.md`）を確認してから着手してください。登録した計画案は、仕様の採用と区別します。
+
 - 全体を一つの文書で読む場合は、日本語初期設計・Codex引継ぎ書（`docs/NTK-Core-v0.1-Handoff-ja.md`）を参照してください。
 - 個別の設計や判断を更新する場合は、Docs一覧と根拠の扱い（`docs/README.md`）から進んでください。
 - 開発の段階と完了条件は、ロードマップ（`docs/roadmap.md`）と受入基準案（`docs/acceptance.md`）にあります。
@@ -107,11 +114,19 @@ NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェ
 
 実装に着手する前にREADME（`README.md`）、Project Vision（`docs/vision.md`）、ロードマップ（`docs/roadmap.md`）、ADR索引（`docs/adr/README.md`）を確認してください。確定事項と提案・未決事項を区別し、設計や開発範囲を変える場合は先にIssueで相談してください。
 
+### コード変更の前提
+
+コードの新規作成・修正を伴う対応は、**バージョン別マイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順を必須とします。親子関係はGitHubのsub-issueで設定し、親・子の両方に対象マイルストーンを設定してください。
+
+子Issueに目的・範囲・完了条件・検証方法・先行課題を記載し、実装に必要な未決事項を判断してから着手します。新規実装、不具合修正、リファクタリング、テスト・実行・配布設定の変更も対象です。Issueの登録だけで提案が採用済みになることはありません。
+
+具体的な運用と登録済み課題はIssue運用（`docs/issue-workflow.md`）、採用記録はADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）を参照してください。
+
 ### Pull Request
 
 - 文書修正は小さな単位で送れます。変更した内容と理由、確認した項目を記載してください。
 - 設計変更はメンテナーと議論し、採用された判断をADRへ記録します。提案段階の内容を確定仕様として記載しないでください。
-- 実装変更は合意した段階・範囲に合わせ、必要な検証結果と関連Docsの更新を含めてください。
+- 実装変更は合意した段階・範囲に合わせ、対応する子Issue、必要な検証結果と関連Docsの更新を含めてください。完了時は子IssueへコミットまたはPR・検証結果・残課題を記録します。
 - Docsを変更した場合は文書の更新方法（`docs/README.md`）に従い、単一配布用引継ぎ書との整合を確認してください。
 
 変更の採否とマージはメンテナーが判断します。提案やPRの提出だけで採用とはなりません。
@@ -126,6 +141,31 @@ IssueやPRには、認証情報や他者の非公開データを含めないで�
 
 <a id="section-3"></a>
 
+収録元 `AGENTS.md`
+
+## NTKの作業ルール
+
+このリポジトリで作業するCodexなどの開発エージェントは、参加方針（`CONTRIBUTING.md`）とIssue運用（`docs/issue-workflow.md`）に従う。
+
+### コード変更に着手する前
+
+1. 対象バージョンのGitHubマイルストーンがあることを確認する。
+2. 対象範囲をまとめた親Issueがあり、そのマイルストーンに属することを確認する。
+3. 今回の対応単位の子Issueを登録し、GitHubの親子関係と同じマイルストーンを設定する。
+4. 子Issueの目的、対象範囲、完了条件、検証方法、先行課題・未決事項を確認する。実装に必要な判断を記録してからコードを変更する。
+
+親Issueだけで実装を始めず、コード変更後に子Issueを後付けしない。新規実装、不具合修正、リファクタリング、テストや実行・配布に影響する設定変更もこの順序で扱う。文書だけの修正は対象外だが、設計判断の変更は関連Issue・ADRへ記録する。
+
+マイルストーンやIssueの作成は仕様採用を意味しない。確定事項・提案・要決定を区別し、既存ADRを確認する。特にNymphの意思決定とCoreの実行管理の境界、およびCore経由のみという最後の正式な通信方針を維持する。
+
+変更を関連する子Issueへ紐付け、コミットまたはPR、確認結果、残課題を記録する。採用範囲の対応・検証・文書更新が完了してから子Issueを閉じる。対象が広がる場合は、追加範囲のコード変更前に子Issueを更新するか別の子Issueを登録する。
+
+Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配布用引継ぎ書を同期する。公開済みのタグやRelease添付を後続の文書修正で差し替えない。
+
+---
+
+<a id="section-4"></a>
+
 収録元 `docs/README.md`
 
 ## Docsの読み方と根拠
@@ -138,6 +178,7 @@ IssueやPRには、認証情報や他者の非公開データを含めないで�
 |---|---|
 | ルートREADME（`README.md`） | プロジェクト概要と現在の実装状況 |
 | CONTRIBUTING（`CONTRIBUTING.md`） | Issue・Pull Requestによる参加と設計判断の扱い |
+| AGENTS.md（`AGENTS.md`） | Codexなどの開発エージェントが守る着手前・完了時のルール |
 | 単一配布用の引継ぎ書（`docs/NTK-Core-v0.1-Handoff-ja.md`） | 以下のDocs・ADRを一つに収録したスナップショット |
 | vision.md（`docs/vision.md`） | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | architecture.md（`docs/architecture.md`） | Coreの責務、境界、フォルダ構成、未決事項 |
@@ -145,6 +186,7 @@ IssueやPRには、認証情報や他者の非公開データを含めないで�
 | roadmap.md（`docs/roadmap.md`） | 各段階の着手条件、作業、成果物、完了条件 |
 | acceptance.md（`docs/acceptance.md`） | バージョン別の検証シナリオと結果の記録方法 |
 | development.md（`docs/development.md`） | Git、環境構築、日常開発、文書更新 |
+| issue-workflow.md（`docs/issue-workflow.md`） | マイルストーン・親子Issueによるコード変更の前提と登録済み課題 |
 | release.md（`docs/release.md`） | 公開前の判断欄、GitHub公開、タグ・リリースの手順 |
 | LICENSE（`LICENSE`） | 自作コード・Contracts・設計文書に適用するApache-2.0の公式本文 |
 
@@ -161,6 +203,7 @@ IssueやPRには、認証情報や他者の非公開データを含めないで�
 | R7 | 添付「Project Vision — 人工人格Nymphの最終到達目標」と反映指示 | 添付本文全16節とVision Statementを確認。最終ビジョンは同内容に沿う。完成像・研究方針として扱い、各能力を確定した実装要件へ一括追加しない |
 | R8 | 本チャットのApache-2.0採用・資料反映指示 | 自作コード・Contracts・設計文書へのApache-2.0適用、LICENSE追加、README・ADR・公開準備資料・引継ぎ書への反映を明示的に指示 |
 | R9 | 本チャットの個人アカウントでのpublic公開指示 | `Tao-pyth/nymph-toolkit` を資料中心にpublic公開し、簡潔な参加方針とv0.1.0タグ・リリースを整える方針を採用 |
+| R10 | 本チャットのコード変更に先立つ課題管理の指示 | バージョン別マイルストーン、親Issue、対応単位の子Issue登録の順に整備してから対応することを、コード変更の前提として採用 |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -174,11 +217,13 @@ R8によりApache-2.0を採用し、ADR 0011に適用範囲を記録する。R7�
 
 R9により公開先を個人アカウント `Tao-pyth`、公開範囲をpublicへ確定し、ADR 0012へ記録する。公開の判断と作業の完了は区別し、実際の状態はreleaseで管理する。
 
+R10の着手前ルールはADR 0013へ採用として記録する。既存の各段階をマイルストーンと親Issueへ展開し、コード変更は対応単位の子Issueを登録してから行う。課題への登録を仕様採用と混同しない。
+
 ### 状態の読み方
 
 | 表記 | 扱い |
 |---|---|
-| 確定・採用 | R2・R3の設計・開発目標、R5のv1.0.0目標、R6の配布方針、R8のApache-2.0、R9の公開・参加方針など、明示的に決めた事項 |
+| 確定・採用 | R2・R3の設計・開発目標、R5のv1.0.0目標、R6の配布方針、R8のApache-2.0、R9の公開・参加方針、R10のコード変更前の課題登録など、明示的に決めた事項 |
 | 方向性確定 | 技術の方向が採用済み。具体的なAPI・内部方式は要設計 |
 | 提案 | 実装順、検証方法、責務の詳細整理などの案 |
 | 要決定 | 対象の実装や公開に先立ち、判断を記録する事項 |
@@ -195,11 +240,13 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
+
+リポジトリ内の引継ぎ書は最新の資料へ同期し、公開済みReleaseの添付とタグはその時点のスナップショットとして保持する。v0.1.0以降の更新内容はCHANGELOGの未リリース欄で区別する。
 
 ---
 
-<a id="section-4"></a>
+<a id="section-5"></a>
 
 収録元 `docs/vision.md`
 
@@ -594,7 +641,7 @@ NTKの目標は、単に便利なAIアシスタントを作ることではない
 
 ---
 
-<a id="section-5"></a>
+<a id="section-6"></a>
 
 収録元 `docs/architecture.md`
 
@@ -696,6 +743,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 nymph-toolkit/
 ├─ README.md
 ├─ CONTRIBUTING.md
+├─ AGENTS.md
 ├─ .gitignore
 ├─ .gitattributes
 ├─ LICENSE
@@ -709,6 +757,7 @@ nymph-toolkit/
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ development.md
+│  ├─ issue-workflow.md
 │  ├─ release.md
 │  └─ adr/
 │     ├─ README.md
@@ -723,7 +772,8 @@ nymph-toolkit/
 │     ├─ 0009-package-distribution.md
 │     ├─ 0010-project-vision.md
 │     ├─ 0011-apache-2.0-license.md
-│     └─ 0012-v0.1-publication.md
+│     ├─ 0012-v0.1-publication.md
+│     └─ 0013-milestone-issue-workflow.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -752,6 +802,8 @@ R3の文書・開発配置案へ、R5のADR 0006〜0008、R6のContracts・ADR 0
 
 ### 実装前の判断一覧
 
+R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コード変更前に対象バージョンのマイルストーン、親Issue、対応単位の子Issueを整備する。以下の設計判断は対象のIssueから追跡し、必要な判断を記録してから実装へ進む。具体的な運用はissue-workflow.md（`docs/issue-workflow.md`）を参照する。
+
 | 判断 | 判断する時点の案 | 記録先 |
 |---|---|---|
 | Python対応版、配布パッケージの正式名称、ビルド・テストツール、Runtimeのライフサイクル | V0.2着手時 | development、ADR 0009と後続ADR |
@@ -770,13 +822,13 @@ v1.xでは、各Contractの公開範囲・互換性、Subsystemの正式名称�
 
 ---
 
-<a id="section-6"></a>
+<a id="section-7"></a>
 
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R9の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R10の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -792,6 +844,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0010 Nymphの最終ビジョンと実装範囲の区別（`docs/adr/0010-project-vision.md`） | 長期ビジョンとして採用。具体的な実装方式・時期・受入条件は後続判断。ライセンスは0011で採用 | R7・R8 |
 | 0011 自作コード・Contracts・設計文書へのApache-2.0適用（`docs/adr/0011-apache-2.0-license.md`） | 採用。第三者成果物と個体データの条件は別途扱う | R8 |
 | 0012 個人アカウントでのv0.1.0公開と参加方針（`docs/adr/0012-v0.1-publication.md`） | 採用。Tao-pyth配下で資料を中心にpublic公開し、参加方針・v0.1.0を整える | R9 |
+| 0013 マイルストーン・親子Issueを前提とするコード変更（`docs/adr/0013-milestone-issue-workflow.md`） | 採用。マイルストーン、親Issue、対応単位の子Issue登録後にコード変更へ着手 | R10 |
 
 ### 記録方法
 
@@ -803,7 +856,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 
 ---
 
-<a id="section-7"></a>
+<a id="section-8"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -857,7 +910,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-8"></a>
+<a id="section-9"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -891,7 +944,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-9"></a>
+<a id="section-10"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -951,7 +1004,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-10"></a>
+<a id="section-11"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -1010,7 +1063,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-11"></a>
+<a id="section-12"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -1046,7 +1099,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-12"></a>
+<a id="section-13"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -1095,7 +1148,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-13"></a>
+<a id="section-14"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -1142,7 +1195,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-14"></a>
+<a id="section-15"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -1198,7 +1251,7 @@ R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンに
 
 ---
 
-<a id="section-15"></a>
+<a id="section-16"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -1251,7 +1304,7 @@ R6の「単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 ---
 
-<a id="section-16"></a>
+<a id="section-17"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -1304,7 +1357,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-17"></a>
+<a id="section-18"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -1358,7 +1411,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -1388,6 +1441,8 @@ GitHub公開がV0.1という既存目標を実施する。公開のために本�
 
 ### 残る判断事項
 
+後続判断：R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）で、今後のコード変更に先立つマイルストーン・親子Issueの登録順序を採用した。公開済みv0.1.0の記録は維持する。
+
 Python対応版・開発ツール・Core API・通信経路の維持または緩和など、各実装段階の未決事項は従来のADRとロードマップで扱う。詳細な参加手順や検証の自動化は、開発・参加状況に応じて追加する。
 
 ### 根拠
@@ -1396,7 +1451,50 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
+
+収録元 `docs/adr/0013-milestone-issue-workflow.md`
+
+## ADR 0013 マイルストーン・親子Issueを前提とするコード変更
+
+### 状態
+
+採用。採用日2026年11月20日。判断者はプロジェクト所有者（R10のユーザー明示指示）。ADR 0012の参加方針に、今後のコード変更へ適用する着手条件を追加する。
+
+### 背景
+
+v0.1.0の資料公開を終えた。段階別ロードマップを実装へ移す前に、対象バージョン、親課題、個々の対応単位を追跡できる状態にする。実装を始めてから課題を登録する進め方を避ける。
+
+### 決定
+
+コードの新規作成・修正を伴う変更は、次の順序を必須とする。
+
+1. 各バージョン情報をGitHubマイルストーンに整理する。
+2. そのマイルストーンに親課題Issueを設定する。
+3. 対応単位ごとの子課題Issueを登録し、親子関係とマイルストーンを設定する。
+4. 対象の子Issueに沿って対応し、検証結果と変更コミットまたはPRを記録する。
+
+登録時に確定目標と機能配分案を区別する。子Issueの登録だけで未決仕様を採用したことにはしない。実装に必要な設計判断は従来どおり関連Docs・ADRへ記録する。
+
+### 影響
+
+新規実装、不具合修正、リファクタリング、テスト・実行・配布設定の変更を含め、対応する子Issueの登録前にコードを変更しない。親Issueだけの状態では実装へ進めない。文書のみの修正はこの必須条件の対象外だが、設計変更の議論・ADR記録という既存方針は維持する。
+
+GitHubのsub-issue機能で親子関係を保持し、子Issueにも対象マイルストーンを設定する。具体的な記載項目と完了時の確認はIssue運用（`docs/issue-workflow.md`）、エージェント向けの要点はルートのAGENTS.md（`AGENTS.md`）に記載する。
+
+既存ロードマップのv0.1.0〜v0.9.0、v1.0.0〜v1.10.0を期限なしのマイルストーンと親Issueに整理する。公開済みのv0.1.0は完了記録として扱い、このルールを過去に実施したという記録を作らない。先の段階の子Issueは対応単位を具体化してから登録する。
+
+### 未決事項
+
+各バージョンの詳細な作業分割と機能配分、API・実装方式などは従来の採用状態を維持する。GitHub Actionsによる自動チェックやブランチ保護は今回の必須要件に追加しない。
+
+### 根拠
+
+R10の「コードの修正を行うような変更」には「各バージョン情報をマイルストーンとして整理」「親課題issueを設定」「対応単位ごとに子課題issueを登録→対応」を前提とするというユーザー指示。Docsの根拠表（`docs/README.md`）
+
+---
+
+<a id="section-21"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -1413,6 +1511,12 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 V0.2〜V0.8の機能配分は、理由と依存関係・受入条件への影響を記録して再配分できる。V0.1とV0.9の確定目標に対応する完了条件を維持して計画を更新する。
 
 R6で採用した配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割することである。各拡張の設計時に依存関係・独立更新・単独配布の必要性を確認する。個別の分割対象・時期と、ロードマップの節目を分割後の各配布物のバージョンへどう対応させるかは未決である。ADR 0009（`docs/adr/0009-package-distribution.md`）
+
+### マイルストーンとIssueへの展開
+
+R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、各バージョンをマイルストーンに整理し、親Issueを設定したうえで、対応単位ごとの子Issueを登録してからコード変更へ進む。各段階の着手条件に、この運用上の前提を加える。登録済みの対応表と手順はIssue運用（`docs/issue-workflow.md`）にある。
+
+マイルストーン化は機能配分案や未決の仕様を採用する手続ではない。将来段階の子Issueは範囲を具体化してから追加し、実装に必要な判断を先に記録する。公開済みv0.1.0は完了記録として扱い、以降の段階には期限を設定しない。
 
 ### 段階の一覧
 
@@ -1600,7 +1704,7 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-20"></a>
+<a id="section-22"></a>
 
 収録元 `docs/acceptance.md`
 
@@ -1609,6 +1713,8 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 以下は確定方針を確認するための**受入案**である。操作例や観察方法は提案として扱う。未決のAPI・失敗時動作を判断した後、期待結果を具体化する。現時点でCoreの実行検証は未実施である。
 
 ### バージョン別シナリオ
+
+今後のコード変更は、R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）の運用上の前提も確認する。対象マイルストーン・親Issue・子Issueが変更前に登録され、親子関係と対象範囲を追跡できること、完了時に変更コミットまたはPR・検証結果・残課題を子Issueへ記録することを確認する。公開済みv0.1.0へ遡及して適用しない。
 
 | ID・段階 | 根拠 | 入力・操作と検証手順 | 合格と判断できる結果 |
 |---|---|---|---|
@@ -1709,7 +1815,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-21"></a>
+<a id="section-23"></a>
 
 収録元 `docs/development.md`
 
@@ -1786,6 +1892,12 @@ git status --short --branch
 
 この手順は初回コミット用である。既に履歴がある場合は変更対象と履歴を確認し、その変更に対応するコミットを作る。
 
+### コード変更前の必須条件
+
+R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コード変更前に対象バージョンのマイルストーン、親Issue、対応単位の子Issueをこの順で整える。親子関係と双方のマイルストーンを確認し、子Issueの範囲・完了条件・検証方法・先行課題を記録する。実装に必要な判断を残したまま、その範囲のコードを書き始めない。
+
+具体的な登録・完了手順と現在の課題はIssue運用（`docs/issue-workflow.md`）、エージェント向けの要点はAGENTS.md（`AGENTS.md`）を参照する。以後のコミットまたはPRには対応する子Issue番号を記載し、子Issueへ検証結果と残課題を記録する。文書のみの修正はこの必須条件の対象外だが、関連する設計判断をDocs・ADRへ記録する。
+
 ### 日常の作業案
 
 設計判断・文書更新・実装を目的が分かる単位でコミットする。関連するADR・実装・受入条件は同じ作業で整合させる。変更が複数に分かれる場合は作業ブランチを使用する案とする。
@@ -1808,7 +1920,94 @@ git diff --cached
 
 ---
 
-<a id="section-22"></a>
+<a id="section-24"></a>
+
+収録元 `docs/issue-workflow.md`
+
+## マイルストーンと親子Issueの運用
+
+### 必須の順序
+
+R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コード変更を伴う対応は、**バージョン別マイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順で進める。
+
+新規実装、不具合修正、リファクタリング、テストコード、実行・ビルド・配布に影響する設定の変更も対象とする。親Issueだけを作って実装を始めたり、実装後に子Issueを作成したりしない。文書のみの修正はこの必須条件の対象外だが、設計変更は従来どおり議論とADR記録を行う。
+
+### 管理する単位
+
+| 単位 | 記載・確認する内容 |
+|---|---|
+| マイルストーン | 対象バージョン、段階の目標、確定・提案の区別、関連ロードマップ・受入項目。期限は個別に合意しない限り設定しない |
+| 親Issue | 機能・成果のまとまり、目的と範囲、採用済み事項と判断対象、関連Docs・ADR、完了条件、子Issue |
+| 子Issue | 一つの対応単位、親Issue、対象マイルストーン、目的・変更範囲・完了条件・検証方法、先行課題と必要な判断 |
+
+マイルストーンはリリース段階、親Issueは成果のまとまり、子Issueは実際の対応単位を表す。初回は既存ロードマップの各段階に一つの親Issueを設け、必要に応じて同じマイルストーンへ複数の親Issueを追加できる。
+
+親子関係はGitHubのsub-issue機能で設定する。本文の参照だけで済ませず、子Issue自身にも対象マイルストーンを設定して確認する。先行する子Issueは本文で参照し、着手前に完了状況を確認する。[GitHubのsub-issue説明](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues)
+
+### 対応開始から完了まで
+
+1. 既存のマイルストーン・親Issueを確認する。対象バージョンや機能が新しい場合は、先に目標と確定・提案の区別を記録して追加する。
+2. 対応する子Issueを作成し、親子関係・マイルストーンと上表の項目を揃える。設計判断を先に行う必要があれば、その判断を別の子Issueに切り出せる。
+3. 実装に必要な未決事項を判断し、関連Docs・ADRと子Issueへ結果を記録する。依存先の未完了や未決事項が実装を妨げる場合は、その範囲の実装を開始しない。
+4. 子Issueの範囲で変更し、コミットまたはPRに子Issue番号を記載する。対応範囲が広がったら、追加範囲のコード変更前に子Issueを更新するか別の子Issueを登録する。
+5. 子Issueへ変更コミットまたはPR、検証内容・結果、関連Docs・ADR、残課題を記録する。採用範囲の対応・検証・文書更新が完了してから閉じる。
+6. 親Issueでは採用した子Issueの完了と受入結果を確認する。延期・不採用は理由と移管先を記録し、未実装を実装済みとして扱わない。
+7. マイルストーンの目標・受入条件・リリース条件を確認して完了とする。Issueがすべて閉じたことだけで自動的にリリースしない。
+
+通常の作業ブランチ名は、例えば `feat/24-runtime-lifecycle` のように子Issue番号を含めると追跡しやすい。ブランチ命名の例を製品仕様や必須の命名規約としては扱わない。
+
+### 計画と仕様の区別
+
+この運用ルールは採用済みである。一方、v0.2〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録は採用や着手の宣言ではない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
+
+v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝CoreとSubsystem・Adapterの接続契約整備という確定目標を維持する。NymphとCoreの責務分離、Core経由のみという最後の正式な通信方針も変更しない。
+
+### 登録したマイルストーンと親Issue
+
+2026年11月20日に既存ロードマップを以下のように整理した。進捗の最新状態はGitHubを参照する。v0.1.0は公開結果を記録した完了済みの段階であり、新ルールを公開前に実施したという意味ではない。
+
+| マイルストーン | 親Issue | 計画の位置付け |
+|---|---|---|
+| [v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/1) | [#1 GitHub公開](https://github.com/Tao-pyth/nymph-toolkit/issues/1) | 確定目標・公開済み |
+| [v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/2) | [#2 Runtime](https://github.com/Tao-pyth/nymph-toolkit/issues/2) | 機能配分案 |
+| [v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/3) | [#3 Registry](https://github.com/Tao-pyth/nymph-toolkit/issues/3) | 機能配分案 |
+| [v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/4) | [#4 Connections](https://github.com/Tao-pyth/nymph-toolkit/issues/4) | 機能配分案 |
+| [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | 機能配分案 |
+| [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | 機能配分案 |
+| [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | 機能配分案 |
+| [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | 機能配分案 |
+| [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | 確定目標・詳細範囲は要合意 |
+| [v1.0.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/10) | [#10 Core接続契約](https://github.com/Tao-pyth/nymph-toolkit/issues/10) | 確定目標・契約詳細は提案 |
+| [v1.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/11) | [#11 Memory Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/11) | 名称・機能配分・実装順序は提案 |
+| [v1.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/12) | [#12 Document Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/12) | 名称・機能配分・実装順序は提案 |
+| [v1.3.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/13) | [#13 Cognition Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/13) | 名称・機能配分・実装順序は提案 |
+| [v1.4.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/14) | [#14 Text Interaction / Web Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/14) | 名称・機能配分・実装順序は提案 |
+| [v1.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/15) | [#15 Agency Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/15) | 名称・機能配分・実装順序は提案 |
+| [v1.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/16) | [#16 TaskManager連携強化](https://github.com/Tao-pyth/nymph-toolkit/issues/16) | 名称・機能配分・実装順序は提案 |
+| [v1.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/17) | [#17 Persona Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/17) | 名称・機能配分・実装順序は提案 |
+| [v1.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/18) | [#18 Persona連携強化](https://github.com/Tao-pyth/nymph-toolkit/issues/18) | 名称・機能配分・実装順序は提案 |
+| [v1.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/19) | [#19 Sleep Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/19) | 名称・機能配分・実装順序は提案 |
+| [v1.10.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/20) | [#20 Sleep連携・Discord Voice Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/20) | 名称・機能配分・実装順序は提案 |
+
+[マイルストーン一覧](https://github.com/Tao-pyth/nymph-toolkit/milestones)と[Issue一覧](https://github.com/Tao-pyth/nymph-toolkit/issues)からも参照できる。将来段階の子Issueは対応単位が具体化した時点で追加し、各コード変更の開始前に登録する。
+
+### v0.2に向けた最初の対応単位
+
+親Issueは[#2 Runtime](https://github.com/Tao-pyth/nymph-toolkit/issues/2)、マイルストーンは[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/2)である。
+
+| 子Issue | 対応単位 | 先行課題 |
+|---|---|---|
+| [#21](https://github.com/Tao-pyth/nymph-toolkit/issues/21) | 今回の運用ルール・資料整備 | なし |
+| [#22](https://github.com/Tao-pyth/nymph-toolkit/issues/22) | 開発環境とRuntimeライフサイクルの設計判断 | #21 |
+| [#23](https://github.com/Tao-pyth/nymph-toolkit/issues/23) | 採用判断に基づくCore・Contracts開発環境 | #22 |
+| [#24](https://github.com/Tao-pyth/nymph-toolkit/issues/24) | 採用した最小Runtimeとダミー実行 | #22・#23 |
+| [#25](https://github.com/Tao-pyth/nymph-toolkit/issues/25) | A02の受入と再現手順の確認 | #24 |
+
+この分割は対応を追跡するための初期計画である。#22でPython版・ツール・APIなどを判断し、結果に合わせて後続の範囲と検証条件を更新する。今回の文書整備だけでv0.2の実装へ進めたことにはしない。
+
+---
+
+<a id="section-25"></a>
 
 収録元 `docs/release.md`
 
@@ -1905,6 +2104,8 @@ V0.2以降は対応する受入結果、READMEの実装状況、CHANGELOG、文�
 
 ### 配布パッケージとリリースの対応
 
+R10以降はIssue運用（`docs/issue-workflow.md`）に従い、対象マイルストーン・親Issue・子Issueから変更と検証結果を追跡する。リリース前に採用範囲の受入結果と残課題の扱いを確認する。コード変更は子Issue登録後に行い、Issueやマイルストーンを閉じただけで自動的に公開・タグ付けは行わない。公開済みv0.1.0のタグ・Release添付は保持し、その後の資料更新は未リリースの変更として記録する。
+
 R6・ADR 0009（`docs/adr/0009-package-distribution.md`）で、単一リポジトリと、Core・Contractsを一つの配布パッケージから始める方針を採用した。Subsystem・Adapterは必要に応じて同じリポジトリ内で分割する。GitHub公開のv0.1.0は資料と開発基盤を中心とする節目で、Python配布物の公開を必須条件に加えない。
 
 配布パッケージの正式名称、配布先、ビルド手段は別途決める。将来分割する際は、対象とCore・Contractsの対応バージョン、各配布物のバージョンを同期するか独立させるか、リポジトリのタグ・ロードマップの節目との対応を後続ADRへ記録する。これらの決定と検証結果を基に、そのリリースで公開する配布物を明示する。
@@ -1932,11 +2133,17 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-23"></a>
+<a id="section-26"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
+
+### 未リリース
+
+- R10・ADR 0013により、コード変更前にマイルストーン・親Issue・対応単位の子Issueを登録する運用を採用。
+- 既存ロードマップの20段階をGitHubマイルストーンと親Issueに整理し、v0.2に向けた5件の子Issueを登録。
+- Issue運用資料とAGENTS.mdを追加し、参加方針・開発手順・関連Docs・引継ぎ書へ反映。機能配分案と未決仕様の状態は維持。
 
 ### v0.1.0 — 2026年11月20日
 
@@ -1960,7 +2167,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-24"></a>
+<a id="section-27"></a>
 
 収録元 `LICENSE`
 
