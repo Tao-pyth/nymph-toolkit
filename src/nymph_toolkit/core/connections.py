@@ -445,7 +445,8 @@ class Connections:
 
     def _is_ready(self, binding: _Binding) -> bool:
         return (self._state == RuntimeState.RUNNING and binding.healthy and not binding.checking
-                and binding.requester.execution == ModuleExecutionState.RUNNING and self.store.admitting)
+                and binding.requester.execution == ModuleExecutionState.RUNNING
+                and binding.provider.execution == ModuleExecutionState.RUNNING and self.store.admitting)
 
     @staticmethod
     def _validate_timeout(wait_timeout: float) -> None:
@@ -472,6 +473,7 @@ class Connections:
                     change, storage_change = self._changed, self.store.changed
                     self._check_running()
                     self._resume_for_request(binding.requester)
+                    self._resume_for_request(binding.provider)
                     if self._is_ready(binding):
                         return PreparedConnection(self, binding)
                     await self._wait_changes(change, storage_change)

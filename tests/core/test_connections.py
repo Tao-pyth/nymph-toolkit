@@ -235,6 +235,49 @@ class ConnectionsTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(sum(kind == "health_completed" for kind, data in self.store.records), 8)
         self.assertEqual(self.connections.connection(key).state, BindingState.VALID)
 
+    async def test_interrupted_provider_blocks_incoming_calls_until_cleanup_ack(self):
+        incoming = await self.start_and_bind()
+        outgoing = (await self.connections.bind("b", READ, "f", wait_timeout=5)).key
+        independent = (await self.connections.bind("e", READ, "f", wait_timeout=5)).key
+        cached = await self.connections.prepare(incoming, wait_timeout=0)
+        notice_id = self.connections.report_link_error(outgoing, OSError("B's dependency failed"))
+        await self.connections.health_check(bindings=(outgoing,))
+        with self.assertRaises(ConnectionNotReadyError):
+            cached.call("get", "must not enter B")
+        with self.assertRaises(PreparationTimeoutError):
+            await self.connections.invoke(incoming, "get", wait_timeout=0, args=("still interrupted",))
+        self.assertEqual(self.calls, 0)
+        self.assertEqual(self.connections.module_state("a"), ModuleExecutionState.RUNNING)
+        self.assertEqual(await self.connections.invoke(independent, "get", wait_timeout=0,
+                                                       args=("independent",)), "stored:independent")
+        waiting = asyncio.create_task(self.connections.prepare(incoming, wait_timeout=5))
+        await asyncio.sleep(0)
+        self.assertFalse(waiting.done())
+        self.assertTrue(self.connections.acknowledge_interruption("b", notice_id))
+        resumed = await asyncio.wait_for(waiting, 5)
+        self.assertEqual(self.connections.module_state("b"), ModuleExecutionState.RUNNING)
+        self.assertEqual(resumed.call("get", "new incoming request"), "stored:new incoming request")
+        self.assertEqual(self.calls, 2)
+
+    async def test_incoming_request_cannot_resume_provider_with_unhealthy_dependency(self):
+        incoming = await self.start_and_bind()
+        outgoing = (await self.connections.bind("b", READ, "f", wait_timeout=5)).key
+        self.connections.publish_usage("f", READY, contracts={READ: FAILED})
+        notice_id = self.connections.report_link_error(outgoing, OSError("F's contract failed"))
+        self.assertTrue(self.connections.acknowledge_interruption("b", notice_id))
+        await self.connections.health_check(bindings=(outgoing,))
+        with self.assertRaises(PreparationTimeoutError):
+            await self.connections.prepare(incoming, wait_timeout=0)
+        self.assertEqual(self.connections.module_state("b"), ModuleExecutionState.SUSPENDED)
+        waiting = asyncio.create_task(self.connections.prepare(incoming, wait_timeout=5))
+        await asyncio.sleep(0)
+        self.connections.publish_usage("f", READY, contracts={READ: READY})
+        self.assertFalse(waiting.done())
+        await self.connections.health_check(bindings=(outgoing,))
+        resumed = await asyncio.wait_for(waiting, 5)
+        self.assertEqual(self.calls, 0)
+        self.assertEqual(resumed.call("get", "recovered"), "stored:recovered")
+
     async def test_registration_replacement_invalidates_old_instance(self):
         key = await self.start_and_bind()
         self.registry.unregister("b")
