@@ -32,7 +32,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 ## 計画と仕様の区別
 
-この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。一方、v0.5〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録は採用や着手の宣言ではない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
+この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。v0.5はR17・ADR 0020で設計判断へ着手しており、未決事項を実装要件へ含めない。v0.6〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録だけでは採用や着手の宣言にならない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
 
 v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝CoreとSubsystem・Adapterの接続契約整備という確定目標と、NymphとCoreの責務分離を維持する。通信方針はR12・[ADR 0015](adr/0015-core-authorized-direct-communication.md)で更新し、Coreが管理・許可した直接通信を採用した。詳細な許可条件・APIなどは実装前に判断する。
 
@@ -46,7 +46,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/2) | [#2 Runtime](https://github.com/Tao-pyth/nymph-toolkit/issues/2) | R11・ADR 0014で実施範囲を具体化 |
 | [v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/3) | [#3 Registry](https://github.com/Tao-pyth/nymph-toolkit/issues/3) | R13・ADR 0016で実施範囲を具体化 |
 | [v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/4) | [#4 Connections](https://github.com/Tao-pyth/nymph-toolkit/issues/4) | R16・ADR 0019で実施範囲を具体化 |
-| [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | 機能配分案 |
+| [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | R17・ADR 0020で設計判断に着手 |
 | [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | 機能配分案 |
 | [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | 機能配分案 |
 | [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | 機能配分案 |
@@ -64,6 +64,22 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v1.10.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/20) | [#20 Sleep連携・Discord Voice Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/20) | 名称・機能配分・実装順序は提案 |
 
 [マイルストーン一覧](https://github.com/Tao-pyth/nymph-toolkit/milestones)と[Issue一覧](https://github.com/Tao-pyth/nymph-toolkit/issues)からも参照できる。将来段階の子Issueは対応単位が具体化した時点で追加し、各コード変更の開始前に登録する。
+
+## v0.5の対応単位
+
+2026年11月21日のR17により、次の子Issueをコード変更前に登録し、親Issue #5のsub-issueとマイルストーンv0.5.0への所属を確認した。[ADR 0020](adr/0020-v0.5-task-manager.md)の採用範囲と未決事項を各実装前に確認する。
+
+| 子Issue | 対応単位 | 先行する判断・成果 |
+|---|---|---|
+| [#45](https://github.com/Tao-pyth/nymph-toolkit/issues/45) | TaskManagerの時間・状態・実行境界と受入範囲 | v0.4の採用契約とR17の回答 |
+| [#46](https://github.com/Tao-pyth/nymph-toolkit/issues/46) | 活動要求・状態・時間到達通知のContracts | #45の型・状態の判断 |
+| [#47](https://github.com/Tao-pyth/nymph-toolkit/issues/47) | 予定・実行追跡と時間到達通知 | #45・#46 |
+| [#48](https://github.com/Tao-pyth/nymph-toolkit/issues/48) | Runtime・ModuleGroup・Connectionsとの統合 | #45・#46・#47 |
+| [#49](https://github.com/Tao-pyth/nymph-toolkit/issues/49) | 活動履歴と再起動時の扱い | #45の再起動判断・#46 |
+| [#50](https://github.com/Tao-pyth/nymph-toolkit/issues/50) | A05、実行例、配布・CI、Docs・引継ぎ書 | 各採用範囲の判断と実装 |
+| [#51](https://github.com/Tao-pyth/nymph-toolkit/issues/51) | v0.5.0公開と公開後の確認 | #50の受入・配布・CI成功 |
+
+現在は#45の設計判断と#50の資料同期を進める。時間到達時の通知・継続はユーザー回答で採用した。再起動時の活動等は要決定であり、依存するコード変更やIssueの完了を先行しない。各Issueに目的・対象範囲・完了条件・検証方法・先行課題を記録した。
 
 ## v0.2に向けた最初の対応単位
 

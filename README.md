@@ -14,7 +14,9 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 **v0.4.0：Connections・非同期保存・救命処理。** CoreとContractsの単一パッケージに、既存のRuntime・Registry・ModuleGroupと、候補照会・接続固定・直接／Core経由の操作・協調的中断・ヘルスチェック・FileStoreを含みます。CPython 3.12以上、実行時の外部依存はありません。TaskManager・別プロセス実行は後続段階で扱います。
 
-v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtime、v0.3.0ではRegistry・ModuleGroupを公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3は[ADR 0016](docs/adr/0016-v0.3-registry.md)、v0.4は[ADR 0019](docs/adr/0019-v0.4-connections.md)で具体化し、v0.5〜v0.8の配分は開発計画案です。
+v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtime、v0.3.0ではRegistry・ModuleGroupを公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3は[ADR 0016](docs/adr/0016-v0.3-registry.md)、v0.4は[ADR 0019](docs/adr/0019-v0.4-connections.md)で具体化しました。
+
+**v0.5は設計・開発に着手しています。** [親Issue #5](https://github.com/Tao-pyth/nymph-toolkit/issues/5)と子Issue #45〜#51でTaskManager基本機能を進めます。予定時間に到達したらCoreがNymphへ通知し、活動を継続して指示を待つ方針を採用しました。Coreは到達だけを理由に活動を終了・中断・延長しません。判断履歴と未決事項は[ADR 0020](docs/adr/0020-v0.5-task-manager.md)を参照してください。TaskManagerの製品コードは未実装、A05は未検証です。v0.6〜v0.8の機能配分は引き続き開発計画案です。
 
 採用範囲のA04では129件のテスト、3実行例、Windows／Linux・Python 3.12〜3.15、通常インストール・sdist再ビルドと性能測定を確認しました。[Connectionsの操作契約](docs/connections.md)と[v0.4受入記録](docs/validation/v0.4.md)に、使い方・結果・制約を記載しています。
 
