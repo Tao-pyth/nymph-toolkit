@@ -183,6 +183,40 @@ class ConnectedGroupTests(unittest.IsolatedAsyncioTestCase):
             pass
         self.assertTrue(health.done())
 
+    async def test_eager_task_factory_preserves_ownership_and_cleanup(self):
+        loop = asyncio.get_running_loop()
+        previous = loop.get_task_factory()
+        loop.set_task_factory(asyncio.eager_task_factory)
+        try:
+            await self.runtime.start()
+            self.modules["a"].trigger.set()
+            await self.wait(self.modules["a"].progressed)
+            self.assertEqual(self.modules["a"].results, ["activity"])
+            await self.connections.health_check()
+            await self.runtime.stop()
+        finally:
+            loop.set_task_factory(previous)
+        self.assertTrue(all(module.stopped for module in self.modules.values()))
+
+    async def test_module_and_infrastructure_cleanup_failures_are_both_retained(self):
+        module_error = ValueError("module cleanup")
+        core_error = OSError("storage cleanup")
+        async def module_stop():
+            self.modules["b"].stopped = True
+            raise module_error
+        async def storage_stop():
+            raise core_error
+        self.modules["b"].stop = module_stop
+        self.store.stop = storage_stop
+        await self.runtime.start()
+        with self.assertRaises(RuntimeFailure) as raised:
+            await self.runtime.stop()
+        combined = raised.exception.failures[0].exception
+        self.assertIsInstance(combined, ExceptionGroup)
+        self.assertIs(combined.exceptions[0].failures[0].exception, module_error)
+        self.assertIs(combined.exceptions[1].failures[0].exception, core_error)
+        self.assertTrue(all(module.stopped for module in self.modules.values()))
+
 
 if __name__ == "__main__":
     unittest.main()
