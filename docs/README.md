@@ -14,6 +14,7 @@
 | [architecture.md](architecture.md) | Coreの責務、境界、フォルダ構成、未決事項 |
 | [runtime.md](runtime.md) | v0.2の実装済みRuntime・Contractsの使い方と制約 |
 | [registry.md](registry.md) | v0.3のRegistry・ModuleGroup契約、着脱・依存管理の境界 |
+| [connections.md](connections.md) | 開発中の接続API、操作・中断・ヘルスと保存層の未完了事項 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
 | [roadmap.md](roadmap.md) | 各段階の着手条件、作業、成果物、完了条件 |
 | [acceptance.md](acceptance.md) | バージョン別の検証シナリオと結果の記録方法 |
@@ -97,7 +98,7 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。[再生成ツール](../tools/build_handoff.py)と[文書確認ツール](../tools/check_docs.py)はCIでも使用する。
 

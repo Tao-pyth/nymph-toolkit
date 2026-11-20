@@ -32,7 +32,8 @@ R16でv0.4作業に着手し、ADR 0019で公開契約・状態・保存等の�
 def sources():
     result = [
         "README.md", "CONTRIBUTING.md", "AGENTS.md", "docs/README.md",
-        "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md", "docs/adr/README.md",
+        "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md",
+        "docs/connections.md", "docs/adr/README.md",
     ]
     result += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/adr").glob("[0-9]*.md"))]
     result += ["docs/roadmap.md", "docs/acceptance.md"]

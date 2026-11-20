@@ -10,7 +10,7 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ## 採用された構成
 
-v0.2でRuntime、v0.3でRegistry・ModuleGroupと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。Connections・TaskManagerと本番Subsystem・Adapterは今後の段階で扱う。
+v0.2でRuntime、v0.3でRegistry・ModuleGroupと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。mainではv0.4のConnectionsを開発中で、[操作契約](connections.md)とADR 0019に実装済み部分・未完了部分を区別する。TaskManagerと本番Subsystem・Adapterは後続段階で扱う。
 
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
 
@@ -18,7 +18,7 @@ Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Reg
 |---|---|---|
 | Core Runtime | Coreの起動、実行、停止を取りまとめる | ADR 0014のRuntimeとADR 0016のModuleGroupを実装 |
 | Registry | Subsystem・Adapterの登録状態と識別を管理する | ADR 0016でID・必須依存・スナップショット・着脱範囲を採用して実装 |
-| Connections | 採用した経路で接続と通信を管理する | ADR 0015・0017で直接通信と接続選定・固定・検証方針を採用。要求と結果、API、保存・失効・同期／非同期境界は要具体化 |
+| Connections | 採用した経路で接続と通信を管理する | ADR 0015・0017・0018の方針をADR 0019で具体化し開発中。候補・接続固定・操作・中断・ヘルスを部分検証。非同期保存・救命との全体結合は未完了 |
 | TaskManager | Nymphが決めた活動の予定、実行状態、変更を管理する | 時刻・期間、状態遷移、変更や取消、競合の扱い |
 | Subsystem | 着脱する機能単位 | Coreとの接続契約とライフサイクル |
 | Adapter | 外部環境との接点を担う着脱可能な構成要素 | 接続契約。将来のPC状況取得はここに配置 |
@@ -140,6 +140,7 @@ nymph-toolkit/
 │  ├─ architecture.md
 │  ├─ runtime.md
 │  ├─ registry.md
+│  ├─ connections.md                # v0.4開発中の操作契約
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md

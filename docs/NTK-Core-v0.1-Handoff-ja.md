@@ -26,36 +26,37 @@ R16でv0.4作業に着手し、ADR 0019で公開契約・状態・保存等の�
 6. [Architecture](#section-6)
 7. [v0.2 Runtimeの使い方](#section-7)
 8. [RegistryとModuleGroup](#section-8)
-9. [ADR索引と更新方法](#section-9)
-10. [ADR 0001 Coreと統合リポジトリ](#section-10)
-11. [ADR 0002 実行モデル](#section-11)
-12. [ADR 0003 通信経路](#section-12)
-13. [ADR 0004 活動の決定権](#section-13)
-14. [ADR 0005 初期実装の範囲](#section-14)
-15. [ADR 0006 v1.0.0のCore接続契約](#section-15)
-16. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-16)
-17. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-17)
-18. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-18)
-19. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-19)
-20. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-20)
-21. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-21)
-22. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-22)
-23. [ADR 0014 v0.2の開発環境と最小Runtime](#section-23)
-24. [ADR 0015 Coreが許可する直接通信の採用](#section-24)
-25. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-25)
-26. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-26)
-27. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-27)
-28. [ADR 0019 v0.4のConnections実装判断](#section-28)
-29. [NTK開発ロードマップ](#section-29)
-30. [受入基準案と検証記録](#section-30)
-31. [v0.2 Runtime受入記録](#section-31)
-32. [v0.3受入記録](#section-32)
-33. [v0.4の検証経過（A04未完了）](#section-33)
-34. [開発準備とGit運用](#section-34)
-35. [マイルストーンと親子Issueの運用](#section-35)
-36. [公開準備とリリース手順](#section-36)
-37. [変更履歴](#section-37)
-38. [Apache License 2.0（原文）](#section-38)
+9. [Connectionsの操作契約（v0.4開発中）](#section-9)
+10. [ADR索引と更新方法](#section-10)
+11. [ADR 0001 Coreと統合リポジトリ](#section-11)
+12. [ADR 0002 実行モデル](#section-12)
+13. [ADR 0003 通信経路](#section-13)
+14. [ADR 0004 活動の決定権](#section-14)
+15. [ADR 0005 初期実装の範囲](#section-15)
+16. [ADR 0006 v1.0.0のCore接続契約](#section-16)
+17. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-17)
+18. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-18)
+19. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-19)
+20. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-20)
+21. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-21)
+22. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-22)
+23. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-23)
+24. [ADR 0014 v0.2の開発環境と最小Runtime](#section-24)
+25. [ADR 0015 Coreが許可する直接通信の採用](#section-25)
+26. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-26)
+27. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-27)
+28. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-28)
+29. [ADR 0019 v0.4のConnections実装判断](#section-29)
+30. [NTK開発ロードマップ](#section-30)
+31. [受入基準案と検証記録](#section-31)
+32. [v0.2 Runtime受入記録](#section-32)
+33. [v0.3受入記録](#section-33)
+34. [v0.4の検証経過（A04未完了）](#section-34)
+35. [開発準備とGit運用](#section-35)
+36. [マイルストーンと親子Issueの運用](#section-36)
+37. [公開準備とリリース手順](#section-37)
+38. [変更履歴](#section-38)
+39. [Apache License 2.0（原文）](#section-39)
 
 ---
 
@@ -81,7 +82,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtimeを2026年11月20日に公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲はADR 0014（`docs/adr/0014-v0.2-runtime.md`）、v0.3はADR 0016（`docs/adr/0016-v0.3-registry.md`）で具体化し、v0.4〜v0.8の配分は開発計画案です。
 
-**mainではv0.4を開発中です。** ADR 0019（`docs/adr/0019-v0.4-connections.md`）に従い、契約型・候補照会・接続固定・協調的中断とヘルスチェック、ディスク操作を追加しています。現在の接続状態テストでは保存用の制御可能なダミーも使用しており、非同期保存・救命の全体結合とA04・配布検証は未完了です。v0.4の検証経過と残課題（`docs/validation/v0.4.md`）を参照し、公開済みv0.3.0と区別してください。
+**mainではv0.4を開発中です。** ADR 0019（`docs/adr/0019-v0.4-connections.md`）に従い、契約型・候補照会・接続固定・協調的中断とヘルスチェック、ディスク操作を追加しています。Connectionsの操作契約（`docs/connections.md`）に現在のAPIを記載しています。接続状態テストでは保存用の制御可能なダミーも使用しており、非同期保存・救命の全体結合とA04・配布検証は未完了です。v0.4の検証経過と残課題（`docs/validation/v0.4.md`）を参照し、公開済みv0.3.0と区別してください。
 
 v0.3では実行開始前にSubsystem・Adapterのダミーを着脱し、起動から停止完了まで構成を固定します。停止後は明示解除できます。実体の稼働中着脱は、接続の解除・失効契約を設計する後続段階へ残しています。利用方法はRegistryとModuleGroup（`docs/registry.md`）を参照してください。
 
@@ -225,6 +226,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | architecture.md（`docs/architecture.md`） | Coreの責務、境界、フォルダ構成、未決事項 |
 | runtime.md（`docs/runtime.md`） | v0.2の実装済みRuntime・Contractsの使い方と制約 |
 | registry.md（`docs/registry.md`） | v0.3のRegistry・ModuleGroup契約、着脱・依存管理の境界 |
+| connections.md（`docs/connections.md`） | 開発中の接続API、操作・中断・ヘルスと保存層の未完了事項 |
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
 | roadmap.md（`docs/roadmap.md`） | 各段階の着手条件、作業、成果物、完了条件 |
 | acceptance.md（`docs/acceptance.md`） | バージョン別の検証シナリオと結果の記録方法 |
@@ -308,7 +310,7 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。再生成ツール（`tools/build_handoff.py`）と文書確認ツール（`tools/check_docs.py`）はCIでも使用する。
 
@@ -727,7 +729,7 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ### 採用された構成
 
-v0.2でRuntime、v0.3でRegistry・ModuleGroupと必要なContractsを実装した。Runtimeの使い方（`docs/runtime.md`）とRegistryの使い方（`docs/registry.md`）、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。Connections・TaskManagerと本番Subsystem・Adapterは今後の段階で扱う。
+v0.2でRuntime、v0.3でRegistry・ModuleGroupと必要なContractsを実装した。Runtimeの使い方（`docs/runtime.md`）とRegistryの使い方（`docs/registry.md`）、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。mainではv0.4のConnectionsを開発中で、操作契約（`docs/connections.md`）とADR 0019に実装済み部分・未完了部分を区別する。TaskManagerと本番Subsystem・Adapterは後続段階で扱う。
 
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
 
@@ -735,7 +737,7 @@ Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Reg
 |---|---|---|
 | Core Runtime | Coreの起動、実行、停止を取りまとめる | ADR 0014のRuntimeとADR 0016のModuleGroupを実装 |
 | Registry | Subsystem・Adapterの登録状態と識別を管理する | ADR 0016でID・必須依存・スナップショット・着脱範囲を採用して実装 |
-| Connections | 採用した経路で接続と通信を管理する | ADR 0015・0017で直接通信と接続選定・固定・検証方針を採用。要求と結果、API、保存・失効・同期／非同期境界は要具体化 |
+| Connections | 採用した経路で接続と通信を管理する | ADR 0015・0017・0018の方針をADR 0019で具体化し開発中。候補・接続固定・操作・中断・ヘルスを部分検証。非同期保存・救命との全体結合は未完了 |
 | TaskManager | Nymphが決めた活動の予定、実行状態、変更を管理する | 時刻・期間、状態遷移、変更や取消、競合の扱い |
 | Subsystem | 着脱する機能単位 | Coreとの接続契約とライフサイクル |
 | Adapter | 外部環境との接点を担う着脱可能な構成要素 | 接続契約。将来のPC状況取得はここに配置 |
@@ -857,6 +859,7 @@ nymph-toolkit/
 │  ├─ architecture.md
 │  ├─ runtime.md
 │  ├─ registry.md
+│  ├─ connections.md                # v0.4開発中の操作契約
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
@@ -1076,6 +1079,96 @@ Nymphが活動を決定し、Coreが実行管理する。ModuleGroupのライフ
 
 <a id="section-9"></a>
 
+収録元 `docs/connections.md`
+
+## Connectionsの操作契約（v0.4開発中）
+
+本書はADR 0019（`docs/adr/0019-v0.4-connections.md`）に基づく、現在の接続APIの説明である。**v0.4全体は未完成で、製品用の非同期FileStoreはまだ利用できない。** 現時点では保存ダミーを用いる接続制御テストと、独立したディスク操作のテストがある。完全な構築・実行例は保存層との結合後に追加する。公開済みv0.3.0のAPI説明ではなく、main上の開発状況として読む。
+
+検証対象と未完了項目は検証経過（`docs/validation/v0.4.md`）、採用方針はADR 0018（`docs/adr/0018-connection-selection-health-and-recovery.md`）を参照する。ここでいう契約IDは接続用の識別子であり、Nymphの活動内容や価値の判断をCoreへ移すものではない。
+
+### 起動と所有
+
+`Connections`と`PreparedConnection`は`nymph_toolkit.core`、共有する型・結果・例外は`nymph_toolkit.contracts`からimportする。
+
+Connectionsは一つの作成スレッド・イベントループで利用する。一度開始したインスタンスを再起動せず、次の起動では新しいインスタンスを作る。構成は次の順序に従う。
+
+1. RegistryまたはModuleGroupへ機能を登録する。実体の登録と接続設定の追加は別操作である。
+2. Connectionsへ`declare`で機能の宣言と提供する操作ハンドラーを登録する。宣言は開始前に固定する。
+3. ModuleGroupを使う場合、同じModuleGroupを照会元とするConnectionsを`attach_connections`で一度だけ取り付ける。接続管理をダミーSubsystemとして登録しない。
+4. Runtimeが保存の初期化、各機能の`start`と現在状態の通知、保存済み接続の検証、`run`を順に進める。機能の`start`で通常の接続利用を待たず、要求は`run`以降に行う。
+5. 終了時は新規要求・準備待機を終了させ、各機能の停止と後処理、保存の終了を行う。ライフサイクルはRuntime・ModuleGroupに所有させる。
+
+Connectionsを単独のRuntimeServiceとして扱うテストでは、開始前に各機能の現在状態を通知する。`run`はヘルス申請処理と保存障害監視を担い、単なる初期化関数ではない。独自の所有者で使う場合も、`run`タスクの取消・回収と`stop`の順序を担当する必要がある。
+
+### 宣言・候補・選定
+
+| 型・入口 | 扱い |
+|---|---|
+| `ContractKey(contract_id, version)` | 契約IDと明示版。文字列の完全一致で照合し、提供側の実装版から推定しない |
+| `ContractSpec(key, operations)` | `OperationSpec(name, OperationMode.SYNC / ASYNC)`の集合。同じ契約ID・版に異なる操作宣言を登録しない |
+| `ModuleAdvertisement(module_id, implementation_version, contracts, tags, attributes)` | 静的な宣言。属性はJSONスカラー値で、関数や可変オブジェクトを条件として渡さない |
+| `declare(advertisement, handlers)` | 提供契約から操作名と関数への対応を渡す。契約を提供しない要求元の宣言ではhandlersを省略できる |
+| `publish_usage(module_id, usage, contracts=...)` | `Usage(state, accepting, active, capacity)`を開始時・変更時に通知する。契約ごとの状態は明示した項目を更新する |
+| `candidates(contract)` | 対応する候補と属性・登録情報・機能全体および契約の稼働情報を、不変スナップショットで返す |
+
+候補には停止・異常・満杯・未通知の機能も含まれる。ID順は一覧を安定させるための順序であり、最適な候補順ではない。要求側がタグ・属性・稼働情報などから選び、そのIDをCoreへ渡す。Coreへ選定関数を預ける方式は使わない。
+
+Registryの`available`は登録依存の充足、`Usage.state`は通知された稼働状態、`accepting`と`free`は受付と容量の情報である。未通知は`UNKNOWN`。これらを相互に推測せず、現在の候補情報を処理枠の予約保証として扱わない。実際の受付は提供側が判断し、満杯なら直ちに`TemporaryUnavailable`を返す。
+
+### 接続の確立と固定
+
+`await connections.bind(requester_id, contract, provider_id, wait_timeout=...)`で、要求側が選んだ接続先を確立する。`BindingKey(requester_id, contract)`ごとに1接続で、用途別の複数接続は設けない。
+
+同じキー・相手への再要求は既存の`ConnectionSnapshot`を返す。同じキーで別の相手を指定すると`ConnectionConflictError`。初回に相手が停止・異常・未通知なら`ConnectionUnavailableError`となり、設定を確定しない。保存完了後に確立済みとして公開する。
+
+`bind`の既存接続の返却は、直ちに操作を開始できるという保証ではない。失効・検証中・機能の中断中などは`prepare`で扱う。初回の確立待ちには必須の期限を使うが、開始済みの保存トランザクションをその期限で強制打切りにしない。保存開始後の取消は保存とメモリ反映の完了を待って返るため、取消後でも接続が確立している場合がある。同じ指定の再要求または`connection(key)`で確認できる。
+
+稼働中に失効しても接続先を切り替えない。起動時だけは、保存設定を現在の宣言・登録・稼働状態で確認し、有効なら再利用、無効なら除外して次の要求で選び直せる。同一IDへの再登録は世代が異なるため、古い実体の宣言を引き継がない。運用履歴から現在の稼働値を復元しない。
+
+### 操作と期限
+
+| 操作 | 結果・制限 |
+|---|---|
+| `await prepare(key, wait_timeout=...)` | 確認・中断・保存側の受付停止が解けるまで待ち、準備済み接続を返す |
+| `handle.call(operation, *args, **kwargs)` | SYNC宣言の操作を保持したハンドラーで直接呼ぶ |
+| `await handle.acall(operation, *args, **kwargs)` | ASYNC宣言の操作を保持したハンドラーで直接呼ぶ |
+| `await invoke(key, operation, wait_timeout=..., args=(), kwargs=None)` | Core経由で同じ準備・操作契約を利用する |
+
+`wait_timeout`は0以上の有限秒数を必ず指定し、イベントループの単調時計で準備期限を測る。0は直ちに準備できる場合だけ進む。期限切れは`PreparationTimeoutError`、終了中は`ConnectionsStateError`。この期限は操作本体の実行時間制限ではない。
+
+準備後に状態が変わったハンドルは、操作を開始せず`ConnectionNotReadyError`を返すため、新しい準備へ戻る。要求元・提供側のどちらかが協調的中断中でも新規操作を始めない。このローカル状態の確認と、毎回の候補検索・許可条件の再審査は別である。
+
+提供側が返す`OperationFailure`は宣言した通常失敗、`TemporaryUnavailable`は容量などの一時利用不可であり、これだけでは中断・ヘルス申請を起こさない。提供側の想定外例外・宣言モード違反は`LinkFailure`として元例外と中断通知IDを保持する。未知の操作名・呼出側のモード間違いは`ContractDeclarationError`というAPI誤用として区別する。
+
+要求側の準備取消はその待機だけを取り消す。async操作中の呼出側の取消は操作へ伝播し、それだけを提供側障害と判定しない。Coreの実行管理から外れた任意のPython参照を強制遮断する仕組みではない。
+
+### 協調的中断と復帰
+
+要求元AがBへの連携エラーを起こした場合、CoreはAの機能全体を`INTERRUPTING`として通知する。Aは`next_notice("A")`で通知を受け、自身の操作契約に従う巻戻し・後処理を完了してから、`acknowledge_interruption("A", notice_id)`で報告する。古い通知IDへの完了報告は新しい中断を解除しない。
+
+完了報告後は`SUSPENDED`。原因接続の正常確認と、新規の準備要求が揃って`RUNNING`へ戻る。Aが提供する操作への新規要求も復帰の契機となる。原因接続が異常・検証中のままなら、後処理完了だけで復帰しない。ヘルス結果が異常でも準備待機は各要求の期限まで続き、後続の外部申請による正常確認を待つ。
+
+Aの機能全体の中断には、Aからの送信だけでなくAが受ける新規操作も含まれる。既に進行中の操作や機能内部の作業はA自身が協調して停止する。Coreは汎用的な`task.cancel()`で中断完了を偽装しない。
+
+Bの異常を確認したら、Bを利用するC・Dへ該当接続の`INVALIDATED`を通知する。C・D自身の全体中断にはせず、その依存処理を避けられるようにする。Bの別の正常契約・無関係なEを一律停止しない。`RECOVERED`は接続の正常化、`RESUMED`は中断機能の新規要求に伴う復帰であり、元の失敗操作の再生を意味しない。
+
+`OperatingState`と`ModuleExecutionState`は区別する。サービスの存在・稼働が正常でも協調的中断中は操作できない。中断だけを理由に稼働情報を`STOPPED`へ書き換える必要はなく、実際の停止・障害を機能から通知する。
+
+### ヘルス申請と保存の残課題
+
+`health_check(module_ids=..., bindings=...)`で機能・接続を指定し、両方を省略すると全体を確認する。受付ごとに異なる申請IDでFIFO処理し、申請者が待機を取り消しても受付済み申請は処理する。機能固有の自己診断を呼ばず、保持している登録世代・宣言契約・稼働状態を確認する。Coreの定期申請や自動再選定は行わない。
+
+`HealthResult`の`BindingHealth`はその申請の観測結果。`connection(key)`の`ConnectionSnapshot`は保留中の別申請も含む現在状態で、別の確認が残っていれば`CHECKING`になり得る。
+
+履歴・接続設定の保存失敗ではCore内蔵の救命手順を行う方針を採用済みである。現在は設定JSON、期間別JSON Lines、退避先の確認と原本保全というディスク操作まで実装している。非同期バッチ処理、通常終了時の排出、保存失敗時の全体受付停止・救命・再開／終了は未結合。通常時の未保存バッファ増加に対する受付方針はユーザー回答待ちである。
+
+公開APIの最終照合、FileStoreの構築例、性能・実ファイルによる全体検証が完了するまでは、本書をv0.4の完成済み利用手順として扱わない。
+
+---
+
+<a id="section-10"></a>
+
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
@@ -1118,7 +1211,7 @@ ADR 0017のR14時点の未決事項は履歴として保持し、R15で解消し
 
 ---
 
-<a id="section-10"></a>
+<a id="section-11"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -1172,7 +1265,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-11"></a>
+<a id="section-12"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -1208,7 +1301,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-12"></a>
+<a id="section-13"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -1271,7 +1364,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-13"></a>
+<a id="section-14"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -1330,7 +1423,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-14"></a>
+<a id="section-15"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -1366,7 +1459,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-15"></a>
+<a id="section-16"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -1415,7 +1508,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-16"></a>
+<a id="section-17"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -1462,7 +1555,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-17"></a>
+<a id="section-18"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -1518,7 +1611,7 @@ R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンに
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -1573,7 +1666,7 @@ R6の「単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -1626,7 +1719,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -1680,7 +1773,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-21"></a>
+<a id="section-22"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -1720,7 +1813,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-22"></a>
+<a id="section-23"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -1763,7 +1856,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-23"></a>
+<a id="section-24"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -1832,7 +1925,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-24"></a>
+<a id="section-25"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -1901,7 +1994,7 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-25"></a>
+<a id="section-26"></a>
 
 収録元 `docs/adr/0016-v0.3-registry.md`
 
@@ -1977,7 +2070,7 @@ Runtimeの開始待機・停止待機が取消された場合もADR 0014の後�
 
 ---
 
-<a id="section-26"></a>
+<a id="section-27"></a>
 
 収録元 `docs/adr/0017-connection-binding-and-health.md`
 
@@ -2050,7 +2143,7 @@ ADR 0015の直接通信採用とADR 0016のRegistry・ModuleGroupを前提とす
 
 ---
 
-<a id="section-27"></a>
+<a id="section-28"></a>
 
 収録元 `docs/adr/0018-connection-selection-health-and-recovery.md`
 
@@ -2174,7 +2267,7 @@ R15：Docsの根拠一覧（`docs/README.md`）に記録した、本チャット
 
 ---
 
-<a id="section-28"></a>
+<a id="section-29"></a>
 
 収録元 `docs/adr/0019-v0.4-connections.md`
 
@@ -2285,7 +2378,7 @@ R16は本チャットのv0.4着手指示。R15の採用方針はADR 0018、既�
 
 ---
 
-<a id="section-29"></a>
+<a id="section-30"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -2510,7 +2603,7 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-30"></a>
+<a id="section-31"></a>
 
 収録元 `docs/acceptance.md`
 
@@ -2679,7 +2772,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-31"></a>
+<a id="section-32"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -2749,7 +2842,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-32"></a>
+<a id="section-33"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -2820,7 +2913,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-33"></a>
+<a id="section-34"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -2828,15 +2921,17 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ### 対象と判定
 
-2026年11月20日、[コード検証対象8bd7a0e](https://github.com/Tao-pyth/nymph-toolkit/commit/8bd7a0ea4d585beae2a81bbd0b6579532fcea06a)までの記録。親Issue [#4](https://github.com/Tao-pyth/nymph-toolkit/issues/4)、検証子Issue [#43](https://github.com/Tao-pyth/nymph-toolkit/issues/43)、ADR 0019（`docs/adr/0019-v0.4-connections.md`）を対応付ける。
+2026年11月20日、[コード検証対象b08127a](https://github.com/Tao-pyth/nymph-toolkit/commit/b08127aafd0e9d5d3bbd4ddfe67eab35366ba79e)までの記録。親Issue [#4](https://github.com/Tao-pyth/nymph-toolkit/issues/4)、検証子Issue [#43](https://github.com/Tao-pyth/nymph-toolkit/issues/43)、ADR 0019（`docs/adr/0019-v0.4-connections.md`）を対応付ける。
 
 **A04全体は未完了。v0.4.0は未公開。** 接続制御は保存用ダミー、ディスク操作は一時ディレクトリ内の実ファイルで個別に検証した。非同期FileStoreによる両者の結合、救命からの回復・終了、性能測定、v0.4版の配布検証は残っている。現在の版情報は公開済みの0.3.0を維持しており、mainの追加機能がv0.3.0のReleaseに含まれるという意味ではない。
 
 ### 実施結果
 
-ローカルのWindows・CPython 3.15.2で全104件のunittestが成功。内訳は既存63件、契約型6件、接続制御19件、Runtime・ModuleGroup結合8件、ディスク操作8件。通常の成功だけでなく、取消・終了との競合、失敗情報の保持、原本保全を確認した。
+ローカルのWindows・CPython 3.15.2で警告をエラーにした全106件のunittestが成功。内訳は既存63件、契約型6件、接続制御21件、Runtime・ModuleGroup結合8件、ディスク操作8件。通常の成功だけでなく、取消・終了との競合、失敗情報の保持、原本保全を確認した。
 
-[GitHub Actionsの実行44737150660](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44737150660)は、Windows／LinuxとPython 3.12〜3.15の全8環境で成功。警告をエラーにしたテスト、既存のRuntime・Registry実行例、文書検証、現行パッケージのビルド・配布チェックを含む。このCI成功を、未実装のFileStoreやv0.4リリース全体の検証済みという意味にはしない。
+[GitHub Actionsの実行44738235833](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44738235833)は、Windows／LinuxとPython 3.12〜3.15の全8環境で成功。警告をエラーにしたテスト、既存のRuntime・Registry実行例、文書検証、現行パッケージのビルド・配布チェックを含む。このCI成功を、未実装のFileStoreやv0.4リリース全体の検証済みという意味にはしない。
+
+先行する8bd7a0eの104件に対し、#40で「中断機能を提供側として新規操作を開始できる」という漏れを再現する2件を追加した。修正前は両方失敗、修正後は中断完了前・原因接続の異常中の待機と、正常確認後の新規要求による復帰を確認した。操作契約（`docs/connections.md`）にも要求元・提供側の双方に適用することを記載した。
 
 | 採用要件 | 現時点の確認 | 証拠・限界 |
 |---|---|---|
@@ -2844,7 +2939,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 | D2 固定・初回競合 | 要求元＋契約ID・版で1接続。同じ相手への再要求、異なる相手への競合、停止相手の初回拒否、並行確立、保存中の繰り返し取消 | 接続制御テスト。保存完了とメモリ反映を分断しないことを制御可能なダミーで確認 |
 | D2 起動・互換性・失効 | 保存済み接続の正常再利用と不正接続の除外、登録世代変更、Bの一契約だけの失効 | 接続制御テスト・結合テスト（`tests/core/test_connected_group.py`）。実FileStoreによる停止・再起動は未検証 |
 | D3 操作・待機 | 同期／非同期モード、直接呼出しでRegistryを再照会しないこと、Core経由入口、要求側指定の期限、待機だけの取消、終了時の待機解除 | 接続制御テスト。直接呼出しの速さは未測定であり、軽量性の定量評価は未完了 |
-| D4 失敗・中断・復帰 | 通常失敗と想定外例外の区別、Aの協調的後処理、古い完了通知の拒否、Cの接続失効と別契約D・無関係Eの継続、正常確認後の新規要求 | 接続制御・結合テスト。失敗操作を自動再実行しないことも確認 |
+| D4 失敗・中断・復帰 | 通常失敗と想定外例外の区別、Aの協調的後処理、古い完了通知の拒否、Cの接続失効と別契約D・無関係Eの継続、正常確認後の新規要求、中断機能への新規受信操作の待機 | 接続制御・結合テスト。失敗操作を自動再実行しないことも確認 |
 | D5 ヘルス申請 | 同じ対象への8申請に異なる申請IDと結果、指定範囲、申請者の取消後の処理、終了との競合 | 接続制御・結合テスト。Coreの定期申請・自己診断呼出しは追加していない |
 | D6 設定・履歴のディスク操作 | 設定の原子的保存、破損・重複キー・未知形式の保全、UTC期間境界、部分追記の再試行で重複しないこと | ディスク操作テスト（`tests/core/test_storage_io.py`）。全変更の非同期バッチ保存・排出は未結合 |
 | D7 履歴退避のディスク操作 | 期限を過ぎたNTK履歴だけの退避、処理中ファイル除外、コピー失敗時の原本保全、同名で異なる退避先を上書きしないこと | ディスク操作テスト。全体の受付停止→退避→保存再試行→再開／終了は未結合 |
@@ -2875,7 +2970,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-34"></a>
+<a id="section-35"></a>
 
 収録元 `docs/development.md`
 
@@ -3005,7 +3100,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ---
 
-<a id="section-35"></a>
+<a id="section-36"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -3148,7 +3243,7 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 ---
 
-<a id="section-36"></a>
+<a id="section-37"></a>
 
 収録元 `docs/release.md`
 
@@ -3302,7 +3397,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-37"></a>
+<a id="section-38"></a>
 
 収録元 `CHANGELOG.md`
 
@@ -3367,7 +3462,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-38"></a>
+<a id="section-39"></a>
 
 収録元 `LICENSE`
 
