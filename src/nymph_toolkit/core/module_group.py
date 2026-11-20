@@ -4,6 +4,7 @@
 import asyncio
 
 from nymph_toolkit.contracts import (
+    ConnectionsLifecycleFailure, ConnectionsStateError, LifecycleFailure,
     DependencyUnavailableError, LifecyclePhase, ModuleFailure, ModuleGroupFailure,
     ModuleSpec, RegistryEntry, RegistryStateError, RegistryUpdate,
     RuntimeService, RuntimeStateError,
@@ -27,6 +28,20 @@ class ModuleGroup:
         self._closed = False
         self._loop: asyncio.AbstractEventLoop | None = None
         self._controller: asyncio.Task | None = None
+        self._connections = None
+        self._connections_started = False
+        self._connections_task: asyncio.Task | None = None
+        self._connections_reported = False
+
+    def attach_connections(self, connections) -> None:
+        """Own connection infrastructure without registering it as a user module."""
+        from .connections import Connections
+        self._registry._check_thread()
+        if self._used or self._connections is not None:
+            raise RegistryStateError("Connections must be attached once, before start")
+        if not isinstance(connections, Connections) or connections.catalog is not self:
+            raise TypeError("Connections must use this ModuleGroup as its catalog")
+        self._connections = connections
 
     @property
     def revision(self) -> int:
@@ -73,6 +88,9 @@ class ModuleGroup:
         missing = frozenset().union(*(entry.missing_dependencies for entry in entries))
         if missing:
             raise DependencyUnavailableError(missing)
+        if self._connections is not None:
+            self._connections_started = True
+            await self._connections.start(defer_activation=True)
         for entry in entries:
             module_id = entry.spec.module_id
             self._entered.append(module_id)
@@ -84,6 +102,8 @@ class ModuleGroup:
                 raise
             except Exception as exc:
                 raise ModuleGroupFailure((ModuleFailure(module_id, LifecyclePhase.START, exc),)) from exc
+        if self._connections is not None:
+            await self._connections.activate()
         self._started = True
 
     async def _run_service(self, module_id: str) -> object:
@@ -94,6 +114,13 @@ class ModuleGroup:
         if not self._started or self._run_entered or self._closed:
             raise RuntimeStateError("ModuleGroup is not ready to run")
         self._run_entered = True
+        if self._connections is not None:
+            coroutine = self._connections.run()
+            try:
+                self._connections_task = asyncio.create_task(coroutine, name="ntk-connections")
+            except Exception:
+                coroutine.close()
+                raise
         for module_id in self._entered:
             coroutine = self._run_service(module_id)
             try:
@@ -103,7 +130,9 @@ class ModuleGroup:
                 raise ModuleGroupFailure((ModuleFailure(module_id, LifecyclePhase.RUN, exc),)) from exc
         pending = set(self._tasks.values())
         while pending:
-            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
+            watched = pending | ({self._connections_task} if self._connections_task is not None else set())
+            done, _ = await asyncio.wait(watched, return_when=asyncio.FIRST_COMPLETED)
+            pending -= done
             failures = []
             for module_id, task in sorted(self._tasks.items()):
                 if task in done:
@@ -113,6 +142,13 @@ class ModuleGroup:
                         failures.append(failure)
             if failures:
                 raise ModuleGroupFailure(tuple(failures))
+            if self._connections_task is not None and self._connections_task in done:
+                try:
+                    self._connections_task.result()
+                except (Exception, asyncio.CancelledError) as exc:
+                    self._connections_reported = True
+                    raise ConnectionsLifecycleFailure((LifecycleFailure(LifecyclePhase.RUN, exc),)) from exc
+                raise ConnectionsStateError("Connections processing ended while modules were still running")
         return {module_id: task.result() for module_id, task in sorted(self._tasks.items())}
 
     @staticmethod
@@ -129,7 +165,24 @@ class ModuleGroup:
             return
         self._used = self._frozen = True
         failures = []
+        infrastructure_failures = []
         try:
+            if self._connections_started:
+                try:
+                    self._connections.begin_shutdown()
+                except (Exception, asyncio.CancelledError) as exc:
+                    infrastructure_failures.append(LifecycleFailure(LifecyclePhase.STOP, exc))
+            if self._connections_task is not None:
+                cancelled = not self._connections_task.done()
+                if cancelled:
+                    self._connections_task.cancel()
+                await asyncio.gather(self._connections_task, return_exceptions=True)
+                if not self._connections_reported:
+                    try:
+                        self._connections_task.result()
+                    except (Exception, asyncio.CancelledError) as exc:
+                        if not (cancelled and isinstance(exc, asyncio.CancelledError)):
+                            infrastructure_failures.append(LifecycleFailure(LifecyclePhase.RUN, exc))
             requested_cancellation = set()
             for module_id, task in self._tasks.items():
                 if not task.done():
@@ -150,8 +203,20 @@ class ModuleGroup:
                     await self._services[module_id].stop()
                 except (Exception, asyncio.CancelledError) as exc:
                     failures.append(ModuleFailure(module_id, LifecyclePhase.STOP, exc))
+            if self._connections_started:
+                try:
+                    await self._connections.stop()
+                except (Exception, asyncio.CancelledError) as exc:
+                    infrastructure_failures.append(LifecycleFailure(LifecyclePhase.STOP, exc))
         finally:
             self._closed = True
             self._frozen = False
+        if failures and infrastructure_failures:
+            raise ExceptionGroup("Module and Connections cleanup failures", [
+                ModuleGroupFailure(tuple(failures)),
+                ConnectionsLifecycleFailure(tuple(infrastructure_failures)),
+            ])
         if failures:
             raise ModuleGroupFailure(tuple(failures))
+        if infrastructure_failures:
+            raise ConnectionsLifecycleFailure(tuple(infrastructure_failures))
