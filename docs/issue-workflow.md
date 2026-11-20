@@ -117,3 +117,20 @@ R14の方針と補足回答を、親Issue [#4](https://github.com/Tao-pyth/nymph
 採用済みの振る舞いと、API・保存形式・接続識別キー・競合規則・バッファ数値等の未採用案を区別する。Coreが候補一覧を返し要求側が選ぶという最終訂正を反映する。履歴保存・救命措置まで記録するが、今回の範囲は資料と生成ヘッダーの同期であり、製品コード・公開API・版情報・公開済みタグ/Releaseを変更しない。
 
 文書検証・変更コミット・残課題は#36へ記録する。親Issue #4は実装・A04の課題として継続し、資料更新の完了で閉じない。後続の実装単位はロードマップの案を基に、それぞれ必要な判断と子Issue登録を先行する。
+
+## R16によるv0.4の着手
+
+v0.4着手指示に基づき、以下をすべて親Issue #4・マイルストーンv0.4.0の子課題としてコード変更前に登録した。判断は[ADR 0019](adr/0019-v0.4-connections.md)へ段階的に記録する。
+
+| 子Issue | 対応単位 |
+|---|---|
+| [#37](https://github.com/Tao-pyth/nymph-toolkit/issues/37) | 公開契約・状態・保存・競合規則の設計判断 |
+| [#38](https://github.com/Tao-pyth/nymph-toolkit/issues/38) | 契約宣言、候補・稼働情報、通知・失敗型 |
+| [#39](https://github.com/Tao-pyth/nymph-toolkit/issues/39) | 候補照会、要求側選定、接続固定・永続設定 |
+| [#40](https://github.com/Tao-pyth/nymph-toolkit/issues/40) | 協調的中断・期限付き準備・操作入口 |
+| [#41](https://github.com/Tao-pyth/nymph-toolkit/issues/41) | 個別ヘルス申請・部分失効と復帰 |
+| [#42](https://github.com/Tao-pyth/nymph-toolkit/issues/42) | 履歴の非同期保存・Core内蔵の救命措置 |
+| [#43](https://github.com/Tao-pyth/nymph-toolkit/issues/43) | A04統合・性能・回帰・配布・資料 |
+| [#44](https://github.com/Tao-pyth/nymph-toolkit/issues/44) | 受入後のv0.4.0公開準備・取得確認 |
+
+登録だけで未決の仕様を採用したものとせず、各範囲の実装前に必要な判断を記録する。既存の#35・#36は資料更新の完了記録として保持する。

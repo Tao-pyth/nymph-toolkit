@@ -166,7 +166,8 @@ nymph-toolkit/
 │     ├─ 0015-core-authorized-direct-communication.md
 │     ├─ 0016-v0.3-registry.md
 │     ├─ 0017-connection-binding-and-health.md
-│     └─ 0018-connection-selection-health-and-recovery.md
+│     ├─ 0018-connection-selection-health-and-recovery.md
+│     └─ 0019-v0.4-connections.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -193,6 +194,8 @@ R3の配置案をR11・R13の実装に合わせて具体化した。Runtimeは `
 依存ライブラリや対応OS、更新頻度、単独導入の必要性を基に分割を判断する。任意依存による同梱も比較対象とし、分割後のバージョンを同期するか独立させるかは後続ADRで決める。配布単位は実行プロセスと通信経路を決定しない。同梱・別配布のいずれも、実行配置はADR 0002、通信経路はADR 0015と後続判断に従う。
 
 ## 実装前の判断一覧
+
+R16でv0.4へ着手した。後続の公開型・接続制御・保存の実装判断は[ADR 0019](adr/0019-v0.4-connections.md)を参照する。R15時点の未実装という説明を現在の全体状況と混同せず、受入・公開の完了は個別に確認する。
 
 R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変更前に対象バージョンのマイルストーン、親Issue、対応単位の子Issueを整備する。以下の設計判断は対象のIssueから追跡し、必要な判断を記録してから実装へ進む。具体的な運用は[issue-workflow.md](issue-workflow.md)を参照する。
 

@@ -1,4 +1,4 @@
-"""The lifecycle and registration contracts adopted for v0.2 and v0.3."""
+"""Shared lifecycle, registration and connection contracts."""
 
 # SPDX-License-Identifier: Apache-2.0
 from dataclasses import dataclass
@@ -77,8 +77,28 @@ from .registry import (
     UnknownModuleError,
 )
 
+from .connections import (
+    BindingHealth, BindingKey, BindingRecord, BindingState, Candidate, ContractKey, ContractSpec, ModuleAdvertisement,
+    OperatingState, OperationFailure, OperationMode, OperationSpec,
+    TemporaryUnavailable, Usage, ConnectionSnapshot, ConnectionNotice, NoticeKind,
+    ModuleExecutionState, ModuleHealth, HealthResult, LinkFailure,
+    ConnectionsError, ConnectionsStateError, ConnectionsLifecycleFailure, ContractDeclarationError,
+    UnknownConnectionError, ConnectionConflictError, ConnectionUnavailableError,
+    ConnectionNotReadyError, PreparationTimeoutError,
+    StorageError, StorageCorruptionError, StorageFailure,
+)
+
 
 __all__ = [
+    "BindingHealth", "BindingKey", "BindingRecord", "BindingState", "Candidate", "ContractKey", "ContractSpec", "ModuleAdvertisement",
+    "OperatingState", "OperationFailure", "OperationMode", "OperationSpec",
+    "TemporaryUnavailable", "Usage",
+    "ConnectionSnapshot", "ConnectionNotice", "NoticeKind", "ModuleExecutionState",
+    "ModuleHealth", "HealthResult", "LinkFailure", "ConnectionsError", "ConnectionsStateError",
+    "ConnectionsLifecycleFailure",
+    "ContractDeclarationError", "UnknownConnectionError", "ConnectionConflictError",
+    "ConnectionUnavailableError", "ConnectionNotReadyError", "PreparationTimeoutError",
+    "StorageError", "StorageCorruptionError", "StorageFailure",
     "DependencyCycleError",
     "DependencyUnavailableError",
     "DuplicateModuleError",
