@@ -1909,9 +1909,26 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ### 公開準備時の環境
 
-2026年11月19日の作業環境ではGit 2.56.0.windows.4とPython 3.8が存在した。このPython版はNTKの対応版を意味しない。対応Python版、依存管理、テストツールはV0.2着手時に決め、`pyproject.toml` と本書に記録する。
+2026年11月19日の公開準備環境にはGit 2.56.0.windows.4とPython 3.8が存在した。v0.2ではADR 0014によりCPython 3.12以上を採用した。既存のPython 3.8は変更せず、開発用のPythonと仮想環境を別に用意する。
 
-現在の成果物は資料とGit設定である。Coreのインストール・起動・実行テストのコマンドは実装後に掲載する。
+### v0.2の環境構築
+
+CPython 3.12以上を用意し、リポジトリ直下で実行する。以下はPowerShellの例。仮想環境のactivateは不要である。
+
+```powershell
+python --version
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install -r requirements-dev.txt
+.venv/Scripts/python.exe -m pip install -e .
+.venv/Scripts/python.exe -m build
+.venv/Scripts/python.exe tools/check_dist.py
+```
+
+Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える。Pythonの下限はpyproject.tomlにも記録する。実行時の外部依存はなく、build 1.6.1とHatchling 1.33.0をビルド時だけ使う。テストは標準unittestを用いる。
+
+distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
+
+CIはWindowsとLinux、Python 3.12〜3.15でビルドと配布検証を行う。Runtime実装後には同じ環境で非同期テストとダミー実行も行う。
 
 ### 実装開始時の配布構成
 

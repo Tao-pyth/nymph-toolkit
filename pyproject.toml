@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nymph-toolkit"
+version = "0.2.0"
+description = "A lightweight runtime foundation for the Nymph artificial personality project."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
+
+[project.urls]
+Repository = "https://github.com/Tao-pyth/nymph-toolkit"
+Issues = "https://github.com/Tao-pyth/nymph-toolkit/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nymph_toolkit"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src", "/tests", "/examples", "/tools", "/docs",
+    "/pyproject.toml", "/requirements-dev.txt", "/README.md",
+    "/CONTRIBUTING.md", "/AGENTS.md", "/CHANGELOG.md", "/LICENSE",
+]
