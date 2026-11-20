@@ -1,24 +1,16 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R6〜R11反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R11を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
-本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。NTKは、その成長を可能にするSubsystemとAdapterのソフトウェア基盤を目指す。R7の添付Project Visionを長期ビジョンとして収録し、完成を特定のバージョンに固定しない。
+本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
-GitHub公開をv0.1.0、合意したCore機能の完成をv0.9.0、CoreとSubsystem・Adapterの接続契約整備をv1.0.0の目標とする。2026年11月20日にv0.1.0として初期資料・開発基盤を公開した。v0.1.0公開時はCore未実装であった。R11により現在はv0.2の最小Runtimeと実行テストを実装している。長期構想の方式・時期・定量的な受入条件は、各段階の設計・ADRで具体化する。
+GitHub公開をv0.1.0、合意したCore機能の完成をv0.9.0、接続契約整備をv1.0.0の目標とする。R11に伴うv0.2の実装判断はADR 0014に記録し、過去に確定していた方針と区別する。現在の実装・公開状況は収録したREADME・release・受入記録で確認する。
 
-v1.0.0以降の契約詳細、Subsystem・Adapterの名称・実装順序・機能配分、奇数・偶数マイナーとパッチのリリース運用は設計提案として記載する。各名称は暫定であり、今後変更される可能性がある。
+Nymphが活動を決定し、Coreが実行を管理する。通信の最後の正式方針はCore経由のみであり、直接接続の緩和は未採用である。後続バージョンの名称・順序・機能配分と契約詳細は採用状態を確認して読む。
 
-元会話は提示プレビューまでの確認であり、確定方針の根拠は本チャットの明示依頼である。R4で責務境界を補い、R5でv1.0.0以降の計画案を追加した。Nymphが意思決定を担い、Coreが実行管理を担う。通信経路の最後の正式採用はCore経由のみで、直接接続の緩和は実装前決定事項である。
+R10により、コード変更はマイルストーン、親Issue、対応単位の子Issue登録の順に前提を整えてから行う。元会話の確認範囲と各指示の根拠はDocs索引に記録する。
 
-R6で、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する方針を採用した。個別の分割対象・時期・正式なパッケージ名・分割後のバージョン管理は要決定である。
-
-R8で、自作コード・Contracts・設計文書へのApache-2.0適用を採用した。本書も対象とし、末尾にLICENSEの公式本文を収録する。第三者成果物と会話・記憶・人格などの個体データの条件は別途扱う。
-
-R9で、個人アカウント Tao-pyth 配下の nymph-toolkit を資料中心にpublic公開し、簡潔な参加方針を添えてv0.1.0とする方針を採用した。公開作業の完了状況は収録したreleaseで確認する。
-
-R10で、コード変更に先立ちマイルストーン、親Issue、対応単位の子Issueを順に登録するルールを採用した。本書はv0.1.0公開後の未リリース更新を含む。公開済みReleaseの添付は初回公開時のスナップショットとして保持する。
-
-R11の実施指示に伴うv0.2の実装判断をADR 0014に記録した。最小RuntimeとContracts、起動・停止・失敗通知・後処理の範囲を具体化し、後続段階の未決事項とは区別する。
+本書にもApache-2.0を適用し、末尾にLICENSEの公式本文を収録する。第三者成果物と個体データの条件は別途扱う。ファイル名のv0.1は初稿の識別子であり、リポジトリ内の本文は更新する。公開済みRelease添付は各公開時点のスナップショットとして保持する。
 
 ## 収録文書
 
@@ -46,11 +38,12 @@ R11の実施指示に伴うv0.2の実装判断をADR 0014に記録した。最�
 22. [ADR 0014 v0.2の開発環境と最小Runtime](#section-22)
 23. [NTK開発ロードマップ](#section-23)
 24. [受入基準案と検証記録](#section-24)
-25. [開発準備とGit運用](#section-25)
-26. [マイルストーンと親子Issueの運用](#section-26)
-27. [公開準備とリリース手順](#section-27)
-28. [変更履歴](#section-28)
-29. [Apache License 2.0（原文）](#section-29)
+25. [v0.2 Runtime受入記録](#section-25)
+26. [開発準備とGit運用](#section-26)
+27. [マイルストーンと親子Issueの運用](#section-27)
+28. [公開準備とリリース手順](#section-28)
+29. [変更履歴](#section-29)
+30. [Apache License 2.0（原文）](#section-30)
 
 ---
 
@@ -203,6 +196,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
 | roadmap.md（`docs/roadmap.md`） | 各段階の着手条件、作業、成果物、完了条件 |
 | acceptance.md（`docs/acceptance.md`） | バージョン別の検証シナリオと結果の記録方法 |
+| validation/v0.2.md（`docs/validation/v0.2.md`） | v0.2の受入結果、環境・再現手順、制約 |
 | development.md（`docs/development.md`） | Git、環境構築、日常開発、文書更新 |
 | issue-workflow.md（`docs/issue-workflow.md`） | マイルストーン・親子Issueによるコード変更の前提と登録済み課題 |
 | release.md（`docs/release.md`） | 公開前の判断欄、GitHub公開、タグ・リリースの手順 |
@@ -261,7 +255,9 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、ADR索引と各ADR、roadmap、acceptance、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+
+Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。再生成ツール（`tools/build_handoff.py`）と文書確認ツール（`tools/check_docs.py`）はCIでも使用する。
 
 リポジトリ内の引継ぎ書は最新の資料へ同期し、公開済みReleaseの添付とタグはその時点のスナップショットとして保持する。v0.1.0以降の更新内容はCHANGELOGの未リリース欄で区別する。
 
@@ -776,6 +772,8 @@ nymph-toolkit/
 ├─ .github/workflows/ci.yml
 ├─ examples/runtime_demo.py
 ├─ tools/check_dist.py
+├─ tools/check_docs.py
+├─ tools/build_handoff.py
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
@@ -784,6 +782,7 @@ nymph-toolkit/
 │  ├─ runtime.md
 │  ├─ roadmap.md
 │  ├─ acceptance.md
+│  ├─ validation/v0.2.md
 │  ├─ development.md
 │  ├─ issue-workflow.md
 │  ├─ release.md
@@ -1919,6 +1918,8 @@ ADR 0003の維持・緩和が決まるまでは、Core経由のみを暫定基�
 
 ### A02 v0.2の具体化
 
+採用範囲の結果・再現手順・制約は受入記録（`docs/validation/v0.2.md`）にある。
+
 ADR 0014（`docs/adr/0014-v0.2-runtime.md`）に従い、起動・ダミー実行・停止を検証する。正常終了と明示停止、開始前の停止、二重起動の拒否、初期化中の停止、待機側キャンセルと後処理継続、初期化・実行・後処理の各失敗と複数失敗を確認する。サービス内部からの自己待機と別イベントループからの制御を拒否し、無関係な呼出側タスクを停止しないことも確認する。
 
 失敗時はphaseと元例外を照合する。部分初期化時もstopが一度実行され、終了後にRuntimeとダミーが所有するタスクが残らないことを、実際のイベントループ上で確認する。キャンセルに応答しないサービスを強制終了できるという合格条件は設けない。
@@ -1950,7 +1951,7 @@ wheelとsdistをビルドし、新しい仮想環境へwheelを通常インス�
 
 ### 結果の記録方法
 
-実装開始後、必要になった段階で `docs/validation/` を作り、v0.xの結果は `v0.x.md`、v1.x以降は対象バージョンを示すファイルに結果を残す案とする。
+v0.2から `docs/validation/` に結果を記録する。v0.xの結果は `v0.x.md`、v1.x以降は対象バージョンを示すファイルに残す。
 
 | 記録欄 | 内容 |
 |---|---|
@@ -2007,6 +2008,74 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 <a id="section-25"></a>
 
+収録元 `docs/validation/v0.2.md`
+
+## v0.2 Runtime受入記録
+
+### 対象と結果
+
+2026年11月20日、A02とADR 0014の採用範囲を検証した。親Issueは[#2](https://github.com/Tao-pyth/nymph-toolkit/issues/2)、受入は[#25](https://github.com/Tao-pyth/nymph-toolkit/issues/25)、公開後の取得は[#26](https://github.com/Tao-pyth/nymph-toolkit/issues/26)で追跡する。
+
+Runtime実装の基準コミットは[fa00e1b](https://github.com/Tao-pyth/nymph-toolkit/commit/fa00e1bb81ca3117e01ac8665905b7e2b384b3cb)。[CI run 44659437167](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44659437167)でWindows・LinuxとPython 3.12〜3.15の8環境すべてが成功した。各環境で23件の非同期テスト、ダミー実行、ビルド・新規環境へのwheel導入、sdist再ビルドを行った。
+
+後続の受入ツール・文書更新を含む最終コミットのCIと公開後の取得結果は、#25・#26および[リリース記録](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)に実際のコミットSHA・CI URL・配布物ハッシュを記載する。本書の基準コミットと最終公開コミットを混同しない。
+
+### 環境と手順
+
+- ローカル：Windows 11（10.0.26200）、CPython 3.15.2。既存Python 3.8と分離したvenvを使用。
+- CI：ubuntu-latest / windows-latest、CPython 3.12・3.13・3.14・3.15。同一プロセスの検証。
+- ローカルの開発用依存：pip 26.3、build 1.6.1、packaging 26.3、pyproject_hooks 1.3.3、colorama 0.4.6。隔離ビルドのHatchlingは1.33.0に固定。
+- 実行時依存：なし。配布物にはCoreとContracts、Apache-2.0のLICENSEを収録。
+
+リポジトリ直下からdevelopment（`docs/development.md`）の環境構築を行い、以下を実行する。
+
+```powershell
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+.venv/Scripts/python.exe examples/runtime_demo.py
+.venv/Scripts/python.exe tools/check_docs.py
+.venv/Scripts/python.exe -m build
+.venv/Scripts/python.exe tools/check_dist.py
+```
+
+LinuxではPythonパスを `.venv/bin/python` に置き換える。check_distはリポジトリ外の一時venvへwheelをインストールし、公開importがそのvenv内にあることを確認する。さらにダミーと同じ23件のテストをwheel上で実行し、sdistからの再ビルド結果をwheelとバイト比較する。テストソースはリポジトリから読み、対象ライブラリは通常インストールした配布物から読む。
+
+### A02との対応
+
+| 観点 | 操作・観測 | 判定 |
+|---|---|---|
+| 正常起動・実行・停止 | ダミーのstart/run/stopが一度ずつ順番に実行され、runの戻り値を取得 | 合格 |
+| 明示停止 | runをEventで待機させ、stopでキャンセル。後処理の完了前はSTOPPING、完了後はSTOPPED | 合格 |
+| 起動失敗 | startで例外を発生。部分初期化で作成した子タスクをstopで終了してからSTARTの失敗を通知 | 合格 |
+| 実行・後処理の失敗 | runとstopの単独失敗・同時失敗、startとstopの同時失敗を再現。phaseと元例外を保持 | 合格 |
+| キャンセル | start・wait・stopの待機側キャンセル、サービスからの未要求キャンセル、停止待機のタイムアウトを再現 | 合格 |
+| 重複・競合 | 二重起動・再起動拒否、開始前・初期化中の停止、重複stop、監督タスク開始前の停止を確認 | 合格 |
+| 実行コンテキスト | 別イベントループと自己待機を拒否。eager task factoryでも動作・自己待機拒否を確認 | 合格 |
+| 残存タスク | ダミー所有の子タスクを終了。各非同期テストの終了時とダミー例で残存タスク0件。無関係なタスクは維持 | 合格 |
+| 配布 | wheelの新規環境インストール、公開import、ダミー・非同期テスト、sdist再ビルド、LICENSE・メタデータ照合 | 合格 |
+| 文書 | Runtime API、採用ADR、受入基準、READMEの実装範囲、リンク、引継ぎ書と元文書の一致を照合 | 合格 |
+| 意思決定の境界 | Runtimeの入力は実行入口のみ。時刻・期間・優先度・活動価値の生成や選択を実装していない | 適合 |
+
+ローカルのダミー出力は `state=stopped`、`result=dummy-result`、`events=[start, run, stop]`、`remaining_tasks=0`。非同期テストは23件成功し、警告をエラーとして実行した。
+
+### 検証中の修正
+
+初回の環境CIではWindowsの短縮パス（RUNNER~1）と実パスの比較によって、インストール先の検証が誤判定した。双方のパスをresolveする修正を[e28278d](https://github.com/Tao-pyth/nymph-toolkit/commit/e28278d49300c4975460c402901080605ab1eee0)で行い、[再検証8環境](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44659084738)の成功を確認した。検証項目は省略していない。
+
+### 制約と残る範囲
+
+v0.2採用範囲に受入未達はない。以下は今回の完成対象に含めない。
+
+- キャンセルに応答しないサービスの強制終了。タイムアウト後も実行・後処理が続き得るため、STOPPINGを停止完了として扱わない。
+- Registry、Connections、TaskManager、別プロセス実行、本番Subsystem・Adapter。後続ロードマップと各親Issueで追跡する。
+- 公開契約全体の安定化、直接通信の緩和、永続化・自動再試行・自動復旧。各段階の判断を要する。
+- PC全体の状況取得、個体データの複製・移植・伝播。今回の初期実装要件へ追加しない。
+
+Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセス実行は今回未検証。将来の全Core機能や人工人格の完成を宣言するものではない。
+
+---
+
+<a id="section-26"></a>
+
 収録元 `docs/development.md`
 
 ## 開発準備とGit運用
@@ -2026,6 +2095,7 @@ python -m venv .venv
 .venv/Scripts/python.exe -m pip install -e .
 .venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
 .venv/Scripts/python.exe examples/runtime_demo.py
+.venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
 ```
@@ -2125,13 +2195,15 @@ git diff --cached
 
 ### 文書更新時の確認
 
+Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し、`python tools/check_docs.py` で収録元との一致・ローカルリンクを確認する。CIは再生成を自動保存せず、一致していない場合に失敗する。v0.2の検証結果はvalidation/v0.2.md（`docs/validation/v0.2.md`）に記録する。
+
 ローカルリンク先の存在、ADRの状態と根拠、ロードマップと受入IDの対応、READMEの実装状況を確認する。単一配布用引継ぎ書はDocs索引に示した順序・変換方法で再作成し、収録元の本文と照合する。将来の配置予定はarchitectureのツリーに記載し、リンクは実在するファイルへ向ける。
 
 公開準備と公開後の状態はrelease.md（`docs/release.md`）で確認する。
 
 ---
 
-<a id="section-26"></a>
+<a id="section-27"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -2219,7 +2291,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 
 ---
 
-<a id="section-27"></a>
+<a id="section-28"></a>
 
 収録元 `docs/release.md`
 
@@ -2345,7 +2417,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-28"></a>
+<a id="section-29"></a>
 
 収録元 `CHANGELOG.md`
 
@@ -2383,7 +2455,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-29"></a>
+<a id="section-30"></a>
 
 収録元 `LICENSE`
 

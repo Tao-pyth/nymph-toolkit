@@ -15,6 +15,7 @@ python -m venv .venv
 .venv/Scripts/python.exe -m pip install -e .
 .venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
 .venv/Scripts/python.exe examples/runtime_demo.py
+.venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
 ```
@@ -113,6 +114,8 @@ git diff --cached
 各段階で本書の環境構築、テスト、ダミー受入シナリオを更新する。新しい作業環境で再現し、OS・Python版・依存版と結果をacceptanceの記録形式で残す。
 
 ## 文書更新時の確認
+
+Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し、`python tools/check_docs.py` で収録元との一致・ローカルリンクを確認する。CIは再生成を自動保存せず、一致していない場合に失敗する。v0.2の検証結果は[validation/v0.2.md](validation/v0.2.md)に記録する。
 
 ローカルリンク先の存在、ADRの状態と根拠、ロードマップと受入IDの対応、READMEの実装状況を確認する。単一配布用引継ぎ書はDocs索引に示した順序・変換方法で再作成し、収録元の本文と照合する。将来の配置予定はarchitectureのツリーに記載し、リンクは実在するファイルへ向ける。
 

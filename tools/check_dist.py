@@ -22,6 +22,7 @@ def main() -> None:
         names = package.namelist()
         for module in ("core", "contracts"):
             assert f"nymph_toolkit/{module}/__init__.py" in names
+        assert "nymph_toolkit/core/runtime.py" in names
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
@@ -43,7 +44,7 @@ def main() -> None:
             cwd=work, env=env, check=True,
         )
         probe = (
-            "from pathlib import Path; import nymph_toolkit.core as core; "
+            "from pathlib import Path; import nymph_toolkit.core as core; from nymph_toolkit.core import Runtime; "
             "from nymph_toolkit.contracts import RuntimeService, RuntimeState; "
             "from importlib.metadata import version; import sys; "
             "assert version('nymph-toolkit') == '0.2.0'; "
@@ -52,8 +53,13 @@ def main() -> None:
         )
         subprocess.run([str(python), "-I", "-c", probe], cwd=work, env=env, check=True)
         example = root / "examples" / "runtime_demo.py"
-        if example.exists():
-            subprocess.run([str(python), "-I", str(example)], cwd=work, env=env, check=True)
+        assert example.is_file(), "The runtime acceptance example is required"
+        subprocess.run([str(python), "-I", str(example)], cwd=work, env=env, check=True)
+        subprocess.run(
+            [str(python), "-I", "-W", "error", "-m", "unittest", "discover",
+             "-s", str(root / "tests"), "-t", str(root), "-v"],
+            cwd=work, env=env, check=True,
+        )
         source = work / "source"
         source.mkdir()
         with tarfile.open(archive) as package:

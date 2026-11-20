@@ -108,6 +108,8 @@ nymph-toolkit/
 ├─ .github/workflows/ci.yml
 ├─ examples/runtime_demo.py
 ├─ tools/check_dist.py
+├─ tools/check_docs.py
+├─ tools/build_handoff.py
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
@@ -116,6 +118,7 @@ nymph-toolkit/
 │  ├─ runtime.md
 │  ├─ roadmap.md
 │  ├─ acceptance.md
+│  ├─ validation/v0.2.md
 │  ├─ development.md
 │  ├─ issue-workflow.md
 │  ├─ release.md
