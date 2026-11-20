@@ -47,7 +47,7 @@ def main() -> None:
             "from nymph_toolkit.contracts import RuntimeService, RuntimeState; "
             "from importlib.metadata import version; import sys; "
             "assert version('nymph-toolkit') == '0.2.0'; "
-            "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix)); "
+            "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "assert RuntimeState.NEW.value == 'new'; print('installed imports: PASS')"
         )
         subprocess.run([str(python), "-I", "-c", probe], cwd=work, env=env, check=True)
