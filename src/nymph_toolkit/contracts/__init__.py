@@ -1,4 +1,4 @@
-"""The minimal in-process lifecycle contract adopted for v0.2."""
+"""The lifecycle and registration contracts adopted for v0.2 and v0.3."""
 
 # SPDX-License-Identifier: Apache-2.0
 from dataclasses import dataclass
@@ -61,7 +61,37 @@ class RuntimeStateError(RuntimeError):
     """A lifecycle operation was requested in an unsupported state or context."""
 
 
+from .registry import (
+    DependencyCycleError,
+    DependencyUnavailableError,
+    DuplicateModuleError,
+    ModuleFailure,
+    ModuleGroupFailure,
+    ModuleKind,
+    ModuleSpec,
+    RegistryChange,
+    RegistryEntry,
+    RegistryError,
+    RegistryStateError,
+    RegistryUpdate,
+    UnknownModuleError,
+)
+
+
 __all__ = [
+    "DependencyCycleError",
+    "DependencyUnavailableError",
+    "DuplicateModuleError",
+    "ModuleFailure",
+    "ModuleGroupFailure",
+    "ModuleKind",
+    "ModuleSpec",
+    "RegistryChange",
+    "RegistryEntry",
+    "RegistryError",
+    "RegistryStateError",
+    "RegistryUpdate",
+    "UnknownModuleError",
     "LifecycleFailure",
     "LifecyclePhase",
     "RuntimeFailure",
