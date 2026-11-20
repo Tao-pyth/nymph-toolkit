@@ -296,6 +296,55 @@ class FileStoreTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.store.unsaved_events, 0)
         self.assertTrue(self.store.admitting)
 
+    async def test_stop_during_initialization_owns_io_and_drains_prestart_history(self):
+        entered, release = threading.Event(), threading.Event()
+        original = self.store._disk.initialize
+        def slow_initialize():
+            entered.set()
+            if not release.wait(5):
+                raise OSError("test gate timed out")
+            original()
+        self.store.append("before_start", {})
+        with patch.object(self.store._disk, "initialize", side_effect=slow_initialize):
+            starting = asyncio.create_task(self.store.start())
+            try:
+                await self.entered(entered)
+                stopping = asyncio.create_task(self.store.stop())
+                starting.cancel()
+                await asyncio.sleep(0)
+                self.assertFalse(starting.done())
+                self.assertFalse(stopping.done())
+                self.assertFalse(self.store.admitting)
+            finally:
+                release.set()
+            with self.assertRaises(asyncio.CancelledError):
+                await starting
+            await stopping
+        self.assertEqual(self.store.state, RuntimeState.STOPPED)
+        self.assertEqual([e["kind"] for e in self.history()], ["before_start"])
+
+    async def test_eager_tasks_and_foreign_thread_leave_no_detached_io(self):
+        loop = asyncio.get_running_loop()
+        previous = loop.get_task_factory()
+        loop.set_task_factory(asyncio.eager_task_factory)
+        try:
+            await self.store.start()
+            await self.store.save_bindings((self.record,))
+            with self.assertRaises(StorageError):
+                await asyncio.to_thread(self.store.append, "foreign", {})
+            self.store.append("owned", {})
+            await self.store.stop()
+        finally:
+            loop.set_task_factory(previous)
+        self.assertEqual([e["kind"] for e in self.history()], ["owned"])
+
+    async def test_stop_without_start_drains_and_binds_to_the_stopping_loop(self):
+        self.store.append("before_start", {})
+        await self.store.stop()
+        self.assertEqual([e["kind"] for e in self.history()], ["before_start"])
+        with self.assertRaises(StorageError):
+            await asyncio.to_thread(lambda: asyncio.run(self.store.stop()))
+
 
 if __name__ == "__main__":
     unittest.main()

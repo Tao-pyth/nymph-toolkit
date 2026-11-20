@@ -282,6 +282,8 @@ class FileStore:
 
     async def stop(self) -> None:
         self._check_context()
+        if self._loop is None:
+            self._loop = asyncio.get_running_loop()
         if self._stop_task is None:
             self._closing = True
             if self._failure is None:

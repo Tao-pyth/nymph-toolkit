@@ -4,7 +4,7 @@
 
 2026年11月19日の公開準備環境にはGit 2.56.0.windows.4とPython 3.8が存在した。v0.2ではADR 0014によりCPython 3.12以上を採用した。既存のPython 3.8は変更せず、開発用のPythonと仮想環境を別に用意する。
 
-## v0.3の環境構築
+## Coreの環境構築
 
 CPython 3.12以上を用意し、リポジトリ直下で実行する。以下はPowerShellの例。仮想環境のactivateは不要である。
 
@@ -16,6 +16,7 @@ python -m venv .venv
 .venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
 .venv/Scripts/python.exe examples/runtime_demo.py
 .venv/Scripts/python.exe examples/registry_demo.py
+.venv/Scripts/python.exe examples/connections_demo.py
 .venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
@@ -25,7 +26,9 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registryのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)、登録・依存管理と複数対象の実行は[registry.md](registry.md)に記載する。
+CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connectionsのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)、登録・依存管理と複数対象の実行は[registry.md](registry.md)、接続・保存の操作は[connections.md](connections.md)に記載する。
+
+接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
 
 ## 実装開始時の配布構成
 

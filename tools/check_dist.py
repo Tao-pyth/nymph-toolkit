@@ -26,10 +26,12 @@ def main() -> None:
         assert "nymph_toolkit/core/registry.py" in names
         assert "nymph_toolkit/core/module_group.py" in names
         assert "nymph_toolkit/contracts/registry.py" in names
+        for path in ("core/connections.py", "core/storage.py", "core/_storage_io.py", "contracts/connections.py"):
+            assert "nymph_toolkit/" + path in names
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
-        assert metadata["Version"] == "0.3.0"
+        assert metadata["Version"] == "0.4.0"
         assert metadata["Requires-Python"] == ">=3.12"
         assert metadata["License-Expression"] == "Apache-2.0"
         assert metadata.get_all("Requires-Dist", []) == []
@@ -47,10 +49,10 @@ def main() -> None:
             cwd=work, env=env, check=True,
         )
         probe = (
-            "from pathlib import Path; import nymph_toolkit.core as core; from nymph_toolkit.core import Runtime, Registry, ModuleGroup; "
-            "from nymph_toolkit.contracts import RuntimeService, RuntimeState, ModuleSpec, ModuleKind; "
+            "from pathlib import Path; import nymph_toolkit.core as core; from nymph_toolkit.core import Runtime, Registry, ModuleGroup, Connections, FileStore; "
+            "from nymph_toolkit.contracts import RuntimeService, RuntimeState, ModuleSpec, ModuleKind, BindingKey, ContractKey, StorageFailure; "
             "from importlib.metadata import version; import sys; "
-            "assert version('nymph-toolkit') == '0.3.0'; "
+            "assert version('nymph-toolkit') == '0.4.0'; "
             "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "assert RuntimeState.NEW.value == 'new'; print('installed imports: PASS')"
         )
@@ -61,6 +63,9 @@ def main() -> None:
         registry_example = root / "examples" / "registry_demo.py"
         assert registry_example.is_file(), "The Registry acceptance example is required"
         subprocess.run([str(python), "-I", str(registry_example)], cwd=work, env=env, check=True)
+        connections_example = root / "examples" / "connections_demo.py"
+        assert connections_example.is_file(), "The Connections acceptance example is required"
+        subprocess.run([str(python), "-I", str(connections_example)], cwd=work, env=env, check=True)
         subprocess.run(
             [str(python), "-I", "-W", "error", "-m", "unittest", "discover",
              "-s", str(root / "tests"), "-t", str(root), "-v"],

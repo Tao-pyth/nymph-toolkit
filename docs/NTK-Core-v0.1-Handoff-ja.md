@@ -849,7 +849,9 @@ nymph-toolkit/
 ├─ .github/workflows/ci.yml
 ├─ examples/runtime_demo.py
 ├─ examples/registry_demo.py
+├─ examples/connections_demo.py
 ├─ tools/check_dist.py
+├─ tools/benchmark_connections.py
 ├─ tools/check_docs.py
 ├─ tools/build_handoff.py
 ├─ docs/
@@ -1170,6 +1172,16 @@ Bの異常を確認したら、Bを利用するC・Dへ該当接続の`INVALIDAT
 通常停止では進行中のI/Oと未保存履歴を回収する。呼出側による保存・停止の取消でも開始済みI/Oの完了まで所有し、停止完了後にスレッドだけが書込みを続ける状態を作らない。急なプロセス終了による未保存分の損失は許容される限界であり、履歴から現在の稼働状態を復元しない。
 
 公開APIの最終照合、構築・実行例、性能・配布を含む受入が完了するまでは、本書をv0.4の完成済み利用手順として扱わない。
+
+### 実行例
+
+connections_demo.py（`examples/connections_demo.py`）は実際のModuleGroup・Runtime・FileStoreとダミーを使う。要求側が属性・稼働情報から選定し、同期・非同期の直接呼出しとCore経由呼出しを行い、同じ保存先で再起動して接続を再利用する。終了後の未保存履歴と残存タスクが0であることも確認する。
+
+```powershell
+.venv/Scripts/python.exe examples/connections_demo.py
+```
+
+例は専用の一時ディレクトリだけを使用する。例で指定する保持7日・バッチ64件・50ms間隔・準備待機5秒はデモ用の値であり、Coreの既定設定として採用した値ではない。
 
 ---
 
@@ -2941,7 +2953,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 2026年11月20日、[コード検証対象b08127a](https://github.com/Tao-pyth/nymph-toolkit/commit/b08127aafd0e9d5d3bbd4ddfe67eab35366ba79e)までの記録。親Issue [#4](https://github.com/Tao-pyth/nymph-toolkit/issues/4)、検証子Issue [#43](https://github.com/Tao-pyth/nymph-toolkit/issues/43)、ADR 0019（`docs/adr/0019-v0.4-connections.md`）を対応付ける。
 
-**A04全体は未完了。v0.4.0は未公開。** 以下の先行検証では接続制御に保存用ダミーを使い、ディスク操作を個別に確認した。その後のFileStore結合検証は末尾の節へ記録する。現在の版情報は0.3.0を維持しており、mainの追加機能が公開済みv0.3.0のReleaseに含まれるという意味ではない。
+**A04全体の最終照合とv0.4.0公開は継続中。** 以下の先行検証では接続制御に保存用ダミーを使い、ディスク操作を個別に確認した。その後のFileStore結合検証は末尾の節へ記録する。ソースの版情報を0.4.0へ更新して配布確認を進めており、公開済みv0.3.0のReleaseと区別する。
 
 ### 実施結果
 
@@ -2985,12 +2997,30 @@ R16のユーザー回答により、通常のバッファ上限なし・受付�
 
 ### 完了までに必要な作業
 
+FileStoreを追加したc98796dでは[CI全8環境](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44742627097)が成功した。後続では初期化中の停止・eagerタスク・所有スレッド、実装版一致でも契約不一致となる起動、設定保存の回復不能時のRuntime終了を追加検証し、合計129件になる。最終コード・文書・配布物を同一コミットで照合して結果を確定する。
+
 1. 追加したFileStore結合を対応するCI全環境で確認し、D1〜D7と残る競合条件をA04へ照合する。
 2. 初回確立、継続直接呼出し、Core経由、稼働通知・履歴保存、ヘルス申請を分けて測定する。設定・環境・測定限界を併記し、測定前に最適化済みと判断しない。
 3. 使い方・例・版情報・配布確認をv0.4向けに更新し、wheelの新規環境インストールとsdist再ビルドを含めて確認する。既存CIでの0.3.0版パッケージ検証を、この確認の代わりにしない。
 4. 採用範囲の実装・受入・文書照合が完了した子Issueから結果を記録して閉じる。#44のタグ・Release・公開後の取得確認は受入完了後に行う。
 
 要求元と提供側の同一プロセス内の協調を対象とする。TaskManager、IPC、本番Subsystem・Adapter、強制的な参照遮断、個体データの複製・移植・伝播は今回の受入へ追加しない。
+
+### 性能の測定記録
+
+Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミーとローカル一時ディレクトリで測定した。測定ツール（`tools/benchmark_connections.py`）を `--iterations 5000 --initial-connections 20 --samples 3` で実行した3標本の中央値。単純な呼出しのループ処理時間も含み、CPU・ストレージの異なる環境との一般的な優劣を示すものではない。
+
+| 測定区間 | 中央値 |
+|---|---:|
+| Coreを使わないecho呼出し | 0.033 µs/回 |
+| 準備済み接続の直接呼出し | 1.433 µs/回 |
+| Core経由の準備と呼出し | 7.453 µs/回 |
+| 初回接続と設定ファイル保存（20件） | 3.195 ms/接続 |
+| 稼働情報の生成・スナップショット・履歴受付 | 18.499 µs/変更 |
+| 5,000件の履歴バッチ排出 | 119.812 ms/バッチ（23.962 µs/件） |
+| ヘルス申請と結果（各標本200件） | 139.609 µs/申請 |
+
+呼出し区間では自動フラッシュが混ざらないよう、バッチ件数50,200・間隔60秒を測定専用に指定し、区間間で明示flushした。履歴排出はシリアライズ・スレッド受渡し・実ファイルへの追記と同期を含む。提供側の業務処理、複数要求の競合、巨大な属性、救命中、IPCはこの測定に含まれない。固定の性能合格値やハードリアルタイム保証は採用しておらず、「最適化済み」という判定は行わない。
 
 ---
 
@@ -3004,7 +3034,7 @@ R16のユーザー回答により、通常のバッファ上限なし・受付�
 
 2026年11月19日の公開準備環境にはGit 2.56.0.windows.4とPython 3.8が存在した。v0.2ではADR 0014によりCPython 3.12以上を採用した。既存のPython 3.8は変更せず、開発用のPythonと仮想環境を別に用意する。
 
-### v0.3の環境構築
+### Coreの環境構築
 
 CPython 3.12以上を用意し、リポジトリ直下で実行する。以下はPowerShellの例。仮想環境のactivateは不要である。
 
@@ -3016,6 +3046,7 @@ python -m venv .venv
 .venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
 .venv/Scripts/python.exe examples/runtime_demo.py
 .venv/Scripts/python.exe examples/registry_demo.py
+.venv/Scripts/python.exe examples/connections_demo.py
 .venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
@@ -3025,7 +3056,9 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registryのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）、登録・依存管理と複数対象の実行はregistry.md（`docs/registry.md`）に記載する。
+CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connectionsのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）、登録・依存管理と複数対象の実行はregistry.md（`docs/registry.md`）、接続・保存の操作はconnections.md（`docs/connections.md`）に記載する。
+
+接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
 
 ### 実装開始時の配布構成
 

@@ -130,7 +130,9 @@ nymph-toolkit/
 ├─ .github/workflows/ci.yml
 ├─ examples/runtime_demo.py
 ├─ examples/registry_demo.py
+├─ examples/connections_demo.py
 ├─ tools/check_dist.py
+├─ tools/benchmark_connections.py
 ├─ tools/check_docs.py
 ├─ tools/build_handoff.py
 ├─ docs/

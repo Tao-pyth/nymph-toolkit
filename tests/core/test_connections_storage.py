@@ -12,8 +12,8 @@ import unittest
 from unittest.mock import patch
 
 from nymph_toolkit.contracts import (
-    BindingKey, BindingState, ConnectionNotReadyError, ModuleAdvertisement,
-    ModuleExecutionState, ModuleKind, ModuleSpec, RuntimeFailure, RuntimeState,
+    BindingKey, BindingRecord, BindingState, ContractKey, ConnectionNotReadyError, ModuleAdvertisement,
+    ModuleExecutionState, ModuleKind, ModuleSpec, RuntimeFailure, RuntimeState, StorageFailure, UnknownConnectionError,
 )
 from nymph_toolkit.core import Connections, FileStore, ModuleGroup, Runtime, _storage_io
 from tests.core.test_connected_group import KEY, SPEC, Module
@@ -93,6 +93,18 @@ class PersistedConnectionsTests(unittest.IsolatedAsyncioTestCase):
         new = await second.connections.bind("a", KEY, "f", wait_timeout=5)
         self.assertEqual(new.provider_id, "f")
         self.assertEqual(await second.connections.invoke(new.key, "echo", wait_timeout=0, args=("fresh",)), "fresh")
+
+    async def test_same_implementation_version_does_not_make_a_different_contract_compatible(self):
+        owner = self.make()
+        owner.store._disk.initialize()
+        unsupported = BindingKey("a", ContractKey(KEY.contract_id, "different-contract-version"))
+        owner.store._disk.save_bindings((BindingRecord(unsupported, "b"),))
+        await owner.runtime.start()
+        self.assertEqual(await owner.store.load_bindings(), ())
+        with self.assertRaises(UnknownConnectionError):
+            owner.connections.connection(unsupported)
+        valid = await owner.connections.bind("a", KEY, "b", wait_timeout=5)
+        self.assertEqual(valid.state, BindingState.VALID)
 
     async def test_cooperative_interruption_and_new_request_recovery_are_persisted(self):
         owner = self.make()
@@ -176,6 +188,23 @@ class PersistedConnectionsTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(all(module.stopped for module in owner.modules.values()))
         self.assertGreater(owner.store.failure.unsaved_events, 0)
         self.assertFalse(owner.store._disk.archive.exists())
+
+    async def test_unrecoverable_settings_failure_preserves_existing_binding_and_stops_runtime(self):
+        owner = self.make()
+        await owner.runtime.start()
+        await owner.connections.bind("a", KEY, "b", wait_timeout=5)
+        before = owner.store._disk.settings.read_bytes()
+        with patch.object(owner.store._disk, "save_bindings", side_effect=OSError("settings disk unavailable")) as writes:
+            with self.assertRaises(StorageFailure):
+                await owner.connections.bind("e", KEY, "b", wait_timeout=5)
+            with self.assertRaises(RuntimeFailure):
+                await asyncio.wait_for(owner.runtime.wait(), 5)
+            self.assertEqual(writes.call_count, 2)
+        self.assertEqual(owner.store._disk.settings.read_bytes(), before)
+        self.assertTrue(owner.store.failure.pending_configuration)
+        with self.assertRaises(UnknownConnectionError):
+            owner.connections.connection(BindingKey("e", KEY))
+        self.assertTrue(all(module.stopped for module in owner.modules.values()))
 
 
 if __name__ == "__main__":
