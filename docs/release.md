@@ -9,16 +9,18 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 | リポジトリ名 | 確定 | `nymph-toolkit` |
 | 公開先アカウント | 要決定 | 所有者のアカウントまたは組織。接続アカウント `Tao-pyth` は確認済み |
 | 公開範囲 | 要決定 | publicで公開するか、private準備を経てpublicにするか。private準備はV0.1公開前として扱う案 |
-| ライセンス | 要決定 | 採用ライセンスまたは利用許諾の扱いを明示的に決め、必要な文書を配置 |
-| 公開対象 | 準備済み資料を確認する段階 | README、Docs・ADR、CHANGELOG、Git設定、決定後のLICENSE等 |
+| ライセンス | 採用済み（R8、2026年11月20日） | 自作コード・Contracts・設計文書へApache-2.0を適用。[LICENSE](../LICENSE)と[ADR 0011](adr/0011-apache-2.0-license.md)を配置済み |
+| 公開対象 | 準備済み資料を確認する段階 | README、Docs・ADR、CHANGELOG、Git設定、LICENSE |
 | 公開URL・remote | 未設定 | 実際の所有者・リポジトリURLと `origin` |
 | V0.1タグ・公開日 | 未作成・未記入 | `v0.1.0`、対象コミットSHA、実際の公開日 |
 
-公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスは所有者が決定する。文書中の候補や作業者の便宜から採用を推定しない。
+公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスはR8のユーザー指示によりApache-2.0へ確定した。公開先アカウント・公開範囲の選定と、GitHub上の公開作業は引き続き未完了である。
 
 ## 公開前チェックリスト
 
-- [ ] 公開先アカウント・公開範囲・ライセンスの判断欄を埋める。
+- [x] Apache-2.0の採用・適用範囲を記録し、公式本文のLICENSEを追加する。
+- [ ] 公開先アカウント・公開範囲の判断欄を埋める。
+- [ ] 公開する成果物にLICENSEを含め、第三者成果物がある場合は元の許諾・帰属表示・NOTICE等の要件を確認する。
 - [ ] READMEにその時点の実装状況を記載する。
 - [ ] Docs・ADRの確定事項、未決事項、根拠を確認する。
 - [ ] 単一配布用引継ぎ書を個別Docsと同期する。
@@ -26,6 +28,14 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 - [ ] 初回コミットとローカルGitの作成者設定を確認する。
 - [ ] 文書リンク、文字コード、改行、受入IDの対応を確認する。
 - [ ] README・CHANGELOG・本書の公開時の更新を準備する。
+
+## ライセンスと配布内容の確認
+
+自作コード（Core、Contracts、将来の自作Subsystem・Adapter）と設計文書（README、Docs・ADR、引継ぎ書）にApache-2.0を適用する。第三者のコード・依存ライブラリ・モデル・文書・音声等は各権利者の条件を維持し、会話・記憶・人格などの個体データの利用条件も別途扱う。
+
+LICENSEは[Apache公式テキスト](https://www.apache.org/licenses/LICENSE-2.0.txt)を変更せず収録する。付録の著作権表示の記入例は公式本文の一部として保持する。実際の成果物の著作権・帰属表示は正確な権利関係に基づいて別途記載し、第三者の表示を保持する。
+
+単一配布用引継ぎ書にはLICENSE原文を収録する。将来のPython配布物や分割したパッケージでも、各配布物にLICENSEと必要な表示が含まれることを確認する。NOTICEは収録物の表示要件に応じて整備する。採用状態の記録は[ADR 0011](adr/0011-apache-2.0-license.md)を参照する。
 
 ## GitHubへの接続とpush
 
@@ -55,7 +65,7 @@ git ls-remote origin refs/heads/main
 公開内容を確認したら、READMEの状態を「V0.1公開済み」に更新し、実装状況を具体的に記す。CHANGELOGの未リリース項目に実際の公開日を記録し、本書の判断欄・公開URLを埋める。単一配布用引継ぎ書も同期してコミット・pushする。
 
 ```powershell
-git add -- README.md CHANGELOG.md docs
+git add -- LICENSE README.md CHANGELOG.md docs
 git diff --cached --check
 git diff --cached
 git commit -m 'docs: record v0.1.0 publication'

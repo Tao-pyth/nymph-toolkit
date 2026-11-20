@@ -90,7 +90,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 
 ### 初期の配置
 
-文書とGit設定は公開準備時に配置する。以下の `LICENSE` はライセンス決定後、`pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
+文書・Git設定・Apache-2.0の `LICENSE` は公開準備資料として配置済みである。自作コード・Contracts・設計文書への適用は[ADR 0011](adr/0011-apache-2.0-license.md)で採用した。以下の `pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
 
 ```text
 nymph-toolkit/
@@ -120,7 +120,8 @@ nymph-toolkit/
 │     ├─ 0007-v1-release-roadmap.md
 │     ├─ 0008-subsystem-adapter-boundaries.md
 │     ├─ 0009-package-distribution.md
-│     └─ 0010-project-vision.md
+│     ├─ 0010-project-vision.md
+│     └─ 0011-apache-2.0-license.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/

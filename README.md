@@ -27,6 +27,12 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 - 全体を一つの文書で読む場合は、[日本語初期設計・Codex引継ぎ書](docs/NTK-Core-v0.1-Handoff-ja.md)を参照してください。
 - 個別の設計や判断を更新する場合は、[Docs一覧と根拠の扱い](docs/README.md)から進んでください。
 - 開発の段階と完了条件は、[ロードマップ](docs/roadmap.md)と[受入基準案](docs/acceptance.md)にあります。
-- Gitの用意は[開発手順](docs/development.md)、公開先・ライセンスの未決事項と公開手順は[リリース手順](docs/release.md)にあります。
+- Gitの用意は[開発手順](docs/development.md)、公開先などの未決事項と公開手順は[リリース手順](docs/release.md)にあります。
 
-将来のPC状況取得はAdapterで扱います。Desktop Adapterはv1.10.0までの配分に含めず将来課題とします。複製・移植・伝播機構は初期スコープ外です。ライセンスは公開前の判断事項です。
+将来のPC状況取得はAdapterで扱います。Desktop Adapterはv1.10.0までの配分に含めず将来課題とします。複製・移植・伝播機構は初期スコープ外です。
+
+## ライセンス
+
+NTKの自作コード、Contracts、設計文書には **Apache License 2.0（SPDX: `Apache-2.0`）** を適用します。設計文書にはREADME、Docs・ADR、配布用引継ぎ書を含みます。将来の自作Subsystem・Adapterにもこの方針を適用し、パッケージ分割後も各配布物にライセンスを含めます。
+
+ライセンス本文は[LICENSE](LICENSE)、採用理由と適用範囲は[ADR 0011](docs/adr/0011-apache-2.0-license.md)を参照してください。第三者のコード・依存ライブラリ・モデル・文書・音声などは各権利者の条件に従います。Nymphの会話・記憶・人格データへ、このソフトウェアライセンスを一律に適用するものではありません。

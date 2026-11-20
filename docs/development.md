@@ -14,6 +14,14 @@
 
 Subsystem・Adapterは必要に応じて同じリポジトリ内で別配布にする。分割時は対象の `pyproject.toml`、ソース・テストを配置する案とし、依存宣言、Core・Contractsの対応バージョン、公開import名、ビルド・インストール・組合せ検証の手順を後続ADRへ記録する。配置例は[architecture.md](architecture.md)を参照する。
 
+## ライセンスの適用と配布確認
+
+R8・[ADR 0011](adr/0011-apache-2.0-license.md)により、自作コード・Contracts・設計文書へApache-2.0を適用する。ルートの[LICENSE](../LICENSE)を維持し、実装開始時に採用するビルドツールに合わせてライセンス識別子 `Apache-2.0` とライセンスファイルの収録を配布設定へ記載する。
+
+ソースファイルへライセンスを表示する場合は、ファイル形式に応じたコメントで `SPDX-License-Identifier: Apache-2.0` を記す方法を用いる。著作権表示を付す場合は実際の権利者・年を記載し、第三者の権利表示やライセンスを上書きしない。[Apache公式の適用方法](https://www.apache.org/foundation/license-faq.html)
+
+ビルドした配布物を確認し、LICENSEと必要な帰属表示が含まれることを検証する。分割した自作Subsystem・Adapterも各配布物で同じ確認を行う。第三者成果物の同梱時は、その許諾条件と必要なNOTICE等を確認する。具体的なビルド・検証コマンドは実装後に追加する。
+
 ## Git未初期化からの準備
 
 以下はPowerShellでリポジトリ直下から実行する手順である。各コマンドの結果を確認し、失敗した場合は原因を解消してから次へ進む。作業フォルダは利用環境に合わせる。
@@ -43,11 +51,11 @@ GitHubのnoreplyアドレスを使う場合は、GitHubのメール設定で値�
 
 ## 対象確認と初回コミット
 
-`.gitignore` で仮想環境、Python生成物、キャッシュ、ローカル設定を除外する。`.gitattributes` でMarkdown・Python・設定ファイルをLFに統一する。ライセンス決定後に `LICENSE` を追加する。
+`.gitignore` で仮想環境、Python生成物、キャッシュ、ローカル設定を除外する。`.gitattributes` でMarkdown・Python・設定ファイル・LICENSEをLFに統一する。Apache-2.0の公式本文を収録した `LICENSE` をコミット対象に含める。
 
 ```powershell
 git status --short --untracked-files=all
-git add -- .gitignore .gitattributes README.md CHANGELOG.md docs
+git add -- .gitignore .gitattributes LICENSE README.md CHANGELOG.md docs
 git diff --cached --stat
 git diff --cached --check
 git diff --cached

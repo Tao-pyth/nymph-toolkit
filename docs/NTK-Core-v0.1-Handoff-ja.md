@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R6・R7反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R6・R7・R8反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。NTKは、その成長を可能にするSubsystemとAdapterのソフトウェア基盤を目指す。R7の添付Project Visionを長期ビジョンとして収録し、完成を特定のバージョンに固定しない。
 
@@ -11,6 +11,8 @@ v1.0.0以降の契約詳細、Subsystem・Adapterの名称・実装順序・機�
 元会話は提示プレビューまでの確認であり、確定方針の根拠は本チャットの明示依頼である。R4で責務境界を補い、R5でv1.0.0以降の計画案を追加した。Nymphが意思決定を担い、Coreが実行管理を担う。通信経路の最後の正式採用はCore経由のみで、直接接続の緩和は実装前決定事項である。
 
 R6で、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する方針を採用した。個別の分割対象・時期・正式なパッケージ名・分割後のバージョン管理は要決定である。
+
+R8で、自作コード・Contracts・設計文書へのApache-2.0適用を採用した。本書も対象とし、末尾にLICENSEの公式本文を収録する。第三者成果物と会話・記憶・人格などの個体データの条件は別途扱う。
 
 ## 収録文書
 
@@ -29,11 +31,13 @@ R6で、単一リポジトリでCoreとContractsを一つの配布パッケー�
 13. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-13)
 14. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-14)
 15. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-15)
-16. [NTK開発ロードマップ](#section-16)
-17. [受入基準案と検証記録](#section-17)
-18. [開発準備とGit運用](#section-18)
-19. [公開準備とリリース手順](#section-19)
-20. [変更履歴](#section-20)
+16. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-16)
+17. [NTK開発ロードマップ](#section-17)
+18. [受入基準案と検証記録](#section-18)
+19. [開発準備とGit運用](#section-19)
+20. [公開準備とリリース手順](#section-20)
+21. [変更履歴](#section-21)
+22. [Apache License 2.0（原文）](#section-22)
 
 ---
 
@@ -70,9 +74,15 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 - 全体を一つの文書で読む場合は、日本語初期設計・Codex引継ぎ書（`docs/NTK-Core-v0.1-Handoff-ja.md`）を参照してください。
 - 個別の設計や判断を更新する場合は、Docs一覧と根拠の扱い（`docs/README.md`）から進んでください。
 - 開発の段階と完了条件は、ロードマップ（`docs/roadmap.md`）と受入基準案（`docs/acceptance.md`）にあります。
-- Gitの用意は開発手順（`docs/development.md`）、公開先・ライセンスの未決事項と公開手順はリリース手順（`docs/release.md`）にあります。
+- Gitの用意は開発手順（`docs/development.md`）、公開先などの未決事項と公開手順はリリース手順（`docs/release.md`）にあります。
 
-将来のPC状況取得はAdapterで扱います。Desktop Adapterはv1.10.0までの配分に含めず将来課題とします。複製・移植・伝播機構は初期スコープ外です。ライセンスは公開前の判断事項です。
+将来のPC状況取得はAdapterで扱います。Desktop Adapterはv1.10.0までの配分に含めず将来課題とします。複製・移植・伝播機構は初期スコープ外です。
+
+### ライセンス
+
+NTKの自作コード、Contracts、設計文書には **Apache License 2.0（SPDX: `Apache-2.0`）** を適用します。設計文書にはREADME、Docs・ADR、配布用引継ぎ書を含みます。将来の自作Subsystem・Adapterにもこの方針を適用し、パッケージ分割後も各配布物にライセンスを含めます。
+
+ライセンス本文はLICENSE（`LICENSE`）、採用理由と適用範囲はADR 0011（`docs/adr/0011-apache-2.0-license.md`）を参照してください。第三者のコード・依存ライブラリ・モデル・文書・音声などは各権利者の条件に従います。Nymphの会話・記憶・人格データへ、このソフトウェアライセンスを一律に適用するものではありません。
 
 ---
 
@@ -97,6 +107,7 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 | acceptance.md（`docs/acceptance.md`） | バージョン別の検証シナリオと結果の記録方法 |
 | development.md（`docs/development.md`） | Git、環境構築、日常開発、文書更新 |
 | release.md（`docs/release.md`） | 公開前の判断欄、GitHub公開、タグ・リリースの手順 |
+| LICENSE（`LICENSE`） | 自作コード・Contracts・設計文書に適用するApache-2.0の公式本文 |
 
 ### 根拠と確認範囲
 
@@ -109,6 +120,7 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 | R5 | 本チャットの「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」 | v1.0.0の接続契約整備という目標と既存方針の維持、v1.1.0〜v1.10.0の推奨配分、暫定名称、研究方針・責務境界、リリース運用案の明示 |
 | R6 | 本チャットの配布方針の採用・資料反映指示 | 単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する方針を明示的に採用 |
 | R7 | 添付「Project Vision — 人工人格Nymphの最終到達目標」と反映指示 | 添付本文全16節とVision Statementを確認。最終ビジョンは同内容に沿う。完成像・研究方針として扱い、各能力を確定した実装要件へ一括追加しない |
+| R8 | 本チャットのApache-2.0採用・資料反映指示 | 自作コード・Contracts・設計文書へのApache-2.0適用、LICENSE追加、README・ADR・公開準備資料・引継ぎ書への反映を明示的に指示 |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -116,13 +128,15 @@ R5は今回の明示的な編集根拠として扱う。v1.0.0で接続契約を
 
 R6の配布方針はADR 0009で採用として記録する。前段で提示されたフォルダ構成案のうち、将来の個別パッケージ名や分割対象、Capability照合の担当などは引き続き具体化する事項として扱う。
 
-R7の最終ビジョンはvisionに収録し、ADR 0010で長期ビジョンとして採用する。元の本文にある具体的な構想は長期目標として位置付け、現行バージョンへの割当や受入条件は後続判断へ残す。本文には現在の通信方針、ロードマップの採用状態、ライセンス未決の注記を補って既存資料と整合させる。
+R7の最終ビジョンはvisionに収録し、ADR 0010で長期ビジョンとして採用する。元の本文にある具体的な構想は長期目標として位置付け、現行バージョンへの割当や受入条件は後続判断へ残す。本文には現在の通信方針、ロードマップの採用状態、公開準備の状態を補って既存資料と整合させる。
+
+R8によりApache-2.0を採用し、ADR 0011に適用範囲を記録する。R7反映時点では未決だったライセンス選定は解消済みである。第三者成果物と個体データの条件、公開先・公開範囲の判断は別途扱う。
 
 ### 状態の読み方
 
 | 表記 | 扱い |
 |---|---|
-| 確定・採用 | R2・R3の設計・開発目標、R5のv1.0.0目標、R6の配布方針など、明示的に決めた事項 |
+| 確定・採用 | R2・R3の設計・開発目標、R5のv1.0.0目標、R6の配布方針、R8のApache-2.0採用など、明示的に決めた事項 |
 | 方向性確定 | 技術の方向が採用済み。具体的なAPI・内部方式は要設計 |
 | 提案 | 実装順、検証方法、責務の詳細整理などの案 |
 | 要決定 | 対象の実装や公開に先立ち、判断を記録する事項 |
@@ -139,7 +153,7 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、release、CHANGELOGの順に全文を収録する。再作成時は各文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
+単一配布用の引継ぎ書は、ルートREADME、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
 
 ---
 
@@ -159,7 +173,7 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 **根拠・状態：** R7の添付文書と「NTKの最終ビジョンは本内容に沿って記述する」という指示に基づき、2026年11月20日に長期ビジョンとして採用。判断記録はADR 0010（`docs/adr/0010-project-vision.md`）。本文の「初期状態」は将来のNymphの発達開始時点を指し、Coreのみを実装するv0.xの範囲とは区別する。
 
-**実装との関係：** 各能力の方式・配置・時期・定量的な受入条件は、段階ごとの設計・ADRで具体化する。再起動後の継続性、Self-Model、内部状態、夢の保持・失効などを、現行Coreの必須機能へ一括追加しない。オープンソースを目指す方針と、未決のライセンス選定・未実施のGitHub公開は区別する。現在の状態はREADME（`README.md`）、公開判断はrelease（`docs/release.md`）を参照する。
+**実装との関係：** 各能力の方式・配置・時期・定量的な受入条件は、段階ごとの設計・ADRで具体化する。再起動後の継続性、Self-Model、内部状態、夢の保持・失効などを、現行Coreの必須機能へ一括追加しない。ライセンスはR8・ADR 0011（`docs/adr/0011-apache-2.0-license.md`）で自作コード・Contracts・設計文書へのApache-2.0適用を採用した。GitHub公開は準備段階である。現在の状態はREADME（`README.md`）、公開判断はrelease（`docs/release.md`）を参照する。
 
 ---
 
@@ -634,7 +648,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 
 #### 初期の配置
 
-文書とGit設定は公開準備時に配置する。以下の `LICENSE` はライセンス決定後、`pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
+文書・Git設定・Apache-2.0の `LICENSE` は公開準備資料として配置済みである。自作コード・Contracts・設計文書への適用はADR 0011（`docs/adr/0011-apache-2.0-license.md`）で採用した。以下の `pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
 
 ```text
 nymph-toolkit/
@@ -664,7 +678,8 @@ nymph-toolkit/
 │     ├─ 0007-v1-release-roadmap.md
 │     ├─ 0008-subsystem-adapter-boundaries.md
 │     ├─ 0009-package-distribution.md
-│     └─ 0010-project-vision.md
+│     ├─ 0010-project-vision.md
+│     └─ 0011-apache-2.0-license.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -717,11 +732,11 @@ v1.xでは、各Contractの公開範囲・互換性、Subsystemの正式名称�
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R7の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R8の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
-| 0001 Coreと統合リポジトリ（`docs/adr/0001-core-and-repository.md`） | 基本構成は確定。Subsystem独立性の詳細は提案。配布方針は0009で具体化 | R2・R3・R4・R6 |
+| 0001 Coreと統合リポジトリ（`docs/adr/0001-core-and-repository.md`） | 基本構成は確定。Subsystem独立性の詳細は提案。配布方針は0009、ライセンスは0011で具体化 | R2・R3・R4・R6・R8 |
 | 0002 実行モデル（`docs/adr/0002-execution-model.md`） | ハイブリッドは確定、Python asyncio・軽量なメソッド呼び出しは方向性確定 | R2・R5 |
 | 0003 通信経路（`docs/adr/0003-communication-routing.md`） | Core経由のみが正式採用済み、直接接続緩和は未採用・要決定 | R2・R4・R5 |
 | 0004 活動の決定権（`docs/adr/0004-activity-authority.md`） | 決定権の境界は確定。時間・優先度・変更操作の具体策は要決定 | R2・R4・R5 |
@@ -729,8 +744,9 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0006 v1.0.0のCore接続契約（`docs/adr/0006-core-connection-contracts.md`） | 目標は確定。契約詳細・公開API・補助機能・契約テストは提案・要決定。初期配布は0009で採用 | R5・R6 |
 | 0007 v1.x以降のリリース運用と開発順序（`docs/adr/0007-v1-release-roadmap.md`） | 提案・未採用。名称・順序・機能配分は暫定。配布方針の後続判断を0009へ参照 | R5・R6 |
 | 0008 v1.xのSubsystem・Adapter責務案（`docs/adr/0008-subsystem-adapter-boundaries.md`） | 設計提案。R5の研究方針・責務境界を前提とし、R7の長期構想を補足 | R5・R7 |
-| 0009 単一リポジトリと段階的な配布パッケージ分割（`docs/adr/0009-package-distribution.md`） | 採用。CoreとContractsを同梱して開始し、Subsystem・Adapterを必要に応じて分割 | R6 |
-| 0010 Nymphの最終ビジョンと実装範囲の区別（`docs/adr/0010-project-vision.md`） | 長期ビジョンとして採用。具体的な実装方式・時期・受入条件は後続判断 | R7 |
+| 0009 単一リポジトリと段階的な配布パッケージ分割（`docs/adr/0009-package-distribution.md`） | 採用。CoreとContractsを同梱して開始し、Subsystem・Adapterを必要に応じて分割。ライセンスは0011で採用 | R6・R8 |
+| 0010 Nymphの最終ビジョンと実装範囲の区別（`docs/adr/0010-project-vision.md`） | 長期ビジョンとして採用。具体的な実装方式・時期・受入条件は後続判断。ライセンスは0011で採用 | R7・R8 |
+| 0011 自作コード・Contracts・設計文書へのApache-2.0適用（`docs/adr/0011-apache-2.0-license.md`） | 採用。第三者成果物と個体データの条件は別途扱う | R8 |
 
 ### 記録方法
 
@@ -782,7 +798,11 @@ R4を受け、次の点をV0.3の設計判断に追加する。着脱可能性�
 
 ### 未決事項
 
-Subsystem・Adapterの公開API、登録ID、機能的依存の採否と宣言形式、稼働中着脱の可否、依存先解除時の検出・通知・解除許可条件、進行中活動の処理。公開先アカウントとライセンスはreleaseの判断欄で管理する。
+Subsystem・Adapterの公開API、登録ID、機能的依存の採否と宣言形式、稼働中着脱の可否、依存先解除時の検出・通知・解除許可条件、進行中活動の処理。公開先アカウントはreleaseの判断欄で管理する。
+
+### ライセンスの後続判断
+
+初稿で未決だったライセンスは、R8の明示指示によりADR 0011（`docs/adr/0011-apache-2.0-license.md`）でApache-2.0を採用した。適用範囲は自作コード・Contracts・設計文書とし、公開先の選定とは別に記録する。
 
 ### 根拠
 
@@ -1170,6 +1190,8 @@ Core先行開発を進めながら、将来のSubsystem・Adapterごとの依存
 
 初期のCoreとContractsは同じ配布物としてビルド・検証する。拡張を分割した場合は、それぞれの配布物とCore・Contractsの組み合わせを検証する。
 
+R8・ADR 0011（`docs/adr/0011-apache-2.0-license.md`）で、自作コード・Contracts・設計文書へのApache-2.0適用を採用した。将来分割する自作Subsystem・Adapterも各配布物にLICENSEと必要な表示を含める。第三者成果物の条件は別途扱う。
+
 責務分離の設計案として、Core・Subsystem・Adapterが公開Contractsを参照し、Contractsを具体的な実装から独立させる依存方向を用いる。配布単位とは別に、同一・別プロセスの実行配置はADR 0002、許可する通信経路はADR 0003で管理する。
 
 ### 未決事項
@@ -1223,6 +1245,8 @@ READMEはCoreの現在の実装状況と併せて、人工人格の成長とい�
 
 通信経路の最後の正式採用はCore経由のみである。直接接続緩和の未採用状態とADR 0003の実装前判断を維持する。オープンソースを目指すことと、公開先・公開範囲・ライセンスの具体的な選定は分けて記録する。
 
+後続のR8により、ライセンスはADR 0011（`docs/adr/0011-apache-2.0-license.md`）でApache-2.0を採用した。自作コード・Contracts・設計文書に適用し、第三者成果物やNymphの個体データの条件は別途扱う。公開先・公開範囲の選定と公開作業は引き続き公開準備資料で管理する。
+
 ### 未決事項
 
 長期能力の方式・担当・開発時期、定量的な到達基準、言語獲得の評価方法、根拠・訂正・不確実性の表現、夢の保持・失効の契約、継続性を支える保存範囲と復元方法、外部操作の権限・承認の仕組み。各段階の採用範囲と受入条件を後続ADRへ記録する。
@@ -1234,6 +1258,58 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 ---
 
 <a id="section-16"></a>
+
+収録元 `docs/adr/0011-apache-2.0-license.md`
+
+## ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用
+
+### 状態
+
+採用。採用日2026年11月20日。判断者はプロジェクト所有者（R8のユーザー明示指示）。公開前のライセンス未決事項を解消する。ADR 0009の配布方針とADR 0010の長期ビジョンを補い、既存ADRの全面置換は行わない。
+
+### 背景
+
+人工人格Nymphの成長を支えるオープンソース基盤として、第三者が利用・研究・拡張しやすい条件を用意する。初期はCoreとContractsを一つの配布パッケージとし、Subsystem・Adapterは必要に応じて分割する。
+
+候補の比較を経て、ユーザーがApache-2.0を明示的に選択した。改変ソースの提供を必須としない利用の自由と、貢献者による一定範囲の明示的な特許許諾を採用理由とする。再配布時の条件は公式本文に従う。[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+### 決定
+
+- NTKの自作コード、Contracts、設計文書にApache License 2.0を適用する。SPDX識別子は `Apache-2.0` とする。
+- 自作コードにはCoreと将来の自作Subsystem・Adapterを含む。設計文書にはREADME、Docs・ADR、配布用引継ぎ書を含む。
+- リポジトリ直下のLICENSE（`LICENSE`）に、Apache Software Foundationが提供する公式英語本文を変更せず収録する。付録の説明・記入例も公式本文のまま保持する。
+- READMEと公開準備資料に採用済みの状態と適用範囲を記載する。単一配布用引継ぎ書にもライセンス原文を収録し、一つのファイルで利用条件を確認できるようにする。
+- パッケージを分割する際も、自作の対象部分には同じ方針を適用し、各配布物にLICENSEと必要な権利表示を含める。
+
+### 適用対象との境界
+
+第三者のコード・ライブラリ・モデル・学習用文書・音声等の権利を、この決定によってApache-2.0へ変更しない。導入・同梱時に元のライセンス、利用条件、必要な表示を確認する。
+
+Nymphが扱う会話・記憶・人格などの個体データへ、本ライセンスを一律適用する決定ではない。取得・保存・学習・共有の条件はデータごとに別途扱う。
+
+既存LLMを言語理解・文章生成の中核にしない研究方針はNTK本体の開発方針として維持する。ライセンス本文へ研究目的限定や商用禁止などの独自条件を付け加えない。
+
+### 影響
+
+ライセンス選定は公開前判断欄で「採用済み」とする。公開先アカウント・公開範囲・remote・タグ・公開日はそれぞれ従来の状態を維持し、ライセンスの採用だけでV0.1公開完了とはしない。
+
+将来の実装・配布では、配布メタデータのライセンス表示とLICENSEの収録を確認する。必要な著作権・帰属表示、変更表示を保持し、第三者のNOTICEを含む場合は本文第4条に従って扱う。独立したNOTICEファイルの必要性は、収録物と表示要件に応じて確認する。[公式の適用方法](https://www.apache.org/foundation/license-faq.html)
+
+Coreの責務、通信経路、契約の具体的なAPI、各段階の実装範囲を変更する決定ではない。
+
+### 残る判断事項
+
+新たな第三者成果物の導入時の互換性・利用条件・帰属表示、実装開始時のビルド設定、各配布物へのライセンス収録方法。公開先・公開範囲はrelease（`docs/release.md`）で引き続き判断する。ライセンス種別そのものは確定済みである。
+
+### 根拠
+
+R8の「Apache-2.0で進めてください。自作コード・Contracts・設計文書に適用する方針」という明示指示。Docsの根拠表（`docs/README.md`）
+
+本文の取得元：[Apache License 2.0公式テキスト](https://www.apache.org/licenses/LICENSE-2.0.txt)。2026年11月20日確認。
+
+---
+
+<a id="section-17"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -1273,7 +1349,7 @@ R6で採用した配布方針は、単一リポジトリでCoreとContractsを�
 - **着手条件** — R2・R3を根拠とした資料と既存ファイルを確認できる。
 - **作業** — 確定事項と未決事項を記載し、Docs・ADRを配置する。除外・改行設定を整え、Gitを `main` で初期化し、作成者設定、差分確認、初回コミットを行う。
 - **成果物** — 単一配布用引継ぎ書、個別Docs・ADR、Git履歴、公開前判断欄。
-- **判断事項** — 公開先アカウント、公開範囲、ライセンス。releaseに記録する。
+- **判断事項** — 公開先アカウント・公開範囲をreleaseに記録する。ライセンスはR8・ADR 0011でApache-2.0を採用済み。公開対象へのLICENSE収録と適用範囲を確認する。
 - **完了条件** — P0を確認でき、公開前判断欄が埋まっている。未記入項目がある間は公開準備として扱う。
 
 ### V0.1 GitHub公開
@@ -1437,7 +1513,7 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-17"></a>
+<a id="section-18"></a>
 
 収録元 `docs/acceptance.md`
 
@@ -1449,7 +1525,7 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 | ID・段階 | 根拠 | 入力・操作と検証手順 | 合格と判断できる結果 |
 |---|---|---|---|
-| P0 公開準備 | R3 | DocsとADRの状態表示・リンクを確認。Gitの対象ファイルと初回コミットを確認し、releaseの判断欄と照合する | 単一文書と個別Docsの内容が整合し、公開対象が説明できる。公開先・公開範囲・ライセンスが決定済み |
+| P0 公開準備 | R3・R8・ADR 0011 | DocsとADRの状態表示・リンクを確認。Gitの対象ファイルと初回コミットを確認し、releaseの判断欄と照合する。LICENSE原文とApache-2.0の適用範囲を確認する | 単一文書と個別Docsの内容が整合し、公開対象が説明できる。公開先・公開範囲が決定済みで、採用したライセンスと必要な表示が公開対象に含まれる |
 | A01 V0.1 | ADR 0001・0005 | 公開URLとタグを開き、READMEから各Docsへ進む。対象コミットを新しいフォルダへcloneする | 資料が取得でき、実装状況と未決事項が読める。`v0.1.0` とリリース記録が同じコミットを指す |
 | A02 V0.2 | ADR 0002・0005 | development記載の環境構築後、Runtimeを起動し、ダミー処理を一度実行して停止する。採用した起動失敗も再現する | 開始・処理結果・停止完了を確認できる。失敗が契約どおり呼出側へ通知される |
 | A03 V0.3 | ADR 0001・0005 | ダミーSubsystemとAdapterを登録、照会、解除する。重複・未登録解除を試す。機能的依存の採用時は依存先を解除し、機能の利用可否を照合する | 登録状態と応答が契約に一致する。依存先解除を許可した場合は利用不能を検出・通知できる。単体完全動作や代替機能の提供を必須としない案を受入範囲に記録する |
@@ -1531,6 +1607,8 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ### 資料整備時の確認
 
+- R8のApache-2.0採用がREADME・ADR 0011・公開準備資料で一致し、LICENSEが公式本文と一致することを確認する。引継ぎ書のLICENSE原文も照合する。
+- 第三者成果物・個体データの条件を一律にApache-2.0へ変更していないことと、将来の分割配布時のLICENSE収録方針を確認する。
 - R2・R3の確定事項とR4の責務境界を照合し、追加仕様には状態を付ける。
 - Subsystem独立性の整理案、4つの時間概念、V0.6の各操作の採否をADR・roadmap・受入案の間で照合する。
 - ADR 0003で最後の正式方針と未採用提案を追える。
@@ -1544,7 +1622,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/development.md`
 
@@ -1563,6 +1641,14 @@ ADR 0009（`docs/adr/0009-package-distribution.md`）に従い、初期はCore�
 検証手順案として、ビルドした配布物を新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。開発用ソースへの参照だけで成功していないことを確認する。具体的なコマンドはツール採用・実装後に掲載し、結果をacceptanceの形式で残す。
 
 Subsystem・Adapterは必要に応じて同じリポジトリ内で別配布にする。分割時は対象の `pyproject.toml`、ソース・テストを配置する案とし、依存宣言、Core・Contractsの対応バージョン、公開import名、ビルド・インストール・組合せ検証の手順を後続ADRへ記録する。配置例はarchitecture.md（`docs/architecture.md`）を参照する。
+
+### ライセンスの適用と配布確認
+
+R8・ADR 0011（`docs/adr/0011-apache-2.0-license.md`）により、自作コード・Contracts・設計文書へApache-2.0を適用する。ルートのLICENSE（`LICENSE`）を維持し、実装開始時に採用するビルドツールに合わせてライセンス識別子 `Apache-2.0` とライセンスファイルの収録を配布設定へ記載する。
+
+ソースファイルへライセンスを表示する場合は、ファイル形式に応じたコメントで `SPDX-License-Identifier: Apache-2.0` を記す方法を用いる。著作権表示を付す場合は実際の権利者・年を記載し、第三者の権利表示やライセンスを上書きしない。[Apache公式の適用方法](https://www.apache.org/foundation/license-faq.html)
+
+ビルドした配布物を確認し、LICENSEと必要な帰属表示が含まれることを検証する。分割した自作Subsystem・Adapterも各配布物で同じ確認を行う。第三者成果物の同梱時は、その許諾条件と必要なNOTICE等を確認する。具体的なビルド・検証コマンドは実装後に追加する。
 
 ### Git未初期化からの準備
 
@@ -1593,11 +1679,11 @@ GitHubのnoreplyアドレスを使う場合は、GitHubのメール設定で値�
 
 ### 対象確認と初回コミット
 
-`.gitignore` で仮想環境、Python生成物、キャッシュ、ローカル設定を除外する。`.gitattributes` でMarkdown・Python・設定ファイルをLFに統一する。ライセンス決定後に `LICENSE` を追加する。
+`.gitignore` で仮想環境、Python生成物、キャッシュ、ローカル設定を除外する。`.gitattributes` でMarkdown・Python・設定ファイル・LICENSEをLFに統一する。Apache-2.0の公式本文を収録した `LICENSE` をコミット対象に含める。
 
 ```powershell
 git status --short --untracked-files=all
-git add -- .gitignore .gitattributes README.md CHANGELOG.md docs
+git add -- .gitignore .gitattributes LICENSE README.md CHANGELOG.md docs
 git diff --cached --stat
 git diff --cached --check
 git diff --cached
@@ -1635,7 +1721,7 @@ git diff --cached
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/release.md`
 
@@ -1650,16 +1736,18 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 | リポジトリ名 | 確定 | `nymph-toolkit` |
 | 公開先アカウント | 要決定 | 所有者のアカウントまたは組織。接続アカウント `Tao-pyth` は確認済み |
 | 公開範囲 | 要決定 | publicで公開するか、private準備を経てpublicにするか。private準備はV0.1公開前として扱う案 |
-| ライセンス | 要決定 | 採用ライセンスまたは利用許諾の扱いを明示的に決め、必要な文書を配置 |
-| 公開対象 | 準備済み資料を確認する段階 | README、Docs・ADR、CHANGELOG、Git設定、決定後のLICENSE等 |
+| ライセンス | 採用済み（R8、2026年11月20日） | 自作コード・Contracts・設計文書へApache-2.0を適用。LICENSE（`LICENSE`）とADR 0011（`docs/adr/0011-apache-2.0-license.md`）を配置済み |
+| 公開対象 | 準備済み資料を確認する段階 | README、Docs・ADR、CHANGELOG、Git設定、LICENSE |
 | 公開URL・remote | 未設定 | 実際の所有者・リポジトリURLと `origin` |
 | V0.1タグ・公開日 | 未作成・未記入 | `v0.1.0`、対象コミットSHA、実際の公開日 |
 
-公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスは所有者が決定する。文書中の候補や作業者の便宜から採用を推定しない。
+公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスはR8のユーザー指示によりApache-2.0へ確定した。公開先アカウント・公開範囲の選定と、GitHub上の公開作業は引き続き未完了である。
 
 ### 公開前チェックリスト
 
-- [ ] 公開先アカウント・公開範囲・ライセンスの判断欄を埋める。
+- [x] Apache-2.0の採用・適用範囲を記録し、公式本文のLICENSEを追加する。
+- [ ] 公開先アカウント・公開範囲の判断欄を埋める。
+- [ ] 公開する成果物にLICENSEを含め、第三者成果物がある場合は元の許諾・帰属表示・NOTICE等の要件を確認する。
 - [ ] READMEにその時点の実装状況を記載する。
 - [ ] Docs・ADRの確定事項、未決事項、根拠を確認する。
 - [ ] 単一配布用引継ぎ書を個別Docsと同期する。
@@ -1667,6 +1755,14 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 - [ ] 初回コミットとローカルGitの作成者設定を確認する。
 - [ ] 文書リンク、文字コード、改行、受入IDの対応を確認する。
 - [ ] README・CHANGELOG・本書の公開時の更新を準備する。
+
+### ライセンスと配布内容の確認
+
+自作コード（Core、Contracts、将来の自作Subsystem・Adapter）と設計文書（README、Docs・ADR、引継ぎ書）にApache-2.0を適用する。第三者のコード・依存ライブラリ・モデル・文書・音声等は各権利者の条件を維持し、会話・記憶・人格などの個体データの利用条件も別途扱う。
+
+LICENSEは[Apache公式テキスト](https://www.apache.org/licenses/LICENSE-2.0.txt)を変更せず収録する。付録の著作権表示の記入例は公式本文の一部として保持する。実際の成果物の著作権・帰属表示は正確な権利関係に基づいて別途記載し、第三者の表示を保持する。
+
+単一配布用引継ぎ書にはLICENSE原文を収録する。将来のPython配布物や分割したパッケージでも、各配布物にLICENSEと必要な表示が含まれることを確認する。NOTICEは収録物の表示要件に応じて整備する。採用状態の記録はADR 0011（`docs/adr/0011-apache-2.0-license.md`）を参照する。
 
 ### GitHubへの接続とpush
 
@@ -1696,7 +1792,7 @@ git ls-remote origin refs/heads/main
 公開内容を確認したら、READMEの状態を「V0.1公開済み」に更新し、実装状況を具体的に記す。CHANGELOGの未リリース項目に実際の公開日を記録し、本書の判断欄・公開URLを埋める。単一配布用引継ぎ書も同期してコミット・pushする。
 
 ```powershell
-git add -- README.md CHANGELOG.md docs
+git add -- LICENSE README.md CHANGELOG.md docs
 git diff --cached --check
 git diff --cached
 git commit -m 'docs: record v0.1.0 publication'
@@ -1746,7 +1842,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `CHANGELOG.md`
 
@@ -1766,5 +1862,220 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 - 初期のCore・Contracts配置と将来の同梱・別配布の配置例を区別し、関連する開発・受入・リリース資料へ反映。個別の分割対象・時期・正式なパッケージ名・分割後のバージョン管理は未決として記載。
 - R7の添付Project Vision全16節を `docs/vision.md` に収録し、経験から学び、活動し、成長する人工人格Nymphという最終目標をREADME・設計資料へ反映。
 - ADR 0010で長期ビジョンを採用し、言語獲得、記憶、Self-Model、内部状態・人格・睡眠・夢、権限下のPC操作、継続性の目標と、段階ごとの実装・受入範囲を区別。最終完成のバージョンは固定しない。
+- R8により、自作コード・Contracts・設計文書へApache-2.0を採用。公式本文のLICENSEとADR 0011を追加し、README・公開準備資料・関連Docsの採用状態を更新。
+- 第三者成果物と個体データの条件を適用範囲から区別し、分割後の配布物にもLICENSEを含める方針を記録。単一配布用引継ぎ書へライセンス原文を収録。
 
 V0.1の公開時に、この項目を実際の公開日と `v0.1.0` に対応するリリース記録へ更新する。
+
+---
+
+<a id="section-22"></a>
+
+収録元 `LICENSE`
+
+## Apache License 2.0（原文）
+
+```text
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```

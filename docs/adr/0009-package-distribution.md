@@ -33,6 +33,8 @@ Core先行開発を進めながら、将来のSubsystem・Adapterごとの依存
 
 初期のCoreとContractsは同じ配布物としてビルド・検証する。拡張を分割した場合は、それぞれの配布物とCore・Contractsの組み合わせを検証する。
 
+R8・[ADR 0011](0011-apache-2.0-license.md)で、自作コード・Contracts・設計文書へのApache-2.0適用を採用した。将来分割する自作Subsystem・Adapterも各配布物にLICENSEと必要な表示を含める。第三者成果物の条件は別途扱う。
+
 責務分離の設計案として、Core・Subsystem・Adapterが公開Contractsを参照し、Contractsを具体的な実装から独立させる依存方向を用いる。配布単位とは別に、同一・別プロセスの実行配置はADR 0002、許可する通信経路はADR 0003で管理する。
 
 ## 未決事項
