@@ -2,6 +2,21 @@
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
 
+## v0.4.0の公開手順と記録
+
+R16・ADR 0019のConnections・FileStore・共有Contractsとダミー、A04受入資料をv0.4.0として公開する。通常のバッファ上限なし・受付継続と、保存失敗時の受付停止・救命を区別する。
+
+| 項目 | 内容 |
+|---|---|
+| 公開先 | [GitHub Release v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)。PyPI公開は対象外 |
+| 配布物 | `nymph_toolkit-0.4.0-py3-none-any.whl`、`nymph_toolkit-0.4.0.tar.gz`、単一引継ぎ書、SHA256SUMS |
+| 受入 | [A04記録](validation/v0.4.md)。129テスト、3実行例、Windows/Linux・CPython 3.12〜3.15、通常インストール・sdist再ビルド、区間別性能測定 |
+| 公開前の条件 | 最終コミットで文書・ビルド・配布チェックと8環境のCIが成功。コード・文書・配布物・タグが同じコミットに対応 |
+| 公開後の条件 | 認証なしのタグclone・添付4件の取得・ハッシュ照合。取得したwheelを新規環境へ導入し、3実行例と129テストを再現 |
+| 実際の結果 | 最終SHA・CI・各配布物のハッシュ・公開後検証をReleaseと[子Issue #44](https://github.com/Tao-pyth/nymph-toolkit/issues/44)に記録 |
+
+実装受入と公開確認を分け、公開後検証まで終えてから親Issue #4・マイルストーンv0.4.0を完了する。公開済みv0.1.0・v0.2.0・v0.3.0のタグ、Release本文、添付のID・サイズ・ハッシュが作業前の記録と一致することを確認する。受入記録にある同一プロセス・協調的中断・バッファ増加と突然の終了時の限界をReleaseにも掲載する。
+
 ## v0.3.0の公開手順と記録
 
 R13の実施指示に基づき、ADR 0016のRegistry・ModuleGroup・Contractsとダミー、A03受入資料をv0.3.0として公開する。R12・ADR 0015の直接通信の採用記録も含めるが、通信実装は含めない。

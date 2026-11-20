@@ -14,13 +14,13 @@
 | [architecture.md](architecture.md) | Coreの責務、境界、フォルダ構成、未決事項 |
 | [runtime.md](runtime.md) | v0.2の実装済みRuntime・Contractsの使い方と制約 |
 | [registry.md](registry.md) | v0.3のRegistry・ModuleGroup契約、着脱・依存管理の境界 |
-| [connections.md](connections.md) | 開発中の接続API、操作・中断・ヘルスと保存層の未完了事項 |
+| [connections.md](connections.md) | v0.4の接続API、操作・中断・ヘルス・保存の使い方と制約 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
 | [roadmap.md](roadmap.md) | 各段階の着手条件、作業、成果物、完了条件 |
 | [acceptance.md](acceptance.md) | バージョン別の検証シナリオと結果の記録方法 |
 | [validation/v0.2.md](validation/v0.2.md) | v0.2の受入結果、環境・再現手順、制約 |
 | [validation/v0.3.md](validation/v0.3.md) | v0.3のA03、回帰・配布検証、後続へ残す範囲 |
-| [validation/v0.4.md](validation/v0.4.md) | v0.4の検証経過、ダミーと実ファイルの検証範囲、A04の未完了項目 |
+| [validation/v0.4.md](validation/v0.4.md) | v0.4のA04、ダミーと実ファイルの検証、配布・性能と制約 |
 | [development.md](development.md) | Git、環境構築、日常開発、文書更新 |
 | [issue-workflow.md](issue-workflow.md) | マイルストーン・親子Issueによるコード変更の前提と登録済み課題 |
 | [release.md](release.md) | 公開前の判断欄、GitHub公開、タグ・リリースの手順 |
@@ -88,7 +88,7 @@ R16のv0.4作業は[ADR 0019](adr/0019-v0.4-connections.md)で段階的に具体
 | 長期ビジョン | R7で示された最終到達目標・研究方針。具体的な実装要件・時期・合格基準は段階ごとに判断する |
 | 初期スコープ外 | 今回計画するCore初期開発の対象から除く事項 |
 
-計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で具体化し、v0.4〜v0.8への機能配分と受入方法は提案として扱う。
+計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で具体化し、v0.5〜v0.8への機能配分と受入方法は提案として扱う。
 
 R4で列挙された時間・優先度の変更、中断・再開、取消・終了は採否を判断する対象として追記する。Subsystemの機能的依存と独立性の整理案のうち、v0.3の採用範囲はR13・ADR 0016で具体化した。Coreが扱う機械的な実行順序と、Nymphが決める活動の価値・優先度の境界を明示し、優先度機能や実行枠の方式は後続判断へ残す。
 

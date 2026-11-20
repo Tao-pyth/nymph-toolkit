@@ -12,15 +12,15 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.3.0：Registry・依存管理・ModuleGroup。** CoreとContractsの単一パッケージに、登録・照会・解除、不変スナップショット、依存先の利用可否と変更通知、複数対象の初期化・実行・後処理を含みます。CPython 3.12以上、実行時の外部依存はありません。Connections・TaskManager・別プロセス実行は今後の段階で扱います。
+**v0.4.0：Connections・非同期保存・救命処理。** CoreとContractsの単一パッケージに、既存のRuntime・Registry・ModuleGroupと、候補照会・接続固定・直接／Core経由の操作・協調的中断・ヘルスチェック・FileStoreを含みます。CPython 3.12以上、実行時の外部依存はありません。TaskManager・別プロセス実行は後続段階で扱います。
 
-v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtimeを2026年11月20日に公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3は[ADR 0016](docs/adr/0016-v0.3-registry.md)で具体化し、v0.4〜v0.8の配分は開発計画案です。
+v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtime、v0.3.0ではRegistry・ModuleGroupを公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3は[ADR 0016](docs/adr/0016-v0.3-registry.md)、v0.4は[ADR 0019](docs/adr/0019-v0.4-connections.md)で具体化し、v0.5〜v0.8の配分は開発計画案です。
 
-**mainではv0.4を開発中です。** [ADR 0019](docs/adr/0019-v0.4-connections.md)に従い、契約型・候補照会・接続固定・協調的中断とヘルスチェック、非同期FileStoreと救命処理を追加しています。[Connectionsの操作契約](docs/connections.md)に現在のAPIを記載しています。保存ダミーによる状態制御の検証に加え、実ファイルによる再起動・救命・Runtime終了を検証しました。性能・配布を含むA04全体は継続中です。[v0.4の検証経過と残課題](docs/validation/v0.4.md)を参照し、公開済みv0.3.0と区別してください。
+採用範囲のA04では129件のテスト、3実行例、Windows／Linux・Python 3.12〜3.15、通常インストール・sdist再ビルドと性能測定を確認しました。[Connectionsの操作契約](docs/connections.md)と[v0.4受入記録](docs/validation/v0.4.md)に、使い方・結果・制約を記載しています。
 
 v0.3では実行開始前にSubsystem・Adapterのダミーを着脱し、起動から停止完了まで構成を固定します。停止後は明示解除できます。実体の稼働中着脱は、接続の解除・失効契約を設計する後続段階へ残しています。利用方法は[RegistryとModuleGroup](docs/registry.md)を参照してください。
 
-[v0.3.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)にwheel・sdist・引継ぎ書・チェックサムと公開結果を掲載します。[v0.3受入記録](docs/validation/v0.3.md)には検証環境・結果・制約を記載しています。過去の[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
+[v0.4.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)にwheel・sdist・引継ぎ書・チェックサムと公開結果を掲載します。対象SHAと公開後の取得確認は[公開課題 #44](https://github.com/Tao-pyth/nymph-toolkit/issues/44)でも追跡します。過去の[v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)・[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
 
 V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0はCoreとSubsystem・Adapterの接続契約を大きく形作る目標です。v1.1.0〜v1.10.0のSubsystem・Adapter開発、奇数・偶数マイナーのリリース運用は設計提案としてロードマップに追記しています。記載するSubsystem名・Adapter名は暫定名称で、実装順序と機能配分も変更される可能性があります。
 
@@ -28,11 +28,11 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 
 活動の価値や優先度はNymphが判断します。優先度機能を採用する場合、Coreは与えられた値と採用済み規則に基づいて実行順序を処理します。時間変更、優先度変更、中断・再開などの具体的な採否はV0.6の判断対象です。
 
-通信は、**Coreが管理・許可した接続ではSubsystem間の直接通信を認める**方針を採用しました。Core経由の通信も利用できます。方針の採用履歴は[ADR 0015](docs/adr/0015-core-authorized-direct-communication.md)、現在の公開入口・状態・失効の実装判断はADR 0019に記録しています。mainでは直接呼出しとCore経由入口を部分検証しており、v0.4全体の受入は継続中です。
+通信は、**Coreが管理・許可した接続ではSubsystem間の直接通信を認める**方針を採用しました。Core経由の通信も利用できます。方針の採用履歴は[ADR 0015](docs/adr/0015-core-authorized-direct-communication.md)、現在の公開入口・状態・失効の実装判断はADR 0019に記録しています。
 
 接続管理では、Coreが契約に合致する候補一覧を返し、要求側の機能が属性・稼働状況を評価して利用先を選びます。接続設定を永続保存し、稼働中の初回追加を認めつつ確定済み接続先を固定します。起動時・申請されたヘルスチェックで存在・稼働状態・宣言契約の互換性を確認し、確立後は利用ごとの再審査を省きます。[ADR 0017](docs/adr/0017-connection-binding-and-health.md)の方針を、[ADR 0018](docs/adr/0018-connection-selection-health-and-recovery.md)で具体化しています。
 
-稼働情報は機能側から変更時に通知し、実際の受付は提供側が判断します。容量不足には即時応答し、ヘルス確認中・中断中の新規要求は要求側指定の期限まで待機します。連携エラーでは要求元機能が通知に従って中断・後処理し、同じ相手の正常確認後に新規要求から再開します。履歴は期間別ファイルへ非同期にまとめて保存し、保存障害時は新規受付を停止して古い履歴の退避による救命措置を行う方針です。**v0.4開発中・A04未完了**であり、実装した範囲と残る判断はADR 0019で追跡しています。
+稼働情報は機能側から変更時に通知し、実際の受付は提供側が判断します。容量不足には即時応答し、ヘルス確認中・中断中の新規要求は要求側指定の期限まで待機します。連携エラーでは要求元機能が通知に従って中断・後処理し、同じ相手の正常確認後に新規要求から再開します。履歴は期間別ファイルへ非同期にまとめて保存します。通常のバッファには上限を設けず受付を継続し、保存障害時は新規受付を停止して古い履歴の退避による救命措置を行います。
 
 失効は接続の不整合によるエラー回避を目的とし、機能側がCoreの管理結果に従うことを前提とします。望まない参照の継続を強制遮断する仕組みは、この接続管理の要件に含めません。
 
@@ -45,10 +45,11 @@ python -m venv .venv
 .venv/Scripts/python.exe -m pip install -e .
 .venv/Scripts/python.exe examples/runtime_demo.py
 .venv/Scripts/python.exe examples/registry_demo.py
+.venv/Scripts/python.exe examples/connections_demo.py
 .venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
 ```
 
-Runtimeのダミーはstart → run → stopを表示します。Registryのダミーは依存先の登録・解除による変更通知、依存順の初期化と逆順の後処理、結果・残存タスク0件を表示します。[Runtimeの使い方](docs/runtime.md)と[ビルド・配布検証](docs/development.md)も参照してください。
+Runtimeのダミーはstart → run → stopを表示します。Registryのダミーは登録・解除と依存順の実行を、Connectionsのダミーは選定・操作・接続保存・再起動後の再利用を確認します。いずれも終了後の残存タスク0件を確認します。[Runtimeの使い方](docs/runtime.md)と[ビルド・配布検証](docs/development.md)も参照してください。
 
 コード変更は、**対象バージョンのマイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順を必須とします。[Issue運用と登録済み課題](docs/issue-workflow.md)を確認してから着手してください。登録した計画案は、仕様の採用と区別します。
 
