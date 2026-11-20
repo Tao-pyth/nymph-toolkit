@@ -176,12 +176,13 @@ class ActivityHistoryTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_history_read_failure_reports_a_problem_without_running_write_rescue(self):
         await self.save_completed()
-        path = next(self.root.glob("history-*.jsonl"))
+        # FileStore canonicalizes its roots, including Windows short-name temp paths.
+        path = next(self.root.glob("history-*.jsonl")).resolve()
         store = self.store()
         await store.start()
         original_open = Path.open
         def open_path(candidate, *args, **kwargs):
-            if candidate == path:
+            if candidate.resolve() == path:
                 raise PermissionError("history unavailable")
             return original_open(candidate, *args, **kwargs)
         try:
