@@ -10,14 +10,14 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ## 採用された構成
 
-v0.2でRuntimeと最小のContractsを実装した。[Runtimeの使い方](runtime.md)と[ADR 0014](adr/0014-v0.2-runtime.md)に、一回のライフサイクル、呼出側イベントループ、失敗通知と後処理を記録する。下表のうちRegistry・Connections・TaskManagerと本番Subsystem・Adapterは今後の段階で扱う。
+v0.2でRuntime、v0.3でRegistry・ModuleGroupと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。Connections・TaskManagerと本番Subsystem・Adapterは今後の段階で扱う。
 
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
 
-| 構成要素 | 責務の整理案 | 実装前に具体化する点 |
+| 構成要素 | 責務の整理 | 採用状況・今後具体化する点 |
 |---|---|---|
-| Core Runtime | Coreの起動、実行、停止を取りまとめる | ライフサイクルAPI、イベントループの所有者、停止時の後処理 |
-| Registry | Subsystem・Adapterの登録状態と識別を管理する | 登録ID、重複登録、依存関係、着脱の可能な時点 |
+| Core Runtime | Coreの起動、実行、停止を取りまとめる | ADR 0014のRuntimeとADR 0016のModuleGroupを実装 |
+| Registry | Subsystem・Adapterの登録状態と識別を管理する | ADR 0016でID・必須依存・スナップショット・着脱範囲を採用して実装 |
 | Connections | 採用した経路で接続と通信を管理する | 通信経路ADR、要求と結果、同期・非同期境界、失敗通知 |
 | TaskManager | Nymphが決めた活動の予定、実行状態、変更を管理する | 時刻・期間、状態遷移、変更や取消、競合の扱い |
 | Subsystem | 着脱する機能単位 | Coreとの接続契約とライフサイクル |
@@ -52,9 +52,9 @@ Coreが管理する活動状態はNymph自身の活動を対象とする。外�
 
 ## Subsystemの独立性の整理案
 
-着脱は確定方針である。R4を受けた設計案として、実装を交換できる接続契約を設け、他Subsystemへの機能的依存を許容する方向で検討する。具体的な相手実装への依存を避け、単体での完全動作を必須条件にしない。
+着脱は確定方針である。R4の整理案を受け、R13・ADR 0016でID単位の必須依存を採用した。具体的な相手実装への依存を避け、依存先不在・解除による利用不能を変更結果として通知する。単体での完全動作や代替機能の提供は必須条件にしない。
 
-依存先の解除による機能の利用不能をCoreが検出し、状態を利用側へ伝える方法をV0.3で決める。代替機能の提供は必須条件にしない案とする。依存の宣言形式、解除を許可する条件、進行中活動への影響は要決定。データの複製・移植は初期スコープ外である。詳細はADR 0001。
+Registry単独では依存先解除を許可する。ModuleGroupでは起動から停止完了まで構成変更を拒否する。進行中の通信・活動に関わる実体着脱と、Capability単位の依存などは後続判断に残す。データの複製・移植は初期スコープ外である。履歴はADR 0001、現在の採用範囲はADR 0016を参照する。
 
 ## 実行配置と通信経路
 
@@ -88,7 +88,7 @@ R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大�
 
 R6で、単一リポジトリを維持し、CoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する方針を採用した。[ADR 0009](adr/0009-package-distribution.md)に判断を記録する。
 
-配布パッケージはインストール・配布の単位を指す。初期はルートの `pyproject.toml` でCoreとContractsを同梱し、ソース上では `src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` に分ける。リポジトリ名、配布パッケージ名、Pythonのimport名は区別し、配布パッケージの正式名称は実装開始時に決める。
+配布パッケージはインストール・配布の単位を指す。ルートの `pyproject.toml` でCoreとContractsを同梱し、ソース上では `src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` に分ける。ADR 0014で配布名を `nymph-toolkit`、import名を `nymph_toolkit` として採用した。
 
 ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要なものから配置する。v1.0.0で公開接続契約として体系化する。依存方向の設計案として、Core・Subsystem・Adapterが公開Contractsを参照し、Contractsを具体的な実装から独立させる。契約の型やAPIはADR 0006で具体化する。
 
@@ -109,6 +109,7 @@ nymph-toolkit/
 ├─ requirements-dev.txt
 ├─ .github/workflows/ci.yml
 ├─ examples/runtime_demo.py
+├─ examples/registry_demo.py
 ├─ tools/check_dist.py
 ├─ tools/check_docs.py
 ├─ tools/build_handoff.py
@@ -118,9 +119,11 @@ nymph-toolkit/
 │  ├─ vision.md
 │  ├─ architecture.md
 │  ├─ runtime.md
+│  ├─ registry.md
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
+│  ├─ validation/v0.3.md
 │  ├─ development.md
 │  ├─ issue-workflow.md
 │  ├─ release.md
@@ -139,7 +142,9 @@ nymph-toolkit/
 │     ├─ 0011-apache-2.0-license.md
 │     ├─ 0012-v0.1-publication.md
 │     ├─ 0013-milestone-issue-workflow.md
-│     └─ 0014-v0.2-runtime.md
+│     ├─ 0014-v0.2-runtime.md
+│     ├─ 0015-core-authorized-direct-communication.md
+│     └─ 0016-v0.3-registry.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -149,7 +154,7 @@ nymph-toolkit/
    └─ doubles/
 ```
 
-R3の配置案をR11の実装に合わせて具体化した。Runtimeは `core/runtime.py`、最小契約は `contracts/__init__.py` にある。ダミーは `tests/doubles/`、Coreの検証は `tests/core/` に置く。共有契約の独立した検証が必要になった場合は `tests/contracts/` を追加する案とする。残りの3責務のモジュール・APIはその実装時に判断する。
+R3の配置案をR11・R13の実装に合わせて具体化した。Runtimeは `core/runtime.py`、Registryは `core/registry.py`、複数対象の実行入口は `core/module_group.py` に置く。契約は `contracts/__init__.py` と `contracts/registry.py`、ダミーは `tests/doubles/`、検証は `tests/core/` に置く。Connections・TaskManagerのモジュール・APIはその実装時に判断する。
 
 ### Subsystem・Adapterを追加する際の配置案
 

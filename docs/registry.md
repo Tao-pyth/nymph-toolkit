@@ -2,6 +2,8 @@
 
 v0.3の採用契約は[ADR 0016](adr/0016-v0.3-registry.md)に記録する。実装・公開の状態は[README](../README.md)を参照する。CoreとContractsは一つのパッケージに含める。
 
+実行例は [examples/registry_demo.py](../examples/registry_demo.py)。インストール後に `python examples/registry_demo.py` を実行すると、ダミーAdapterとSubsystemの登録、依存先の追加・解除による変更通知、依存順の初期化・逆順の後処理、残存タスク0件を確認できる。ダミーの名称は将来の本番Subsystem・Adapterの実装を示すものではない。
+
 ## 登録情報と依存関係
 
 `nymph_toolkit.core.Registry` に `nymph_toolkit.contracts.ModuleSpec` を登録する。ModuleKind.SUBSYSTEMとModuleKind.ADAPTERを同じ契約で扱う。IDは利用側が指定する、前後空白のない空でない文字列である。

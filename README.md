@@ -12,11 +12,13 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.2.0：最小Runtimeを公開（2026年11月20日）。** CoreとContractsの単一パッケージ、非同期の起動・実行・停止、失敗通知と後処理を実装しています。CPython 3.12以上を対象とし、実行時の外部依存はありません。Registry・Connections・TaskManager・別プロセス実行は今後の段階で扱います。
+**v0.3.0：Registry・依存管理・ModuleGroup。** CoreとContractsの単一パッケージに、登録・照会・解除、不変スナップショット、依存先の利用可否と変更通知、複数対象の初期化・実行・後処理を含みます。CPython 3.12以上、実行時の外部依存はありません。Connections・TaskManager・別プロセス実行は今後の段階で扱います。
 
-v0.1.0では初期資料・開発基盤を2026年11月20日に公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3〜v0.8の配分は開発計画案です。
+v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtimeを2026年11月20日に公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3は[ADR 0016](docs/adr/0016-v0.3-registry.md)で具体化し、v0.4〜v0.8の配分は開発計画案です。
 
-[v0.2.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)からwheel・sdist・引継ぎ書を取得できます。[受入記録](docs/validation/v0.2.md)には検証環境・結果・制約を記載しています。初回の資料公開は[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)に保持しています。
+v0.3では実行開始前にSubsystem・Adapterのダミーを着脱し、起動から停止完了まで構成を固定します。停止後は明示解除できます。実体の稼働中着脱は、接続の解除・失効契約を設計する後続段階へ残しています。利用方法は[RegistryとModuleGroup](docs/registry.md)を参照してください。
+
+[v0.3.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)にwheel・sdist・引継ぎ書・チェックサムと公開結果を掲載します。[v0.3受入記録](docs/validation/v0.3.md)には検証環境・結果・制約を記載しています。過去の[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
 
 V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0はCoreとSubsystem・Adapterの接続契約を大きく形作る目標です。v1.1.0〜v1.10.0のSubsystem・Adapter開発、奇数・偶数マイナーのリリース運用は設計提案としてロードマップに追記しています。記載するSubsystem名・Adapter名は暫定名称で、実装順序と機能配分も変更される可能性があります。
 
@@ -34,10 +36,11 @@ CPython 3.12以上で、リポジトリ直下から次を実行できます（Po
 python -m venv .venv
 .venv/Scripts/python.exe -m pip install -e .
 .venv/Scripts/python.exe examples/runtime_demo.py
+.venv/Scripts/python.exe examples/registry_demo.py
 .venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
 ```
 
-ダミーはstart → run → stopの順に実行され、停止状態・結果・残存タスク0件を表示します。[Runtimeの使い方](docs/runtime.md)と[ビルド・配布検証](docs/development.md)も参照してください。
+Runtimeのダミーはstart → run → stopを表示します。Registryのダミーは依存先の登録・解除による変更通知、依存順の初期化と逆順の後処理、結果・残存タスク0件を表示します。[Runtimeの使い方](docs/runtime.md)と[ビルド・配布検証](docs/development.md)も参照してください。
 
 コード変更は、**対象バージョンのマイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順を必須とします。[Issue運用と登録済み課題](docs/issue-workflow.md)を確認してから着手してください。登録した計画案は、仕様の採用と区別します。
 

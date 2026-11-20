@@ -1,6 +1,6 @@
 # v0.2 Runtimeの使い方
 
-v0.2は、一つの実行入口を同一プロセスで起動・実行・停止する最小Runtimeである。仕様判断は[ADR 0014](adr/0014-v0.2-runtime.md)、環境構築と検証は[development](development.md)にある。Registry・Connections・TaskManager、別プロセス実行はまだ含まない。
+Runtimeは、一つの実行入口を同一プロセスで起動・実行・停止する。v0.2の仕様判断は[ADR 0014](adr/0014-v0.2-runtime.md)、環境構築と検証は[development](development.md)にある。v0.3ではこのAPIを維持し、[ModuleGroup](registry.md)を実行入口にして複数対象を動かせる。Connections・TaskManager、別プロセス実行はまだ含まない。
 
 ## 実行例
 
