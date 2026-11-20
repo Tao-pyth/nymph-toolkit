@@ -1,6 +1,19 @@
 # 公開準備とリリース手順
 
-GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤をpublicで公開した。以下のv0.1.0欄は初回公開時の記録である。現在はv0.2の最小Runtimeと実行テストを実装し、受入・公開準備を進めている。
+GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
+
+## v0.2.0の公開記録
+
+| 項目 | 内容 |
+|---|---|
+| 対象 | ADR 0014の最小RuntimeとContracts、ダミー、テスト、開発・受入資料 |
+| Python・依存 | CPython 3.12以上、実行時の外部依存なし |
+| 公開先 | [GitHub Release v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)。PyPIへの公開は行わない |
+| 配布物 | `nymph_toolkit-0.2.0-py3-none-any.whl`、`nymph_toolkit-0.2.0.tar.gz`、単一引継ぎ書、SHA256SUMS |
+| 受入 | [A02の結果](validation/v0.2.md)、Windows/LinuxとPython 3.12〜3.15のCI |
+| 実際の公開結果 | 対象SHA・最終CI・公開後の取得確認・各配布物のハッシュはReleaseと子Issue #26へ記録 |
+
+リリース対象コミットで `python tools/check_docs.py`、テスト、`python -m build`、`python tools/check_dist.py` を実行し、CIを確認する。同じコミットへ `v0.2.0` タグを付けてpushし、検証した配布物と同じタグの引継ぎ書をReleaseへ添付する。公開後は認証なしでタグ・添付を取得し、ハッシュ照合とwheelからのダミー・テスト実行を確認する。結果を記録して親Issue・マイルストーンを完了とする。
 
 ## v0.1.0の公開記録
 

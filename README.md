@@ -12,11 +12,11 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.2.0：最小Runtimeを実装し、受入・公開準備中です。** CoreとContractsの単一パッケージ、非同期の起動・実行・停止、失敗通知と後処理を実装しています。CPython 3.12以上を対象とし、実行時の外部依存はありません。Registry・Connections・TaskManager・別プロセス実行は今後の段階で扱います。
+**v0.2.0：最小Runtimeを公開（2026年11月20日）。** CoreとContractsの単一パッケージ、非同期の起動・実行・停止、失敗通知と後処理を実装しています。CPython 3.12以上を対象とし、実行時の外部依存はありません。Registry・Connections・TaskManager・別プロセス実行は今後の段階で扱います。
 
 v0.1.0では初期資料・開発基盤を2026年11月20日に公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3〜v0.8の配分は開発計画案です。
 
-[v0.1.0のリリース記録](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)から、公開内容と配布用引継ぎ書を確認できます。
+[v0.2.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)からwheel・sdist・引継ぎ書を取得できます。[受入記録](docs/validation/v0.2.md)には検証環境・結果・制約を記載しています。初回の資料公開は[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)に保持しています。
 
 V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0はCoreとSubsystem・Adapterの接続契約を大きく形作る目標です。v1.1.0〜v1.10.0のSubsystem・Adapter開発、奇数・偶数マイナーのリリース運用は設計提案としてロードマップに追記しています。記載するSubsystem名・Adapter名は暫定名称で、実装順序と機能配分も変更される可能性があります。
 
