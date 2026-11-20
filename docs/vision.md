@@ -308,7 +308,7 @@ CoreはSubsystem・Adapterの接続と実行環境を管理する。
 
 実行方式は、同一プロセスでの軽量なPythonメソッド呼び出しと、必要に応じた別プロセス実行を組み合わせるハイブリッド方式を採用する。
 
-通信経路の最後の正式採用はCore経由のみであり、直接通信を認める緩和案は未採用である。Connections実装前に維持・緩和を[ADR 0003](adr/0003-communication-routing.md)へ記録する。後続判断までは直接通信を前提としたコードを書かない。
+R12・[ADR 0015](adr/0015-core-authorized-direct-communication.md)により、Coreが管理・許可した接続で直接通信を認める。Core経由の通信も利用できる。許可範囲・API・解除時の動作などの詳細は対象の実装前に判断し、旧来のCore経由のみという判断は[ADR 0003](adr/0003-communication-routing.md)の履歴として保持する。この採用は長期ビジョンを変更するものではない。
 
 配布は単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterを必要に応じて分割する。[ADR 0009](adr/0009-package-distribution.md)の採用方針に従い、名称・分割対象・時期は個別に判断する。
 

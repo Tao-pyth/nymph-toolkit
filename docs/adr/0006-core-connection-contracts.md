@@ -31,7 +31,7 @@ R6で採用した初期配布方針に従い、CoreとContractsは一つの配�
 
 CoreはRuntime、Registry、Connections、TaskManagerを中心とする実行・接続・活動管理の基盤である。認知・意思決定はNymph側が担当する。軽量なPythonメソッド呼び出しとasyncioの方向性、およびハイブリッド実行を前提とする。
 
-Subsystem・Adapter向け共通接続契約と、同一・別プロセス間でどこまで通信契約を共通化するかは、それぞれ判断を記録する。通信の直接接続許可はADR 0003の未決事項であり、本ADRによる緩和の採用はない。
+Subsystem・Adapter向け共通接続契約と、同一・別プロセス間でどこまで通信契約を共通化するかは、それぞれ判断を記録する。本ADRの初稿時点では通信の直接接続許可はADR 0003の未決事項であり、本ADRによる緩和の採用はなかった。後続のR12・[ADR 0015](0015-core-authorized-direct-communication.md)でCoreが管理・許可した直接通信を採用した。個別の許可範囲と契約詳細は引き続き要決定である。
 
 ## 未決事項
 
