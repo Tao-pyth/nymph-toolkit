@@ -1,10 +1,10 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R6〜R10反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R6〜R11反映2026年11月20日 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。NTKは、その成長を可能にするSubsystemとAdapterのソフトウェア基盤を目指す。R7の添付Project Visionを長期ビジョンとして収録し、完成を特定のバージョンに固定しない。
 
-GitHub公開をv0.1.0、合意したCore機能の完成をv0.9.0、CoreとSubsystem・Adapterの接続契約整備をv1.0.0の目標とする。2026年11月20日にv0.1.0として初期資料・開発基盤を公開した。Coreコードと実行テストは未実装である。長期構想の方式・時期・定量的な受入条件は、各段階の設計・ADRで具体化する。
+GitHub公開をv0.1.0、合意したCore機能の完成をv0.9.0、CoreとSubsystem・Adapterの接続契約整備をv1.0.0の目標とする。2026年11月20日にv0.1.0として初期資料・開発基盤を公開した。v0.1.0公開時はCore未実装であった。R11により現在はv0.2の最小Runtimeと実行テストを実装している。長期構想の方式・時期・定量的な受入条件は、各段階の設計・ADRで具体化する。
 
 v1.0.0以降の契約詳細、Subsystem・Adapterの名称・実装順序・機能配分、奇数・偶数マイナーとパッチのリリース運用は設計提案として記載する。各名称は暫定であり、今後変更される可能性がある。
 
@@ -18,6 +18,8 @@ R9で、個人アカウント Tao-pyth 配下の nymph-toolkit を資料中心�
 
 R10で、コード変更に先立ちマイルストーン、親Issue、対応単位の子Issueを順に登録するルールを採用した。本書はv0.1.0公開後の未リリース更新を含む。公開済みReleaseの添付は初回公開時のスナップショットとして保持する。
 
+R11の実施指示に伴うv0.2の実装判断をADR 0014に記録した。最小RuntimeとContracts、起動・停止・失敗通知・後処理の範囲を具体化し、後続段階の未決事項とは区別する。
+
 ## 収録文書
 
 1. [Nymph Toolkit（NTK）](#section-1)
@@ -26,28 +28,29 @@ R10で、コード変更に先立ちマイルストーン、親Issue、対応単
 4. [Docsの読み方と根拠](#section-4)
 5. [Project Vision — 人工人格Nymphの最終到達目標](#section-5)
 6. [Architecture](#section-6)
-7. [ADR索引と更新方法](#section-7)
-8. [ADR 0001 Coreと統合リポジトリ](#section-8)
-9. [ADR 0002 実行モデル](#section-9)
-10. [ADR 0003 通信経路](#section-10)
-11. [ADR 0004 活動の決定権](#section-11)
-12. [ADR 0005 初期実装の範囲](#section-12)
-13. [ADR 0006 v1.0.0のCore接続契約](#section-13)
-14. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-14)
-15. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-15)
-16. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-16)
-17. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-17)
-18. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-18)
-19. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-19)
-20. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-20)
-21. [ADR 0014 v0.2の開発環境と最小Runtime](#section-21)
-22. [NTK開発ロードマップ](#section-22)
-23. [受入基準案と検証記録](#section-23)
-24. [開発準備とGit運用](#section-24)
-25. [マイルストーンと親子Issueの運用](#section-25)
-26. [公開準備とリリース手順](#section-26)
-27. [変更履歴](#section-27)
-28. [Apache License 2.0（原文）](#section-28)
+7. [v0.2 Runtimeの使い方](#section-7)
+8. [ADR索引と更新方法](#section-8)
+9. [ADR 0001 Coreと統合リポジトリ](#section-9)
+10. [ADR 0002 実行モデル](#section-10)
+11. [ADR 0003 通信経路](#section-11)
+12. [ADR 0004 活動の決定権](#section-12)
+13. [ADR 0005 初期実装の範囲](#section-13)
+14. [ADR 0006 v1.0.0のCore接続契約](#section-14)
+15. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-15)
+16. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-16)
+17. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-17)
+18. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-18)
+19. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-19)
+20. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-20)
+21. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-21)
+22. [ADR 0014 v0.2の開発環境と最小Runtime](#section-22)
+23. [NTK開発ロードマップ](#section-23)
+24. [受入基準案と検証記録](#section-24)
+25. [開発準備とGit運用](#section-25)
+26. [マイルストーンと親子Issueの運用](#section-26)
+27. [公開準備とリリース手順](#section-27)
+28. [変更履歴](#section-28)
+29. [Apache License 2.0（原文）](#section-29)
 
 ---
 
@@ -69,7 +72,9 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在の段階
 
-**v0.1.0：初期資料・開発基盤を公開（2026年11月20日）。Coreコードと実行テストは未実装です。** GitHub公開をV0.1とする目標に対応する初回公開です。合意したCore機能の完成をV0.9の目標とし、V0.2〜V0.8の機能配分は開発計画案として扱います。
+**v0.2.0：最小Runtimeを実装し、受入・公開準備中です。** CoreとContractsの単一パッケージ、非同期の起動・実行・停止、失敗通知と後処理を実装しています。CPython 3.12以上を対象とし、実行時の外部依存はありません。Registry・Connections・TaskManager・別プロセス実行は今後の段階で扱います。
+
+v0.1.0では初期資料・開発基盤を2026年11月20日に公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲はADR 0014（`docs/adr/0014-v0.2-runtime.md`）、v0.3〜v0.8の配分は開発計画案です。
 
 [v0.1.0のリリース記録](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)から、公開内容と配布用引継ぎ書を確認できます。
 
@@ -82,6 +87,17 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 通信について最後に正式採用された方針はCore経由のみです。その後の直接接続を認める緩和案は未採用で、Connections実装前の判断事項です。
 
 ### 開発を始める方へ
+
+CPython 3.12以上で、リポジトリ直下から次を実行できます（PowerShell）。LinuxではPythonのパスを `.venv/bin/python` に置き換えてください。
+
+```powershell
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install -e .
+.venv/Scripts/python.exe examples/runtime_demo.py
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+```
+
+ダミーはstart → run → stopの順に実行され、停止状態・結果・残存タスク0件を表示します。Runtimeの使い方（`docs/runtime.md`）とビルド・配布検証（`docs/development.md`）も参照してください。
 
 コード変更は、**対象バージョンのマイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順を必須とします。Issue運用と登録済み課題（`docs/issue-workflow.md`）を確認してから着手してください。登録した計画案は、仕様の採用と区別します。
 
@@ -107,7 +123,7 @@ NTKの自作コード、Contracts、設計文書には **Apache License 2.0（SP
 
 ## NTKへの参加
 
-NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェクトです。現在は資料・設計を中心とした初期段階で、Coreコードと実行テストは未実装です。
+NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェクトです。現在はCoreの最小RuntimeとContractsを実装し、ダミーで検証する初期段階です。実装状況はREADME（`README.md`）を参照してください。
 
 ### 提案・報告
 
@@ -183,6 +199,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | 単一配布用の引継ぎ書（`docs/NTK-Core-v0.1-Handoff-ja.md`） | 以下のDocs・ADRを一つに収録したスナップショット |
 | vision.md（`docs/vision.md`） | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | architecture.md（`docs/architecture.md`） | Coreの責務、境界、フォルダ構成、未決事項 |
+| runtime.md（`docs/runtime.md`） | v0.2の実装済みRuntime・Contractsの使い方と制約 |
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
 | roadmap.md（`docs/roadmap.md`） | 各段階の着手条件、作業、成果物、完了条件 |
 | acceptance.md（`docs/acceptance.md`） | バージョン別の検証シナリオと結果の記録方法 |
@@ -234,7 +251,7 @@ R11に伴うv0.2のPython・配布・Runtimeの実装判断はADR 0014に記録�
 | 長期ビジョン | R7で示された最終到達目標・研究方針。具体的な実装要件・時期・合格基準は段階ごとに判断する |
 | 初期スコープ外 | 今回計画するCore初期開発の対象から除く事項 |
 
-計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。特にV0.2〜V0.8への機能配分と受入方法は提案として扱う。
+計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014で具体化し、v0.3〜v0.8への機能配分と受入方法は提案として扱う。
 
 R4で列挙された時間・優先度の変更、中断・再開、取消・終了は採否を判断する対象として追記する。Subsystemの機能的依存と独立性の整理は提案として扱う。Coreが扱う機械的な実行順序と、Nymphが決める活動の価値・優先度の境界を明示し、優先度機能や実行枠の方式は後続判断へ残す。
 
@@ -244,7 +261,7 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、ADR索引と各ADR、roadmap、acceptance、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
 
 リポジトリ内の引継ぎ書は最新の資料へ同期し、公開済みReleaseの添付とタグはその時点のスナップショットとして保持する。v0.1.0以降の更新内容はCHANGELOGの未リリース欄で区別する。
 
@@ -661,6 +678,8 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ### 採用された構成
 
+v0.2でRuntimeと最小のContractsを実装した。Runtimeの使い方（`docs/runtime.md`）とADR 0014（`docs/adr/0014-v0.2-runtime.md`）に、一回のライフサイクル、呼出側イベントループ、失敗通知と後処理を記録する。下表のうちRegistry・Connections・TaskManagerと本番Subsystem・Adapterは今後の段階で扱う。
+
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
 
 | 構成要素 | 責務の整理案 | 実装前に具体化する点 |
@@ -741,7 +760,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 
 #### 初期の配置
 
-文書・Git設定・Apache-2.0の `LICENSE` は公開準備資料として配置済みである。自作コード・Contracts・設計文書への適用はADR 0011（`docs/adr/0011-apache-2.0-license.md`）で採用した。以下の `pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
+文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用はADR 0011（`docs/adr/0011-apache-2.0-license.md`）に従う。
 
 ```text
 nymph-toolkit/
@@ -753,11 +772,16 @@ nymph-toolkit/
 ├─ LICENSE
 ├─ CHANGELOG.md
 ├─ pyproject.toml
+├─ requirements-dev.txt
+├─ .github/workflows/ci.yml
+├─ examples/runtime_demo.py
+├─ tools/check_dist.py
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
 │  ├─ vision.md
 │  ├─ architecture.md
+│  ├─ runtime.md
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ development.md
@@ -777,18 +801,18 @@ nymph-toolkit/
 │     ├─ 0010-project-vision.md
 │     ├─ 0011-apache-2.0-license.md
 │     ├─ 0012-v0.1-publication.md
-│     └─ 0013-milestone-issue-workflow.md
+│     ├─ 0013-milestone-issue-workflow.md
+│     └─ 0014-v0.2-runtime.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
 │     └─ contracts/
 └─ tests/
    ├─ core/
-   ├─ contracts/
    └─ doubles/
 ```
 
-R3の文書・開発配置案へ、R5のADR 0006〜0008、R6のContracts・ADR 0009、R7のvision・ADR 0010を反映した。4責務は `core/` 内のモジュールとして始める案とし、クラス名と公開API名は実装時に決定する。ダミーは `tests/doubles/`、Coreの検証は `tests/core/`、共有契約の検証は `tests/contracts/` に置く案とする。テスト用ディレクトリも対象の実装・検証が必要になった段階で作成する。
+R3の配置案をR11の実装に合わせて具体化した。Runtimeは `core/runtime.py`、最小契約は `contracts/__init__.py` にある。ダミーは `tests/doubles/`、Coreの検証は `tests/core/` に置く。共有契約の独立した検証が必要になった場合は `tests/contracts/` を追加する案とする。残りの3責務のモジュール・APIはその実装時に判断する。
 
 #### Subsystem・Adapterを追加する際の配置案
 
@@ -810,7 +834,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 
 | 判断 | 判断する時点の案 | 記録先 |
 |---|---|---|
-| Python対応版、配布パッケージの正式名称、ビルド・テストツール、Runtimeのライフサイクル | V0.2着手時 | development、ADR 0009と後続ADR |
+| Python対応版、配布パッケージの正式名称、ビルド・テストツール、Runtimeのライフサイクル | v0.2で採用済み | development、ADR 0014 |
 | Subsystem・Adapterの同梱・分割対象、任意依存、公開import名、バージョン管理 | 各対象の実装・配布を設計する時点 | ADR 0009に関連付ける後続ADR |
 | 登録ID、重複、稼働中の着脱、機能的依存の採否・宣言、解除による利用不能の検出と通知 | V0.3着手時 | ADR 0001と後続ADR |
 | Core経由維持・直接接続緩和、経路別の許可条件 | Connections実装前 | ADR 0003 |
@@ -828,11 +852,91 @@ v1.xでは、各Contractの公開範囲・互換性、Subsystemの正式名称�
 
 <a id="section-7"></a>
 
+収録元 `docs/runtime.md`
+
+## v0.2 Runtimeの使い方
+
+v0.2は、一つの実行入口を同一プロセスで起動・実行・停止する最小Runtimeである。仕様判断はADR 0014（`docs/adr/0014-v0.2-runtime.md`）、環境構築と検証はdevelopment（`docs/development.md`）にある。Registry・Connections・TaskManager、別プロセス実行はまだ含まない。
+
+### 実行例
+
+インストール済みのPythonでダミー例（`examples/runtime_demo.py`）を実行する。
+
+```powershell
+.venv/Scripts/python.exe examples/runtime_demo.py
+```
+
+正常時には次を表示する。
+
+```json
+{"state": "stopped", "result": "dummy-result", "events": ["start", "run", "stop"], "remaining_tasks": 0}
+```
+
+利用側はRuntimeServiceの三つの非同期メソッドを実装する。継承は必須ではなく、同じ契約を満たすオブジェクトを渡せる。
+
+```python
+import asyncio
+from nymph_toolkit.core import Runtime
+
+class Service:
+    async def start(self):
+        pass  # 初期化
+
+    async def run(self):
+        await asyncio.sleep(0)
+        return "completed"
+
+    async def stop(self):
+        pass  # 部分初期化も考慮してリソースを解放
+
+async def main():
+    runtime = Runtime(Service())
+    await runtime.start()
+    try:
+        print(await runtime.wait())
+    finally:
+        await runtime.stop()
+
+asyncio.run(main())
+```
+
+イベントループは利用側が用意する。既存のasyncioアプリでは、そのループ内からstart・wait・stopをawaitする。Runtimeはループの作成や終了、活動内容の選択を行わない。
+
+### 公開インターフェース
+
+| import | 用途 |
+|---|---|
+| `nymph_toolkit.core.Runtime` | 一回のライフサイクルを管理する。start、wait、stopとstateを公開 |
+| `nymph_toolkit.contracts.RuntimeService` | start・run・stopを定義する型契約 |
+| `RuntimeState` | NEW / STARTING / RUNNING / STOPPING / STOPPED / FAILED |
+| `RuntimeFailure`、`LifecycleFailure`、`LifecyclePhase` | 初期化・実行・後処理の失敗通知。後二者と例外はcontractsからimport |
+| `RuntimeStateError` | 二重起動、別ループからの制御、自己待機などの不正な操作 |
+
+waitはrunの結果を返す。停止要求によってrunがキャンセルされた場合はNoneである。自然終了と停止のどちらでも、初期化を開始していればstopを一度呼び出す。waitとstopは後処理まで待つ。インスタンスは再起動せず、次の実行には新しいRuntimeを作る。
+
+開始・実行の失敗も後処理を経てFAILEDとなる。RuntimeFailure.failuresにはphaseと元例外が順に保持される。例えばrunとstopが両方失敗しても、runの原因は失われない。後からstopやwaitを再度呼んだ場合も失敗を通知する。タスク生成そのものの失敗は初期化失敗として通知し、サービスのフックは呼ばない。
+
+### 停止とキャンセル
+
+stopは実行中または初期化中の処理へキャンセルを要求する。後処理中の重複stopで後処理を再キャンセルしない。サービスが自分で作ったタスクや接続は、そのサービスのstopが終了させる。Runtimeは無関係な呼出側タスクを停止しない。
+
+waitを待つ側がキャンセルされてもサービスは実行を続ける。startを待つ側がキャンセルされた場合は停止を要求する。stopを待つ側がキャンセルされても後処理は継続する。必要に応じて再びstopまたはwaitをawaitして、終了を確認する。
+
+キャンセルに応答しないサービスは強制終了できない。待機の期限は呼出側でasyncio.timeoutを使って設定できるが、TimeoutErrorはRuntimeの停止完了を意味しない。ブロッキングI/OやCPU処理をそのままイベントループへ置かない。
+
+### 適用範囲
+
+RuntimeServiceはv0.2の実行入口であり、Subsystem・Adapterの登録や通信の契約全体ではない。APIは初期開発中であり、v1.0の公開契約へ向けて変更を判断する。活動の開始時刻・期間・優先度や価値判断をRuntimeへ追加しない。
+
+---
+
+<a id="section-8"></a>
+
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R10の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R11の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -861,7 +965,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 
 ---
 
-<a id="section-8"></a>
+<a id="section-9"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -915,7 +1019,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-9"></a>
+<a id="section-10"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -951,7 +1055,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-10"></a>
+<a id="section-11"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -1011,7 +1115,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-11"></a>
+<a id="section-12"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -1070,7 +1174,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-12"></a>
+<a id="section-13"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -1106,7 +1210,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-13"></a>
+<a id="section-14"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -1155,7 +1259,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-14"></a>
+<a id="section-15"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -1202,7 +1306,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-15"></a>
+<a id="section-16"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -1258,7 +1362,7 @@ R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンに
 
 ---
 
-<a id="section-16"></a>
+<a id="section-17"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -1313,7 +1417,7 @@ R6の「単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 ---
 
-<a id="section-17"></a>
+<a id="section-18"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -1366,7 +1470,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -1420,7 +1524,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -1460,7 +1564,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -1503,7 +1607,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-21"></a>
+<a id="section-22"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -1570,7 +1674,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-22"></a>
+<a id="section-23"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -1782,13 +1886,13 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-23"></a>
+<a id="section-24"></a>
 
 収録元 `docs/acceptance.md`
 
 ## 受入基準案と検証記録
 
-以下は確定方針を確認するための**受入案**である。操作例や観察方法は提案として扱う。未決のAPI・失敗時動作を判断した後、期待結果を具体化する。現時点でCoreの実行検証は未実施である。
+以下は各段階の**受入案**である。v0.2のA02はADR 0014で具体化し、Runtimeの実行検証を行う。他の段階の操作例や観察方法は引き続き提案とし、対象のAPI・失敗時動作を判断してから期待結果を具体化する。
 
 ### バージョン別シナリオ
 
@@ -1901,7 +2005,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-24"></a>
+<a id="section-25"></a>
 
 収録元 `docs/development.md`
 
@@ -1920,6 +2024,8 @@ python --version
 python -m venv .venv
 .venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 .venv/Scripts/python.exe -m pip install -e .
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+.venv/Scripts/python.exe examples/runtime_demo.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
 ```
@@ -1928,15 +2034,15 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15でビルドと配布検証を行う。Runtime実装後には同じ環境で非同期テストとダミー実行も行う。
+CIはWindowsとLinux、Python 3.12〜3.15で非同期テスト、ダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）に記載する。
 
 ### 実装開始時の配布構成
 
 v0.2での採用結果はADR 0014（`docs/adr/0014-v0.2-runtime.md`）に記録する。CPython 3.12以上、配布名 `nymph-toolkit`、venv・pip、build・Hatchling、標準unittestを使用する。実行時依存は追加しない。Core・Contractsの単一wheel・sdistをGitHub Releaseから配布する。以下にある「実装開始時に記録する」項目のうち、これらは本ADRで具体化した。
 
-ADR 0009（`docs/adr/0009-package-distribution.md`）に従い、初期はCoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。Contractsは必要な契約から追加する。配布パッケージの正式名称、ビルドツール、対応Python版、依存・テストツールは実装開始時に記録する。
+ADR 0009（`docs/adr/0009-package-distribution.md`）に従い、CoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。v0.2で必要なライフサイクル契約を実装し、残る契約は後続段階で具体化する。
 
-検証手順案として、ビルドした配布物を新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。開発用ソースへの参照だけで成功していないことを確認する。具体的なコマンドはツール採用・実装後に掲載し、結果をacceptanceの形式で残す。
+ビルドした配布物をcheck_distで新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。結果はacceptanceの記録形式で残す。
 
 Subsystem・Adapterは必要に応じて同じリポジトリ内で別配布にする。分割時は対象の `pyproject.toml`、ソース・テストを配置する案とし、依存宣言、Core・Contractsの対応バージョン、公開import名、ビルド・インストール・組合せ検証の手順を後続ADRへ記録する。配置例はarchitecture.md（`docs/architecture.md`）を参照する。
 
@@ -2015,7 +2121,7 @@ git diff --cached --check
 git diff --cached
 ```
 
-実装開始後は、本書に環境構築、テスト、ダミー受入シナリオの実行コマンドを追加する。新しい作業環境で再現し、OS・Python版・依存版と結果をacceptanceの記録形式で残す。
+各段階で本書の環境構築、テスト、ダミー受入シナリオを更新する。新しい作業環境で再現し、OS・Python版・依存版と結果をacceptanceの記録形式で残す。
 
 ### 文書更新時の確認
 
@@ -2025,7 +2131,7 @@ git diff --cached
 
 ---
 
-<a id="section-25"></a>
+<a id="section-26"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -2063,7 +2169,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 
 ### 計画と仕様の区別
 
-この運用ルールは採用済みである。一方、v0.2〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録は採用や着手の宣言ではない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
+この運用ルールは採用済みである。v0.2はR11とADR 0014で実施範囲を具体化した。一方、v0.3〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録は採用や着手の宣言ではない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
 
 v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝CoreとSubsystem・Adapterの接続契約整備という確定目標を維持する。NymphとCoreの責務分離、Core経由のみという最後の正式な通信方針も変更しない。
 
@@ -2074,7 +2180,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | マイルストーン | 親Issue | 計画の位置付け |
 |---|---|---|
 | [v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/1) | [#1 GitHub公開](https://github.com/Tao-pyth/nymph-toolkit/issues/1) | 確定目標・公開済み |
-| [v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/2) | [#2 Runtime](https://github.com/Tao-pyth/nymph-toolkit/issues/2) | 機能配分案 |
+| [v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/2) | [#2 Runtime](https://github.com/Tao-pyth/nymph-toolkit/issues/2) | R11・ADR 0014で実施範囲を具体化 |
 | [v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/3) | [#3 Registry](https://github.com/Tao-pyth/nymph-toolkit/issues/3) | 機能配分案 |
 | [v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/4) | [#4 Connections](https://github.com/Tao-pyth/nymph-toolkit/issues/4) | 機能配分案 |
 | [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | 機能配分案 |
@@ -2113,13 +2219,13 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 
 ---
 
-<a id="section-26"></a>
+<a id="section-27"></a>
 
 収録元 `docs/release.md`
 
 ## 公開準備とリリース手順
 
-GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤をpublicで公開した。以下に初回公開の判断記録と再現手順を示す。Coreコードと実行テストは未実装である。
+GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤をpublicで公開した。以下のv0.1.0欄は初回公開時の記録である。現在はv0.2の最小Runtimeと実行テストを実装し、受入・公開準備を進めている。
 
 ### v0.1.0の公開記録
 
@@ -2239,13 +2345,17 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-27"></a>
+<a id="section-28"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
 
 ### 未リリース
+
+- v0.2のRuntimeと最小Contractsを実装。起動・実行・停止、自然終了とキャンセル時の後処理、失敗の保持・通知を追加。
+- CPython 3.12以上、Core・Contractsの単一wheel・sdist、実行時依存なしの構成をADR 0014へ記録。
+- 非同期ライフサイクルテスト、ダミー例、Windows・LinuxのCI、配布物を新規環境で検証する手順を追加。
 
 - R10・ADR 0013により、コード変更前にマイルストーン・親Issue・対応単位の子Issueを登録する運用を採用。
 - 既存ロードマップの20段階をGitHubマイルストーンと親Issueに整理し、v0.2に向けた5件の子Issueを登録。
@@ -2273,7 +2383,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-28"></a>
+<a id="section-29"></a>
 
 収録元 `LICENSE`
 

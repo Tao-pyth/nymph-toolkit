@@ -12,7 +12,9 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.1.0：初期資料・開発基盤を公開（2026年11月20日）。Coreコードと実行テストは未実装です。** GitHub公開をV0.1とする目標に対応する初回公開です。合意したCore機能の完成をV0.9の目標とし、V0.2〜V0.8の機能配分は開発計画案として扱います。
+**v0.2.0：最小Runtimeを実装し、受入・公開準備中です。** CoreとContractsの単一パッケージ、非同期の起動・実行・停止、失敗通知と後処理を実装しています。CPython 3.12以上を対象とし、実行時の外部依存はありません。Registry・Connections・TaskManager・別プロセス実行は今後の段階で扱います。
+
+v0.1.0では初期資料・開発基盤を2026年11月20日に公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3〜v0.8の配分は開発計画案です。
 
 [v0.1.0のリリース記録](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)から、公開内容と配布用引継ぎ書を確認できます。
 
@@ -25,6 +27,17 @@ Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管�
 通信について最後に正式採用された方針はCore経由のみです。その後の直接接続を認める緩和案は未採用で、Connections実装前の判断事項です。
 
 ## 開発を始める方へ
+
+CPython 3.12以上で、リポジトリ直下から次を実行できます（PowerShell）。LinuxではPythonのパスを `.venv/bin/python` に置き換えてください。
+
+```powershell
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install -e .
+.venv/Scripts/python.exe examples/runtime_demo.py
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+```
+
+ダミーはstart → run → stopの順に実行され、停止状態・結果・残存タスク0件を表示します。[Runtimeの使い方](docs/runtime.md)と[ビルド・配布検証](docs/development.md)も参照してください。
 
 コード変更は、**対象バージョンのマイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順を必須とします。[Issue運用と登録済み課題](docs/issue-workflow.md)を確認してから着手してください。登録した計画案は、仕様の採用と区別します。
 

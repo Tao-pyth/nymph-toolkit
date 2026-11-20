@@ -10,6 +10,8 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ## 採用された構成
 
+v0.2でRuntimeと最小のContractsを実装した。[Runtimeの使い方](runtime.md)と[ADR 0014](adr/0014-v0.2-runtime.md)に、一回のライフサイクル、呼出側イベントループ、失敗通知と後処理を記録する。下表のうちRegistry・Connections・TaskManagerと本番Subsystem・Adapterは今後の段階で扱う。
+
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
 
 | 構成要素 | 責務の整理案 | 実装前に具体化する点 |
@@ -90,7 +92,7 @@ ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要
 
 ### 初期の配置
 
-文書・Git設定・Apache-2.0の `LICENSE` は公開準備資料として配置済みである。自作コード・Contracts・設計文書への適用は[ADR 0011](adr/0011-apache-2.0-license.md)で採用した。以下の `pyproject.toml`、`src/`、`tests/` は実装着手時に作成する予定である。
+文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用は[ADR 0011](adr/0011-apache-2.0-license.md)に従う。
 
 ```text
 nymph-toolkit/
@@ -102,11 +104,16 @@ nymph-toolkit/
 ├─ LICENSE
 ├─ CHANGELOG.md
 ├─ pyproject.toml
+├─ requirements-dev.txt
+├─ .github/workflows/ci.yml
+├─ examples/runtime_demo.py
+├─ tools/check_dist.py
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
 │  ├─ vision.md
 │  ├─ architecture.md
+│  ├─ runtime.md
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ development.md
@@ -126,18 +133,18 @@ nymph-toolkit/
 │     ├─ 0010-project-vision.md
 │     ├─ 0011-apache-2.0-license.md
 │     ├─ 0012-v0.1-publication.md
-│     └─ 0013-milestone-issue-workflow.md
+│     ├─ 0013-milestone-issue-workflow.md
+│     └─ 0014-v0.2-runtime.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
 │     └─ contracts/
 └─ tests/
    ├─ core/
-   ├─ contracts/
    └─ doubles/
 ```
 
-R3の文書・開発配置案へ、R5のADR 0006〜0008、R6のContracts・ADR 0009、R7のvision・ADR 0010を反映した。4責務は `core/` 内のモジュールとして始める案とし、クラス名と公開API名は実装時に決定する。ダミーは `tests/doubles/`、Coreの検証は `tests/core/`、共有契約の検証は `tests/contracts/` に置く案とする。テスト用ディレクトリも対象の実装・検証が必要になった段階で作成する。
+R3の配置案をR11の実装に合わせて具体化した。Runtimeは `core/runtime.py`、最小契約は `contracts/__init__.py` にある。ダミーは `tests/doubles/`、Coreの検証は `tests/core/` に置く。共有契約の独立した検証が必要になった場合は `tests/contracts/` を追加する案とする。残りの3責務のモジュール・APIはその実装時に判断する。
 
 ### Subsystem・Adapterを追加する際の配置案
 
@@ -159,7 +166,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 | 判断 | 判断する時点の案 | 記録先 |
 |---|---|---|
-| Python対応版、配布パッケージの正式名称、ビルド・テストツール、Runtimeのライフサイクル | V0.2着手時 | development、ADR 0009と後続ADR |
+| Python対応版、配布パッケージの正式名称、ビルド・テストツール、Runtimeのライフサイクル | v0.2で採用済み | development、ADR 0014 |
 | Subsystem・Adapterの同梱・分割対象、任意依存、公開import名、バージョン管理 | 各対象の実装・配布を設計する時点 | ADR 0009に関連付ける後続ADR |
 | 登録ID、重複、稼働中の着脱、機能的依存の採否・宣言、解除による利用不能の検出と通知 | V0.3着手時 | ADR 0001と後続ADR |
 | Core経由維持・直接接続緩和、経路別の許可条件 | Connections実装前 | ADR 0003 |

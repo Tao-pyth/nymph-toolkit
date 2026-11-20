@@ -13,6 +13,8 @@ python --version
 python -m venv .venv
 .venv/Scripts/python.exe -m pip install -r requirements-dev.txt
 .venv/Scripts/python.exe -m pip install -e .
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+.venv/Scripts/python.exe examples/runtime_demo.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
 ```
@@ -21,15 +23,15 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15でビルドと配布検証を行う。Runtime実装後には同じ環境で非同期テストとダミー実行も行う。
+CIはWindowsとLinux、Python 3.12〜3.15で非同期テスト、ダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)に記載する。
 
 ## 実装開始時の配布構成
 
 v0.2での採用結果は[ADR 0014](adr/0014-v0.2-runtime.md)に記録する。CPython 3.12以上、配布名 `nymph-toolkit`、venv・pip、build・Hatchling、標準unittestを使用する。実行時依存は追加しない。Core・Contractsの単一wheel・sdistをGitHub Releaseから配布する。以下にある「実装開始時に記録する」項目のうち、これらは本ADRで具体化した。
 
-[ADR 0009](adr/0009-package-distribution.md)に従い、初期はCoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。Contractsは必要な契約から追加する。配布パッケージの正式名称、ビルドツール、対応Python版、依存・テストツールは実装開始時に記録する。
+[ADR 0009](adr/0009-package-distribution.md)に従い、CoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。v0.2で必要なライフサイクル契約を実装し、残る契約は後続段階で具体化する。
 
-検証手順案として、ビルドした配布物を新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。開発用ソースへの参照だけで成功していないことを確認する。具体的なコマンドはツール採用・実装後に掲載し、結果をacceptanceの形式で残す。
+ビルドした配布物をcheck_distで新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。結果はacceptanceの記録形式で残す。
 
 Subsystem・Adapterは必要に応じて同じリポジトリ内で別配布にする。分割時は対象の `pyproject.toml`、ソース・テストを配置する案とし、依存宣言、Core・Contractsの対応バージョン、公開import名、ビルド・インストール・組合せ検証の手順を後続ADRへ記録する。配置例は[architecture.md](architecture.md)を参照する。
 
@@ -108,7 +110,7 @@ git diff --cached --check
 git diff --cached
 ```
 
-実装開始後は、本書に環境構築、テスト、ダミー受入シナリオの実行コマンドを追加する。新しい作業環境で再現し、OS・Python版・依存版と結果をacceptanceの記録形式で残す。
+各段階で本書の環境構築、テスト、ダミー受入シナリオを更新する。新しい作業環境で再現し、OS・Python版・依存版と結果をacceptanceの記録形式で残す。
 
 ## 文書更新時の確認
 

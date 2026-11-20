@@ -12,6 +12,7 @@
 | [単一配布用の引継ぎ書](NTK-Core-v0.1-Handoff-ja.md) | 以下のDocs・ADRを一つに収録したスナップショット |
 | [vision.md](vision.md) | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | [architecture.md](architecture.md) | Coreの責務、境界、フォルダ構成、未決事項 |
+| [runtime.md](runtime.md) | v0.2の実装済みRuntime・Contractsの使い方と制約 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
 | [roadmap.md](roadmap.md) | 各段階の着手条件、作業、成果物、完了条件 |
 | [acceptance.md](acceptance.md) | バージョン別の検証シナリオと結果の記録方法 |
@@ -63,7 +64,7 @@ R11に伴うv0.2のPython・配布・Runtimeの実装判断はADR 0014に記録�
 | 長期ビジョン | R7で示された最終到達目標・研究方針。具体的な実装要件・時期・合格基準は段階ごとに判断する |
 | 初期スコープ外 | 今回計画するCore初期開発の対象から除く事項 |
 
-計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。特にV0.2〜V0.8への機能配分と受入方法は提案として扱う。
+計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014で具体化し、v0.3〜v0.8への機能配分と受入方法は提案として扱う。
 
 R4で列挙された時間・優先度の変更、中断・再開、取消・終了は採否を判断する対象として追記する。Subsystemの機能的依存と独立性の整理は提案として扱う。Coreが扱う機械的な実行順序と、Nymphが決める活動の価値・優先度の境界を明示し、優先度機能や実行枠の方式は後続判断へ残す。
 
@@ -73,6 +74,6 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、ADR索引と各ADR、roadmap、acceptance、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、ADR索引と各ADR、roadmap、acceptance、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。元文書と本文を照合してから配布する。
 
 リポジトリ内の引継ぎ書は最新の資料へ同期し、公開済みReleaseの添付とタグはその時点のスナップショットとして保持する。v0.1.0以降の更新内容はCHANGELOGの未リリース欄で区別する。
