@@ -327,7 +327,8 @@ class StorageFailure(StorageError):
         self.cause = cause
         self.unsaved_events = unsaved_events
         self.pending_configuration = pending_configuration
-        super().__init__(
-            f"Storage rescue failed: {cause}; unsaved_events={unsaved_events}, "
-            f"pending_configuration={pending_configuration}"
-        )
+        super().__init__(str(self))
+
+    def __str__(self) -> str:
+        return (f"Storage rescue failed: {self.cause}; unsaved_events={self.unsaved_events}, "
+                f"pending_configuration={self.pending_configuration}")

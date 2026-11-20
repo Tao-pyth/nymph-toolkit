@@ -5,5 +5,6 @@ from .runtime import Runtime
 from .registry import Registry
 from .module_group import ModuleGroup
 from .connections import Connections, PreparedConnection
+from .storage import FileStore
 
-__all__ = ["Connections", "ModuleGroup", "PreparedConnection", "Registry", "Runtime"]
+__all__ = ["Connections", "FileStore", "ModuleGroup", "PreparedConnection", "Registry", "Runtime"]
