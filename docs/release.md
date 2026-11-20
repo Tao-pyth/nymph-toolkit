@@ -1,18 +1,18 @@
 # 公開準備とリリース手順
 
-GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。現在は公開準備段階である。以下は実際に公開する際の手順と判断欄である。
+GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤をpublicで公開した。以下に初回公開の判断記録と再現手順を示す。Coreコードと実行テストは未実装である。
 
-## 公開前の判断欄
+## v0.1.0の公開記録
 
-| 項目 | 現在の状態 | 公開前に記録する内容 |
+| 項目 | 現在の状態 | 記録 |
 |---|---|---|
 | リポジトリ名 | 確定 | `nymph-toolkit` |
 | 公開先アカウント | 採用済み（R9） | 個人アカウント `Tao-pyth`。GitHub接続でも確認済み |
-| 公開範囲 | 採用済み（R9） | 最初からpublicで公開する |
+| 公開範囲 | publicを確認済み | R9に従い最初からpublicで公開 |
 | ライセンス | 採用済み（R8、2026年11月20日） | 自作コード・Contracts・設計文書へApache-2.0を適用。[LICENSE](../LICENSE)と[ADR 0011](adr/0011-apache-2.0-license.md)を配置済み |
 | 公開対象 | 資料中心で確定（R9） | README、CONTRIBUTING、Docs・ADR、CHANGELOG、Git設定、LICENSE。Core未実装を明記 |
-| 公開URL・remote | 設定予定 | `https://github.com/Tao-pyth/nymph-toolkit` と `origin` |
-| V0.1タグ・公開日 | 未作成・未記入 | `v0.1.0`、対象コミットSHA、実際の公開日 |
+| 公開URL・remote | 設定済み | [Tao-pyth/nymph-toolkit](https://github.com/Tao-pyth/nymph-toolkit)、`origin` は `https://github.com/Tao-pyth/nymph-toolkit.git` |
+| V0.1タグ・公開日 | 初回公開の対象 | `v0.1.0`、2026年11月20日。対象コミットSHAと公開後の検証結果は[GitHub Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)に記録 |
 
 公開先の接続確認と、公開先の選定はそれぞれ記録する。ライセンスはR8でApache-2.0、公開先と公開範囲はR9で `Tao-pyth/nymph-toolkit` のpublic公開へ確定した。判断記録は[ADR 0012](adr/0012-v0.1-publication.md)。公開・タグ・Releaseの完了は実際の結果を確認して記録する。
 
@@ -30,7 +30,7 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 - [x] 文書リンク、文字コード、改行、受入IDの対応を確認する。
 - [x] README・CHANGELOG・本書の公開時の更新を準備する。
 
-ローカルでの公開前確認は2026年11月20日に実施した。GitHubのリポジトリ作成・push・タグ・Releaseの公開と、公開後の取得確認は次の手順で行う。
+ローカルでの公開前確認は2026年11月20日に実施した。文書リンク、引継ぎ書と収録元の一致、LICENSE原文、公開対象とGit履歴を確認した。初回push後にpublic設定とローカル・remoteのコミット一致を確認した。以下はタグ・Release作成と公開後の取得確認を含む手順である。最終結果は上記Releaseに記録する。
 
 ## ライセンスと配布内容の確認
 

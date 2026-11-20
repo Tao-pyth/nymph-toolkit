@@ -1,6 +1,6 @@
 # 変更履歴
 
-## 未リリース — 公開準備
+## v0.1.0 — 2026年11月20日
 
 - 日本語の初期設計・Codex引継ぎ書と個別Docs・ADRを整備。
 - GitHub公開をV0.1、Core機能完成をV0.9とするロードマップ案と受入基準案を掲載。
@@ -18,4 +18,4 @@
 - 第三者成果物と個体データの条件を適用範囲から区別し、分割後の配布物にもLICENSEを含める方針を記録。単一配布用引継ぎ書へライセンス原文を収録。
 - R9・ADR 0012で `Tao-pyth/nymph-toolkit` のpublic公開を採用し、Issue・Pull Requestでの参加方針をCONTRIBUTINGへ追加。
 
-V0.1の公開時に、この項目を実際の公開日と `v0.1.0` に対応するリリース記録へ更新する。
+資料・設計・開発基盤を中心とした初回public公開。Coreコード・本番Subsystem・Adapter・実行テストは未実装である。[リリース記録](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)に対象コミットと確認結果を記載する。
