@@ -2,9 +2,9 @@
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
 
-## v0.5.0の公開準備（未公開）
+## v0.5.0の公開手順と記録
 
-R17によりTaskManager基本機能へ着手した。公開課題は[#51](https://github.com/Tao-pyth/nymph-toolkit/issues/51)、先行する設計・実装・受入は親Issue #5・子Issue #45〜#50で管理する。採用範囲を実装し、版情報を0.5.0へ更新して配布検証を進める。A05・配布・最終CIの確認前にタグ・Releaseを作成しない。
+R17によりTaskManager基本機能へ着手した。公開課題は[#51](https://github.com/Tao-pyth/nymph-toolkit/issues/51)、先行する設計・実装・受入は親Issue #5・子Issue #45〜#50で管理する。採用範囲の実装・A05・配布検証を確認した。公開対象版は0.5.0。最終コミットのCI確認後、タグ・Releaseを作成する。公開後の結果は[Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.5.0)と#51へ記録する。
 
 公開前に[ADR 0020](adr/0020-v0.5-task-manager.md)で必要な判断を確定し、A05の要件ごとの証拠、採用したAPI、未対応範囲、実行例、ソース・wheel・sdistの検証結果、最終コミットのCIを確認する。予定時間到達時の通知・継続とNymphの意思決定の境界を受入に含める。再起動時の履歴提供とNymphによる再登録、過去時刻の返却、安全な終了も確認する。公開結果は#51へ記録し、既存v0.1.0〜v0.4.0のタグ・添付を保持する。
 

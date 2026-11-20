@@ -12,17 +12,19 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.4.0：Connections・非同期保存・救命処理。** CoreとContractsの単一パッケージに、既存のRuntime・Registry・ModuleGroupと、候補照会・接続固定・直接／Core経由の操作・協調的中断・ヘルスチェック・FileStoreを含みます。CPython 3.12以上、実行時の外部依存はありません。別プロセス実行は後続段階で扱います。
+**v0.5.0：TaskManagerとNymph主導の活動管理。** CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
 
-v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtime、v0.3.0ではRegistry・ModuleGroupを公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3は[ADR 0016](docs/adr/0016-v0.3-registry.md)、v0.4は[ADR 0019](docs/adr/0019-v0.4-connections.md)で具体化しました。
+予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。[操作契約](docs/task-manager.md)と[ADR 0020](docs/adr/0020-v0.5-task-manager.md)に採用範囲を記録しています。
 
-**v0.5は実装・検証中です。** [親Issue #5](https://github.com/Tao-pyth/nymph-toolkit/issues/5)と子Issue #45〜#51で活動Contracts・TaskManager・ModuleGroup連携・活動履歴の参照を実装しました。予定時間到達時は通知して活動を継続し、Nymphの終了指示を受けた実行側が安全な区切りで終了します。過去時刻の要求は開始せず返し、再起動後の再登録・再開もNymphが判断します。[操作契約](docs/task-manager.md)、[ADR 0020](docs/adr/0020-v0.5-task-manager.md)、[検証経過](docs/validation/v0.5.md)を参照してください。ソース177テストと新しい実行例、接続・保存障害の統合検証を確認しましたが、配布・CI・公開確認が残り、A05全体は未完了です。v0.6〜v0.8の機能配分は引き続き開発計画案です。
+A05では177テスト、4実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。[v0.5受入記録](docs/validation/v0.5.md)に要件ごとの証拠と制約をまとめています。活動の時刻・期間・優先度変更、中断再開、IPC、本番Subsystemは後続段階です。
+
+v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。v0.6〜v0.8の機能配分は開発計画案です。
 
 採用範囲のA04では129件のテスト、3実行例、Windows／Linux・Python 3.12〜3.15、通常インストール・sdist再ビルドと性能測定を確認しました。[Connectionsの操作契約](docs/connections.md)と[v0.4受入記録](docs/validation/v0.4.md)に、使い方・結果・制約を記載しています。
 
 v0.3では実行開始前にSubsystem・Adapterのダミーを着脱し、起動から停止完了まで構成を固定します。停止後は明示解除できます。実体の稼働中着脱は、接続の解除・失効契約を設計する後続段階へ残しています。利用方法は[RegistryとModuleGroup](docs/registry.md)を参照してください。
 
-[v0.4.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)にwheel・sdist・引継ぎ書・チェックサムと公開結果を掲載します。対象SHAと公開後の取得確認は[公開課題 #44](https://github.com/Tao-pyth/nymph-toolkit/issues/44)でも追跡します。過去の[v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)・[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
+[v0.5.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.5.0)にwheel・sdist・引継ぎ書・チェックサムを掲載します。最終SHA・CI・公開後の取得確認は[公開課題 #51](https://github.com/Tao-pyth/nymph-toolkit/issues/51)で追跡します。過去の[v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)・[v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)・[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
 
 V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0はCoreとSubsystem・Adapterの接続契約を大きく形作る目標です。v1.1.0〜v1.10.0のSubsystem・Adapter開発、奇数・偶数マイナーのリリース運用は設計提案としてロードマップに追記しています。記載するSubsystem名・Adapter名は暫定名称で、実装順序と機能配分も変更される可能性があります。
 
