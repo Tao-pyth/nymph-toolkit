@@ -76,5 +76,6 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [#23](https://github.com/Tao-pyth/nymph-toolkit/issues/23) | 採用判断に基づくCore・Contracts開発環境 | #22 |
 | [#24](https://github.com/Tao-pyth/nymph-toolkit/issues/24) | 採用した最小Runtimeとダミー実行 | #22・#23 |
 | [#25](https://github.com/Tao-pyth/nymph-toolkit/issues/25) | A02の受入と再現手順の確認 | #24 |
+| [#26](https://github.com/Tao-pyth/nymph-toolkit/issues/26) | R11に伴うv0.2.0公開と配布物の取得確認 | #25 |
 
-この分割は対応を追跡するための初期計画である。#22でPython版・ツール・APIなどを判断し、結果に合わせて後続の範囲と検証条件を更新する。今回の文書整備だけでv0.2の実装へ進めたことにはしない。
+この分割は対応を追跡するための初期計画である。R11の実施に伴い、#22でPython版・ツール・APIなどをADR 0014へ記録し、後続の範囲と検証条件を更新する。#26は受入後の公開を独立した対応単位として追加した。

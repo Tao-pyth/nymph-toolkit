@@ -8,6 +8,8 @@
 
 ## 実装開始時の配布構成
 
+v0.2での採用結果は[ADR 0014](adr/0014-v0.2-runtime.md)に記録する。CPython 3.12以上、配布名 `nymph-toolkit`、venv・pip、build・Hatchling、標準unittestを使用する。実行時依存は追加しない。Core・Contractsの単一wheel・sdistをGitHub Releaseから配布する。以下にある「実装開始時に記録する」項目のうち、これらは本ADRで具体化した。
+
 [ADR 0009](adr/0009-package-distribution.md)に従い、初期はCoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。Contractsは必要な契約から追加する。配布パッケージの正式名称、ビルドツール、対応Python版、依存・テストツールは実装開始時に記録する。
 
 検証手順案として、ビルドした配布物を新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。開発用ソースへの参照だけで成功していないことを確認する。具体的なコマンドはツール採用・実装後に掲載し、結果をacceptanceの形式で残す。
