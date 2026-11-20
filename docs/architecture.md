@@ -10,7 +10,7 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ## 採用された構成
 
-v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStoreと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[操作契約](connections.md)とADR 0019を参照する。TaskManagerと本番Subsystem・Adapterは後続段階で扱う。
+v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[Connections](connections.md)とADR 0019、活動管理は[TaskManager](task-manager.md)とADR 0020を参照する。本番Subsystem・Adapterは後続段階で扱う。
 
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
 
@@ -39,7 +39,7 @@ Coreが管理する活動状態はNymph自身の活動を対象とする。外�
 
 ## 時間管理で具体化する概念
 
-R17・[ADR 0020](adr/0020-v0.5-task-manager.md)により、22時開始・2時間の予定なら翌0時にNymphが判断する。Coreは予定時間到達を通知し、活動を継続して次の指示を待つ。実開始の遅れだけで予定を延長したり、到達だけで終了・中断したりしない。期間はCoreの強制終了タイムアウトではない。再起動時の予定・途中活動等は設計中で、TaskManagerはまだ実装済みではない。
+R17・[ADR 0020](adr/0020-v0.5-task-manager.md)により、22時開始・2時間の予定なら翌0時にNymphが判断する。Coreは予定時間到達を通知し、活動を継続して次の指示を待つ。実開始の遅れだけで予定を延長したり、到達だけで終了・中断したりしない。期間はCoreの強制終了タイムアウトではない。受付時点で過去の開始時刻なら開始せず返す。Nymphの終了指示は実行側へ渡し、安全な区切りと後処理を待つ。再起動後は保存済み履歴を返し、再登録・再開はNymphが決める。活動の自動復元・再実行は行わない。
 
 以下はR4を受けた用語整理案である。V0.5で意味・計測条件を決め、V0.6の変更や中断・再開の判断に引き継ぐ。
 
@@ -133,6 +133,7 @@ nymph-toolkit/
 ├─ examples/runtime_demo.py
 ├─ examples/registry_demo.py
 ├─ examples/connections_demo.py
+├─ examples/task_manager_demo.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
 ├─ tools/check_docs.py
@@ -145,11 +146,13 @@ nymph-toolkit/
 │  ├─ runtime.md
 │  ├─ registry.md
 │  ├─ connections.md                # v0.4の操作契約
+│  ├─ task-manager.md                # v0.5の活動管理契約
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
 │  ├─ validation/v0.3.md
 │  ├─ validation/v0.4.md             # A04・配布・性能と制約
+│  ├─ validation/v0.5.md             # A05・配布・制約
 │  ├─ development.md
 │  ├─ issue-workflow.md
 │  ├─ release.md
@@ -173,7 +176,8 @@ nymph-toolkit/
 │     ├─ 0016-v0.3-registry.md
 │     ├─ 0017-connection-binding-and-health.md
 │     ├─ 0018-connection-selection-health-and-recovery.md
-│     └─ 0019-v0.4-connections.md
+│     ├─ 0019-v0.4-connections.md
+│     └─ 0020-v0.5-task-manager.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -183,7 +187,7 @@ nymph-toolkit/
    └─ doubles/
 ```
 
-R3の配置案をR11・R13の実装に合わせて具体化した。Runtimeは `core/runtime.py`、Registryは `core/registry.py`、複数対象の実行入口は `core/module_group.py` に置く。契約は `contracts/__init__.py` と `contracts/registry.py`、ダミーは `tests/doubles/`、検証は `tests/core/` に置く。Connections・TaskManagerのモジュール・APIはその実装時に判断する。
+R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `core/runtime.py`、Registryは `core/registry.py`、複数対象の実行入口は `core/module_group.py`、接続・保存は `core/connections.py` と `core/storage.py`、活動管理は `core/task_manager.py`、履歴読出しは内部モジュール `core/_activity_history.py` に置く。共有型は `contracts/registry.py`・`contracts/connections.py`・`contracts/activities.py` に置き、`contracts/__init__.py`から公開する。ダミーは `tests/doubles/`、検証は `tests/core/` に置く。
 
 ### Subsystem・Adapterを追加する際の配置案
 

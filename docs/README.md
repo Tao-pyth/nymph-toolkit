@@ -15,12 +15,14 @@
 | [runtime.md](runtime.md) | v0.2の実装済みRuntime・Contractsの使い方と制約 |
 | [registry.md](registry.md) | v0.3のRegistry・ModuleGroup契約、着脱・依存管理の境界 |
 | [connections.md](connections.md) | v0.4の接続API、操作・中断・ヘルス・保存の使い方と制約 |
+| [task-manager.md](task-manager.md) | v0.5開発中の活動要求・到達通知・終了・過去履歴の操作契約 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
 | [roadmap.md](roadmap.md) | 各段階の着手条件、作業、成果物、完了条件 |
 | [acceptance.md](acceptance.md) | バージョン別の検証シナリオと結果の記録方法 |
 | [validation/v0.2.md](validation/v0.2.md) | v0.2の受入結果、環境・再現手順、制約 |
 | [validation/v0.3.md](validation/v0.3.md) | v0.3のA03、回帰・配布検証、後続へ残す範囲 |
 | [validation/v0.4.md](validation/v0.4.md) | v0.4のA04、ダミーと実ファイルの検証、配布・性能と制約 |
+| [validation/v0.5.md](validation/v0.5.md) | v0.5のA05に向けた要件別の証拠と残作業 |
 | [development.md](development.md) | Git、環境構築、日常開発、文書更新 |
 | [issue-workflow.md](issue-workflow.md) | マイルストーン・親子Issueによるコード変更の前提と登録済み課題 |
 | [release.md](release.md) | 公開前の判断欄、GitHub公開、タグ・リリースの手順 |
@@ -46,7 +48,7 @@
 | R14 | 本チャットの接続選定・保存・継続利用・ヘルスチェック方針と固定範囲の補足回答 | 機能要求をCoreへ照会し、条件による候補選定と利用情報保存を行う。確立後の利用ごとの再審査を省き、起動時・ヘルスチェック時に存在とバージョンを確認して失効を扱う。稼働中の初回追加は認め、確定済み接続先は変更しない。連携エラーは処理を中断してヘルスチェックを申請する |
 | R15 | 本チャットの接続管理に関する一問一答、途中の訂正、資料反映と計画実施の指示 | 要求側による候補選定、属性・稼働状況、契約互換性、接続の永続化、協調的中断と期限付き待機、ヘルス申請の個別処理、履歴保存・Core内蔵の救命措置を具体化。Coreへの選定関数渡しは訂正済み。前の計画のAPI・保存形式・バッファ数値等は採用済み回答と区別 |
 | R16 | 本チャットのv0.4着手指示と、接続先固定単位・バッファ受付方針への回答 | v0.4の設計・実装・検証へ着手する。要求元＋契約ID・版につき1接続、バッファ上限なしで新規受付継続を明示採用。保存失敗時の受付停止は維持。具体的な実装判断はADR 0019へ記録し、R15時点の未採用案との違いを明示する |
-| R17 | 本チャットの「v0,5目指して作業をお願いします」と時間到達時の判断に関する回答 | v0.5へ着手する。22時開始・2時間の予定に対して24時時点でNymphが判断する。Coreは到達を通知して活動を継続し、Nymphの指示を待つ。具体的なAPIと再起動等の未決事項はADR 0020で区別する |
+| R17 | 本チャットのv0.5実施指示と、時間到達・再起動・過去時刻・終了指示への回答 | 時間到達時は通知して継続し、Nymphが判断する。再起動時は履歴を返してNymphが再登録・再開を決める。過去時刻は開始せず返し、終了要求は実行側の安全な区切りを待つ。API等の実装判断はADR 0020へ区別して記録 |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -80,7 +82,7 @@ R15の最終回答は[ADR 0018](adr/0018-connection-selection-health-and-recover
 
 R16のv0.4作業は[ADR 0019](adr/0019-v0.4-connections.md)で段階的に具体化する。#37〜#44を親Issue #4・v0.4.0配下へ先に登録した。API・保存等の実装判断は採用した節と未決の節を分け、方針・実装・受入・公開をそれぞれ記録する。
 
-R17のv0.5作業は[ADR 0020](adr/0020-v0.5-task-manager.md)へ記録する。#45〜#51を親Issue #5・v0.5.0配下へコード変更前に登録した。期間をCoreの強制終了タイムアウトと解釈せず、到達時にNymphへ通知して指示を待つという回答を優先する。最初の質問にあった期間の起点に関する選択肢を、ユーザーが採用したことにしない。再起動時の活動等は引き続き要決定で、実装・A05は未完了である。
+R17のv0.5作業は[ADR 0020](adr/0020-v0.5-task-manager.md)へ記録する。#45〜#51を親Issue #5・v0.5.0配下へコード変更前に登録した。D1〜D4はユーザー回答、D5〜D8は今回の実装判断である。最初の期間起点の選択肢を採用したことにしない。再起動時の自動再実行を追加せず、履歴をNymphへ渡す。実装の進捗とA05全体の完了は[検証記録](validation/v0.5.md)で分けて扱う。
 
 | 表記 | 扱い |
 |---|---|
@@ -101,7 +103,7 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。[再生成ツール](../tools/build_handoff.py)と[文書確認ツール](../tools/check_docs.py)はCIでも使用する。
 

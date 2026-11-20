@@ -89,7 +89,23 @@ from .connections import (
 )
 
 
+from .activities import (
+    ActivityAdmissionError, ActivityContext, ActivityError, ActivityExecutor,
+    ActivityFailure, ActivityFinishReason, ActivityKey, ActivityNotice,
+    ActivityNoticeKind, ActivityRequest, ActivitySnapshot, ActivityStartInPastError,
+    ActivityState, ActivityStateError, DuplicateActivityError, UnknownActivityError,
+    TaskManagerLifecycleFailure,
+    ActivityHistory, ActivityHistoryIssue, ActivityHistoryRecord,
+)
+
+
 __all__ = [
+    "ActivityAdmissionError", "ActivityContext", "ActivityError", "ActivityExecutor",
+    "ActivityFailure", "ActivityFinishReason", "ActivityKey", "ActivityNotice",
+    "ActivityNoticeKind", "ActivityRequest", "ActivitySnapshot", "ActivityStartInPastError",
+    "ActivityState", "ActivityStateError", "DuplicateActivityError", "UnknownActivityError",
+    "TaskManagerLifecycleFailure",
+    "ActivityHistory", "ActivityHistoryIssue", "ActivityHistoryRecord",
     "BindingHealth", "BindingKey", "BindingRecord", "BindingState", "Candidate", "ContractKey", "ContractSpec", "ModuleAdvertisement",
     "OperatingState", "OperationFailure", "OperationMode", "OperationSpec",
     "TemporaryUnavailable", "Usage",

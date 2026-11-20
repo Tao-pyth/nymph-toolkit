@@ -12,11 +12,11 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.4.0：Connections・非同期保存・救命処理。** CoreとContractsの単一パッケージに、既存のRuntime・Registry・ModuleGroupと、候補照会・接続固定・直接／Core経由の操作・協調的中断・ヘルスチェック・FileStoreを含みます。CPython 3.12以上、実行時の外部依存はありません。TaskManager・別プロセス実行は後続段階で扱います。
+**v0.4.0：Connections・非同期保存・救命処理。** CoreとContractsの単一パッケージに、既存のRuntime・Registry・ModuleGroupと、候補照会・接続固定・直接／Core経由の操作・協調的中断・ヘルスチェック・FileStoreを含みます。CPython 3.12以上、実行時の外部依存はありません。別プロセス実行は後続段階で扱います。
 
 v0.1.0では初期資料・開発基盤、v0.2.0では最小Runtime、v0.3.0ではRegistry・ModuleGroupを公開しました。合意したCore機能の完成をv0.9.0の目標とします。v0.2の採用範囲は[ADR 0014](docs/adr/0014-v0.2-runtime.md)、v0.3は[ADR 0016](docs/adr/0016-v0.3-registry.md)、v0.4は[ADR 0019](docs/adr/0019-v0.4-connections.md)で具体化しました。
 
-**v0.5は設計・開発に着手しています。** [親Issue #5](https://github.com/Tao-pyth/nymph-toolkit/issues/5)と子Issue #45〜#51でTaskManager基本機能を進めます。予定時間に到達したらCoreがNymphへ通知し、活動を継続して指示を待つ方針を採用しました。Coreは到達だけを理由に活動を終了・中断・延長しません。判断履歴と未決事項は[ADR 0020](docs/adr/0020-v0.5-task-manager.md)を参照してください。TaskManagerの製品コードは未実装、A05は未検証です。v0.6〜v0.8の機能配分は引き続き開発計画案です。
+**v0.5は実装・検証中です。** [親Issue #5](https://github.com/Tao-pyth/nymph-toolkit/issues/5)と子Issue #45〜#51で活動Contracts・TaskManager・ModuleGroup連携・活動履歴の参照を実装しました。予定時間到達時は通知して活動を継続し、Nymphの終了指示を受けた実行側が安全な区切りで終了します。過去時刻の要求は開始せず返し、再起動後の再登録・再開もNymphが判断します。[操作契約](docs/task-manager.md)、[ADR 0020](docs/adr/0020-v0.5-task-manager.md)、[検証経過](docs/validation/v0.5.md)を参照してください。ソース177テストと新しい実行例、接続・保存障害の統合検証を確認しましたが、配布・CI・公開確認が残り、A05全体は未完了です。v0.6〜v0.8の機能配分は引き続き開発計画案です。
 
 採用範囲のA04では129件のテスト、3実行例、Windows／Linux・Python 3.12〜3.15、通常インストール・sdist再ビルドと性能測定を確認しました。[Connectionsの操作契約](docs/connections.md)と[v0.4受入記録](docs/validation/v0.4.md)に、使い方・結果・制約を記載しています。
 
@@ -48,10 +48,11 @@ python -m venv .venv
 .venv/Scripts/python.exe examples/runtime_demo.py
 .venv/Scripts/python.exe examples/registry_demo.py
 .venv/Scripts/python.exe examples/connections_demo.py
+.venv/Scripts/python.exe examples/task_manager_demo.py
 .venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
 ```
 
-Runtimeのダミーはstart → run → stopを表示します。Registryのダミーは登録・解除と依存順の実行を、Connectionsのダミーは選定・操作・接続保存・再起動後の再利用を確認します。いずれも終了後の残存タスク0件を確認します。[Runtimeの使い方](docs/runtime.md)と[ビルド・配布検証](docs/development.md)も参照してください。
+Runtimeのダミーはstart → run → stopを表示します。Registryのダミーは登録・解除と依存順の実行を、Connectionsのダミーは選定・操作・接続保存・再起動後の再利用を確認します。TaskManagerのダミーは予定到達後の継続、安全な終了、再起動後の履歴参照と明示再登録を確認します。いずれも終了後の残存タスク0件を確認します。[Runtimeの使い方](docs/runtime.md)と[ビルド・配布検証](docs/development.md)も参照してください。
 
 コード変更は、**対象バージョンのマイルストーン → 親Issue → 対応単位の子Issue登録 → 対応**の順を必須とします。[Issue運用と登録済み課題](docs/issue-workflow.md)を確認してから着手してください。登録した計画案は、仕様の採用と区別します。
 

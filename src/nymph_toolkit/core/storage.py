@@ -13,6 +13,7 @@ from uuid import uuid4
 
 from nymph_toolkit.contracts import BindingRecord, RuntimeState, StorageError, StorageFailure
 from ._storage_io import Disk
+from ._activity_history import read_activity_history
 
 
 def _utcnow() -> datetime:
@@ -201,6 +202,18 @@ class FileStore:
             async with self._io_lock:
                 return await self._execute(self._disk.load_bindings)
         return await self._own(load(), "ntk-settings-load")
+
+    async def read_activity_history(self, requester_id: str):
+        """Read prior saved runs only; return problems without modifying or restoring data."""
+        self._check_open()
+        if not isinstance(requester_id, str) or not requester_id or requester_id.strip() != requester_id:
+            raise ValueError("requester_id must be nonempty without surrounding whitespace")
+        async def read():
+            async with self._io_lock:
+                # Read problems are returned as evidence, not treated as storage-capacity failures.
+                return await asyncio.to_thread(read_activity_history, self._disk.root, self._disk.archive,
+                                               self._run_id, requester_id)
+        return await self._own(read(), "ntk-activity-history-read")
 
     async def save_bindings(self, bindings: tuple[BindingRecord, ...]) -> None:
         self._check_open()

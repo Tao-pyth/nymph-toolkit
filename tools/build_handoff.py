@@ -24,7 +24,7 @@ R10により、コード変更はマイルストーン、親Issue、対応単位
 
 R16でv0.4を実装し、ADR 0019で公開契約・状態・保存等の判断を記録した。要求元＋契約ID・版につき1接続とする固定単位、通常バッファの上限なし・新規受付継続はユーザー回答で採用した。保存エラー時の受付停止・救命は維持する。実装・A04・性能・配布の証拠と、最終公開の状態は個別資料で確認する。
 
-R17でv0.5に着手し、ADR 0020でTaskManagerの判断を記録する。予定時間到達時はCoreがNymphへ通知して活動を継続し、終了・延長等はNymphが判断する。再起動等の未決事項とAPIを採用済み事項に含めず、実装・A05・公開の進捗を分けて記録する。
+R17でv0.5に着手し、ADR 0020へ判断を記録した。予定時間到達は通知して継続し、終了は安全な区切りを待つ。過去の開始時刻は返却し、再起動時の再登録・再開はNymphが判断する。D1〜D4のユーザー回答とD5〜D8の実装判断、実装・A05・公開の進捗を分けて記録する。
 
 本書にもApache-2.0を適用し、末尾にLICENSEの公式本文を収録する。第三者成果物と個体データの条件は別途扱う。ファイル名のv0.1は初稿の識別子であり、リポジトリ内の本文は更新する。公開済みRelease添付は各公開時点のスナップショットとして保持する。
 
@@ -35,7 +35,7 @@ def sources():
     result = [
         "README.md", "CONTRIBUTING.md", "AGENTS.md", "docs/README.md",
         "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md",
-        "docs/connections.md", "docs/adr/README.md",
+        "docs/connections.md", "docs/task-manager.md", "docs/adr/README.md",
     ]
     result += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/adr").glob("[0-9]*.md"))]
     result += ["docs/roadmap.md", "docs/acceptance.md"]

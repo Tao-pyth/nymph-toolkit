@@ -7,7 +7,7 @@ from nymph_toolkit.contracts import (
     ConnectionsLifecycleFailure, ConnectionsStateError, LifecycleFailure,
     DependencyUnavailableError, LifecyclePhase, ModuleFailure, ModuleGroupFailure,
     ModuleSpec, RegistryEntry, RegistryStateError, RegistryUpdate,
-    RuntimeService, RuntimeStateError,
+    RuntimeService, RuntimeState, RuntimeStateError, TaskManagerLifecycleFailure,
 )
 from .registry import Registry
 
@@ -32,6 +32,10 @@ class ModuleGroup:
         self._connections_started = False
         self._connections_task: asyncio.Task | None = None
         self._connections_reported = False
+        self._task_manager = None
+        self._activities_started = False
+        self._activities_task = None
+        self._activities_reported = False
 
     def attach_connections(self, connections) -> None:
         """Own connection infrastructure without registering it as a user module."""
@@ -42,6 +46,19 @@ class ModuleGroup:
         if not isinstance(connections, Connections) or connections.catalog is not self:
             raise TypeError("Connections must use this ModuleGroup as its catalog")
         self._connections = connections
+
+    def attach_task_manager(self, manager) -> None:
+        """Own activities using the Connections already attached to this group."""
+        from .task_manager import TaskManager
+        self._registry._check_thread()
+        if self._used or self._task_manager is not None:
+            raise RegistryStateError("TaskManager must be attached once, before start")
+        if (not isinstance(manager, TaskManager) or self._connections is None
+                or manager.connections is not self._connections):
+            raise TypeError("TaskManager must use this group's attached Connections")
+        if manager.state != RuntimeState.NEW:
+            raise RegistryStateError("TaskManager must not have been started")
+        self._task_manager = manager
 
     @property
     def revision(self) -> int:
@@ -104,6 +121,15 @@ class ModuleGroup:
                 raise ModuleGroupFailure((ModuleFailure(module_id, LifecyclePhase.START, exc),)) from exc
         if self._connections is not None:
             await self._connections.activate()
+        if self._task_manager is not None:
+            self._activities_started = True
+            try:
+                await self._task_manager.start()
+            except asyncio.CancelledError as exc:
+                exc.add_note("ModuleGroup was initializing TaskManager")
+                raise
+            except Exception as exc:
+                raise TaskManagerLifecycleFailure((LifecycleFailure(LifecyclePhase.START, exc),)) from exc
         self._started = True
 
     async def _run_service(self, module_id: str) -> object:
@@ -121,6 +147,13 @@ class ModuleGroup:
             except Exception:
                 coroutine.close()
                 raise
+        if self._task_manager is not None:
+            coroutine = self._task_manager.run()
+            try:
+                self._activities_task = asyncio.create_task(coroutine, name="ntk-task-manager")
+            except Exception:
+                coroutine.close()
+                raise
         for module_id in self._entered:
             coroutine = self._run_service(module_id)
             try:
@@ -131,6 +164,8 @@ class ModuleGroup:
         pending = set(self._tasks.values())
         while pending:
             watched = pending | ({self._connections_task} if self._connections_task is not None else set())
+            if self._activities_task is not None:
+                watched.add(self._activities_task)
             done, _ = await asyncio.wait(watched, return_when=asyncio.FIRST_COMPLETED)
             pending -= done
             failures = []
@@ -149,6 +184,13 @@ class ModuleGroup:
                     self._connections_reported = True
                     raise ConnectionsLifecycleFailure((LifecycleFailure(LifecyclePhase.RUN, exc),)) from exc
                 raise ConnectionsStateError("Connections processing ended while modules were still running")
+            if self._activities_task is not None and self._activities_task in done:
+                try:
+                    self._activities_task.result()
+                    raise RuntimeStateError("TaskManager processing ended while modules were still running")
+                except (Exception, asyncio.CancelledError) as exc:
+                    self._activities_reported = True
+                    raise TaskManagerLifecycleFailure((LifecycleFailure(LifecyclePhase.RUN, exc),)) from exc
         return {module_id: task.result() for module_id, task in sorted(self._tasks.items())}
 
     @staticmethod
@@ -166,7 +208,14 @@ class ModuleGroup:
         self._used = self._frozen = True
         failures = []
         infrastructure_failures = []
+        activity_failures = []
+        activity_stop = None
         try:
+            if self._activities_started:
+                try:
+                    self._task_manager.begin_shutdown()
+                except (Exception, asyncio.CancelledError) as exc:
+                    activity_failures.append(LifecycleFailure(LifecyclePhase.STOP, exc))
             if self._connections_started:
                 try:
                     self._connections.begin_shutdown()
@@ -183,6 +232,26 @@ class ModuleGroup:
                     except (Exception, asyncio.CancelledError) as exc:
                         if not (cancelled and isinstance(exc, asyncio.CancelledError)):
                             infrastructure_failures.append(LifecycleFailure(LifecyclePhase.RUN, exc))
+            if self._activities_task is not None:
+                cancelled = not self._activities_task.done()
+                if cancelled:
+                    self._activities_task.cancel()
+                await asyncio.gather(self._activities_task, return_exceptions=True)
+                if not self._activities_reported:
+                    try:
+                        self._activities_task.result()
+                    except (Exception, asyncio.CancelledError) as exc:
+                        if not (cancelled and isinstance(exc, asyncio.CancelledError)):
+                            activity_failures.append(LifecycleFailure(LifecyclePhase.RUN, exc))
+            if self._activities_started:
+                coroutine = self._task_manager.stop()
+                try:
+                    activity_stop = asyncio.create_task(coroutine, name="ntk-group-activities-stop")
+                except Exception as exc:
+                    activity_failures.append(LifecycleFailure(LifecyclePhase.STOP, exc))
+                    # Keep both cleanup paths concurrent even if the user's factory fails.
+                    activity_stop = asyncio.Task(coroutine, loop=asyncio.get_running_loop(),
+                                                 name="ntk-group-activities-stop")
             requested_cancellation = set()
             for module_id, task in self._tasks.items():
                 if not task.done():
@@ -190,6 +259,11 @@ class ModuleGroup:
                     task.cancel()
             if self._tasks:
                 await asyncio.gather(*self._tasks.values(), return_exceptions=True)
+            if activity_stop is not None:
+                try:
+                    await activity_stop
+                except (Exception, asyncio.CancelledError) as exc:
+                    activity_failures.append(LifecycleFailure(LifecyclePhase.STOP, exc))
             for module_id, task in sorted(self._tasks.items()):
                 if module_id in self._reported_run:
                     continue
@@ -211,12 +285,14 @@ class ModuleGroup:
         finally:
             self._closed = True
             self._frozen = False
-        if failures and infrastructure_failures:
-            raise ExceptionGroup("Module and Connections cleanup failures", [
-                ModuleGroupFailure(tuple(failures)),
-                ConnectionsLifecycleFailure(tuple(infrastructure_failures)),
-            ])
+        combined = []
         if failures:
-            raise ModuleGroupFailure(tuple(failures))
+            combined.append(ModuleGroupFailure(tuple(failures)))
         if infrastructure_failures:
-            raise ConnectionsLifecycleFailure(tuple(infrastructure_failures))
+            combined.append(ConnectionsLifecycleFailure(tuple(infrastructure_failures)))
+        if activity_failures:
+            combined.append(TaskManagerLifecycleFailure(tuple(activity_failures)))
+        if len(combined) == 1:
+            raise combined[0]
+        if combined:
+            raise ExceptionGroup("Module and Core cleanup failures", combined)
