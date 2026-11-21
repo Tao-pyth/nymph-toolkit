@@ -154,6 +154,7 @@ nymph-toolkit/
 │  ├─ validation/v0.3.md
 │  ├─ validation/v0.4.md             # A04・配布・性能と制約
 │  ├─ validation/v0.5.md             # A05・配布・制約
+│  ├─ validation/v0.6.md             # A06・活動変更・中断再開
 │  ├─ development.md
 │  ├─ issue-workflow.md
 │  ├─ release.md

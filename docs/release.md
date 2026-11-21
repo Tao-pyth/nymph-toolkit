@@ -4,7 +4,7 @@ GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定してい�
 
 ## v0.6.0の公開手順と記録
 
-親Issue #6、設計#52、実装#53〜#57、受入#58、公開[#59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)で追跡する。公開対象版は0.6.0で、[ADR 0021](adr/0021-v0.6-activity-changes.md)と[A06検証記録](validation/v0.6.md)に従う。
+親Issue #6、設計#52、実装#53〜#57、受入#58、公開[#59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)で追跡する。採用範囲の実装・A06・全8環境のCIを確認した。公開対象版は0.6.0で、[ADR 0021](adr/0021-v0.6-activity-changes.md)と[A06検証記録](validation/v0.6.md)に従う。
 
 1. 予定変更・期間通知・優先度・中断再開の全採用範囲、既存回帰、5実行例、通常インストール・sdist再ビルド、文書同期を確認する。
 2. 公開するコミットそのもののWindows/Linux × Python3.12〜3.15の全8環境が成功したことを確認する。

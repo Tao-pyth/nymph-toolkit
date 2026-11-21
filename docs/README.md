@@ -15,7 +15,7 @@
 | [runtime.md](runtime.md) | v0.2の実装済みRuntime・Contractsの使い方と制約 |
 | [registry.md](registry.md) | v0.3のRegistry・ModuleGroup契約、着脱・依存管理の境界 |
 | [connections.md](connections.md) | v0.4の接続API、操作・中断・ヘルス・保存の使い方と制約 |
-| [task-manager.md](task-manager.md) | v0.5の活動要求・到達通知・終了・過去履歴の操作契約 |
+| [task-manager.md](task-manager.md) | v0.5基本操作・v0.6変更要求・中断再開・優先度・履歴の契約 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
 | [roadmap.md](roadmap.md) | 各段階の着手条件、作業、成果物、完了条件 |
 | [acceptance.md](acceptance.md) | バージョン別の検証シナリオと結果の記録方法 |
@@ -23,6 +23,7 @@
 | [validation/v0.3.md](validation/v0.3.md) | v0.3のA03、回帰・配布検証、後続へ残す範囲 |
 | [validation/v0.4.md](validation/v0.4.md) | v0.4のA04、ダミーと実ファイルの検証、配布・性能と制約 |
 | [validation/v0.5.md](validation/v0.5.md) | v0.5のA05要件別の証拠・制約と公開後確認の参照先 |
+| [validation/v0.6.md](validation/v0.6.md) | v0.6のA06・変更と中断再開の証拠・制約・公開確認 |
 | [development.md](development.md) | Git、環境構築、日常開発、文書更新 |
 | [issue-workflow.md](issue-workflow.md) | マイルストーン・親子Issueによるコード変更の前提と登録済み課題 |
 | [release.md](release.md) | 公開前の判断欄、GitHub公開、タグ・リリースの手順 |
