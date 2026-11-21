@@ -12,19 +12,19 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.7.0開発版：同一PCのハイブリッド実行・IPC・ストリーム・遠隔活動。** CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
+**v0.7.0：同一PCのハイブリッド実行・IPC・ストリーム・遠隔活動。** CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。[操作契約](docs/task-manager.md)と[ADR 0020](docs/adr/0020-v0.5-task-manager.md)に採用範囲を記録しています。
 
-A06では219テスト、5実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。時刻・期間・優先度変更、同じ処理の続きからの再開、任意の実行枠、要求ID・観測版による競合処理を含みます。[v0.6受入記録](docs/validation/v0.6.md)に証拠と制約をまとめています。v0.7は262テスト・6実行例・Windows/Linux全8環境、通常wheelとsdist再ビルドでA07を確認しました。使い方は[ハイブリッド実行](docs/hybrid.md)、証拠と制約は[v0.7受入記録](docs/validation/v0.7.md)に記載します。本番Subsystemは後続段階です。
+A06では219テスト、5実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。時刻・期間・優先度変更、同じ処理の続きからの再開、任意の実行枠、要求ID・観測版による競合処理を含みます。[v0.6受入記録](docs/validation/v0.6.md)に証拠と制約をまとめています。v0.7はA07の基本検証に公開前レビューの境界試験を加え、267テスト・6実行例を用意しています。通常wheel・sdist再ビルドとWindows/Linux全8環境CIを公開条件とします。使い方は[ハイブリッド実行](docs/hybrid.md)、証拠と制約は[v0.7受入記録](docs/validation/v0.7.md)に記載します。本番Subsystemは後続段階です。
 
-v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。R19・[ADR 0022](docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md)でv0.9までの64項目を設計採用しました。1〜18は個別回答、19〜64は推奨設定の明示一括採用です。v0.7は同一PCの子プロセス・通信・ストリーム・活動管理、v0.8は統合・障害・負荷検証、v0.9は合意範囲の完成確認とする配分を採用しています。R20により#61〜#68を先に登録してv0.7を実装しました。A07・配布・CIの結果は受入記録で管理し、A08・A09の完了とは区別します。新規のv0.7.0 Releaseは作成していません。
+v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。R19・[ADR 0022](docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md)でv0.9までの64項目を設計採用しました。1〜18は個別回答、19〜64は推奨設定の明示一括採用です。v0.7は同一PCの子プロセス・通信・ストリーム・活動管理、v0.8は統合・障害・負荷検証、v0.9は合意範囲の完成確認とする配分を採用しています。R20により#61〜#68を先に登録してv0.7を実装しました。A07・配布・CIの結果は受入記録で管理し、A08・A09の完了とは区別します。R21によりPR #69をレビューし、修正#70・公開#71を先に登録しました。最終SHA・CI・公開後の取得確認は公開課題へ記録します。
 
 採用範囲のA04では129件のテスト、3実行例、Windows／Linux・Python 3.12〜3.15、通常インストール・sdist再ビルドと性能測定を確認しました。[Connectionsの操作契約](docs/connections.md)と[v0.4受入記録](docs/validation/v0.4.md)に、使い方・結果・制約を記載しています。
 
 v0.3では実行開始前にSubsystem・Adapterのダミーを着脱し、起動から停止完了まで構成を固定します。停止後は明示解除できます。実体の稼働中着脱は、接続の解除・失効契約を設計する後続段階へ残しています。利用方法は[RegistryとModuleGroup](docs/registry.md)を参照してください。
 
-[v0.6.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.6.0)にwheel・sdist・引継ぎ書・チェックサムを掲載します。最終SHA・CI・公開後の取得確認は[公開課題 #59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)で追跡します。過去の[v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.5.0)・[v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)・[v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)・[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
+[v0.7.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.7.0)にwheel・sdist・引継ぎ書・チェックサムを掲載します。最終SHA・CI・公開後の取得確認は[公開課題 #71](https://github.com/Tao-pyth/nymph-toolkit/issues/71)で追跡します。過去の[v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.6.0)・[v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.5.0)・[v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)・[v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)・[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
 
 V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0はCoreとSubsystem・Adapterの接続契約を大きく形作る目標です。v1.1.0〜v1.10.0のSubsystem・Adapter開発、奇数・偶数マイナーのリリース運用は設計提案としてロードマップに追記しています。記載するSubsystem名・Adapter名は暫定名称で、実装順序と機能配分も変更される可能性があります。
 

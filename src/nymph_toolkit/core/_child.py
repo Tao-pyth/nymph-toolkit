@@ -22,7 +22,7 @@ async def main(port, module_id, generation):
         return await peer.call("core", {"operation": operation, "payload": payload}, timeout=timeout)
     async def event(kind, data):
         return await peer.call("event", {"kind": kind, "data": data}, timeout=bootstrap["settings"].call_timeout)
-    node = ModuleNode(**bootstrap, dispatch=dispatch, event=event)
+    node = ModuleNode(**bootstrap, dispatch=dispatch, event=event, report_failed=lambda error: writer.close())
     peer = RpcPeer(reader, writer, generation=generation, module_id=module_id,
                    settings=bootstrap["settings"], handler=node.dispatch)
     try:

@@ -4,7 +4,7 @@
 import asyncio
 from datetime import datetime, timezone
 
-from nymph_toolkit.contracts import ActivityControlKind, ActivityFinishReason, RemoteError
+from nymph_toolkit.contracts import ActivityControlKind, ActivityFinishReason, ProtocolError, RemoteError
 from ._wire import json_value
 
 
@@ -125,11 +125,29 @@ class ExecutorHost:
         except Exception as exc:
             error = RemoteError(self.node.spec.module_id, type(exc).__name__, str(exc))
         finally:
+            # Once execution has ended, repeated stop/cancel signals must not
+            # discard the only final report. The parent still owns its deadline.
+            report = asyncio.create_task(self._finish_report(context, result, error, cancelled))
+            while not report.done():
+                try:
+                    await asyncio.shield(report)
+                except asyncio.CancelledError:
+                    continue
+            report.result()
+
+    async def _finish_report(self, context, result, error, cancelled):
+        try:
             try:
                 await context.report("ended", result=result, error=error, cancelled=cancelled)
-            except (Exception, asyncio.CancelledError):
-                # Parent records loss of evidence; a lost parent cannot acknowledge it.
-                pass
+            except ProtocolError as exc:
+                # Encoding/size rejection happens before sending this report.
+                # Report that failure without resending or rerunning the activity.
+                await context.report("ended", error=RemoteError(
+                    self.node.spec.module_id, "ProtocolError", str(exc)[:512]))
+        except (Exception, asyncio.CancelledError) as exc:
+            # If even completion evidence cannot reach Core, make management
+            # channel loss observable instead of silently retaining a running slot.
+            self.node.report_failed(exc)
 
     async def stop(self):
         tasks = [c.task for c in self.jobs.values() if c.task is not None]

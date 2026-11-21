@@ -134,6 +134,53 @@ class RpcTests(unittest.IsolatedAsyncioTestCase):
             await self.client.call("huge", timeout=1)
         self.assertEqual(caught.exception.remote_type, "ProtocolError")
 
+    async def test_cancel_buffered_before_handler_entry_reports_and_releases_capacity(self):
+        import json
+        from dataclasses import replace
+        server = self.peers[0]
+        server.settings = replace(SETTINGS, max_requests=1)
+        called = []
+        async def handler(operation, payload):
+            called.append(payload)
+            return payload
+        server.handler = handler
+        self.client._next = 1
+        future = asyncio.get_running_loop().create_future()
+        self.client._pending[1] = future
+        messages = [
+            {"kind": "request", "operation": "echo", "payload": "cancelled"},
+            {"kind": "cancel"},
+        ]
+        frames = []
+        for message in messages:
+            raw = json.dumps({"version": "ntk.ipc.v1", "generation": "run", "id": 1, **message}).encode()
+            frames.append(len(raw).to_bytes(4, "big") + raw)
+        self.client.writer.write(b"".join(frames))
+        await self.client.writer.drain()
+        await asyncio.wait_for(asyncio.shield(future), 1)
+        with self.assertRaises(RemoteError) as caught:
+            self.client.result(1)
+        self.assertEqual(caught.exception.remote_type, "CancelledError")
+        self.assertEqual(called, [])
+        self.client.release(1)
+        self.assertEqual(await self.client.call("echo", "next", timeout=1), "next")
+        self.assertEqual(called, ["next"])
+        self.assertFalse(server._incoming)
+
+    async def test_eager_handler_completion_does_not_retain_incoming_capacity(self):
+        from dataclasses import replace
+        server = self.peers[0]
+        server.settings = replace(SETTINGS, max_requests=1)
+        loop = asyncio.get_running_loop()
+        previous = loop.get_task_factory()
+        loop.set_task_factory(asyncio.eager_task_factory)
+        try:
+            for number in range(3):
+                self.assertEqual(await self.client.call("echo", number, timeout=1), number)
+                self.assertFalse(server._incoming)
+        finally:
+            loop.set_task_factory(previous)
+
 
 class StreamTests(unittest.IsolatedAsyncioTestCase):
     async def pair(self, policy=OverflowPolicy.WAIT, send_bytes=4, send_chunks=2):

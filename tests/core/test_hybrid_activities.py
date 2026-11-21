@@ -79,6 +79,61 @@ class HybridActivityTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(ended.cleanup_confirmed)
         self.assertEqual(runtime.state.value, "running")
 
+    async def test_oversized_result_finishes_with_failure_and_frees_execution_slot(self):
+        group, manager, runtime = await self.setup_group()
+        request = self.request()
+        manager.submit_remote(request, "executor", "work", {"large_result": True})
+        ended = await asyncio.wait_for(manager.wait(request.key), 3)
+        self.assertEqual(ended.state, ActivityState.FAILED)
+        self.assertIsNotNone(ended.ended_at)
+        self.assertTrue(ended.cleanup_confirmed)
+        self.assertTrue(ended.timing_confirmed)
+        self.assertEqual(ended.failures[0].exception.remote_type, "ProtocolError")
+        self.assertEqual(manager._running_slots, 0)
+        next_request = self.request("next")
+        manager.submit_remote(next_request, "executor", "work", {"complete": True})
+        self.assertEqual((await asyncio.wait_for(manager.wait(next_request.key), 3)).state, ActivityState.COMPLETED)
+        self.assertEqual(runtime.state.value, "running")
+
+    async def test_rejected_final_report_causes_observable_management_failure(self):
+        group, manager, runtime = await self.setup_group()
+        original = manager._remote_event
+        async def reject(module_id, data):
+            if data["phase"] == "ended":
+                raise ValueError("final report rejected")
+            return await original(module_id, data)
+        manager._remote_event = reject
+        request = self.request()
+        manager.submit_remote(request, "executor", "work", {"complete": True})
+        with self.assertRaises(RuntimeFailure):
+            await asyncio.wait_for(runtime.wait(), 4)
+        ended = manager.snapshot(request.key)
+        self.assertEqual(ended.state, ActivityState.FAILED)
+        self.assertFalse(ended.cleanup_confirmed)
+        self.assertEqual(manager._running_slots, 0)
+        self.assertIsNotNone(group.modules["executor"].process.returncode)
+
+    async def test_repeated_cancel_during_final_report_keeps_completion_evidence(self):
+        group, manager, _ = await self.setup_group()
+        arrived, release = asyncio.Event(), asyncio.Event()
+        original = manager._remote_event
+        async def delayed(module_id, data):
+            if data["phase"] == "ended":
+                arrived.set()
+                await release.wait()
+            return await original(module_id, data)
+        manager._remote_event = delayed
+        request = self.request()
+        manager.submit_remote(request, "executor", "work", {"complete": True})
+        await asyncio.wait_for(arrived.wait(), 3)
+        for _ in range(2):
+            await group.modules["executor"].invoke("activity_cancel", {"key": request.key})
+        release.set()
+        ended = await asyncio.wait_for(manager.wait(request.key), 3)
+        self.assertEqual(ended.state, ActivityState.COMPLETED)
+        self.assertTrue(ended.cleanup_confirmed)
+        self.assertEqual(manager._running_slots, 0)
+
     async def test_child_loss_records_unknown_cleanup_and_releases_slot_after_exit(self):
         group, manager, runtime = await self.setup_group()
         request = self.request()

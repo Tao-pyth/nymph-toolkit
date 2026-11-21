@@ -123,6 +123,8 @@ class Dummy:
         if arguments.get("fail"):
             raise ValueError("activity failed")
         try:
+            if arguments.get("large_result"):
+                return "x" * self.context.settings.max_frame_bytes
             if arguments.get("complete"):
                 return {"pid": os.getpid(), "steps": steps}
             while not context.finish_requested:

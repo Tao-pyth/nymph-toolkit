@@ -2,10 +2,25 @@
 
 # SPDX-License-Identifier: Apache-2.0
 import asyncio
+from dataclasses import dataclass
 
 from nymph_toolkit.contracts import CapacityExceeded, OutcomeUnknown, PeerClosed, ProtocolError, RemoteError
 from nymph_toolkit.contracts.hybrid import seconds
 from ._wire import VERSION, decode, encode, read_frame, write_frame
+
+
+@dataclass
+class _Incoming:
+    task: asyncio.Task | None = None
+    entered: bool = False
+    cancel_requested: bool = False
+
+    def cancel(self):
+        if self.entered:
+            if self.task is not None:
+                self.task.cancel()
+        else:
+            self.cancel_requested = True
 
 
 class RpcPeer:
@@ -93,8 +108,11 @@ class RpcPeer:
             raise OutcomeUnknown(request_id, "Cannot release an unfinished request")
         self._pending.pop(request_id, None)
 
-    async def _respond(self, request_id, operation, payload):
+    async def _respond(self, request_id, operation, payload, incoming):
+        incoming.entered = True
         try:
+            if incoming.cancel_requested:
+                raise asyncio.CancelledError
             result = await self.handler(operation, decode(payload))
             message = {"kind": "result", "id": request_id, "payload": encode(result)}
         except asyncio.CancelledError:
@@ -137,8 +155,10 @@ class RpcPeer:
                         await self._send({"kind": "error", "id": request_id,
                                           "payload": encode(RemoteError(self.module_id, "CapacityExceeded", "Incoming request limit reached"))})
                     else:
-                        task = asyncio.create_task(self._respond(request_id, message["operation"], message["payload"]))
-                        self._incoming[request_id] = task
+                        incoming = _Incoming()
+                        self._incoming[request_id] = incoming
+                        incoming.task = asyncio.create_task(self._respond(
+                            request_id, message["operation"], message["payload"], incoming))
                 elif kind in ("result", "error"):
                     if set(message) != {"version", "generation", "id", "kind", "payload"}:
                         raise ProtocolError("Invalid response fields")
@@ -153,9 +173,9 @@ class RpcPeer:
                 elif kind == "cancel":
                     if set(message) != {"version", "generation", "id", "kind"}:
                         raise ProtocolError("Invalid cancellation fields")
-                    task = self._incoming.get(request_id)
-                    if task is not None:
-                        task.cancel()
+                    incoming = self._incoming.get(request_id)
+                    if incoming is not None:
+                        incoming.cancel()
                 else:
                     raise ProtocolError("Unknown message kind")
         except asyncio.CancelledError:
@@ -168,15 +188,19 @@ class RpcPeer:
             for future in self._pending.values():
                 if not future.done():
                     future.set_result((True, PeerClosed(str(self.error))))
-            for task in self._incoming.values():
-                task.cancel()
+            for incoming in self._incoming.values():
+                incoming.cancel()
 
     async def close(self):
         if not self._reader.done():
             self._reader.cancel()
         await asyncio.gather(self._reader, return_exceptions=True)
-        tasks = (set(self._incoming.values()) | self._auxiliary) - {asyncio.current_task()}
-        for task in tasks:
+        tasks = {incoming.task for incoming in self._incoming.values() if incoming.task is not None}
+        tasks |= self._auxiliary
+        tasks.discard(asyncio.current_task())
+        for incoming in self._incoming.values():
+            incoming.cancel()
+        for task in self._auxiliary:
             task.cancel()
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)

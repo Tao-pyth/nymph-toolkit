@@ -85,10 +85,12 @@ class ModuleContext:
 
 
 class ModuleNode:
-    def __init__(self, spec, advertisement, factory, config, generation, settings, dispatch, event, local_hub=None):
+    def __init__(self, spec, advertisement, factory, config, generation, settings, dispatch, event, local_hub=None,
+                 *, report_failed=None):
         self.spec, self.advertisement = spec, advertisement
         self.factory, self.config = factory, config
         self.generation, self.settings, self.event = generation, settings, event
+        self.report_failed = report_failed if report_failed is not None else local_hub.fail
         self.context = ModuleContext(spec.module_id, generation, settings, dispatch, local_hub)
         self.service = self.server = self.run_task = None
         self.tasks = set()
