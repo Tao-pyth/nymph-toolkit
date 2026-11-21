@@ -2,6 +2,7 @@
 
 # SPDX-License-Identifier: Apache-2.0
 import asyncio
+from dataclasses import replace
 from datetime import timedelta
 import os
 from pathlib import Path
@@ -53,6 +54,8 @@ class HybridGroupTests(unittest.IsolatedAsyncioTestCase):
             for provider in Placement:
                 with self.subTest(requester=requester, provider=provider):
                     group = self.group()
+                    # Normal cleanup is not required to fit the 300ms fault-test deadline.
+                    group.settings = replace(group.settings, shutdown_timeout=3)
                     self.register(group, "requester", requester)
                     self.register(group, "provider", provider)
                     runtime = await self.start(group)
@@ -69,7 +72,7 @@ class HybridGroupTests(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(reverse["value"], "from requester")
                     await runtime.stop()
                     for service in group.modules.values():
-                        self.assertTrue(service.snapshot.cleanup_confirmed)
+                        self.assertTrue(service.snapshot.cleanup_confirmed, service.snapshot)
                         if service.process:
                             self.assertIsNotNone(service.process.returncode)
 
