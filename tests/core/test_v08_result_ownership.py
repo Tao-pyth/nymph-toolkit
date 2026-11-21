@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import asyncio
 import unittest
+from unittest.mock import patch
 
 from nymph_toolkit.contracts import OutcomeUnknown, PeerClosed, Placement, RemoteError
 from nymph_toolkit.core._hybrid_client import CoreClient, DirectLink
@@ -14,6 +15,42 @@ from tests.doubles.scenario import invoke, until
 class ResultOwnershipTests(unittest.IsolatedAsyncioTestCase):
     asyncSetUp = rpc_baseline.RpcTests.asyncSetUp
     asyncTearDown = rpc_baseline.RpcTests.asyncTearDown
+
+    async def test_unsent_deadlines_and_cancellations_do_not_exhaust_capacity(self):
+        async with self.client._write_lock:
+            for _ in range(20):
+                with self.assertRaises(TimeoutError) as caught:
+                    await self.client.call("echo", "not sent", timeout=.001)
+                self.assertNotIsInstance(caught.exception, OutcomeUnknown)
+                task = asyncio.create_task(self.client.call("echo", "cancel before send", timeout=2))
+                await until(lambda: bool(self.client._pending))
+                task.cancel()
+                with self.assertRaises(asyncio.CancelledError):
+                    await task
+                self.assertFalse(self.client._pending)
+                self.assertFalse(self.client._auxiliary)
+        self.assertEqual(self.peers[0]._received, 0)
+        self.assertEqual(await self.client.call("echo", "next", timeout=2), "next")
+        self.assertFalse(self.client._pending)
+
+    async def test_write_started_before_drain_timeout_retains_uncertain_result(self):
+        release = asyncio.Event()
+        async def drain():
+            await release.wait()
+        with patch.object(self.client.writer, "drain", side_effect=drain):
+            try:
+                with self.assertRaises(OutcomeUnknown) as caught:
+                    await self.client.call("wait", timeout=.03)
+                identity = caught.exception.request_id
+                self.assertIn(identity, self.client._pending)
+                self.assertEqual(self.peers[0]._received, identity)
+            finally:
+                release.set()
+        await until(lambda: self.client._pending[identity].done())
+        with self.assertRaises(RemoteError):
+            self.client.result(identity)
+        self.client.release(identity)
+        self.assertFalse(self.client._pending)
 
     async def test_internal_release_waits_for_result_or_disconnect(self):
         for disconnect in (False, True):

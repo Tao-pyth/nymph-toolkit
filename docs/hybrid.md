@@ -40,7 +40,7 @@ CoreClientの主な操作は次のとおり。期限省略可能な管理操作�
 
 別プロセスの操作引数・結果はJSON値と明示したContractsに限定する。pickle・任意型のimportは行わない。HybridGroupの遠隔宣言はASYNCのみとし、既存のModuleGroup/Connectionsの同期操作・ローカル入力を変更しない。
 
-業務失敗は`OperationFailure`、受付容量不足は`TemporaryUnavailable`。通常の連携失敗は`LinkFailure`と要求元への中断通知で扱う。予想外例外の情報は`RemoteError(module_id, remote_type, message)`。通信切断は`PeerClosed`。期限切れは協調的取消を送り`OutcomeUnknown(request_id)`を返し、タイムアウトだけで提供先の障害と判断しない。直接RPCの遅い結果は`link.result(id)`で照会し、確認後`link.release(id)`で一時保持を解放できる。`link.close()`は窓口の通信資源を閉じる。自動再送・自動再接続をせず、復帰後の新規処理には機能が明示的にprepareする。
+業務失敗は`OperationFailure`、受付容量不足は`TemporaryUnavailable`。通常の連携失敗は`LinkFailure`と要求元への中断通知で扱う。予想外例外の情報は`RemoteError(module_id, remote_type, message)`。通信切断は`PeerClosed`。送信ロック待ちで書込み開始前に期限切れとなった場合は`TimeoutError`として未送信の枠を回収します（#80）。書込み開始後の期限切れは協調的取消を送り`OutcomeUnknown(request_id)`を返し、タイムアウトだけで提供先の障害と判断しない。直接RPCの遅い結果は`link.result(id)`で照会し、確認後`link.release(id)`で一時保持を解放できる。`link.close()`は窓口の通信資源を閉じる。自動再送・自動再接続をせず、復帰後の新規処理には機能が明示的にprepareする。
 
 ## 通信結果の保持と解放
 
