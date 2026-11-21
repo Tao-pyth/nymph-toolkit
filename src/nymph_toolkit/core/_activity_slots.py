@@ -76,10 +76,13 @@ class _Slots:
                         continue
                     entry.slot = True
                     self._running_slots += 1
-                    self._unpause_clock(entry)
-                    entry.resumed_at = self._now()
-                    entry.state = ActivityState.RUNNING
-                    entry.revision += 1
-                    self._emit(entry)
-                    self._resolve_commands(entry, "resume", ActivityCommandStatus.APPLIED)
-                    entry.resumed.set()
+                    self._grant_resume(entry)
+
+    def _grant_resume(self, entry):
+        self._unpause_clock(entry)
+        entry.resumed_at = self._now()
+        entry.state = ActivityState.RUNNING
+        entry.revision += 1
+        self._emit(entry)
+        self._resolve_commands(entry, "resume", ActivityCommandStatus.APPLIED)
+        entry.resumed.set()

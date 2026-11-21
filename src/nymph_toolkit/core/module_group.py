@@ -135,6 +135,10 @@ class ModuleGroup:
     async def _run_service(self, module_id: str) -> object:
         return await self._services[module_id].run()
 
+    def _extra_watchers(self):
+        """Optional owned infrastructure failures supplied by execution adapters."""
+        return ()
+
     async def run(self) -> dict[str, object]:
         self._check_controller()
         if not self._started or self._run_entered or self._closed:
@@ -164,6 +168,7 @@ class ModuleGroup:
         pending = set(self._tasks.values())
         while pending:
             watched = pending | ({self._connections_task} if self._connections_task is not None else set())
+            watched.update(self._extra_watchers())
             if self._activities_task is not None:
                 watched.add(self._activities_task)
             done, _ = await asyncio.wait(watched, return_when=asyncio.FIRST_COMPLETED)
@@ -177,6 +182,9 @@ class ModuleGroup:
                         failures.append(failure)
             if failures:
                 raise ModuleGroupFailure(tuple(failures))
+            for watcher in self._extra_watchers():
+                if watcher in done:
+                    watcher.result()
             if self._connections_task is not None and self._connections_task in done:
                 try:
                     self._connections_task.result()

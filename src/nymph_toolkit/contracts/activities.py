@@ -160,6 +160,7 @@ class ActivityChange:
 
 class ActivityState(StrEnum):
     PENDING = "pending"
+    STARTING = "starting"
     RUNNING = "running"
     PAUSING = "pausing"
     PAUSED = "paused"
@@ -208,10 +209,14 @@ class ActivitySnapshot:
     scheduled_revision: int = 0
     current_request: ActivityRequest | None = None
     execution_seconds: float = 0.0
+    timing_confirmed: bool = True
+    cleanup_confirmed: bool = True
 
     def __post_init__(self) -> None:
         if not isinstance(self.request, ActivityRequest) or not isinstance(self.state, ActivityState):
             raise TypeError("Snapshot requires an ActivityRequest and ActivityState")
+        if type(self.timing_confirmed) is not bool or type(self.cleanup_confirmed) is not bool:
+            raise TypeError("Observation confirmation flags must be bool")
         if self.current_request is None:
             object.__setattr__(self, "current_request", self.request)
         if not isinstance(self.current_request, ActivityRequest) or self.current_request.key != self.request.key:

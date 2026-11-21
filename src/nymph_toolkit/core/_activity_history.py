@@ -33,14 +33,14 @@ def _constant(value):
 def _request(data, *, version=5):
     if not isinstance(data, dict) or set(data) != {
         "requester_id", "activity_id", "content", "start_at", "duration_us", "parameters",
-        *({"priority"} if version == 6 else set())
+        *({"priority"} if version >= 6 else set())
     }:
         raise ValueError("Invalid activity request fields")
     _positive(data["duration_us"])
     return ActivityRequest(ActivityKey(data["requester_id"], data["activity_id"]), data["content"],
                            None if data["start_at"] is None else _time(data["start_at"]),
                            timedelta(microseconds=data["duration_us"]), data["parameters"],
-                           data["priority"] if version == 6 else 0)
+                           data["priority"] if version >= 6 else 0)
 
 
 def _nonnegative_int(value):
@@ -87,9 +87,10 @@ def _validate_activity(kind, data):
     if not isinstance(data, dict):
         raise ValueError("Activity data must be an object")
     if kind not in ("activity_rejected", "activity_state_changed", "activity_planned_end",
-                    "activity_v06_state_changed", "activity_v06_planned_end", "activity_v06_command"):
+                    "activity_v06_state_changed", "activity_v06_planned_end", "activity_v06_command",
+                    "activity_v07_state_changed", "activity_v07_planned_end", "activity_v07_command"):
         raise ValueError("Unknown activity history kind")
-    version = 6 if kind.startswith("activity_v06_") else 5
+    version = 7 if kind.startswith("activity_v07_") else 6 if kind.startswith("activity_v06_") else 5
     if kind == "activity_rejected" and isinstance(data.get("request"), dict) and "priority" in data["request"]:
         version = 6
     request = _request(data.get("request"), version=version)
@@ -101,14 +102,22 @@ def _validate_activity(kind, data):
             raise ValueError("Past-start rejection does not match its request")
         return request.key.requester_id
     if kind not in ("activity_state_changed", "activity_planned_end",
-                    "activity_v06_state_changed", "activity_v06_planned_end", "activity_v06_command"):
+                    "activity_v06_state_changed", "activity_v06_planned_end", "activity_v06_command",
+                    "activity_v07_state_changed", "activity_v07_planned_end", "activity_v07_command"):
         raise ValueError("Unknown activity history kind")
     times = ("accepted_at", "planned_start_at", "planned_end_at", "started_at", "ended_at", "finish_requested_at")
     expected = {"request", "state", "notice_sequence", "observed_at", "elapsed_seconds",
                 "planned_end_notified", "finish_reason", "result", "failures", *times}
-    if version == 6:
+    if version >= 6:
         expected.update({"current_request", "revision", "scheduled_revision", "execution_seconds", "paused_at", "resumed_at"})
-    if kind == "activity_v06_command":
+    if version == 7:
+        expected.update({"timing_confirmed", "cleanup_confirmed", "executor_module_id", "executor_id"})
+        for name in ("timing_confirmed", "cleanup_confirmed"):
+            if type(data.get(name)) is not bool:
+                raise ValueError("Invalid remote evidence flag")
+        _identifier(data.get("executor_module_id"), "executor_module_id")
+        _identifier(data.get("executor_id"), "executor_id")
+    if kind in ("activity_v06_command", "activity_v07_command"):
         expected.add("command")
     if set(data) != expected:
         raise ValueError("Invalid activity observation fields")
@@ -117,7 +126,7 @@ def _validate_activity(kind, data):
     for name in times:
         if name in times[:3] or data[name] is not None:
             _time(data[name])
-    current = _request(data["current_request"], version=6) if version == 6 else request
+    current = _request(data["current_request"], version=6) if version >= 6 else request
     if (current.key, current.content, current.parameters) != (request.key, request.content, request.parameters):
         raise ValueError("Current request changes immutable activity input")
     start, end = current.planned_times(_time(data["accepted_at"]))
@@ -129,9 +138,11 @@ def _validate_activity(kind, data):
     if type(data["planned_end_notified"]) is not bool:
         raise ValueError("Invalid planned-end notification flag")
     state = ActivityState(data["state"])
+    if version < 7 and state == ActivityState.STARTING:
+        raise ValueError("Remote starting state in legacy history")
     if version == 5 and state in (ActivityState.PAUSING, ActivityState.PAUSED, ActivityState.RESUME_PENDING):
         raise ValueError("New activity state in legacy history")
-    if version == 6:
+    if version >= 6:
         _nonnegative_int(data["revision"])
         _nonnegative_int(data["scheduled_revision"])
         if data["scheduled_revision"] > data["revision"]:
@@ -144,15 +155,16 @@ def _validate_activity(kind, data):
                 _time(data[name])
         if state in (ActivityState.PAUSED, ActivityState.RESUME_PENDING) and data["paused_at"] is None:
             raise ValueError("Paused activity has no acknowledged pause")
-        if kind == "activity_v06_command":
+        if kind in ("activity_v06_command", "activity_v07_command"):
             _command(data["command"], state)
-    if state.terminal != (data["ended_at"] is not None):
+    unknown_end = version == 7 and not data["cleanup_confirmed"] and state == ActivityState.FAILED and data["ended_at"] is None
+    if not unknown_end and state.terminal != (data["ended_at"] is not None):
         raise ValueError("Terminal state and end timestamp disagree")
     if (data["finish_reason"] is None) != (data["finish_requested_at"] is None):
         raise ValueError("Finish reason and timestamp disagree")
     if data["finish_reason"] is not None:
         ActivityFinishReason(data["finish_reason"])
-    if kind in ("activity_planned_end", "activity_v06_planned_end") and (not data["planned_end_notified"] or state.terminal):
+    if kind in ("activity_planned_end", "activity_v06_planned_end", "activity_v07_planned_end") and (not data["planned_end_notified"] or state.terminal):
         raise ValueError("Invalid planned-end observation")
     if not isinstance(data["failures"], list):
         raise ValueError("Failures must be an array")

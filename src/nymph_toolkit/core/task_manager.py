@@ -296,11 +296,15 @@ class TaskManager(_Slots, _Commands):
                                  "change": None if command.change is None else command.change.as_dict(),
                                  "received_at": command.received_at.isoformat(),
                                  "status": command.result.status.value, "reason": command.result.reason}
-        self.store.append("activity_v06_" + ("command" if command is not None else kind.value), record)
+        history_kind, record = self._history_record(entry, kind, record, command)
+        self.store.append(history_kind, record)
         queue = self._notices.setdefault(entry.request.key.requester_id, asyncio.Queue())
         queue.put_nowait(ActivityNotice(self._sequence, kind, at, command.result.snapshot if command else observed,
                                        command.result if command else None))
         return observed
+
+    def _history_record(self, entry, kind, record, command):
+        return "activity_v06_" + ("command" if command is not None else kind.value), record
 
     def submit(self, request: ActivityRequest, execute: Callable, *, supports_pause=False):
         self._check_running()

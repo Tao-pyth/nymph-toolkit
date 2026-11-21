@@ -100,7 +100,16 @@ from .activities import (
 )
 
 
+from .hybrid import (
+    Placement, HybridSettings, OverflowPolicy, StreamOptions, StreamState,
+    StreamEvent, ProcessSnapshot, HybridError, ProtocolError, PeerClosed,
+    CapacityExceeded, OutcomeUnknown, RemoteError, StreamClosed, ChunkTooLarge,
+)
+
 __all__ = [
+    "Placement", "HybridSettings", "OverflowPolicy", "StreamOptions", "StreamState",
+    "StreamEvent", "ProcessSnapshot", "HybridError", "ProtocolError", "PeerClosed",
+    "CapacityExceeded", "OutcomeUnknown", "RemoteError", "StreamClosed", "ChunkTooLarge",
     "UNCHANGED", "ActivityChange", "ActivityCommandResult", "ActivityCommandStatus", "ActivityControlKind",
     "ActivityAdmissionError", "ActivityContext", "ActivityError", "ActivityExecutor",
     "ActivityFailure", "ActivityFinishReason", "ActivityKey", "ActivityNotice",

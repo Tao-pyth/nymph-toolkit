@@ -2,6 +2,18 @@
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
 
+## v0.7.0の公開手順と記録
+
+R20の実装は[PR #69](https://github.com/Tao-pyth/nymph-toolkit/pull/69)、親#7、子#61〜#68で追跡した。R21でユーザーがレビュー後のマージ・v0.7.0公開を明示指示した。修正[#70](https://github.com/Tao-pyth/nymph-toolkit/issues/70)・公開[#71](https://github.com/Tao-pyth/nymph-toolkit/issues/71)を着手前に登録し、配布メタデータ0.7.0、[A07検証記録](validation/v0.7.md)、[操作契約](hybrid.md)に従う。
+
+1. レビュー指摘を解消し、267テスト・6実行例・通常wheel・sdist再ビルド・文書同期と、PR最終headのWindows/Linux × Python3.12〜3.15全8環境CIを確認する。
+2. 確認したhead SHAを指定してPR #69をマージする。マージコミットそのものの全8環境CIが成功したことを確認する。
+3. 同じコミットからwheel・sdist・単一引継ぎ書・SHA256SUMSを作成する。新しい`v0.7.0`タグを付け、[Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.7.0)へ4件を添付して公開する。
+4. 認証情報を使わずにタグをcloneし、4添付をdownload・ハッシュ照合する。新規venvへの通常インストールで全試験・6実行例・Docs・sdist再ビルドを確認し、タグ本文と添付引継ぎ書の一致も確認する。
+5. 最終SHA・CI・レビュー結果・チェックサム・匿名取得の結果をReleaseと#71へ記録し、対応子Issue・親#7・マイルストーンv0.7.0を完了する。
+
+R20時点で新規Releaseを含めなかった判断は履歴として保持する。今回の公開根拠はR21である。公開済みv0.1.0〜v0.6.0のタグ・Release・添付は変更しない。v0.8のA08・v0.9のA09の完了は含めない。
+
 ## v0.6.0の公開手順と記録
 
 親Issue #6、設計#52、実装#53〜#57、受入#58、公開[#59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)で追跡する。採用範囲の実装・A06・全8環境のCIを確認した。公開対象版は0.6.0で、[ADR 0021](adr/0021-v0.6-activity-changes.md)と[A06検証記録](validation/v0.6.md)に従う。
