@@ -112,6 +112,7 @@ async def measure(args):
                 for case, group, _, root, _, _ in active:
                     observations = {name: await invoke(group, name, "metrics") for name in ("requester", "provider")}
                     case["samples"].append({"elapsed_seconds": elapsed, "modules": observations,
+                        "parent_control_pending": sum(len(s.peer._pending) for s in group.modules.values() if s.peer is not None),
                         "activities_retained": len(group.activities._activities),
                         "unsaved_events": group.connections.store.unsaved_events,
                         "history_bytes": sum(p.stat().st_size for p in root.rglob("history-*.jsonl"))})
@@ -147,6 +148,8 @@ async def measure(args):
                 for info in case["idle_modules"].values():
                     assert info["pending_rpc"] == info["streams"] == info["owned_tasks"] == info["opening_streams"] == 0
                     assert info["unconsumed_results"] == 0
+                    assert info["pending_management"] == 0
+                assert all(not s.peer._pending for s in group.modules.values() if s.peer is not None)
                 assert case["idle_modules"]["provider"]["work_started"] == case["activities"]
                 assert case["idle_modules"]["provider"]["work_ended"] == case["activities"]
                 assert len(group.activities._activities) == case["activities"]

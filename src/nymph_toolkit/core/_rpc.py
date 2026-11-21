@@ -55,7 +55,7 @@ class RpcPeer:
         task.add_done_callback(done)
         return task
 
-    async def call(self, operation, payload=None, *, timeout):
+    async def call(self, operation, payload=None, *, timeout, retain_result=True):
         seconds(timeout)
         if self.closed.is_set():
             raise PeerClosed(str(self.error or "Connection closed"))
@@ -71,9 +71,13 @@ class RpcPeer:
                 await self._send({"kind": "request", "id": request_id, "operation": operation, "payload": encoded})
                 result = await asyncio.shield(future)
         except TimeoutError as exc:
+            if not retain_result:
+                future.add_done_callback(lambda _: self._pending.pop(request_id, None))
             self._background(self._cancel(request_id))
             raise OutcomeUnknown(request_id) from exc
         except asyncio.CancelledError:
+            if not retain_result:
+                future.add_done_callback(lambda _: self._pending.pop(request_id, None))
             self._background(self._cancel(request_id))
             raise
         except Exception:

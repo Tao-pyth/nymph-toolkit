@@ -171,6 +171,7 @@ class Probe(Dummy):
         return {**memory(), "calls": self.calls, "work_started": self.work_started, "work_ended": self.work_ended,
                 "retained_executions": 0 if self.execution_host is None else len(self.execution_host.jobs),
                 "pending_rpc": sum(len(p._pending) for p in peers), "data_peers": len(peers),
+                "pending_management": len(self.context.core.pending_requests),
                 "streams": len(self.context.streams), "owned_tasks": len(self.context.owned),
                 "opening_streams": self.context.opening_streams, "unconsumed_results": len(self.results)}
 

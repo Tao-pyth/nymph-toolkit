@@ -42,6 +42,12 @@ CoreClientの主な操作は次のとおり。期限省略可能な管理操作�
 
 業務失敗は`OperationFailure`、受付容量不足は`TemporaryUnavailable`。通常の連携失敗は`LinkFailure`と要求元への中断通知で扱う。予想外例外の情報は`RemoteError(module_id, remote_type, message)`。通信切断は`PeerClosed`。期限切れは協調的取消を送り`OutcomeUnknown(request_id)`を返し、タイムアウトだけで提供先の障害と判断しない。直接RPCの遅い結果は`link.result(id)`で照会し、確認後`link.release(id)`で一時保持を解放できる。`link.close()`は窓口の通信資源を閉じる。自動再送・自動再接続をせず、復帰後の新規処理には機能が明示的にprepareする。
 
+## 通信結果の保持と解放
+
+v0.8の子Issue #78で、上記の一時結果の保持を管理RPCにも具体化した。子の`context.core.pending_requests`は未完了または完了後に保持中のIDのタプルを返す。`core.result(id)`で元の管理要求の結果・例外を照会し、確認後に`core.release(id)`を呼ぶ。`prepare`の遅い結果は経路情報でありDirectLinkではない。未完了の解放は`OutcomeUnknown`となる。待機取消では例外からIDを受け取れないため、一覧から照合する。直接RPCも`link.pending_requests`を使える。IDは窓口・起動世代内に限り、別の窓口へ渡さない。同一プロセス入口にはRPC結果がなく一覧は空である。
+
+内部のライフサイクル操作・子の報告は、呼出し所有者が完了後の解放を指定する。期限切れだけで未完了の容量枠を解放せず、結果または切断の確認後に一時結果を回収する。活動・変更結果・履歴の保持は変わらない。根拠は[ADR 0024](adr/0024-v0.8-integration-validation.md)と[検証記録](validation/v0.8.md)。
+
 ## ストリーム
 
 `link.open_stream(operation, StreamOptions(send_bytes, send_chunks, receive_bytes, receive_chunks, overflow), metadata=None, timeout=...)`で片方向のStreamSenderを得る。`overflow`は`WAIT`か`DROP_OLDEST`。双方向は独立した2本を開く。ストリームごとにIDとTCP接続を持ち、管理RPCとデータ用の待機列を分ける。
