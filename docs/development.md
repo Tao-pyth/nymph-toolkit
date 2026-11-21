@@ -19,6 +19,8 @@ python -m venv .venv
 .venv/Scripts/python.exe examples/connections_demo.py
 .venv/Scripts/python.exe examples/task_manager_demo.py
 .venv/Scripts/python.exe examples/activity_changes_demo.py
+.venv/Scripts/python.exe examples/hybrid_demo.py
+.venv/Scripts/python.exe examples/activity_changes_demo.py
 .venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
@@ -36,7 +38,7 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・
 
 v0.2での採用結果は[ADR 0014](adr/0014-v0.2-runtime.md)に記録する。CPython 3.12以上、配布名 `nymph-toolkit`、venv・pip、build・Hatchling、標準unittestを使用する。実行時依存は追加しない。Core・Contractsの単一wheel・sdistをGitHub Releaseから配布する。以下にある「実装開始時に記録する」項目のうち、これらは本ADRで具体化した。
 
-[ADR 0009](adr/0009-package-distribution.md)に従い、CoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。v0.2のライフサイクル契約に加え、v0.3で登録・依存・変更通知の契約を実装した。v0.4で接続契約、v0.5で活動契約を具体化した。v0.6で変更操作・中断再開・優先度の契約を追加した。将来のIPC等は各段階で判断する。
+[ADR 0009](adr/0009-package-distribution.md)に従い、CoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。v0.2のライフサイクル契約に加え、v0.3で登録・依存・変更通知の契約を実装した。v0.4で接続契約、v0.5で活動契約を具体化した。v0.6で変更操作・中断再開・優先度の契約を追加した。v0.7でIPC・ストリーム・遠隔活動を追加した。Windowsでは標準asyncio.runなど子プロセス対応ループを使う。APIと設定は[hybrid.md](hybrid.md)、結果は[v0.7検証記録](validation/v0.7.md)に記録する。
 
 ビルドした配布物をcheck_distで新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。結果はacceptanceの記録形式で残す。
 

@@ -30,7 +30,7 @@ R17でv0.5に着手し、ADR 0020へ判断を記録した。予定時間到達�
 
 R18で、開始時刻変更・期間変更・優先度・中断再開の全4項目をv0.6の対象として採用した。ADR 0021のD1・D2へユーザーの範囲採用と個別回答を記録し、残事項を決める委任に基づくCodexの設計判断をD3〜D10へ分けた。子Issue #53〜#59をコード変更前に登録し、振る舞い・API・A06条件に従って実装した。実装、最終受入、配布・CI、公開後の取得確認の結果を個別に記録する。
 
-R19でv0.9までの64項目をADR 0022へ採用記録した。1〜18は一問一答の個別回答、19〜64は一覧の推奨設定に対する明示一括採用である。同一PCの子プロセス管理、ループバックTCP、許可済み直接通信、連続ストリーム、活動管理、保存、受入・完成条件とv0.7〜v0.9の配分を設計採用した。A07〜A09へ全項目を対応付け、設計子Issue #60で資料を同期する。製品コードは未実装・A07〜A09未検証であり、具体的なAPI名・形式・数値等は実装子Issueで記録する。v1.xの配分案と公開済みのタグ・添付は変更しない。
+R19でv0.9までの64項目をADR 0022へ採用記録した。1〜18は一問一答の個別回答、19〜64は一覧の推奨設定に対する明示一括採用である。同一PCの子プロセス管理、ループバックTCP、許可済み直接通信、連続ストリーム、活動管理、保存、受入・完成条件とv0.7〜v0.9の配分を設計採用した。A07〜A09へ全項目を対応付け、設計子Issue #60で資料を同期する。R19時点では製品コードは未実装だった。R20でv0.7を実装し、A07の結果を検証記録へ分離した。A08・A09は未完了。具体的なAPI・形式・設定はADR 0023に記録する。v1.xの配分案と公開済みのタグ・添付は変更しない。
 
 R20で資料をGitHub mainへ反映し、v0.7の実装に着手する。子Issue #61〜#68を先に登録し、ADR 0023に具体的な契約を記録した。実装・A07・配布・CIの結果は各子Issueと検証記録で追跡し、新規Release作成とは区別する。
 
@@ -41,7 +41,7 @@ def sources():
     result = [
         "README.md", "CONTRIBUTING.md", "AGENTS.md", "docs/README.md",
         "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md",
-        "docs/connections.md", "docs/task-manager.md", "docs/adr/README.md",
+        "docs/connections.md", "docs/task-manager.md", "docs/hybrid.md", "docs/adr/README.md",
     ]
     result += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/adr").glob("[0-9]*.md"))]
     result += ["docs/roadmap.md", "docs/acceptance.md"]

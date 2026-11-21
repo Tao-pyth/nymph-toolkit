@@ -16,8 +16,10 @@
 | [registry.md](registry.md) | v0.3のRegistry・ModuleGroup契約、着脱・依存管理の境界 |
 | [connections.md](connections.md) | v0.4の接続API、操作・中断・ヘルス・保存の使い方と制約 |
 | [task-manager.md](task-manager.md) | v0.5基本操作・v0.6変更要求・中断再開・優先度・履歴の契約 |
+| [hybrid.md](hybrid.md) | v0.7の配置・CoreClient・直接通信・ストリーム・遠隔活動と制約 |
+| [validation/v0.7.md](validation/v0.7.md) | A07・回帰・配布・CIの検証記録 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
-| [ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md) | v0.9までの64項目の採用記録と受入ID対応。未実装・未検証 |
+| [ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md) | v0.9までの64項目の採用記録と受入ID対応。v0.7の具体化は0023 |
 | [roadmap.md](roadmap.md) | 各段階の着手条件、作業、成果物、完了条件 |
 | [acceptance.md](acceptance.md) | バージョン別の検証シナリオと結果の記録方法 |
 | [validation/v0.2.md](validation/v0.2.md) | v0.2の受入結果、環境・再現手順、制約 |
@@ -52,6 +54,7 @@
 | R16 | 本チャットのv0.4着手指示と、接続先固定単位・バッファ受付方針への回答 | v0.4の設計・実装・検証へ着手する。要求元＋契約ID・版につき1接続、バッファ上限なしで新規受付継続を明示採用。保存失敗時の受付停止は維持。具体的な実装判断はADR 0019へ記録し、R15時点の未採用案との違いを明示する |
 | R17 | 本チャットのv0.5実施指示と、時間到達・再起動・過去時刻・終了指示への回答 | 時間到達時は通知して継続し、Nymphが判断する。再起動時は履歴を返してNymphが再登録・再開を決める。過去時刻は開始せず返し、終了要求は実行側の安全な区切りを待つ。API等の実装判断はADR 0020へ区別して記録 |
 | R18 | 本チャットの「①の全てを決定する」、続く一問一答、最後の「よい　全体想定回答で決め打ちして良い」 | 全4項目の範囲採用と、開始時刻・期間・通知・安全な中断再開・計時・優先度の個別回答をADR 0021 D1・D2へ記録。残事項の判断委任を受け、D3〜D10をCodexの設計判断として採用。設計の採用を製品コード・受入・公開の完了と扱わない |
+| R20 | 本チャットの資料GitHub反映・v0.7実装指示 | 資料をmainへ反映し、#61〜#68を子Issueとして先に登録。ADR 0022に沿って実装・検証し、詳細判断は0023へ記録。新規Release作成は含めない |
 | R19 | 本チャットのv0.9までの一問一答、確認事項1〜64の一覧、「19〜64はすべて推奨設定で採用してください。決定済みの1〜18と合わせて、ADR・ロードマップ・受入基準・引継ぎ書に反映してください。」 | 1〜18は個別回答、19〜64は推奨案から明示一括採用。ADR 0022で番号と採用内容を維持し、v0.7〜v0.9の配置・IPC・ストリーム・活動管理・保存・受入・完成条件を記録。今回の設計反映は製品実装・受入合格・公開を意味しない |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
@@ -111,13 +114,13 @@ R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7�
 
 2026年11月21日のR19を[ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md)に記録する。1〜18の個別回答と19〜64の明示一括採用を区別し、全64項目をA07〜A09へ対応付ける。v0.7〜v0.8の機能配分はこの後続判断で開発計画として採用し、理由を記録した再配分を認める。前節の提案・未決という記述はR18以前の判断範囲を示す。v1.xの名称・順序・配分案は今回採用しない。
 
-設計子Issue [#60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)を親#7・マイルストーンv0.7.0配下へ登録し、引継ぎ書生成ヘッダー変更前にGitHubの親子関係を確認した。API名・型・フレーム・具体的設定値などの実装詳細は後続の対応単位で記録し、採用済みの64項目を再質問しない。現在の実装はv0.6までであり、A07〜A09は未検証である。
+設計子Issue [#60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)を親#7・マイルストーンv0.7.0配下へ登録し、引継ぎ書生成ヘッダー変更前にGitHubの親子関係を確認した。API名・型・フレーム・具体的設定値などの実装詳細は後続の対応単位で記録し、採用済みの64項目を再質問しない。これはR19時点の状態である。R20によるv0.7の実装・A07確認は[検証記録](validation/v0.7.md)で追跡し、A08・A09は未完了である。
 
 ## 文書の更新
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、hybrid、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。[再生成ツール](../tools/build_handoff.py)と[文書確認ツール](../tools/check_docs.py)はCIでも使用する。
 

@@ -19,7 +19,7 @@ Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Reg
 | Core Runtime | Coreの起動、実行、停止を取りまとめる | ADR 0014のRuntimeとADR 0016のModuleGroupを実装 |
 | Registry | Subsystem・Adapterの登録状態と識別を管理する | ADR 0016でID・必須依存・スナップショット・着脱範囲を採用して実装 |
 | Connections | 採用した経路で接続と通信を管理する | ADR 0015・0017・0018の方針をADR 0019で具体化。候補・接続固定・操作・中断・ヘルス、非同期保存・救命を実装しA04を確認 |
-| TaskManager | Nymphが決めた活動の予定、実行状態、変更を管理する | ADR 0020で予定・実行追跡、到達通知、安全な終了、履歴参照、ADR 0021で時刻・期間・優先度変更と中断再開を実装。別プロセスへの適用は0022で設計採用・未実装 |
+| TaskManager | Nymphが決めた活動の予定、実行状態、変更を管理する | ADR 0020で予定・実行追跡、到達通知、安全な終了、履歴参照、ADR 0021で時刻・期間・優先度変更と中断再開を実装。別プロセスへの適用は0022・0023で具体化しHybridTaskManagerとして実装 |
 | Subsystem | 着脱する機能単位 | Coreとの接続契約とライフサイクル |
 | Adapter | 外部環境との接点を担う着脱可能な構成要素 | 接続契約。将来のPC状況取得はここに配置 |
 
@@ -86,9 +86,9 @@ R14追補により、失効の目的は接続の不整合によるエラー回�
 
 保存失敗時は新規受付を停止し、Core内蔵の救命手順として保持期間を過ぎた古い履歴を指定済み予備先へ退避する。退避保存を確認してから元を除去し、主保存先への書込みが回復すれば再開、回復不能なら未保存分を報告して終了する。終了時の追加バッファ退避は行わず、接続設定の保存失敗にも同じ手順を適用する。形式・設定値・既存処理の停止順序等はADR 0018の残課題である。
 
-上記はR15時点の採用方針を説明したもので、その後R16・[ADR 0019](adr/0019-v0.4-connections.md)で同一プロセスの公開API・同期/非同期操作・状態・非同期保存を具体化し、v0.4.0として実装・検証した。現在の契約は[Connections](connections.md)を参照する。配置間の共通範囲、IPC・シリアライズとv0.7〜v0.9の配分は、R19・[ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md)で設計採用した。既存契約を暗黙に変更せず、未実装・未検証として以下に区別する。
+上記はR15時点の採用方針を説明したもので、その後R16・[ADR 0019](adr/0019-v0.4-connections.md)で同一プロセスの公開API・同期/非同期操作・状態・非同期保存を具体化し、v0.4.0として実装・検証した。現在の契約は[Connections](connections.md)を参照する。配置間の共通範囲、IPC・シリアライズとv0.7〜v0.9の配分は、R19・[ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md)で設計採用した。既存契約を暗黙に変更せず、R20・ADR 0023でv0.7を実装した。結果は[検証記録](validation/v0.7.md)、操作は[hybrid.md](hybrid.md)に分ける。
 
-### v0.9までに採用したハイブリッド構成（未実装）
+### v0.9までに採用したハイブリッド構成
 
 R19の1〜18は個別回答、19〜64は推奨設定の明示一括採用である。全項目と受入IDはADR 0022を正本とする。親CoreがRegistry・Connections・TaskManager・保存を一元管理し、同じPC・同じPython環境で機能ごとの子プロセスを起動する。配置は起動設定で明示し、機能の着脱は起動前・停止後、稼働中の構成は固定する。子は実行・状態報告を担い、Nymphの判断とCoreの管理の境界は配置によって変えない。
 
@@ -100,7 +100,7 @@ R19の1〜18は個別回答、19〜64は推奨設定の明示一括採用であ�
 
 活動の開始・中断・再開・終了は実行側の適用報告で確定し、命令ID・版管理を維持する。実行時間は実行側の単調時計で測り、通信遅延や未確認の結果を実行完了に置き換えない。親Coreが保存を集約し、子での発生・Core受付・保存済み・未送信不明を区別する。構成・接続設定・活動変更履歴を保存し、PID・ストリーム途中・実行中処理は復元しない。Nymphが履歴を基に再登録・再開を決める。
 
-v0.7で基本機能、v0.8で統合・障害・負荷・配布、v0.9で全採用範囲の受入と文書・実装の一致を確認する。実装API名・形式の詳細・具体値は後続の実装子Issueで記録し、今回の採用を未実装機能の利用案内にしない。
+v0.7で基本機能、v0.8で統合・障害・負荷・配布、v0.9で全採用範囲の受入と文書・実装の一致を確認する。v0.7のAPI・形式・設定はADR 0023とhybrid.mdへ記録した。A08・A09は未完了であり、基本試験の成功を全体完成と扱わない。
 
 ## v1.0.0以降の構成案
 
@@ -149,6 +149,8 @@ nymph-toolkit/
 ├─ examples/connections_demo.py
 ├─ examples/task_manager_demo.py
 ├─ examples/activity_changes_demo.py
+├─ examples/hybrid_demo.py
+├─ examples/hybrid_dummy.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
 ├─ tools/check_docs.py
@@ -162,6 +164,7 @@ nymph-toolkit/
 │  ├─ registry.md
 │  ├─ connections.md                # v0.4の操作契約
 │  ├─ task-manager.md                # v0.5基本・v0.6変更と中断再開
+│  ├─ hybrid.md                      # v0.7の操作・配置・制約
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
@@ -169,6 +172,7 @@ nymph-toolkit/
 │  ├─ validation/v0.4.md             # A04・配布・性能と制約
 │  ├─ validation/v0.5.md             # A05・配布・制約
 │  ├─ validation/v0.6.md             # A06・活動変更・中断再開
+│  ├─ validation/v0.7.md             # A07・ハイブリッド実行
 │  ├─ development.md
 │  ├─ issue-workflow.md
 │  ├─ release.md
@@ -195,7 +199,8 @@ nymph-toolkit/
 │     ├─ 0019-v0.4-connections.md
 │     ├─ 0020-v0.5-task-manager.md
 │     ├─ 0021-v0.6-activity-changes.md
-│     └─ 0022-v0.7-v0.9-hybrid-and-completion.md
+│     ├─ 0022-v0.7-v0.9-hybrid-and-completion.md
+│     └─ 0023-v0.7-implementation-contracts.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -205,7 +210,7 @@ nymph-toolkit/
    └─ doubles/
 ```
 
-R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `core/runtime.py`、Registryは `core/registry.py`、複数対象の実行入口は `core/module_group.py`、接続・保存は `core/connections.py` と `core/storage.py`、活動管理は `core/task_manager.py`、履歴読出しは内部モジュール `core/_activity_history.py`、変更要求の仲裁は `core/_activity_commands.py`、開始・再開の共通待機列は `core/_activity_slots.py` に置く。共有型は `contracts/registry.py`・`contracts/connections.py`・`contracts/activities.py` に置き、`contracts/__init__.py`から公開する。ダミーは `tests/doubles/`、検証は `tests/core/` に置く。
+R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `core/runtime.py`、Registryは `core/registry.py`、複数対象の実行入口は `core/module_group.py`、接続・保存は `core/connections.py` と `core/storage.py`、活動管理は `core/task_manager.py`、履歴読出しは内部モジュール `core/_activity_history.py`、変更要求の仲裁は `core/_activity_commands.py`、開始・再開の共通待機列は `core/_activity_slots.py` に置く。ハイブリッド実行は `core/hybrid.py`、遠隔活動は `core/hybrid_tasks.py`、通信内部は `_wire.py`・`_rpc.py`・`_streams.py`、子入口は `_child.py`、機能側窓口は `_module_node.py`・`_hybrid_client.py`・`_remote_activity.py` に置く。追加共有型は `contracts/hybrid.py`。共有型は `contracts/registry.py`・`contracts/connections.py`・`contracts/activities.py` に置き、`contracts/__init__.py`から公開する。ダミーは `tests/doubles/`、検証は `tests/core/` に置く。
 
 ### Subsystem・Adapterを追加する際の配置案
 
@@ -238,7 +243,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 | 公開API・型、接続識別と競合、通知・待機の競合、保存形式・設定値、救命の具体手順 | Connectionsの対象範囲の実装前。前の計画の方式・数値は未採用案 | ADR 0018と後続ADR |
 | 時計、時刻・期間・経過時間・実行時間の意味、状態遷移、期間終了の意味 | V0.5着手時 | ADR 0004に関連付ける後続ADR |
 | 開始時刻変更・期間変更・優先度・中断再開の詳細、競合・応答 | R18・ADR 0021に従って実装。最終受入・公開はv0.6検証記録を参照 | ADR 0004・0021 |
-| IPC、配置間契約の共通範囲、ストリーム、切断・子終了、活動管理への適用 | R19で設計採用・未実装。API名・型・フレーム・具体値は対応子Issueで具体化 | ADR 0022・1〜53 |
+| IPC、配置間契約の共通範囲、ストリーム、切断・子終了、活動管理への適用 | R19で設計採用、R20・0023でv0.7を実装。API・制約はhybrid.md | ADR 0022・1〜53 |
 | 保存対象・受付境界・結果保持・運用情報、自動再試行・復旧の範囲 | R19で採用。活動自動復元・子だけの再起動・自動再送・接続先切替は対象外 | ADR 0019〜0022・26・54〜57 |
 | v0.7〜v0.9配分、配置4通り、障害・性能・長時間・配布、Core完成条件 | R19で設計採用・未検証。測定条件・試験値は対応単位で記録 | ADR 0022・58〜64、acceptance |
 
