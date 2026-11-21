@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R22を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R23を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -27,6 +27,8 @@ R20で資料をGitHub mainへ反映し、v0.7の実装に着手する。子Issue
 R21でPR #69のレビュー、問題解消後のマージ、v0.7.0公開が指示された。#70・#71をコード変更前に登録し、境界不具合の修正・回帰確認、最終CI・タグ・Release・4配布物・匿名取得を追跡する。最終SHAと公開後の結果は#71へ記録する。
 
 R22でv0.8の統合・障害・負荷検証を実施する。親#8・マイルストーンv0.8.0に#72〜#77を先に登録し、検出した管理通信の結果解放不具合を#78で修正した。ADR 0024に試験・測定・30分の継続負荷とCIの条件を記録する。採用済み64項目を維持し、A08の結果は検証記録へ分離する。新規Release作成とA09の完成判定は別段階である。
+
+R23でPR #79のレビュー、問題がなければマージとv0.8.0公開まで進めることが指示された。公開#81を親#8・同じマイルストーンへ先に登録し、公開状態の文書・最終CI・マージ・タグ・Release・4添付・匿名取得を追跡する。製品コードに追加修正が必要な問題は見つからず、関連42テストを再確認した。公開対象SHAと公開後の結果は#81・Releaseへ記録し、30分測定と後続修正の検証範囲を維持する。
 
 ## 収録文書
 
@@ -101,7 +103,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在の段階
 
-**v0.8.0開発版：統合・障害・負荷検証。** R22に基づき子Issue #72〜#77を先に登録し、管理通信の結果解放を#78、送信前の期限・取消による枠残存を#80で修正しました。ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）に沿って288テスト・6実行例・全8環境CI・通常配布と、条件を明記した30分負荷を確認しました。変更は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、結果はv0.8受入記録（`docs/validation/v0.8.md`）へ記録し、公開済みv0.7.0と区別します。 CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
+**v0.8.0：統合・障害・負荷検証。** R22に基づき子Issue #72〜#77を先に登録し、管理通信の結果解放を#78、送信前の期限・取消による枠残存を#80で修正しました。ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）に沿って288テスト・6実行例・全8環境CI・通常配布と、条件を明記した30分負荷を確認しました。変更は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、結果はv0.8受入記録（`docs/validation/v0.8.md`）へ記録しています。R23による公開前レビュー・最終CI・公開後の確認は[公開課題 #81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)で追跡します。CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。操作契約（`docs/task-manager.md`）とADR 0020（`docs/adr/0020-v0.5-task-manager.md`）に採用範囲を記録しています。
 
@@ -113,7 +115,7 @@ v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistr
 
 v0.3では実行開始前にSubsystem・Adapterのダミーを着脱し、起動から停止完了まで構成を固定します。停止後は明示解除できます。実体の稼働中着脱は、接続の解除・失効契約を設計する後続段階へ残しています。利用方法はRegistryとModuleGroup（`docs/registry.md`）を参照してください。
 
-[v0.7.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.7.0)にwheel・sdist・引継ぎ書・チェックサムを掲載済みです。最終SHA・CI・公開後の取得確認は[公開課題 #71](https://github.com/Tao-pyth/nymph-toolkit/issues/71)で追跡します。過去の[v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.6.0)・[v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.5.0)・[v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)・[v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)・[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
+[v0.8.0のリリース](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)でwheel・sdist・引継ぎ書・チェックサムを配布します。最終SHA・CI・公開後の取得確認は[公開課題 #81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)へ記録します。過去の[v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.7.0)・[v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.6.0)・[v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.5.0)・[v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.4.0)・[v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.3.0)・[v0.2.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.2.0)・[v0.1.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)は各公開時点の記録として保持します。
 
 V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0はCoreとSubsystem・Adapterの接続契約を大きく形作る目標です。v1.1.0〜v1.10.0のSubsystem・Adapter開発、奇数・偶数マイナーのリリース運用は設計提案としてロードマップに追記しています。記載するSubsystem名・Adapter名は暫定名称で、実装順序と機能配分も変更される可能性があります。
 
@@ -237,7 +239,7 @@ IssueやPRには、認証情報や他者の非公開データを含めないで�
 
 v0.6はADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）を確認する。全4項目と一問一答の回答はD1・D2、残事項を決定してよいという委任に基づく設計はD3〜D10へ分けて採用済み。追加の同じ確認を求めず、実装単位の子Issue登録後に採用契約に従う。優先度は開始・再開待ちの順序にのみ使い、自動中断しない。中断状態は実行側が保持し、同一起動内でNymphの指示により続きから再開する。任意の実行枠をConnectionsの容量応答や履歴バッファ上限へ流用しない。設計採用と実装・A06受入・公開の完了を区別する。
 
-v0.7〜v0.9はR19・ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）を確認する。1〜18の個別回答と19〜64の明示一括採用を合わせた64項目は設計採用済みであり、同じ採否を再質問しない。R20・ADR 0023でv0.7を実装した。A07・配布・CIの結果はdocs/validation/v0.7.mdを参照し、A08・A09の未完了と区別する。各実装子IssueでAPI・形式・具体値を記録してからコードを変更する。管理は親Coreへ集約し、同一PC・同じPython・Core所有の子・稼働中構成固定を守る。直接データ通信と管理通信を分け、利用ごとの許可再審査を追加しない。
+v0.7〜v0.9はR19・ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）を確認する。1〜18の個別回答と19〜64の明示一括採用を合わせた64項目は設計採用済みであり、同じ採否を再質問しない。R20・ADR 0023でv0.7を実装した。A07・配布・CIの結果はdocs/validation/v0.7.mdを参照し、R20時点で未完了だったA08・A09と区別する。A08は後続R22・ADR 0024の検証記録、v0.8.0公開はR23・#81を参照する。各実装子IssueでAPI・形式・具体値を記録してからコードを変更する。管理は親Coreへ集約し、同一PC・同じPython・Core所有の子・稼働中構成固定を守る。直接データ通信と管理通信を分け、利用ごとの許可再審査を追加しない。
 
 通常の連携エラーは既存の要求元中断で扱い、子プロセスの予期しない終了は未処理の機能障害としてRuntimeを停止する。停止期限後の強制終了はCore停止時の所有子だけに限定し、通常の活動終了へ広げない。転送バッファ上限と上限なしの履歴バッファ、送信受付と受信確認、終了待機期限切れと処理打切りを区別する。子だけの再起動・自動再送・接続先切替・活動自動復元を追加しない。
 
@@ -312,6 +314,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | R20 | 本チャットの資料GitHub反映・v0.7実装指示 | 資料をmainへ反映し、#61〜#68を子Issueとして先に登録。ADR 0022に沿って実装・検証し、詳細判断は0023へ記録。R20の範囲は新規Release作成を含めない |
 | R21 | 本チャットのPR #69レビュー・マージ・v0.7.0公開指示 | 問題解消後のマージと公開をユーザーが明示承認。コード変更前に修正#70・公開#71を親#7・v0.7.0の子Issueとして登録。採用済み64項目と既存公開物は維持 |
 | R22 | 本チャットのv0.8統合・障害・負荷検証の実施指示 | 親#8配下へ対応単位の子Issueを先に登録し、ADR 0022・A08に従って実装・検証。#72〜#77を先行登録し、再現した不具合#78・#80を各製品修正前に追加。詳細試験条件はADR 0024。新規ReleaseとA09判定を含めない |
+| R23 | 本チャットのPR #79レビュー・マージ・v0.8.0公開指示 | 問題がなければマージと公開まで進める明示指示。公開#81を親#8・v0.8.0配下へ先に登録し、公開状態の文書・生成ヘッダー、最終検証・タグ・Release・匿名取得を追跡。R22の非公開範囲は当時の履歴として維持 |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -361,6 +364,10 @@ R17のv0.5作業はADR 0020（`docs/adr/0020-v0.5-task-manager.md`）へ記録�
 R4で列挙された時間・優先度の変更、中断・再開、取消・終了は採否を判断する対象として追記する。Subsystemの機能的依存と独立性の整理案のうち、v0.3の採用範囲はR13・ADR 0016で具体化した。Coreが扱う機械的な実行順序と、Nymphが決める活動の価値・優先度の境界を明示し、優先度機能とその作用、任意実行枠はR18・ADR 0021で設計採用した。過去の採否検討と、その後の採用判断を区別する。
 
 既存のV0.1〜V0.9という表記はv0.1.0〜v0.9.0の節目を指す。v1.xの名称・配分の変更時には、roadmap、architecture、関連ADR、acceptance、releaseと単一配布用引継ぎ書を照合する。
+
+### R23によるv0.8.0レビュー・公開
+
+2026年11月22日の「PR #79をレビューし、問題がなければマージしてv0.8.0の公開まで進めてください。」をR23として記録する。公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を親#8・同じマイルストーンへ登録し、生成ヘッダー変更前に親子関係を確認した。RPC・保持・送信境界・統合試験・測定記録・配布をレビューし、製品コードに追加の修正を必要とする問題は見つからなかった。最終CI・マージ・タグ・4添付・公開後の匿名取得を追跡し、release（`docs/release.md`）とv0.8検証記録（`docs/validation/v0.8.md`）へ対応を記載する。公開済みタグ・添付と採用済み64項目を維持する。
 
 ### R22によるv0.8の統合検証
 
@@ -1473,7 +1480,7 @@ v0.6実行例（`examples/activity_changes_demo.py`）は開始の繰上げ、�
 
 ## v0.7 ハイブリッド実行と通信
 
-ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の採用方針を、ADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）で実装契約へ具体化した。実行可能な例はhybrid_demo.py（`examples/hybrid_demo.py`）、試験結果はv0.7受入記録（`docs/validation/v0.7.md`）にある。公開済みReleaseとは別の開発成果である。
+ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の採用方針を、ADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）で実装契約へ具体化した。実行可能な例はhybrid_demo.py（`examples/hybrid_demo.py`）、試験結果はv0.7受入記録（`docs/validation/v0.7.md`）にある。v0.7で導入した機能に、v0.8で統合検証と通信結果・受付枠の回収を追加した。
 
 ### 構成と起動
 
@@ -1570,7 +1577,7 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R22の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R23の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -3432,6 +3439,8 @@ A07-01〜14に対応する実TCP・実子プロセスの検証を行う。ロー
 
 R22は「v0.8の統合・障害・負荷検証を進めてください。着手前に親Issue #8配下へ対応単位の子Issueを登録し、ADR 0022とA08の受入基準に沿って実装・検証してください。」である。既存公開物を維持し、新規Releaseの作成とv0.9の完成判定は本作業に含めない。
 
+R22時点では公開を含めなかった。後続R23のPR #79レビュー・マージ・v0.8.0公開指示により、公開子Issue #81で最終検証・公開・匿名取得を追跡する。採用済みの検証条件と#78・#80の契約は変更しない。
+
 ### 対応単位
 
 | 子Issue | 受入 | 内容 |
@@ -3624,6 +3633,7 @@ R17・ADR 0020で、Nymphの終了指示を安全な区切りで実行する最�
 - **着手条件** — A07の結果があり、4責務・両配置・ストリームが利用できる。親#8・マイルストーンv0.8.0と対応子Issueを確認する。
 - **作業** — 登録→起動→接続→活動・変更・ストリーム→停止→解除を通す。起動失敗・切断・子異常終了・混雑・期限・取消・保存失敗・停止競合を注入し、後処理と通知を確認する。新しいRuntimeでの起動は明示操作とし、自動再実行・子だけの再起動・接続先切替がないことを確認する。
 - **成果物** — A08-01〜07の統合結果、不具合と修正証拠、性能測定、短いCI試験・別途長時間試験の条件と結果、配布物検証。
+- **公開** — R23でPR #79のレビュー・マージ・v0.8.0公開が指示された。公開子Issue #81で最終CI・タグ・Release・匿名取得を追跡する。A09の完成判定は別段階である。
 - **検証条件** — ADR 0024に基本設定・バリアによる障害注入・4配置の測定・別途1800秒の継続負荷を記録した。#78で管理RPC結果の解放漏れを修正する。未測定の速度目標を固定せず、保持活動・履歴の増加と不要資源を区別する。
 - **検証手順** — 4通りの配置を含め、バッファの両上限・管理操作の応答・実行枠・未保存と未送信不明・タスク／子／接続の残存を観測する。Windows/Linux × Python 3.12〜3.15、ソース・通常インストール・sdist再ビルドを確認する。
 - **完了条件** — A08-01〜07を満たし、採用した障害時動作を再現できる。v0.9の完成を妨げる不具合と後処理の未達を解消し、制約と測定限界を記録する。
@@ -4372,6 +4382,12 @@ R22に基づき、親Issue [#8](https://github.com/Tao-pyth/nymph-toolkit/issues
 
 基準は公開済みv0.7.0（`2e2eded6e57fd70f0cb2d89a99d810b19dc5a91c`）、267テスト・6実行例。一次検証・長時間測定のコードは`cb0cf61eb52e6d7f901bb2f8c27e66c09ef6b048`。その後、送信前の期限・取消で未完了枠が残る#80を追加修正した。修正後`d739a44`のローカルと全8環境CIで288テスト・6実行例・通常配布が合格。固定コミット`cb0cf61`の1800.091秒の正常通信・保持・回収も合格した。**以下に記載した対象コミット・条件・後続修正の再検証を合わせ、A08-01〜07の採用範囲を満たすと判定する。** マージ・公開、A09完成判定は別である。最終資料の正確なSHAとCIはPR #79・子#77で追跡する。
 
+### R23の公開前レビューと公開確認
+
+公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を親#8・v0.8.0に先行登録した。レビュー対象`268db96`のRPC送信前後の境界、完了後の結果解放、未完了枠、既存の活動・履歴保持、全A08試験と測定条件、通常配布・CIを確認した。製品コードに追加修正が必要な問題は見つからなかった。関連42テストをWindows・CPython3.15.2で再実行し合格した。採用済み64項目と測定JSONの対象コミット・結果も再照合した。
+
+R22時点の「公開を含めない」という範囲を履歴として残し、今回の公開指示をR23としてREADME・CHANGELOG・release・根拠表・引継ぎ書へ反映した。公開対象コミットそのものの全8環境CI、マージ後の同一ツリー、wheel/sdist/引継ぎ書/SHA256SUMS、匿名でのタグ・添付取得と通常インストール検証を#81・[Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)へ記録する。30分測定と後続#80の検証範囲は下記のまま維持し、測定値を新しい実行結果として書き換えない。
+
 ### A08の対応表
 
 | ID | 再現と証拠 | 観測・判定 |
@@ -4481,7 +4497,7 @@ RPCの平均・最大は全試行、中央値とp95は最大2048件の直近窓�
 
 30分の継続負荷はこのWindows 11・CPython 3.15.2で実施し、8環境すべての長時間試験とは表現しない。CIは短い継続区間と決定的な境界試験を再現する。実メモリ枯渇、ディスク物理故障、OS停止、実機Subsystem/Adapter、ネットワーク越しの通信、無期限稼働の保証は対象にしていない。保存失敗は実ファイルに対する試験専用I/O障害注入で再現する。
 
-v0.8.0タグ・Releaseは作成していない。公開済みv0.7.0以前を差し替えず、マージ・公開の結果は後続作業へ残す。A09の全採用範囲の完成判定は親#9で別途進める。
+R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23によりレビュー・マージ・公開を#81で進め、最終結果を同IssueとReleaseへ記録する。公開済みv0.7.0以前を差し替えない。A09の全採用範囲の完成判定は親#9で別途進める。
 
 ---
 
@@ -4672,7 +4688,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 
 ### 計画と仕様の区別
 
-この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。v0.5はR17・ADR 0020で実施範囲を具体化した。後続の未決事項を実装要件へ含めない。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コードを実装した。最終A06・公開は検証記録（`docs/validation/v0.6.md`）で追跡する。v0.7〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録だけでは採用や着手の宣言にならない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
+この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。v0.5はR17・ADR 0020で実施範囲を具体化した。後続の未決事項を実装要件へ含めない。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コードを実装した。最終A06・公開は検証記録（`docs/validation/v0.6.md`）で追跡する。v0.7〜v0.8の配分は後続R19・ADR 0022で採用した。v1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録だけでは採用や着手の宣言にならない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
 
 v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝CoreとSubsystem・Adapterの接続契約整備という確定目標と、NymphとCoreの責務分離を維持する。通信方針はR12・ADR 0015（`docs/adr/0015-core-authorized-direct-communication.md`）で更新し、Coreが管理・許可した直接通信を採用した。詳細な許可条件・APIなどは実装前に判断する。
 
@@ -4689,7 +4705,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | R17・ADR 0020で実施範囲を具体化 |
 | [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | R18・ADR 0021に従い実装。受入・公開を別途確認 |
 | [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | R19・ADR 0022で設計採用。R20・#61〜#68で実装・A07・配布を確認。R21でPR #69レビュー修正#70、マージ・公開#71を追跡 |
-| [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | R22・ADR 0024で#72〜#78・#80を実施。PR #79・validation/v0.8で追跡 |
+| [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | R22・ADR 0024で#72〜#78・#80を実施。PR #79・validation/v0.8で追跡。R23の公開#81を追加 |
 | [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | 確定目標。R19・ADR 0022で完成条件採用、未検証 |
 | [v1.0.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/10) | [#10 Core接続契約](https://github.com/Tao-pyth/nymph-toolkit/issues/10) | 確定目標・契約詳細は提案 |
 | [v1.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/11) | [#11 Memory Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/11) | 名称・機能配分・実装順序は提案 |
@@ -4712,6 +4728,10 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 R18により、開始時刻変更・期間変更・優先度・中断再開の全4項目を対象として採用した。親Issue [#6](https://github.com/Tao-pyth/nymph-toolkit/issues/6)・マイルストーンv0.6.0配下へ、設計子Issue [#52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)を登録し、GitHubの親子関係と同一マイルストーンを確認した。
 
 #52はADR 0021、関連Docs、引継ぎ書と生成ヘッダーの同期、詳細契約・A06の設計判断を扱う。生成ヘッダーを更新する前に登録した。個別回答と残事項の判断委任を受け、振る舞い・API・A06-01〜12・実装単位を設計採用した。判断元はADR 0021 D1・D2とD3〜D10へ分ける。後続の子Issue分割はD10に記録し、製品コード変更前に各Issueを登録する。#52の設計完了を親#6・v0.6の実装完了と扱わない。
+
+### R23：v0.8.0のレビュー・公開
+
+公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を親#8・v0.8.0配下へ先に登録し、生成ヘッダー変更前に親子関係を確認した。最終CI・通常配布・マージ・新しいタグ/Release・4添付・匿名取得を検証し、結果を#81へ記録してから閉じる。PR #79のClosesで閉じる実装子Issueとは区別し、公開課題#81をマージだけで閉じない。
 
 ### R22：v0.8の検証単位
 
@@ -4869,11 +4889,17 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
 
-### v0.8開発版の検証状態
+### v0.8.0の公開手順と記録
 
-R22は統合・障害・負荷検証の実施指示。親#8の子#72〜#78・#80、[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）、A08検証記録（`docs/validation/v0.8.md`）で追跡する。配布メタデータを0.8.0へ更新し通常wheel・sdistを検証するが、v0.8.0タグ・Releaseはまだ作成していない。マージ・公開は検証結果と別に記録する。
+R22の統合・障害・負荷検証は親#8の子#72〜#78・#80、[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）、A08検証記録（`docs/validation/v0.8.md`）で追跡した。R23でユーザーがレビュー後のマージ・v0.8.0公開を明示指示した。公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を先に登録し、公開対象を配布メタデータ0.8.0とする。
 
-公開する際は、レビューしたコミットの全8環境CI・A08証拠・通常配布・文書同期を確認し、そのコミットから配布物・引継ぎ書・チェックサムを作成する。公開後の匿名取得を確認し、Issueとマイルストーンの完了を記録する。公開済みv0.1.0〜v0.7.0のタグ・Release・添付を差し替えない。A09のCore完成判定は別段階である。
+1. 公開前レビュー・関連42テストの再実行結果、288テスト・6実行例・通常配布・A08証拠・文書同期を確認する。製品コードに追加修正が必要な問題は見つからなかった。
+2. マージ対象headのWindows/Linux × CPython3.12〜3.15の全8環境CIを確認し、SHAを指定してPR #79をマージする。マージコミットのツリーが検証済みheadと同一であることと、そのコミットのCI成功を確認する。
+3. マージコミットからwheel・sdist・単一引継ぎ書・SHA256SUMSを作り、新しい`v0.8.0`タグと[Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)へ4件を添付して公開する。
+4. 認証情報を使わずにタグをcloneし、添付を取得してチェックサム・タグ内文書・製品コードを照合する。作業ツリー外の新規環境へwheelを通常インストールし、全テスト・6実行例・短い負荷・sdist同一wheel再ビルド・Docsを再現する。
+5. 最終SHA・CI・レビュー・公開後の匿名取得結果を#81とReleaseへ記録してから、公開課題・親#8・マイルストーンv0.8.0を完了する。
+
+30分測定は`cb0cf61`、後続#80は専用回帰・通常配布・短い負荷・全環境CIでの再検証であり、最終コード全体の30分測定とは表現しない。R22時点で公開を含めなかった判断は履歴として保持し、R23を今回の公開根拠とする。公開済みv0.1.0〜v0.7.0のタグ・Release・添付は差し替えない。A09のCore完成判定は別段階である。
 
 ### v0.7.0の公開手順と記録
 
@@ -5072,12 +5098,18 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ## 変更履歴
 
-### 未リリース — v0.8開発
+### 未リリース
+
+なし。
+
+### v0.8.0 — 2026年11月22日
+
+- R23に基づくPR #79レビュー・公開#81。製品コードに追加の修正を必要とする問題は見つからず、関連42テストを再実行した。最終CI・マージ・タグ・Release・添付・匿名取得の結果は#81へ記録する。
 
 - R22により親#8配下へ子#72〜#77を着手前に登録。ADR 0024でA08の4配置統合、障害・競合・保存、測定・30分継続負荷、8環境CI・配布の条件を具体化した。
 - #78で管理RPCの期限・取消後に完了結果を解放できない不具合を修正。CoreClientへpending_requests/result/release、DirectLinkへpending_requestsを追加し、内部報告の完了結果を回収する。活動・変更・保存履歴の保持は維持する。
 - #80で送信ロック待ち中の期限・取消による未送信RPCの枠残存を修正。書込み開始前は枠を回収し、開始後は既存の結果不明・協調的取消・保持を維持する。
-- 再現用ダミー・A08試験・測定CLIを追加。0.8.0の配布メタデータを整え、結果と制約はv0.8検証記録（`docs/validation/v0.8.md`）、変更全体は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)で追跡する。288テスト・6実行例・全8環境CIと通常配布を確認し、正常経路の固定コミットで30分・458944 RPC・716活動の継続試験を完走した。後続#80の検証範囲は受入記録に区別した。新規Releaseは作成していない。
+- 再現用ダミー・A08試験・測定CLIを追加。0.8.0の配布メタデータを整え、結果と制約はv0.8検証記録（`docs/validation/v0.8.md`）、変更全体は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)で追跡する。288テスト・6実行例・全8環境CIと通常配布を確認し、正常経路の固定コミットで30分・458944 RPC・716活動の継続試験を完走した。後続#80の検証範囲は受入記録に区別した。R22時点では新規Releaseを含めず、後続R23で公開対象とした。
 
 ### v0.7.0 — 2026年11月21日
 

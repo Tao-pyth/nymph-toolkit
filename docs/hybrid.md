@@ -1,6 +1,6 @@
 # v0.7 ハイブリッド実行と通信
 
-[ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md)の採用方針を、[ADR 0023](adr/0023-v0.7-implementation-contracts.md)で実装契約へ具体化した。実行可能な例は[hybrid_demo.py](../examples/hybrid_demo.py)、試験結果は[v0.7受入記録](validation/v0.7.md)にある。公開済みReleaseとは別の開発成果である。
+[ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md)の採用方針を、[ADR 0023](adr/0023-v0.7-implementation-contracts.md)で実装契約へ具体化した。実行可能な例は[hybrid_demo.py](../examples/hybrid_demo.py)、試験結果は[v0.7受入記録](validation/v0.7.md)にある。v0.7で導入した機能に、v0.8で統合検証と通信結果・受付枠の回収を追加した。
 
 ## 構成と起動
 
