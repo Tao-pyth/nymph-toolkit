@@ -73,6 +73,23 @@ R18により、開始時刻変更・期間変更・優先度・中断再開の�
 
 #52はADR 0021、関連Docs、引継ぎ書と生成ヘッダーの同期、詳細契約・A06の設計判断を扱う。生成ヘッダーを更新する前に登録した。個別回答と残事項の判断委任を受け、振る舞い・API・A06-01〜12・実装単位を設計採用した。判断元はADR 0021 D1・D2とD3〜D10へ分ける。後続の子Issue分割はD10に記録し、製品コード変更前に各Issueを登録する。#52の設計完了を親#6・v0.6の実装完了と扱わない。
 
+## R20：v0.7の実装単位
+
+資料コミットc3f0868をGitHub mainへ反映した。コード変更前に、親#7・マイルストーンv0.7.0の子Issue #61〜#68を登録し、GitHubの親子関係と同じマイルストーンを確認した。[ADR 0023](adr/0023-v0.7-implementation-contracts.md)に実装判断を先に記録する。
+
+| 子Issue | 対応単位 |
+|---|---|
+| [#61](https://github.com/Tao-pyth/nymph-toolkit/issues/61) | 詳細設計と公開契約 |
+| [#62](https://github.com/Tao-pyth/nymph-toolkit/issues/62) | Contracts・IPC符号化 |
+| [#63](https://github.com/Tao-pyth/nymph-toolkit/issues/63) | 非同期RPC・ループバック通信 |
+| [#64](https://github.com/Tao-pyth/nymph-toolkit/issues/64) | 連続ストリーム |
+| [#65](https://github.com/Tao-pyth/nymph-toolkit/issues/65) | 子プロセス管理 |
+| [#66](https://github.com/Tao-pyth/nymph-toolkit/issues/66) | Core統合・直接通信 |
+| [#67](https://github.com/Tao-pyth/nymph-toolkit/issues/67) | 遠隔活動 |
+| [#68](https://github.com/Tao-pyth/nymph-toolkit/issues/68) | A07・例・配布・CI・文書 |
+
+R19でv0.7〜v0.9の配分を採用済みである。本書のR18以前の「提案」はその時点の履歴を示す。各子Issueの完了と親#7・マイルストーン全体の完了、公開を区別する。
+
 ## R19：v0.9までの設計採用と資料同期
 
 2026年11月21日に[設計子Issue #60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)を親#7のGitHub sub-issueとして登録し、親子のマイルストーンv0.7.0への所属を確認した。引継ぎ書生成ツールのヘッダー変更前に登録している。対象はADR 0022・根拠表・関連Docs・A07〜A09・引継ぎ書と生成ヘッダーであり、製品コード・API・版番号・新規リリースは含まない。
