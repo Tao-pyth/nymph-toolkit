@@ -102,6 +102,8 @@ R19の1〜18は個別回答、19〜64は推奨設定の明示一括採用であ�
 
 v0.7で基本機能、v0.8で統合・障害・負荷・配布、v0.9で全採用範囲の受入と文書・実装の一致を確認する。v0.7のAPI・形式・設定はADR 0023とhybrid.mdへ記録した。R22でA08の統合・障害・負荷検証を進め、条件を[ADR 0024](adr/0024-v0.8-integration-validation.md)、結果を[v0.8検証記録](validation/v0.8.md)に分ける。管理・直接RPCの一時結果を明示解放でき、内部報告は完了後に回収する。活動・命令・保存履歴は維持する。A09は未完了であり、A08の結果をCore全体の完成と扱わない。
 
+R24では構成と責務を維持したまま、[公開APIの入力・結果・失敗・所有](core-api.md)と[採用64項目の証拠](validation/core-coverage.md)を整理する。生成API一覧は現在の実装との照合に用い、v1.0の安定契約体系や本番機能を新たに採用しない。
+
 ## v1.0.0以降の構成案
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。具体的な契約は[ADR 0006](adr/0006-core-connection-contracts.md)で判断対象を管理する。
@@ -153,6 +155,9 @@ nymph-toolkit/
 ├─ examples/hybrid_dummy.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
+├─ tools/check_api.py              # 公開export・署名・型の一致
+├─ tools/check_completion.py       # 64項目・既存受入の証拠参照
+├─ tools/validate_hybrid_load.py
 ├─ tools/check_docs.py
 ├─ tools/build_handoff.py
 ├─ docs/
@@ -165,6 +170,11 @@ nymph-toolkit/
 │  ├─ connections.md                # v0.4の操作契約
 │  ├─ task-manager.md                # v0.5基本・v0.6変更と中断再開
 │  ├─ hybrid.md                      # v0.7の操作・配置・制約
+│  ├─ core-api.md                    # 公開入口の意味と制限
+│  ├─ api-reference.md               # 実装から生成する型・署名
+│  ├─ validation/core-coverage.json  # 証拠対応の編集元
+│  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
+│  ├─ validation/v0.9.md             # A09判定と未実施の公開工程
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
@@ -202,7 +212,8 @@ nymph-toolkit/
 │     ├─ 0021-v0.6-activity-changes.md
 │     ├─ 0022-v0.7-v0.9-hybrid-and-completion.md
 │     ├─ 0023-v0.7-implementation-contracts.md
-│     └─ 0024-v0.8-integration-validation.md
+│     ├─ 0024-v0.8-integration-validation.md
+│     └─ 0025-v0.9-core-completion.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -247,7 +258,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 | 開始時刻変更・期間変更・優先度・中断再開の詳細、競合・応答 | R18・ADR 0021に従って実装。最終受入・公開はv0.6検証記録を参照 | ADR 0004・0021 |
 | IPC、配置間契約の共通範囲、ストリーム、切断・子終了、活動管理への適用 | R19で設計採用、R20・0023でv0.7を実装。API・制約はhybrid.md | ADR 0022・1〜53 |
 | 保存対象・受付境界・結果保持・運用情報、自動再試行・復旧の範囲 | R19で採用。活動自動復元・子だけの再起動・自動再送・接続先切替は対象外 | ADR 0019〜0022・26・54〜57 |
-| v0.7〜v0.9配分、配置4通り、障害・性能・長時間・配布、Core完成条件 | R19で設計採用、R22・ADR 0024でA08検証条件を具体化。結果はvalidation/v0.8、A09は後続 | ADR 0022・58〜64、acceptance |
+| v0.7〜v0.9配分、配置4通り、障害・性能・長時間・配布、Core完成条件 | R19で設計採用、R22・ADR 0024でA08検証条件を具体化。A08はvalidation/v0.8、A09のR24監査はADR 0025・validation/v0.9 | ADR 0022・58〜64、acceptance |
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 

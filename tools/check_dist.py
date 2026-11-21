@@ -1,6 +1,7 @@
 """Build-artifact acceptance in a clean environment outside the source tree."""
 
 # SPDX-License-Identifier: Apache-2.0
+import argparse
 import email
 import os
 from pathlib import Path
@@ -15,8 +16,11 @@ import zipfile
 
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
-    wheels = list((root / "dist").glob("*.whl"))
-    archives = list((root / "dist").glob("*.tar.gz"))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dist-dir", type=Path, default=root / "dist")
+    args = parser.parse_args()
+    wheels = list(args.dist_dir.resolve().glob("*.whl"))
+    archives = list(args.dist_dir.resolve().glob("*.tar.gz"))
     assert len(wheels) == len(archives) == 1, "dist must contain one wheel and one sdist"
     wheel, archive = wheels[0], archives[0]
     with zipfile.ZipFile(wheel) as package:
@@ -35,7 +39,7 @@ def main() -> None:
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
-        assert metadata["Version"] == "0.8.0"
+        assert metadata["Version"] == "0.9.0"
         assert metadata["Requires-Python"] == ">=3.12"
         assert metadata["License-Expression"] == "Apache-2.0"
         assert metadata.get_all("Requires-Dist", []) == []
@@ -56,7 +60,7 @@ def main() -> None:
             "from pathlib import Path; import nymph_toolkit.core as core; from nymph_toolkit.core import Runtime, Registry, ModuleGroup, Connections, FileStore, TaskManager; "
             "from nymph_toolkit.contracts import RuntimeService, RuntimeState, ModuleSpec, ModuleKind, BindingKey, ContractKey, StorageFailure, ActivityRequest, ActivityHistory, ActivityChange, ActivityCommandStatus, ActivityControlKind, UNCHANGED; "
             "from importlib.metadata import version; import sys; "
-            "assert version('nymph-toolkit') == '0.8.0'; "
+            "assert version('nymph-toolkit') == '0.9.0'; "
             "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "assert RuntimeState.NEW.value == 'new'; print('installed imports: PASS')"
         )
@@ -81,6 +85,9 @@ def main() -> None:
         shutil.copytree(root / "tests", work / "tests", ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copytree(root / "examples", work / "examples", ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copytree(root / "tools", work / "tools", ignore=shutil.ignore_patterns("__pycache__"))
+        (work / "docs").mkdir()
+        shutil.copyfile(root / "docs/api-reference.md", work / "docs/api-reference.md")
+        subprocess.run([str(python), "-I", str(work / "tools/check_api.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/hybrid_demo.py")], cwd=work, env=env, check=True)
         subprocess.run(
             [str(python), "-I", "-W", "error", "-m", "unittest", "discover",

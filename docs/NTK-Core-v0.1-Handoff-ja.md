@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R23を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R24を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -30,6 +30,8 @@ R22でv0.8の統合・障害・負荷検証を実施する。親#8・マイル�
 
 R23でPR #79のレビュー、問題がなければマージとv0.8.0公開まで進めることが指示された。公開#81を親#8・同じマイルストーンへ先に登録し、公開状態の文書・最終CI・マージ・タグ・Release・4添付・匿名取得を追跡する。製品コードに追加修正が必要な問題は見つからず、関連42テストを再確認した。公開対象SHAと公開後の結果は#81・Releaseへ記録し、30分測定と後続修正の検証範囲を維持する。
 
+R24でv0.9のCore機能完成に向けた実装・検証・資料整備が指示された。親#9・同じマイルストーンへ#82〜#85を先に登録し、ADR 0025で64項目と既存受入の証拠照合、公開APIの意味と生成一覧、新しい環境での配布検証を具体化する。実装・受入の結果と、A09-04のタグ・Release・公開後照合は分けて記録する。採用64項目とNymph/Core境界を維持し、v1.0の接続契約整備を前倒ししない。
+
 ## 収録文書
 
 1. [Nymph Toolkit（NTK）](#section-1)
@@ -43,45 +45,50 @@ R23でPR #79のレビュー、問題がなければマージとv0.8.0公開ま�
 9. [Connectionsの操作契約（v0.4）](#section-9)
 10. [TaskManagerの操作契約と活動履歴](#section-10)
 11. [v0.7 ハイブリッド実行と通信](#section-11)
-12. [ADR索引と更新方法](#section-12)
-13. [ADR 0001 Coreと統合リポジトリ](#section-13)
-14. [ADR 0002 実行モデル](#section-14)
-15. [ADR 0003 通信経路](#section-15)
-16. [ADR 0004 活動の決定権](#section-16)
-17. [ADR 0005 初期実装の範囲](#section-17)
-18. [ADR 0006 v1.0.0のCore接続契約](#section-18)
-19. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-19)
-20. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-20)
-21. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-21)
-22. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-22)
-23. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-23)
-24. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-24)
-25. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-25)
-26. [ADR 0014 v0.2の開発環境と最小Runtime](#section-26)
-27. [ADR 0015 Coreが許可する直接通信の採用](#section-27)
-28. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-28)
-29. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-29)
-30. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-30)
-31. [ADR 0019 v0.4のConnections実装判断](#section-31)
-32. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-32)
-33. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-33)
-34. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-34)
-35. [ADR 0023 v0.7の実装契約](#section-35)
-36. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-36)
-37. [NTK開発ロードマップ](#section-37)
-38. [受入基準・検討案と検証記録](#section-38)
-39. [v0.2 Runtime受入記録](#section-39)
-40. [v0.3受入記録](#section-40)
-41. [v0.4の受入記録](#section-41)
-42. [v0.5の受入確認と検証経過](#section-42)
-43. [v0.6の受入確認と検証経過](#section-43)
-44. [v0.7の受入確認と検証経過](#section-44)
-45. [v0.8 統合・障害・負荷検証記録](#section-45)
-46. [開発準備とGit運用](#section-46)
-47. [マイルストーンと親子Issueの運用](#section-47)
-48. [公開準備とリリース手順](#section-48)
-49. [変更履歴](#section-49)
-50. [Apache License 2.0（原文）](#section-50)
+12. [Core APIと利用上の契約](#section-12)
+13. [公開APIの実装一覧](#section-13)
+14. [ADR索引と更新方法](#section-14)
+15. [ADR 0001 Coreと統合リポジトリ](#section-15)
+16. [ADR 0002 実行モデル](#section-16)
+17. [ADR 0003 通信経路](#section-17)
+18. [ADR 0004 活動の決定権](#section-18)
+19. [ADR 0005 初期実装の範囲](#section-19)
+20. [ADR 0006 v1.0.0のCore接続契約](#section-20)
+21. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-21)
+22. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-22)
+23. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-23)
+24. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-24)
+25. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-25)
+26. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-26)
+27. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-27)
+28. [ADR 0014 v0.2の開発環境と最小Runtime](#section-28)
+29. [ADR 0015 Coreが許可する直接通信の採用](#section-29)
+30. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-30)
+31. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-31)
+32. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-32)
+33. [ADR 0019 v0.4のConnections実装判断](#section-33)
+34. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-34)
+35. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-35)
+36. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-36)
+37. [ADR 0023 v0.7の実装契約](#section-37)
+38. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-38)
+39. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-39)
+40. [NTK開発ロードマップ](#section-40)
+41. [受入基準・検討案と検証記録](#section-41)
+42. [Core採用事項と検証証拠の対応](#section-42)
+43. [v0.2 Runtime受入記録](#section-43)
+44. [v0.3受入記録](#section-44)
+45. [v0.4の受入記録](#section-45)
+46. [v0.5の受入確認と検証経過](#section-46)
+47. [v0.6の受入確認と検証経過](#section-47)
+48. [v0.7の受入確認と検証経過](#section-48)
+49. [v0.8 統合・障害・負荷検証記録](#section-49)
+50. [v0.9 Core機能完成の検証記録](#section-50)
+51. [開発準備とGit運用](#section-51)
+52. [マイルストーンと親子Issueの運用](#section-52)
+53. [公開準備とリリース手順](#section-53)
+54. [変更履歴](#section-54)
+55. [Apache License 2.0（原文）](#section-55)
 
 ---
 
@@ -103,7 +110,9 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在の段階
 
-**v0.8.0：統合・障害・負荷検証。** R22に基づき子Issue #72〜#77を先に登録し、管理通信の結果解放を#78、送信前の期限・取消による枠残存を#80で修正しました。ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）に沿って288テスト・6実行例・全8環境CI・通常配布と、条件を明記した30分負荷を確認しました。変更は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、結果はv0.8受入記録（`docs/validation/v0.8.md`）へ記録しています。R23による公開前レビュー・最終CI・公開後の確認は[公開課題 #81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)で追跡します。CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
+**開発中 v0.9.0：合意したCore機能の完成確認。** R24に基づき親#9配下へ子#82〜#85を登録し、ADR 0025（`docs/adr/0025-v0.9-core-completion.md`）に沿って64項目の証拠照合、公開API資料、通常配布・全環境の検証を進めています。Core API（`docs/core-api.md`）、64項目の対応表（`docs/validation/core-coverage.md`）、v0.9検証記録（`docs/validation/v0.9.md`）から採用範囲と結果を確認できます。A09-04のタグ・Release・公開後取得の判定は公開工程に残します。公開最新版は[v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)です。
+
+CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerとHybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。v0.8では288テスト・6実行例・全8環境CI・通常配布・条件を明記した30分負荷を確認し、PR #79をマージ・公開しました。証拠と測定範囲はv0.8受入記録（`docs/validation/v0.8.md`）と[公開課題 #81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)にあります。
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。操作契約（`docs/task-manager.md`）とADR 0020（`docs/adr/0020-v0.5-task-manager.md`）に採用範囲を記録しています。
 
@@ -153,7 +162,7 @@ Runtimeのダミーはstart → run → stopを表示します。Registryのダ�
 
 - 全体を一つの文書で読む場合は、日本語初期設計・Codex引継ぎ書（`docs/NTK-Core-v0.1-Handoff-ja.md`）を参照してください。
 - 個別の設計や判断を更新する場合は、Docs一覧と根拠の扱い（`docs/README.md`）から進んでください。
-- 開発の段階と完了条件は、ロードマップ（`docs/roadmap.md`）と受入基準案（`docs/acceptance.md`）にあります。
+- 開発の段階と完了条件は、ロードマップ（`docs/roadmap.md`）と受入基準（`docs/acceptance.md`）にあります。
 - Gitの用意は開発手順（`docs/development.md`）、公開先と公開手順はリリース手順（`docs/release.md`）にあります。
 - 提案・修正への参加方法はCONTRIBUTING（`CONTRIBUTING.md`）を参照してください。公開先は個人アカウント配下の `Tao-pyth/nymph-toolkit`（public）に決定しています。
 
@@ -245,6 +254,8 @@ v0.7〜v0.9はR19・ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md
 
 v0.8の統合・障害・負荷検証はADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）とA08検証記録（`docs/validation/v0.8.md`）を参照する。管理RPCと直接RPCの一時結果は照会・明示解放できる。内部報告の完了後回収と、既存活動・命令・保存履歴の保持を混同しない。短いCI試験と別途の長時間測定を区別し、実測条件・未検証範囲を記録する。
 
+v0.9の完成確認はR24・ADR 0025（`docs/adr/0025-v0.9-core-completion.md`）を参照する。公開API一覧と64項目の証拠はtools/check_api.py・tools/check_completion.pyで照合し、動作試験の代わりにしない。A09-01〜03の実装・配布候補の結果と、A09-04のタグ・Release・公開後照合を分け、公開前に全A09合格や親#9完了としない。
+
 Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配布用引継ぎ書を同期する。公開済みのタグやRelease添付を後続の文書修正で差し替えない。
 
 ---
@@ -274,6 +285,10 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | hybrid.md（`docs/hybrid.md`） | v0.7の配置・CoreClient・直接通信・ストリーム・遠隔活動と制約 |
 | validation/v0.7.md（`docs/validation/v0.7.md`） | A07・回帰・配布・CIの検証記録 |
 | validation/v0.8.md（`docs/validation/v0.8.md`） | A08・統合障害・競合・保存・負荷・配布の検証記録 |
+| core-api.md（`docs/core-api.md`） | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
+| api-reference.md（`docs/api-reference.md`） | Core 14件・Contracts 92件の生成API一覧 |
+| validation/core-coverage.md（`docs/validation/core-coverage.md`） | 採用64項目と製品290テストへの証拠参照 |
+| validation/v0.9.md（`docs/validation/v0.9.md`） | A09の完成監査・通常配布・公開前後の判定 |
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
 | ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`） | v0.9までの64項目の採用記録と受入ID対応。v0.7の具体化は0023 |
 | roadmap.md（`docs/roadmap.md`） | 各段階の着手条件、作業、成果物、完了条件 |
@@ -315,6 +330,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | R21 | 本チャットのPR #69レビュー・マージ・v0.7.0公開指示 | 問題解消後のマージと公開をユーザーが明示承認。コード変更前に修正#70・公開#71を親#7・v0.7.0の子Issueとして登録。採用済み64項目と既存公開物は維持 |
 | R22 | 本チャットのv0.8統合・障害・負荷検証の実施指示 | 親#8配下へ対応単位の子Issueを先に登録し、ADR 0022・A08に従って実装・検証。#72〜#77を先行登録し、再現した不具合#78・#80を各製品修正前に追加。詳細試験条件はADR 0024。新規ReleaseとA09判定を含めない |
 | R23 | 本チャットのPR #79レビュー・マージ・v0.8.0公開指示 | 問題がなければマージと公開まで進める明示指示。公開#81を親#8・v0.8.0配下へ先に登録し、公開状態の文書・生成ヘッダー、最終検証・タグ・Release・匿名取得を追跡。R22の非公開範囲は当時の履歴として維持 |
+| R24 | 本チャットのv0.9実装・検証・資料整備の指示 | 親#9配下へ子#82〜#85をコード変更前に登録。ADR 0022とA09を根拠に64項目・公開API・通常配布を照合。実施の具体化はADR 0025。公開後判定は別工程 |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -365,6 +381,10 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 既存のV0.1〜V0.9という表記はv0.1.0〜v0.9.0の節目を指す。v1.xの名称・配分の変更時には、roadmap、architecture、関連ADR、acceptance、releaseと単一配布用引継ぎ書を照合する。
 
+### R24によるv0.9の完成確認
+
+2026年11月22日の実施指示をR24として記録する。#82〜#85を親#9・v0.9.0のsub-issueとして先に登録した。ADR 0025（`docs/adr/0025-v0.9-core-completion.md`）で完成監査と配布前判定を具体化し、64項目と既存受入の証拠、APIの意味と生成一覧、通常配布物の再現を整える。v0.8.0は公開済み。v0.9の実装・受入結果は検証記録（`docs/validation/v0.9.md`）へ分離し、A09-04の公開後照合を完了前に合格としない。
+
 ### R23によるv0.8.0レビュー・公開
 
 2026年11月22日の「PR #79をレビューし、問題がなければマージしてv0.8.0の公開まで進めてください。」をR23として記録する。公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を親#8・同じマイルストーンへ登録し、生成ヘッダー変更前に親子関係を確認した。RPC・保持・送信境界・統合試験・測定記録・配布をレビューし、製品コードに追加の修正を必要とする問題は見つからなかった。最終CI・マージ・タグ・4添付・公開後の匿名取得を追跡し、release（`docs/release.md`）とv0.8検証記録（`docs/validation/v0.8.md`）へ対応を記載する。公開済みタグ・添付と採用済み64項目を維持する。
@@ -385,13 +405,13 @@ R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7�
 
 2026年11月21日のR19をADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）に記録する。1〜18の個別回答と19〜64の明示一括採用を区別し、全64項目をA07〜A09へ対応付ける。v0.7〜v0.8の機能配分はこの後続判断で開発計画として採用し、理由を記録した再配分を認める。前節の提案・未決という記述はR18以前の判断範囲を示す。v1.xの名称・順序・配分案は今回採用しない。
 
-設計子Issue [#60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)を親#7・マイルストーンv0.7.0配下へ登録し、引継ぎ書生成ヘッダー変更前にGitHubの親子関係を確認した。API名・型・フレーム・具体的設定値などの実装詳細は後続の対応単位で記録し、採用済みの64項目を再質問しない。これはR19時点の状態である。R20によるv0.7の実装・A07確認は検証記録（`docs/validation/v0.7.md`）で追跡し、A08は後続R22で実施し、v0.8検証記録（`docs/validation/v0.8.md`）で追跡する。A09は後続である。
+設計子Issue [#60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)を親#7・マイルストーンv0.7.0配下へ登録し、引継ぎ書生成ヘッダー変更前にGitHubの親子関係を確認した。API名・型・フレーム・具体的設定値などの実装詳細は後続の対応単位で記録し、採用済みの64項目を再質問しない。これはR19時点の状態である。R20によるv0.7の実装・A07確認は検証記録（`docs/validation/v0.7.md`）で追跡し、A08は後続R22で実施し、v0.8検証記録（`docs/validation/v0.8.md`）で追跡する。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。
 
 ### 文書の更新
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、hybrid、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。再生成ツール（`tools/build_handoff.py`）と文書確認ツール（`tools/check_docs.py`）はCIでも使用する。
 
@@ -902,6 +922,8 @@ R19の1〜18は個別回答、19〜64は推奨設定の明示一括採用であ�
 
 v0.7で基本機能、v0.8で統合・障害・負荷・配布、v0.9で全採用範囲の受入と文書・実装の一致を確認する。v0.7のAPI・形式・設定はADR 0023とhybrid.mdへ記録した。R22でA08の統合・障害・負荷検証を進め、条件をADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）、結果をv0.8検証記録（`docs/validation/v0.8.md`）に分ける。管理・直接RPCの一時結果を明示解放でき、内部報告は完了後に回収する。活動・命令・保存履歴は維持する。A09は未完了であり、A08の結果をCore全体の完成と扱わない。
 
+R24では構成と責務を維持したまま、公開APIの入力・結果・失敗・所有（`docs/core-api.md`）と採用64項目の証拠（`docs/validation/core-coverage.md`）を整理する。生成API一覧は現在の実装との照合に用い、v1.0の安定契約体系や本番機能を新たに採用しない。
+
 ### v1.0.0以降の構成案
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。具体的な契約はADR 0006（`docs/adr/0006-core-connection-contracts.md`）で判断対象を管理する。
@@ -953,6 +975,9 @@ nymph-toolkit/
 ├─ examples/hybrid_dummy.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
+├─ tools/check_api.py              # 公開export・署名・型の一致
+├─ tools/check_completion.py       # 64項目・既存受入の証拠参照
+├─ tools/validate_hybrid_load.py
 ├─ tools/check_docs.py
 ├─ tools/build_handoff.py
 ├─ docs/
@@ -965,6 +990,11 @@ nymph-toolkit/
 │  ├─ connections.md                # v0.4の操作契約
 │  ├─ task-manager.md                # v0.5基本・v0.6変更と中断再開
 │  ├─ hybrid.md                      # v0.7の操作・配置・制約
+│  ├─ core-api.md                    # 公開入口の意味と制限
+│  ├─ api-reference.md               # 実装から生成する型・署名
+│  ├─ validation/core-coverage.json  # 証拠対応の編集元
+│  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
+│  ├─ validation/v0.9.md             # A09判定と未実施の公開工程
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
@@ -1002,7 +1032,8 @@ nymph-toolkit/
 │     ├─ 0021-v0.6-activity-changes.md
 │     ├─ 0022-v0.7-v0.9-hybrid-and-completion.md
 │     ├─ 0023-v0.7-implementation-contracts.md
-│     └─ 0024-v0.8-integration-validation.md
+│     ├─ 0024-v0.8-integration-validation.md
+│     └─ 0025-v0.9-core-completion.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -1047,7 +1078,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 | 開始時刻変更・期間変更・優先度・中断再開の詳細、競合・応答 | R18・ADR 0021に従って実装。最終受入・公開はv0.6検証記録を参照 | ADR 0004・0021 |
 | IPC、配置間契約の共通範囲、ストリーム、切断・子終了、活動管理への適用 | R19で設計採用、R20・0023でv0.7を実装。API・制約はhybrid.md | ADR 0022・1〜53 |
 | 保存対象・受付境界・結果保持・運用情報、自動再試行・復旧の範囲 | R19で採用。活動自動復元・子だけの再起動・自動再送・接続先切替は対象外 | ADR 0019〜0022・26・54〜57 |
-| v0.7〜v0.9配分、配置4通り、障害・性能・長時間・配布、Core完成条件 | R19で設計採用、R22・ADR 0024でA08検証条件を具体化。結果はvalidation/v0.8、A09は後続 | ADR 0022・58〜64、acceptance |
+| v0.7〜v0.9配分、配置4通り、障害・性能・長時間・配布、Core完成条件 | R19で設計採用、R22・ADR 0024でA08検証条件を具体化。A08はvalidation/v0.8、A09のR24監査はADR 0025・validation/v0.9 | ADR 0022・58〜64、acceptance |
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
@@ -1468,7 +1499,7 @@ resumed = await manager.wait_command(key, "resume-1")
 .venv/Scripts/python.exe examples/activity_changes_demo.py
 ```
 
-IPC、本番Subsystem、稼働中の機能取り外し、プロセスを越える中断状態の保存は実装に含めない。実行側が終了要求やRuntimeの取消に協調しない場合、Coreは後処理完了を偽装しない。現在の活動観測値・通知は同一起動中に保持するため、大量の活動や未取得通知を蓄積し続ける運用には別途保持方針が必要である。
+本書のv0.5/v0.6の同一プロセス入口に対し、後続v0.7ではハイブリッド実行（`docs/hybrid.md`）を追加した。本番Subsystem、稼働中の機能取り外し、プロセス消失後の中断状態の復元は含めない。実行側が終了要求やRuntimeの取消に協調しない場合、Coreは後処理完了を偽装しない。現在の活動観測値・通知は同一起動中に保持するため、大量の活動や未取得通知を蓄積し続ける運用には別途保持方針が必要である。
 
 v0.6実行例（`examples/activity_changes_demo.py`）は開始の繰上げ、期間短縮・延長、優先度、有限枠での中断再開を通し、同じ処理の継続位置・後処理・再起動履歴・残存タスク0・未保存履歴0を確認する。
 
@@ -1573,11 +1604,1533 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 <a id="section-12"></a>
 
+収録元 `docs/core-api.md`
+
+## Core APIと利用上の契約
+
+本書はv0.9の完成確認で整理した、実装済みCore・Contractsの入口である。仕様の根拠はADR 0014〜0025。公開名は `nymph_toolkit.core` の14件、`nymph_toolkit.contracts` の92件で、実装一覧（`docs/api-reference.md`）に構築引数・メソッド・型・列挙値を収録する。v1.0の接続契約体系化・互換性保証の範囲は別目標であり、本書だけで採用しない。
+
+### 入口と返却値
+
+| 入口 | 入力と結果 | 利用・所有期間 |
+|---|---|---|
+| Runtime | `Runtime(service)`。`start()`は初期化を待ちNone、`wait()`はrunの値または停止時のNone、`stop()`は後処理を待ちNone | 一度だけ起動し同じイベントループで操作。stopは繰返し可能。失敗時は保持したRuntimeFailureを再通知 |
+| Registry | `register(ModuleSpec)` / `unregister(id)`→RegistryUpdate。`get(id)`→RegistryEntry、`entries()`→ID順タプル | 作成スレッドで使用。世代・revision・依存の充足を返し、実行中や通信可能という意味を持たない |
+| ModuleGroup | `register(spec, service)`→RegistryUpdate。get/entries/unregisterはRegistryと同じ観測 | 起動前に構成。Runtimeがstart/run/stopを所有し、依存順初期化・逆順後処理。停止後の解除は可能、再登録・再起動には新しいGroup |
+| Connections | `declare(advertisement, handlers)`と`publish_usage`→None。`candidates(contract)`→Candidateタプル | 機能が状態を通知し、要求側が候補を選ぶ。Groupに一度取り付け、保存を含むライフサイクルを所有させる |
+| Connections.bind | 要求元・契約ID/版・提供先・wait_timeout→ConnectionSnapshot | 稼働中の初回接続を保存。確定先の変更不可。接続の返却と今すぐ呼べることを区別 |
+| Connections.prepare / invoke | BindingKeyと準備期限→PreparedConnection / 操作結果 | 確認中・中断中は期限まで待機。期限は操作本体の時間制限ではない |
+| PreparedConnection | prepareが返す窓口。callはSYNC、acallはASYNCの宣言と引数→提供側の値 | 直接構築しない。許可済み接続を使用し、ローカルの無効状態を確認。毎回の候補選定・許可再審査は行わない |
+| FileStore | 主・予備ディレクトリ、retention、batch_size、flush_interval。`append(kind, data)`→None、`flush()`→None | Group/Connectionsが所有。appendはメモリ受付、flushはその時点までの保存。主保存先はCore間で共用しない |
+| TaskManager | Connections、時計監視間隔、任意のmax_running。`submit(request, execute, supports_pause=...)`→ActivitySnapshot | Groupが所有する。状態と結果は起動内で保持。実行関数はActivityContextを受け取る |
+| HybridGroup | settingsとstore。`register_module(spec, advertisement, factory, config, placement)`→RegistryUpdate | factoryはimport可能なmodule:attribute。既存Groupと同じライフサイクル、稼働中構成は固定 |
+| HybridTaskManager | `enable_activities(...)`で取り付け。`submit_remote(request, module_id, executor_id, arguments)`→ActivitySnapshot | 登録済み実行処理IDを使用。関数・継続状態の転送や再起動後の自動復元なし |
+| ModuleContext | factoryに渡される機能用コンテキスト。provide / provide_stream / provide_executor→None | 直接構築しない。初期化中に宣言と一致するハンドラーを登録。coreから管理へ操作を届ける |
+| CoreClient | `context.core`、親のLOCAL機能は`group.client(id)` | 直接構築しない。candidates/bind/prepare/invoke/usage/health/notice/活動操作を親Coreへ届ける |
+| DirectLink | `await core.prepare(...)`で取得。acall→操作結果、open_stream→StreamSender | closeで通信資源を回収。失敗後のprepareは機能側の明示操作、自動再送・接続先切替なし |
+| StreamSender / StreamReceiver | open_stream / 受信ハンドラー引数として取得。send→連番、receive→StreamEvent | 直接構築しない。利用機能がclose/abort/acloseと、活動中断・終了時の扱いを担当 |
+
+詳細はRuntime（`docs/runtime.md`）、Registry（`docs/registry.md`）、Connectionsと保存（`docs/connections.md`）、活動管理（`docs/task-manager.md`）、ハイブリッド実行（`docs/hybrid.md`）を参照する。公開一覧に現れるGroupのstart/run/stopや基盤用補助入口を、Runtimeの所有中に別途呼び出さない。
+
+### 値の定義と配置差
+
+| 入力 | 検証・意味 |
+|---|---|
+| ModuleSpec | module_id、ModuleKind（SUBSYSTEM/ADAPTER）、依存ID集合。重複・循環を拒否し、不足依存を観測する |
+| ContractKey / ContractSpec / OperationSpec | 契約IDと版の完全一致。操作名とSYNC/ASYNCを明示。同じ契約を配置で暗黙に読み替えない |
+| ModuleAdvertisement / Usage | 実装版・契約・タグ・属性、現在のstate/accepting/active/capacity。候補順は最適順ではなく、容量情報は予約ではない |
+| ActivityKey / ActivityRequest | 要求元と活動ID、内容、開始時刻または即時のNone、期間、JSON互換パラメータ、整数優先度（bool不可） |
+| 時刻・期間 | offset付きdatetimeをUTCへ正規化。期間は正のtimedelta。受付時点の過去開始は拒否。予定到達は通知して継続し、実開始が遅れてもCoreが予定を繰り延べない |
+| ActivityChange | 未指定はUNCHANGED。start_at=Noneは即時変更で、未指定と異なる。durationは現在の予定開始からの新しい合計期間 |
+| Connections.wait_timeout | 0以上の有限秒。準備・受付待ちに使い、0なら即時準備可能な場合だけ進む |
+| HybridSettingsと通信timeout | 正の有限秒。フレーム・同時要求・ストリーム数は正整数。明示値またはCoreClientのcall_timeoutを使う |
+| StreamOptions | 送受信それぞれのバイト・件数上限、WAIT/DROP_OLDEST。開設後は固定。本文はbytes/bytearray/memoryviewからコピーしたバイト列 |
+
+既存のModuleGroup/Connectionsによる同一プロセスの操作入力をJSONへ制限しない。HybridGroupの設定・CoreClient経由の転送入力・別プロセスの引数と結果にはJSON値および許可したContractsを用いる。Pythonオブジェクトの同一性、例外オブジェクトの同一性はプロセスを越えて保証しない。内部wire形式を任意Python型の転送契約へ広げない。
+
+### 活動要求と観測
+
+Nymphが内容・時刻・期間・優先度・変更を決定する。Coreは機械的な実行枠・状態整合・通知を担当する。
+
+| TaskManagerの操作 | 結果と意味 |
+|---|---|
+| snapshot(key) / activities(requester_id=None) | ActivitySnapshot / タプル。初回requestとcurrent_request、revision、scheduled_revisionを区別 |
+| change(key, change, command_id, expected_revision) | ActivityCommandResult。全項目を一括検証。拒否で元の入力を変更しない |
+| request_pause / request_resume | ActivityCommandResult。acceptedは適用完了でなく、実行側の安全な区切り・報告を待つ |
+| command_result / wait_command | 保持した命令結果 / 終端結果を待機。同じID・同じ内容は二重適用しない |
+| request_finish(key, reason=NYMPH) | 現在のActivitySnapshot。終了受理と実終了・後処理完了を分ける |
+| wait(key) | 終端のActivitySnapshot。活動失敗はsnapshot.failureに保持 |
+| next_notice(requester_id) | 要求元別FIFOのActivityNotice。Coreが活動の価値を判断した通知ではない |
+| history(requester_id) | 過去起動のActivityHistory。読出し問題をissuesへ返し、活動を自動再登録しない |
+
+CoreClient.activityのoperationはsnapshot/change/pause/resume/finish/wait/command/notice/history。`command`はwait_commandに対応し、`command_id`を渡す。changeには`change`、変更・中断再開には`command_id / expected_revision`を渡す。notice/historyは呼出元を用い、keyを省略する。自身の要求元IDの活動を対象とする。
+
+ActivityStateはPENDING、STARTING（遠隔の実開始待ち）、RUNNING、PAUSING、PAUSED、RESUME_PENDING、FINISHINGと各終了状態を持つ。正確な列挙値はAPI一覧（`docs/api-reference.md`）に示す。状態・通知の時点を先取りせず、実行側の報告が届くまで確定させない。elapsed_secondsは実開始後の経過、execution_secondsは実際の中断を除いた実行側単調時計の値で、CPU時間ではない。遠隔ではtiming_confirmed/cleanup_confirmedを確認する。
+
+### 失敗の種類と呼出側の対応
+
+例外が返る入口と、通常の値として失敗を返す入口を分ける。配置を越える例外の型はRemoteErrorのremote_type等に記録され、元の例外クラスのインスタンスとは限らない。
+
+| 種類 | 公開型・結果 | 対応 |
+|---|---|---|
+| 入力の型・値 | TypeError / ValueError | 宣言・値を修正。勝手な補正や自動再試行を期待しない |
+| Runtime・Group | RuntimeStateError、RuntimeFailure / LifecycleFailure、ModuleGroupFailure / ModuleFailure | stateと各失敗phaseを確認。後処理失敗を実行失敗とともに保持 |
+| Registry | RegistryError、RegistryStateError、DuplicateModuleError、UnknownModuleError、DependencyCycleError、DependencyUnavailableError | 登録の不整合・構成固定・依存不足を解消。登録失敗で部分的な登録を成功扱いしない |
+| 接続API | ConnectionsError、ConnectionsStateError、ContractDeclarationError、UnknownConnectionError、ConnectionConflictError、ConnectionUnavailableError、ConnectionNotReadyError、PreparationTimeoutError | 対象・宣言・状態・待機期限を確認。異なる提供先への稼働中切替をしない |
+| 通常業務・容量 | OperationFailure / TemporaryUnavailable（値） | 機能が次の活動を判断。Coreの全体停止や自動再送を起こさない |
+| 連携の想定外失敗 | LinkFailure（値）、ConnectionNotice | 要求元が中断・後処理・完了報告。ヘルス確認後は新規要求だけ再開 |
+| 接続・保存基盤 | ConnectionsLifecycleFailure、StorageError、StorageCorruptionError、StorageFailure | 新規受付停止・古い履歴退避・回復または未保存報告と終了。破損原本を保全 |
+| 活動入力・状態 | ActivityError、ActivityStateError、ActivityAdmissionError、ActivityStartInPastError、DuplicateActivityError、UnknownActivityError | Nymphへ返して再指定を待つ。実行途中の価値判断をCoreへ移さない |
+| 活動の結果・基盤 | ActivityFailure、ActivityCommandResult、TaskManagerLifecycleFailure | 活動失敗、要求のrejected/failed/superseded、基盤失敗を区別 |
+| IPC | HybridError、ProtocolError、PeerClosed、RemoteError | 不正形式・切断・遠隔失敗を区別。子の予期しない終了はRuntime停止 |
+| RPC容量・結果不明 | CapacityExceeded、OutcomeUnknown、TimeoutError | 未送信期限切れと送信開始後の結果不明を区別。IDを照会して完了後にrelease |
+| ストリーム | StreamClosed、ChunkTooLarge、TimeoutError、StreamEventのerror | 待機だけの期限切れとストリーム障害を区別。大きすぎるチャンクは送信側で分割 |
+
+`Runtime.wait`、活動のwait/wait_command、受付済み管理要求の待機取消で、所有する処理自体が取り消されたと推測しない。Runtime.startの取消は停止を要求し、通常RPCの取消は協調的に伝える。停止待機が取り消されてもCoreは後処理を継続するため、所有者は再度stop/waitで終了を確認する。
+
+### 結果・資源・保存の所有
+
+- CoreClientとDirectLinkのpending_requestsはその窓口の未完了・保持結果ID。期限切れ・取消後の結果はresultで確認し、完了後にreleaseする。未完了の解放はOutcomeUnknown。通常どおり応答を受け取ったRPCの一時結果は呼出し内で回収される。ローカルでRPCを使わない入口は空一覧となる。
+- 通信結果の解放で活動・命令結果・保存履歴は消さない。過去履歴、現在の活動、未保存イベント、一時RPC結果は別の所有物である。
+- sendの成功はローカル受付。closeの成功は先行データ・終端の通信上の受信確認。受信機能の内容処理完了は独自契約で確認する。
+- Core停止では活動・機能・所有通信資源・保存を後処理する。通常の活動終了には強制終了期限を適用しない。Core所有の子だけはCore停止期限後に強制終了し、後処理未確認を記録できる。
+- FileStoreの通常バッファは上限なし。保持活動・通知・未保存が増え続ければメモリも増える。新しい上限や自動削除をこの資料で追加しない。
+
+### 検証と制限
+
+64項目の対応表（`docs/validation/core-coverage.md`）とv0.9の検証記録（`docs/validation/v0.9.md`）からダミー・実装・各ADRを追跡できる。API一覧の機械的な一致は振る舞いの合格を意味しない。既存テスト・4配置統合・通常配布と組み合わせて判定する。
+
+同一PC、同じPython環境、Core所有子、起動前・停止後の着脱を対象とする。同一プロセスでは協調しない処理を強制停止できない。失効は連携上の不整合回避を目的とし、敵対する機能を遮断するセキュリティ境界ではない。本番機能、Desktop Adapter、複製・移植・伝播、分散、活動継続状態の永続復元は含めない。
+
+---
+
+<a id="section-13"></a>
+
+収録元 `docs/api-reference.md`
+
+## 公開APIの実装一覧
+
+この一覧は明示された公開import（core / contractsの__all__）を実装から生成する。
+引数、列挙値、データ型、継承したメソッド・プロパティの存在を照合するための資料であり、入力検証・返却値・所有期間・失敗時動作はCore API（`docs/core-api.md`）と各操作資料を併読する。
+型注釈がない入口から新しい型保証を推測しない。内部補助メソッドを含む実体の一覧は、全メソッドの安定保証やv1.0の接続契約採用を意味しない。直接構築しない窓口もCore APIで区別する。
+
+再生成：python tools/check_api.py --write。照合：python tools/check_api.py。
+
+### nymph_toolkit.core（14件）
+
+<a id="core-Connections"></a>
+
+#### Connections
+
+基底：object。
+
+```text
+Connections(catalog, store: 'FileStore') -> None
+  def acknowledge_interruption(self, module_id: str, notice_id: int) -> bool
+  async activate(self) -> None
+  def begin_shutdown(self) -> None
+  async bind(self, requester_id: str, contract: nymph_toolkit.contracts.connections.ContractKey, provider_id: str, *, wait_timeout: float) -> nymph_toolkit.contracts.connections.ConnectionSnapshot
+  def candidates(self, contract: nymph_toolkit.contracts.connections.ContractKey) -> tuple[nymph_toolkit.contracts.connections.Candidate, ...]
+  def connection(self, key: nymph_toolkit.contracts.connections.BindingKey) -> nymph_toolkit.contracts.connections.ConnectionSnapshot
+  def declare(self, advertisement: nymph_toolkit.contracts.connections.ModuleAdvertisement, handlers: collections.abc.Mapping | None = None) -> None
+  async health_check(self, *, module_ids=None, bindings=None) -> nymph_toolkit.contracts.connections.HealthResult
+  async invoke(self, key: nymph_toolkit.contracts.connections.BindingKey, operation: str, *, wait_timeout: float, args=(), kwargs=None)
+  def module_state(self, module_id: str) -> nymph_toolkit.contracts.connections.ModuleExecutionState
+  async next_notice(self, module_id: str) -> nymph_toolkit.contracts.connections.ConnectionNotice
+  async prepare(self, key: nymph_toolkit.contracts.connections.BindingKey, *, wait_timeout: float) -> nymph_toolkit.core.connections.PreparedConnection
+  def publish_usage(self, module_id: str, usage: nymph_toolkit.contracts.connections.Usage, *, contracts: collections.abc.Mapping[nymph_toolkit.contracts.connections.ContractKey, nymph_toolkit.contracts.connections.Usage] | None = None) -> None
+  def report_link_error(self, key: nymph_toolkit.contracts.connections.BindingKey, exception: Exception) -> int
+  async run(self) -> None
+  async start(self, *, defer_activation: bool = False) -> None
+  property state(self) -> nymph_toolkit.contracts.RuntimeState
+  async stop(self) -> None
+```
+
+<a id="core-CoreClient"></a>
+
+#### CoreClient
+
+基底：object。
+
+```text
+CoreClient(context, dispatch)
+  async acknowledge_interruption(self, notice_id, *, timeout=None)
+  async activity(self, operation, key=None, *, timeout=None, **arguments)
+  async bind(self, contract, provider_id, *, timeout)
+  async candidates(self, contract, *, timeout=None)
+  async health_check(self, *, module_ids=None, bindings=None, timeout=None)
+  async invoke(self, contract, operation, *args, timeout, **kwargs)
+  async next_notice(self, *, timeout)
+  property pending_requests(self)
+  async prepare(self, contract, *, timeout)
+  async publish_usage(self, usage, *, contracts=None, timeout=None)
+  def release(self, request_id)
+  async request(self, operation, payload=None, *, timeout=None)
+  def result(self, request_id)
+  async submit_remote(self, request, module_id, executor_id, arguments=None, *, timeout=None)
+```
+
+<a id="core-DirectLink"></a>
+
+#### DirectLink
+
+基底：object。
+
+```text
+DirectLink(client, route)
+  async acall(self, operation, *args, timeout, **kwargs)
+  async close(self)
+  async open_stream(self, operation, options, metadata=None, *, timeout)
+  property pending_requests(self)
+  def release(self, request_id)
+  def result(self, request_id)
+```
+
+<a id="core-FileStore"></a>
+
+#### FileStore
+
+基底：object。
+
+```text
+FileStore(root: pathlib.Path, archive: pathlib.Path, *, retention: datetime.timedelta, batch_size: int, flush_interval: float) -> None
+  property admitting(self) -> bool
+  def append(self, kind: str, data: dict) -> None
+  property changed(self) -> asyncio.locks.Event
+  property failure(self) -> nymph_toolkit.contracts.connections.StorageFailure | None
+  async flush(self) -> None
+  async load_bindings(self) -> tuple[nymph_toolkit.contracts.connections.BindingRecord, ...]
+  async read_activity_history(self, requester_id: str)
+  async save_bindings(self, bindings: tuple[nymph_toolkit.contracts.connections.BindingRecord, ...]) -> None
+  async start(self) -> None
+  property state(self) -> nymph_toolkit.contracts.RuntimeState
+  async stop(self) -> None
+  property unsaved_events(self) -> int
+  async wait_failure(self) -> nymph_toolkit.contracts.connections.StorageFailure
+  async wait_ready(self) -> None
+```
+
+<a id="core-HybridGroup"></a>
+
+#### HybridGroup
+
+基底：ModuleGroup。
+
+```text
+HybridGroup(settings: nymph_toolkit.contracts.hybrid.HybridSettings, store)
+  def attach_connections(self, connections) -> None
+  def attach_task_manager(self, manager) -> None
+  def entries(self) -> tuple[nymph_toolkit.contracts.registry.RegistryEntry, ...]
+  def get(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryEntry
+  def register(self, spec: nymph_toolkit.contracts.registry.ModuleSpec, service: nymph_toolkit.contracts.RuntimeService[object]) -> nymph_toolkit.contracts.registry.RegistryUpdate
+  property revision(self) -> int
+  async run(self) -> dict[str, object]
+  async start(self)
+  async stop(self)
+  def unregister(self, module_id)
+  def client(self, module_id)
+  async diagnostics(self, module_id)
+  def enable_activities(self, *, clock_check_interval, max_running=None)
+  def fail(self, error)
+  property port(self)
+  def process(self, module_id)
+  def register_module(self, spec, advertisement, factory, config, placement)
+```
+
+<a id="core-HybridTaskManager"></a>
+
+#### HybridTaskManager
+
+基底：TaskManager。
+
+```text
+HybridTaskManager(group, *, clock_check_interval, max_running=None)
+  def change(self, key, change, *, command_id, expected_revision)
+  def command_result(self, key, command_id)
+  def request_pause(self, key, *, command_id, expected_revision)
+  def request_resume(self, key, *, command_id, expected_revision)
+  async wait_command(self, key, command_id)
+  def activities(self, requester_id=None)
+  def begin_shutdown(self)
+  async history(self, requester_id)
+  async next_notice(self, requester_id)
+  def request_finish(self, key, *, reason=<ActivityFinishReason.NYMPH: 'nymph'>)
+  async run(self)
+  def snapshot(self, key)
+  async start(self)
+  property state(self)
+  async stop(self)
+  def submit(self, request: nymph_toolkit.contracts.activities.ActivityRequest, execute: collections.abc.Callable, *, supports_pause=False)
+  async wait(self, key)
+  def submit_remote(self, request, module_id, executor_id, arguments=None)
+```
+
+<a id="core-ModuleContext"></a>
+
+#### ModuleContext
+
+基底：object。
+
+```text
+ModuleContext(module_id, generation, settings, dispatch, local_hub=None)
+  def check_stream_capacity(self)
+  async own_sender(self, sender, route, stream_id)
+  def provide(self, contract, handlers)
+  def provide_executor(self, executor_id, handler, *, supports_pause=False)
+  def provide_stream(self, contract, operation, handler)
+  async reject(self, operation, payload)
+  def reserve_stream(self)
+```
+
+<a id="core-ModuleGroup"></a>
+
+#### ModuleGroup
+
+基底：object。
+
+```text
+ModuleGroup() -> None
+  def attach_connections(self, connections) -> None
+  def attach_task_manager(self, manager) -> None
+  def entries(self) -> tuple[nymph_toolkit.contracts.registry.RegistryEntry, ...]
+  def get(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryEntry
+  def register(self, spec: nymph_toolkit.contracts.registry.ModuleSpec, service: nymph_toolkit.contracts.RuntimeService[object]) -> nymph_toolkit.contracts.registry.RegistryUpdate
+  property revision(self) -> int
+  async run(self) -> dict[str, object]
+  async start(self) -> None
+  async stop(self) -> None
+  def unregister(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryUpdate
+```
+
+<a id="core-PreparedConnection"></a>
+
+#### PreparedConnection
+
+基底：object。
+
+```text
+PreparedConnection(owner: 'Connections', binding: nymph_toolkit.core.connections._Binding) -> None
+  async acall(self, operation: str, *args, **kwargs)
+  def call(self, operation: str, *args, **kwargs)
+  property snapshot(self) -> nymph_toolkit.contracts.connections.ConnectionSnapshot
+```
+
+<a id="core-Registry"></a>
+
+#### Registry
+
+基底：object。
+
+```text
+Registry() -> None
+  def entries(self) -> tuple[nymph_toolkit.contracts.registry.RegistryEntry, ...]
+  def get(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryEntry
+  def register(self, spec: nymph_toolkit.contracts.registry.ModuleSpec) -> nymph_toolkit.contracts.registry.RegistryUpdate
+  property revision(self) -> int
+  def unregister(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryUpdate
+```
+
+<a id="core-Runtime"></a>
+
+#### Runtime
+
+基底：Generic。
+
+```text
+Runtime(service: nymph_toolkit.contracts.RuntimeService[~T]) -> None
+  async start(self) -> None
+  property state(self) -> nymph_toolkit.contracts.RuntimeState
+  async stop(self) -> None
+  async wait(self) -> ~T | None
+```
+
+<a id="core-StreamReceiver"></a>
+
+#### StreamReceiver
+
+基底：_Stream。
+
+```text
+StreamReceiver(reader, writer, options)
+  async abort(self, reason='Explicit stream abort')
+  async aclose(self)
+  property buffered_chunks(self)
+  async fail(self, reason)
+  async receive(self, *, timeout)
+```
+
+<a id="core-StreamSender"></a>
+
+#### StreamSender
+
+基底：_Stream。
+
+```text
+StreamSender(reader, writer, options)
+  async abort(self, reason='Explicit stream abort')
+  async aclose(self)
+  property buffered_chunks(self)
+  async fail(self, reason)
+  async close(self, *, timeout)
+  async send(self, data, *, timeout)
+```
+
+<a id="core-TaskManager"></a>
+
+#### TaskManager
+
+基底：_Slots, _Commands。
+
+```text
+TaskManager(connections: nymph_toolkit.core.connections.Connections, *, clock_check_interval: float, clock=None, max_running=None)
+  def change(self, key, change, *, command_id, expected_revision)
+  def command_result(self, key, command_id)
+  def request_pause(self, key, *, command_id, expected_revision)
+  def request_resume(self, key, *, command_id, expected_revision)
+  async wait_command(self, key, command_id)
+  def activities(self, requester_id=None)
+  def begin_shutdown(self)
+  async history(self, requester_id)
+  async next_notice(self, requester_id)
+  def request_finish(self, key, *, reason=<ActivityFinishReason.NYMPH: 'nymph'>)
+  async run(self)
+  def snapshot(self, key)
+  async start(self)
+  property state(self)
+  async stop(self)
+  def submit(self, request: nymph_toolkit.contracts.activities.ActivityRequest, execute: collections.abc.Callable, *, supports_pause=False)
+  async wait(self, key)
+```
+
+### nymph_toolkit.contracts（92件）
+
+<a id="contracts-ActivityAdmissionError"></a>
+
+#### ActivityAdmissionError
+
+基底：ActivityError。
+
+```text
+ActivityAdmissionError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ActivityChange"></a>
+
+#### ActivityChange
+
+基底：object。
+
+```text
+ActivityChange(start_at: datetime.datetime | None | nymph_toolkit.contracts.activities._Unchanged = <_Unchanged.VALUE: 'unchanged'>, duration: datetime.timedelta | nymph_toolkit.contracts.activities._Unchanged = <_Unchanged.VALUE: 'unchanged'>, priority: int | nymph_toolkit.contracts.activities._Unchanged = <_Unchanged.VALUE: 'unchanged'>) -> None
+  start_at: datetime.datetime | None | nymph_toolkit.contracts.activities._Unchanged
+  duration: datetime.timedelta | nymph_toolkit.contracts.activities._Unchanged
+  priority: int | nymph_toolkit.contracts.activities._Unchanged
+  def as_dict(self)
+```
+
+<a id="contracts-ActivityCommandResult"></a>
+
+#### ActivityCommandResult
+
+基底：object。
+
+```text
+ActivityCommandResult(key: nymph_toolkit.contracts.activities.ActivityKey, command_id: str, operation: str, received_at: datetime.datetime, status: nymph_toolkit.contracts.activities.ActivityCommandStatus, reason: str | None, snapshot: nymph_toolkit.contracts.activities.ActivitySnapshot) -> None
+  key: nymph_toolkit.contracts.activities.ActivityKey
+  command_id: str
+  operation: str
+  received_at: datetime.datetime
+  status: nymph_toolkit.contracts.activities.ActivityCommandStatus
+  reason: str | None
+  snapshot: nymph_toolkit.contracts.activities.ActivitySnapshot
+```
+
+<a id="contracts-ActivityCommandStatus"></a>
+
+#### ActivityCommandStatus
+
+基底：StrEnum。
+
+```text
+ACCEPTED = 'accepted'
+APPLIED = 'applied'
+NO_CHANGE = 'no_change'
+REJECTED = 'rejected'
+SUPERSEDED = 'superseded'
+FAILED = 'failed'
+```
+
+<a id="contracts-ActivityContext"></a>
+
+#### ActivityContext
+
+基底：Protocol。
+
+```text
+ActivityContext(*args, **kwargs)
+  async checkpoint(self) -> nymph_toolkit.contracts.activities.ActivityFinishReason | None
+  property current_request(self) -> nymph_toolkit.contracts.activities.ActivityRequest
+  property finish_reason(self) -> nymph_toolkit.contracts.activities.ActivityFinishReason | None
+  property finish_requested(self) -> bool
+  property pause_requested(self) -> bool
+  property planned_end_at(self) -> datetime.datetime
+  property planned_start_at(self) -> datetime.datetime
+  property request(self) -> nymph_toolkit.contracts.activities.ActivityRequest
+  async wait_for_control(self) -> nymph_toolkit.contracts.activities.ActivityControlKind
+  async wait_for_finish(self) -> nymph_toolkit.contracts.activities.ActivityFinishReason
+```
+
+<a id="contracts-ActivityControlKind"></a>
+
+#### ActivityControlKind
+
+基底：StrEnum。
+
+```text
+PAUSE = 'pause'
+FINISH = 'finish'
+```
+
+<a id="contracts-ActivityError"></a>
+
+#### ActivityError
+
+基底：RuntimeError。
+
+```text
+ActivityError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ActivityExecutor"></a>
+
+#### ActivityExecutor
+
+値：`collections.abc.Callable[[nymph_toolkit.contracts.activities.ActivityContext], collections.abc.Awaitable[object]]`。
+
+<a id="contracts-ActivityFailure"></a>
+
+#### ActivityFailure
+
+基底：object。
+
+```text
+ActivityFailure(exception: BaseException) -> None
+  exception: BaseException
+```
+
+<a id="contracts-ActivityFinishReason"></a>
+
+#### ActivityFinishReason
+
+基底：StrEnum。
+
+```text
+NYMPH = 'nymph'
+RUNTIME = 'runtime'
+CONNECTION_INTERRUPTION = 'connection_interruption'
+```
+
+<a id="contracts-ActivityHistory"></a>
+
+#### ActivityHistory
+
+基底：object。
+
+```text
+ActivityHistory(records: tuple[nymph_toolkit.contracts.activities.ActivityHistoryRecord, ...], issues: tuple[nymph_toolkit.contracts.activities.ActivityHistoryIssue, ...]) -> None
+  records: tuple[nymph_toolkit.contracts.activities.ActivityHistoryRecord, ...]
+  issues: tuple[nymph_toolkit.contracts.activities.ActivityHistoryIssue, ...]
+```
+
+<a id="contracts-ActivityHistoryIssue"></a>
+
+#### ActivityHistoryIssue
+
+基底：object。
+
+```text
+ActivityHistoryIssue(path: str, line: int | None, message: str) -> None
+  path: str
+  line: int | None
+  message: str
+```
+
+<a id="contracts-ActivityHistoryRecord"></a>
+
+#### ActivityHistoryRecord
+
+基底：object。
+
+```text
+ActivityHistoryRecord(run_id: str, sequence: int, at: datetime.datetime, kind: str, data: collections.abc.Mapping[str, object]) -> None
+  run_id: str
+  sequence: int
+  at: datetime.datetime
+  kind: str
+  data: collections.abc.Mapping[str, object]
+```
+
+<a id="contracts-ActivityKey"></a>
+
+#### ActivityKey
+
+基底：object。
+
+```text
+ActivityKey(requester_id: str, activity_id: str) -> None
+  requester_id: str
+  activity_id: str
+```
+
+<a id="contracts-ActivityNotice"></a>
+
+#### ActivityNotice
+
+基底：object。
+
+```text
+ActivityNotice(sequence: int, kind: nymph_toolkit.contracts.activities.ActivityNoticeKind, at: datetime.datetime, snapshot: nymph_toolkit.contracts.activities.ActivitySnapshot, command: nymph_toolkit.contracts.activities.ActivityCommandResult | None = None) -> None
+  sequence: int
+  kind: nymph_toolkit.contracts.activities.ActivityNoticeKind
+  at: datetime.datetime
+  snapshot: nymph_toolkit.contracts.activities.ActivitySnapshot
+  command: nymph_toolkit.contracts.activities.ActivityCommandResult | None
+```
+
+<a id="contracts-ActivityNoticeKind"></a>
+
+#### ActivityNoticeKind
+
+基底：StrEnum。
+
+```text
+STATE_CHANGED = 'state_changed'
+PLANNED_END = 'planned_end'
+COMMAND_RESULT = 'command_result'
+```
+
+<a id="contracts-ActivityRequest"></a>
+
+#### ActivityRequest
+
+基底：object。
+
+```text
+ActivityRequest(key: nymph_toolkit.contracts.activities.ActivityKey, content: str, start_at: datetime.datetime | None, duration: datetime.timedelta, parameters: collections.abc.Mapping[str, object] = <factory>, priority: int = 0) -> None
+  key: nymph_toolkit.contracts.activities.ActivityKey
+  content: str
+  start_at: datetime.datetime | None
+  duration: datetime.timedelta
+  parameters: collections.abc.Mapping[str, object]
+  priority: int
+  def as_dict(self) -> dict
+  def planned_times(self, accepted_at: datetime.datetime) -> tuple[datetime.datetime, datetime.datetime]
+```
+
+<a id="contracts-ActivitySnapshot"></a>
+
+#### ActivitySnapshot
+
+基底：object。
+
+```text
+ActivitySnapshot(request: nymph_toolkit.contracts.activities.ActivityRequest, state: nymph_toolkit.contracts.activities.ActivityState, accepted_at: datetime.datetime, planned_start_at: datetime.datetime, planned_end_at: datetime.datetime, started_at: datetime.datetime | None = None, ended_at: datetime.datetime | None = None, elapsed_seconds: float = 0.0, finish_reason: nymph_toolkit.contracts.activities.ActivityFinishReason | None = None, finish_requested_at: datetime.datetime | None = None, planned_end_notified: bool = False, result: object = None, failures: tuple[nymph_toolkit.contracts.activities.ActivityFailure, ...] = (), revision: int = 0, scheduled_revision: int = 0, current_request: nymph_toolkit.contracts.activities.ActivityRequest | None = None, execution_seconds: float = 0.0, timing_confirmed: bool = True, cleanup_confirmed: bool = True) -> None
+  request: nymph_toolkit.contracts.activities.ActivityRequest
+  state: nymph_toolkit.contracts.activities.ActivityState
+  accepted_at: datetime.datetime
+  planned_start_at: datetime.datetime
+  planned_end_at: datetime.datetime
+  started_at: datetime.datetime | None
+  ended_at: datetime.datetime | None
+  elapsed_seconds: float
+  finish_reason: nymph_toolkit.contracts.activities.ActivityFinishReason | None
+  finish_requested_at: datetime.datetime | None
+  planned_end_notified: bool
+  result: object
+  failures: tuple[nymph_toolkit.contracts.activities.ActivityFailure, ...]
+  revision: int
+  scheduled_revision: int
+  current_request: nymph_toolkit.contracts.activities.ActivityRequest | None
+  execution_seconds: float
+  timing_confirmed: bool
+  cleanup_confirmed: bool
+```
+
+<a id="contracts-ActivityStartInPastError"></a>
+
+#### ActivityStartInPastError
+
+基底：ActivityError。
+
+```text
+ActivityStartInPastError(request: nymph_toolkit.contracts.activities.ActivityRequest, observed_at: datetime.datetime) -> None
+```
+
+<a id="contracts-ActivityState"></a>
+
+#### ActivityState
+
+基底：StrEnum。
+
+```text
+PENDING = 'pending'
+STARTING = 'starting'
+RUNNING = 'running'
+PAUSING = 'pausing'
+PAUSED = 'paused'
+RESUME_PENDING = 'resume_pending'
+FINISHING = 'finishing'
+COMPLETED = 'completed'
+FAILED = 'failed'
+STOPPED = 'stopped'
+```
+
+<a id="contracts-ActivityStateError"></a>
+
+#### ActivityStateError
+
+基底：ActivityError。
+
+```text
+ActivityStateError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-BindingHealth"></a>
+
+#### BindingHealth
+
+基底：object。
+
+```text
+BindingHealth(key: nymph_toolkit.contracts.connections.BindingKey, provider_id: str, healthy: bool, reason: str = '') -> None
+  key: nymph_toolkit.contracts.connections.BindingKey
+  provider_id: str
+  healthy: bool
+  reason: str
+```
+
+<a id="contracts-BindingKey"></a>
+
+#### BindingKey
+
+基底：object。
+
+```text
+BindingKey(requester_id: str, contract: nymph_toolkit.contracts.connections.ContractKey) -> None
+  requester_id: str
+  contract: nymph_toolkit.contracts.connections.ContractKey
+```
+
+<a id="contracts-BindingRecord"></a>
+
+#### BindingRecord
+
+基底：object。
+
+```text
+BindingRecord(key: nymph_toolkit.contracts.connections.BindingKey, provider_id: str) -> None
+  key: nymph_toolkit.contracts.connections.BindingKey
+  provider_id: str
+```
+
+<a id="contracts-BindingState"></a>
+
+#### BindingState
+
+基底：StrEnum。
+
+```text
+VALID = 'valid'
+INVALID = 'invalid'
+CHECKING = 'checking'
+```
+
+<a id="contracts-Candidate"></a>
+
+#### Candidate
+
+基底：object。
+
+```text
+Candidate(registration: nymph_toolkit.contracts.registry.RegistryEntry, advertisement: nymph_toolkit.contracts.connections.ModuleAdvertisement, contract: nymph_toolkit.contracts.connections.ContractKey, module_usage: nymph_toolkit.contracts.connections.Usage, contract_usage: nymph_toolkit.contracts.connections.Usage) -> None
+  registration: nymph_toolkit.contracts.registry.RegistryEntry
+  advertisement: nymph_toolkit.contracts.connections.ModuleAdvertisement
+  contract: nymph_toolkit.contracts.connections.ContractKey
+  module_usage: nymph_toolkit.contracts.connections.Usage
+  contract_usage: nymph_toolkit.contracts.connections.Usage
+```
+
+<a id="contracts-CapacityExceeded"></a>
+
+#### CapacityExceeded
+
+基底：HybridError。
+
+```text
+CapacityExceeded（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ChunkTooLarge"></a>
+
+#### ChunkTooLarge
+
+基底：HybridError, ValueError。
+
+```text
+ChunkTooLarge（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ConnectionConflictError"></a>
+
+#### ConnectionConflictError
+
+基底：ConnectionsError。
+
+```text
+ConnectionConflictError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ConnectionNotReadyError"></a>
+
+#### ConnectionNotReadyError
+
+基底：ConnectionsError。
+
+```text
+ConnectionNotReadyError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ConnectionNotice"></a>
+
+#### ConnectionNotice
+
+基底：object。
+
+```text
+ConnectionNotice(notice_id: int, module_id: str, kind: nymph_toolkit.contracts.connections.NoticeKind, binding: nymph_toolkit.contracts.connections.BindingKey | None, reason: str = '') -> None
+  notice_id: int
+  module_id: str
+  kind: nymph_toolkit.contracts.connections.NoticeKind
+  binding: nymph_toolkit.contracts.connections.BindingKey | None
+  reason: str
+```
+
+<a id="contracts-ConnectionSnapshot"></a>
+
+#### ConnectionSnapshot
+
+基底：object。
+
+```text
+ConnectionSnapshot(key: nymph_toolkit.contracts.connections.BindingKey, provider_id: str, state: nymph_toolkit.contracts.connections.BindingState, reason: str = '') -> None
+  key: nymph_toolkit.contracts.connections.BindingKey
+  provider_id: str
+  state: nymph_toolkit.contracts.connections.BindingState
+  reason: str
+```
+
+<a id="contracts-ConnectionUnavailableError"></a>
+
+#### ConnectionUnavailableError
+
+基底：ConnectionsError。
+
+```text
+ConnectionUnavailableError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ConnectionsError"></a>
+
+#### ConnectionsError
+
+基底：RuntimeError。
+
+```text
+ConnectionsError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ConnectionsLifecycleFailure"></a>
+
+#### ConnectionsLifecycleFailure
+
+基底：ConnectionsError。
+
+```text
+ConnectionsLifecycleFailure(failures: tuple[nymph_toolkit.contracts.LifecycleFailure, ...]) -> None
+```
+
+<a id="contracts-ConnectionsStateError"></a>
+
+#### ConnectionsStateError
+
+基底：ConnectionsError。
+
+```text
+ConnectionsStateError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ContractDeclarationError"></a>
+
+#### ContractDeclarationError
+
+基底：ConnectionsError。
+
+```text
+ContractDeclarationError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ContractKey"></a>
+
+#### ContractKey
+
+基底：object。
+
+```text
+ContractKey(contract_id: str, version: str) -> None
+  contract_id: str
+  version: str
+```
+
+<a id="contracts-ContractSpec"></a>
+
+#### ContractSpec
+
+基底：object。
+
+```text
+ContractSpec(key: nymph_toolkit.contracts.connections.ContractKey, operations: tuple[nymph_toolkit.contracts.connections.OperationSpec, ...]) -> None
+  key: nymph_toolkit.contracts.connections.ContractKey
+  operations: tuple[nymph_toolkit.contracts.connections.OperationSpec, ...]
+```
+
+<a id="contracts-DependencyCycleError"></a>
+
+#### DependencyCycleError
+
+基底：RegistryError。
+
+```text
+DependencyCycleError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-DependencyUnavailableError"></a>
+
+#### DependencyUnavailableError
+
+基底：RegistryError。
+
+```text
+DependencyUnavailableError(missing_dependencies: frozenset[str]) -> None
+```
+
+<a id="contracts-DuplicateActivityError"></a>
+
+#### DuplicateActivityError
+
+基底：ActivityError。
+
+```text
+DuplicateActivityError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-DuplicateModuleError"></a>
+
+#### DuplicateModuleError
+
+基底：RegistryError。
+
+```text
+DuplicateModuleError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-HealthResult"></a>
+
+#### HealthResult
+
+基底：object。
+
+```text
+HealthResult(request_id: int, modules: tuple[nymph_toolkit.contracts.connections.ModuleHealth, ...], connections: tuple[nymph_toolkit.contracts.connections.BindingHealth, ...]) -> None
+  request_id: int
+  modules: tuple[nymph_toolkit.contracts.connections.ModuleHealth, ...]
+  connections: tuple[nymph_toolkit.contracts.connections.BindingHealth, ...]
+```
+
+<a id="contracts-HybridError"></a>
+
+#### HybridError
+
+基底：RuntimeError。
+
+```text
+HybridError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-HybridSettings"></a>
+
+#### HybridSettings
+
+基底：object。
+
+```text
+HybridSettings(startup_timeout: float, shutdown_timeout: float, call_timeout: float, max_frame_bytes: int, max_requests: int, max_streams: int) -> None
+  startup_timeout: float
+  shutdown_timeout: float
+  call_timeout: float
+  max_frame_bytes: int
+  max_requests: int
+  max_streams: int
+```
+
+<a id="contracts-LifecycleFailure"></a>
+
+#### LifecycleFailure
+
+基底：object。
+
+```text
+LifecycleFailure(phase: nymph_toolkit.contracts.LifecyclePhase, exception: BaseException) -> None
+  phase: nymph_toolkit.contracts.LifecyclePhase
+  exception: BaseException
+```
+
+<a id="contracts-LifecyclePhase"></a>
+
+#### LifecyclePhase
+
+基底：StrEnum。
+
+```text
+START = 'start'
+RUN = 'run'
+STOP = 'stop'
+```
+
+<a id="contracts-LinkFailure"></a>
+
+#### LinkFailure
+
+基底：object。
+
+```text
+LinkFailure(binding: nymph_toolkit.contracts.connections.BindingKey, exception: Exception, interruption_id: int | None) -> None
+  binding: nymph_toolkit.contracts.connections.BindingKey
+  exception: Exception
+  interruption_id: int | None
+```
+
+<a id="contracts-ModuleAdvertisement"></a>
+
+#### ModuleAdvertisement
+
+基底：object。
+
+```text
+ModuleAdvertisement(module_id: str, implementation_version: str, contracts: tuple[nymph_toolkit.contracts.connections.ContractSpec, ...] = (), tags: frozenset[str] = <factory>, attributes: collections.abc.Mapping[str, str | bool | int | float | None] = <factory>) -> None
+  module_id: str
+  implementation_version: str
+  contracts: tuple[nymph_toolkit.contracts.connections.ContractSpec, ...]
+  tags: frozenset[str]
+  attributes: collections.abc.Mapping[str, str | bool | int | float | None]
+```
+
+<a id="contracts-ModuleExecutionState"></a>
+
+#### ModuleExecutionState
+
+基底：StrEnum。
+
+```text
+RUNNING = 'running'
+INTERRUPTING = 'interrupting'
+SUSPENDED = 'suspended'
+```
+
+<a id="contracts-ModuleFailure"></a>
+
+#### ModuleFailure
+
+基底：object。
+
+```text
+ModuleFailure(module_id: str, phase: nymph_toolkit.contracts.LifecyclePhase, exception: BaseException) -> None
+  module_id: str
+  phase: nymph_toolkit.contracts.LifecyclePhase
+  exception: BaseException
+```
+
+<a id="contracts-ModuleGroupFailure"></a>
+
+#### ModuleGroupFailure
+
+基底：RuntimeError。
+
+```text
+ModuleGroupFailure(failures: tuple[nymph_toolkit.contracts.registry.ModuleFailure, ...]) -> None
+```
+
+<a id="contracts-ModuleHealth"></a>
+
+#### ModuleHealth
+
+基底：object。
+
+```text
+ModuleHealth(module_id: str, healthy: bool, reason: str = '') -> None
+  module_id: str
+  healthy: bool
+  reason: str
+```
+
+<a id="contracts-ModuleKind"></a>
+
+#### ModuleKind
+
+基底：StrEnum。
+
+```text
+SUBSYSTEM = 'subsystem'
+ADAPTER = 'adapter'
+```
+
+<a id="contracts-ModuleSpec"></a>
+
+#### ModuleSpec
+
+基底：object。
+
+```text
+ModuleSpec(module_id: str, kind: nymph_toolkit.contracts.registry.ModuleKind, requires: frozenset[str] = <factory>) -> None
+  module_id: str
+  kind: nymph_toolkit.contracts.registry.ModuleKind
+  requires: frozenset[str]
+```
+
+<a id="contracts-NoticeKind"></a>
+
+#### NoticeKind
+
+基底：StrEnum。
+
+```text
+INTERRUPT = 'interrupt'
+INVALIDATED = 'invalidated'
+RECOVERED = 'recovered'
+RESUMED = 'resumed'
+SHUTDOWN = 'shutdown'
+```
+
+<a id="contracts-OperatingState"></a>
+
+#### OperatingState
+
+基底：StrEnum。
+
+```text
+UNKNOWN = 'unknown'
+RUNNING = 'running'
+STOPPED = 'stopped'
+FAILED = 'failed'
+```
+
+<a id="contracts-OperationFailure"></a>
+
+#### OperationFailure
+
+基底：object。
+
+```text
+OperationFailure(code: str, message: str) -> None
+  code: str
+  message: str
+```
+
+<a id="contracts-OperationMode"></a>
+
+#### OperationMode
+
+基底：StrEnum。
+
+```text
+SYNC = 'sync'
+ASYNC = 'async'
+```
+
+<a id="contracts-OperationSpec"></a>
+
+#### OperationSpec
+
+基底：object。
+
+```text
+OperationSpec(name: str, mode: nymph_toolkit.contracts.connections.OperationMode) -> None
+  name: str
+  mode: nymph_toolkit.contracts.connections.OperationMode
+```
+
+<a id="contracts-OutcomeUnknown"></a>
+
+#### OutcomeUnknown
+
+基底：HybridError, TimeoutError。
+
+```text
+OutcomeUnknown(request_id, message='Request outcome is not confirmed')
+```
+
+<a id="contracts-OverflowPolicy"></a>
+
+#### OverflowPolicy
+
+基底：StrEnum。
+
+```text
+WAIT = 'wait'
+DROP_OLDEST = 'drop_oldest'
+```
+
+<a id="contracts-PeerClosed"></a>
+
+#### PeerClosed
+
+基底：HybridError。
+
+```text
+PeerClosed（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-Placement"></a>
+
+#### Placement
+
+基底：StrEnum。
+
+```text
+LOCAL = 'local'
+PROCESS = 'process'
+```
+
+<a id="contracts-PreparationTimeoutError"></a>
+
+#### PreparationTimeoutError
+
+基底：ConnectionsError, TimeoutError。
+
+```text
+PreparationTimeoutError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-ProcessSnapshot"></a>
+
+#### ProcessSnapshot
+
+基底：object。
+
+```text
+ProcessSnapshot(module_id: str, placement: nymph_toolkit.contracts.hybrid.Placement, generation: str, state: str, pid: int | None = None, returncode: int | None = None, cleanup_confirmed: bool = False, reason: str = '') -> None
+  module_id: str
+  placement: nymph_toolkit.contracts.hybrid.Placement
+  generation: str
+  state: str
+  pid: int | None
+  returncode: int | None
+  cleanup_confirmed: bool
+  reason: str
+```
+
+<a id="contracts-ProtocolError"></a>
+
+#### ProtocolError
+
+基底：HybridError。
+
+```text
+ProtocolError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-RegistryChange"></a>
+
+#### RegistryChange
+
+基底：object。
+
+```text
+RegistryChange(module_id: str, before: nymph_toolkit.contracts.registry.RegistryEntry | None, after: nymph_toolkit.contracts.registry.RegistryEntry | None) -> None
+  module_id: str
+  before: nymph_toolkit.contracts.registry.RegistryEntry | None
+  after: nymph_toolkit.contracts.registry.RegistryEntry | None
+```
+
+<a id="contracts-RegistryEntry"></a>
+
+#### RegistryEntry
+
+基底：object。
+
+```text
+RegistryEntry(spec: nymph_toolkit.contracts.registry.ModuleSpec, generation: int, missing_dependencies: frozenset[str] = <factory>) -> None
+  spec: nymph_toolkit.contracts.registry.ModuleSpec
+  generation: int
+  missing_dependencies: frozenset[str]
+  property available(self) -> bool
+```
+
+<a id="contracts-RegistryError"></a>
+
+#### RegistryError
+
+基底：RuntimeError。
+
+```text
+RegistryError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-RegistryStateError"></a>
+
+#### RegistryStateError
+
+基底：RegistryError。
+
+```text
+RegistryStateError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-RegistryUpdate"></a>
+
+#### RegistryUpdate
+
+基底：object。
+
+```text
+RegistryUpdate(revision: int, changes: tuple[nymph_toolkit.contracts.registry.RegistryChange, ...]) -> None
+  revision: int
+  changes: tuple[nymph_toolkit.contracts.registry.RegistryChange, ...]
+```
+
+<a id="contracts-RemoteError"></a>
+
+#### RemoteError
+
+基底：HybridError。
+
+```text
+RemoteError(module_id, remote_type, message)
+```
+
+<a id="contracts-RuntimeFailure"></a>
+
+#### RuntimeFailure
+
+基底：RuntimeError。
+
+```text
+RuntimeFailure(failures: tuple[nymph_toolkit.contracts.LifecycleFailure, ...]) -> None
+```
+
+<a id="contracts-RuntimeService"></a>
+
+#### RuntimeService
+
+基底：Protocol。
+
+```text
+RuntimeService(*args, **kwargs)
+  async run(self) -> +T_co
+  async start(self) -> None
+  async stop(self) -> None
+```
+
+<a id="contracts-RuntimeState"></a>
+
+#### RuntimeState
+
+基底：StrEnum。
+
+```text
+NEW = 'new'
+STARTING = 'starting'
+RUNNING = 'running'
+STOPPING = 'stopping'
+STOPPED = 'stopped'
+FAILED = 'failed'
+```
+
+<a id="contracts-RuntimeStateError"></a>
+
+#### RuntimeStateError
+
+基底：RuntimeError。
+
+```text
+RuntimeStateError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-StorageCorruptionError"></a>
+
+#### StorageCorruptionError
+
+基底：StorageError。
+
+```text
+StorageCorruptionError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-StorageError"></a>
+
+#### StorageError
+
+基底：RuntimeError。
+
+```text
+StorageError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-StorageFailure"></a>
+
+#### StorageFailure
+
+基底：StorageError。
+
+```text
+StorageFailure(cause: Exception, unsaved_events: int, pending_configuration: bool) -> None
+```
+
+<a id="contracts-StreamClosed"></a>
+
+#### StreamClosed
+
+基底：HybridError。
+
+```text
+StreamClosed（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-StreamEvent"></a>
+
+#### StreamEvent
+
+基底：object。
+
+```text
+StreamEvent(kind: str, sequence: int, data: bytes = b'', missing: tuple[int, int] | None = None, reason: str = '') -> None
+  kind: str
+  sequence: int
+  data: bytes
+  missing: tuple[int, int] | None
+  reason: str
+  property missing_count(self)
+```
+
+<a id="contracts-StreamOptions"></a>
+
+#### StreamOptions
+
+基底：object。
+
+```text
+StreamOptions(send_bytes: int, send_chunks: int, receive_bytes: int, receive_chunks: int, overflow: nymph_toolkit.contracts.hybrid.OverflowPolicy) -> None
+  send_bytes: int
+  send_chunks: int
+  receive_bytes: int
+  receive_chunks: int
+  overflow: nymph_toolkit.contracts.hybrid.OverflowPolicy
+```
+
+<a id="contracts-StreamState"></a>
+
+#### StreamState
+
+基底：StrEnum。
+
+```text
+OPEN = 'open'
+CLOSING = 'closing'
+CLOSED = 'closed'
+ABORTED = 'aborted'
+FAILED = 'failed'
+```
+
+<a id="contracts-TaskManagerLifecycleFailure"></a>
+
+#### TaskManagerLifecycleFailure
+
+基底：ActivityError。
+
+```text
+TaskManagerLifecycleFailure(failures: tuple[nymph_toolkit.contracts.LifecycleFailure, ...])
+```
+
+<a id="contracts-TemporaryUnavailable"></a>
+
+#### TemporaryUnavailable
+
+基底：object。
+
+```text
+TemporaryUnavailable(message: str = 'Provider has no capacity or is not accepting work') -> None
+  message: str
+```
+
+<a id="contracts-UNCHANGED"></a>
+
+#### UNCHANGED
+
+値：`UNCHANGED`。
+
+<a id="contracts-UnknownActivityError"></a>
+
+#### UnknownActivityError
+
+基底：ActivityError。
+
+```text
+UnknownActivityError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-UnknownConnectionError"></a>
+
+#### UnknownConnectionError
+
+基底：ConnectionsError。
+
+```text
+UnknownConnectionError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-UnknownModuleError"></a>
+
+#### UnknownModuleError
+
+基底：RegistryError。
+
+```text
+UnknownModuleError（構築署名はPython標準の基底例外に従う）
+```
+
+<a id="contracts-Usage"></a>
+
+#### Usage
+
+基底：object。
+
+```text
+Usage(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingState.UNKNOWN: 'unknown'>, accepting: bool = False, active: int = 0, capacity: int = 0) -> None
+  state: nymph_toolkit.contracts.connections.OperatingState
+  accepting: bool
+  active: int
+  capacity: int
+  property free(self) -> int
+```
+
+---
+
+<a id="section-14"></a>
+
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R23の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R24の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -1602,9 +3155,10 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0019 v0.4のConnections実装判断（`docs/adr/0019-v0.4-connections.md`） | 採用。固定単位とバッファ上限なし・通常受付継続をユーザー回答で採用。契約型・接続・中断・ヘルス・非同期保存・救命を実装し、A04を確認 | R16・#37〜#44 |
 | 0020 v0.5のTaskManager基本機能と活動判断の境界（`docs/adr/0020-v0.5-task-manager.md`） | 採用。到達時の継続、Nymphによる再登録・再開、過去時刻拒否、安全な区切りでの終了を回答で採用。D5〜D8の実装判断を記録し、A05の採用範囲を検証済み | R17・#45〜#51 |
 | 0021 v0.6の活動変更の採用範囲と詳細設計（`docs/adr/0021-v0.6-activity-changes.md`） | 採用・実装。D1・D2はユーザーの範囲採用と個別回答、D3〜D10は委任に基づく時刻・制御・枠・競合・API・保存・受入・実装単位の判断。最終受入・公開は検証記録を参照 | R18・#6・#52〜#59 |
-| 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`） | 設計採用。v0.7の実装判断は0023、検証結果はvalidation/v0.7。A08・A09は未完了。1〜18は個別回答、19〜64は推奨設定の明示一括採用。受入IDへ全件対応 | R19・#60・親#7〜#9 |
+| 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`） | 設計採用。v0.7の実装判断は0023、検証結果はvalidation/v0.7。A08はR22〜R23で検証・公開。A09はR24・0025で完成確認。1〜18は個別回答、19〜64は推奨設定の明示一括採用。受入IDへ全件対応 | R19・#60・親#7〜#9 |
 | 0023 v0.7の実装契約（`docs/adr/0023-v0.7-implementation-contracts.md`） | R20の実施に伴う実装判断として採用。公開入口・通信・ストリーム・子管理・遠隔活動を具体化。実装とA07は各子Issueで追跡 | R20・#61〜#68、R21・#70のレビュー補足 |
 | 0024 v0.8の統合・障害・負荷検証条件（`docs/adr/0024-v0.8-integration-validation.md`） | R22の実施に伴う検証条件として採用。A08の4配置・障害・保存・計測・30分負荷・通常配布を具体化。受入結果は別記 | R22・#72〜#78・#80 |
+| 0025 v0.9のCore完成監査と配布前判定（`docs/adr/0025-v0.9-core-completion.md`） | R24の実施に伴う具体化として採用。64項目・既存受入・公開API・新規環境を照合。A09-04の公開後判定を分離 | R24・#82〜#85 |
 
 ### 記録方法
 
@@ -1622,7 +3176,7 @@ ADR 0017のR14時点の未決事項は履歴として保持し、R15で解消し
 
 ---
 
-<a id="section-13"></a>
+<a id="section-15"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -1676,7 +3230,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-14"></a>
+<a id="section-16"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -1714,7 +3268,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-15"></a>
+<a id="section-17"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -1777,7 +3331,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-16"></a>
+<a id="section-18"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -1840,7 +3394,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-17"></a>
+<a id="section-19"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -1876,7 +3430,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-18"></a>
+<a id="section-20"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -1925,7 +3479,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-19"></a>
+<a id="section-21"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -1972,7 +3526,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-20"></a>
+<a id="section-22"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -2028,7 +3582,7 @@ R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンに
 
 ---
 
-<a id="section-21"></a>
+<a id="section-23"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -2083,7 +3637,7 @@ R6の「単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 ---
 
-<a id="section-22"></a>
+<a id="section-24"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -2136,7 +3690,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-23"></a>
+<a id="section-25"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -2190,7 +3744,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-24"></a>
+<a id="section-26"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -2230,7 +3784,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-25"></a>
+<a id="section-27"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -2273,7 +3827,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-26"></a>
+<a id="section-28"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -2342,7 +3896,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-27"></a>
+<a id="section-29"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -2413,7 +3967,7 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-28"></a>
+<a id="section-30"></a>
 
 収録元 `docs/adr/0016-v0.3-registry.md`
 
@@ -2491,7 +4045,7 @@ Runtimeの開始待機・停止待機が取消された場合もADR 0014の後�
 
 ---
 
-<a id="section-29"></a>
+<a id="section-31"></a>
 
 収録元 `docs/adr/0017-connection-binding-and-health.md`
 
@@ -2564,7 +4118,7 @@ ADR 0015の直接通信採用とADR 0016のRegistry・ModuleGroupを前提とす
 
 ---
 
-<a id="section-30"></a>
+<a id="section-32"></a>
 
 収録元 `docs/adr/0018-connection-selection-health-and-recovery.md`
 
@@ -2688,7 +4242,7 @@ R15：Docsの根拠一覧（`docs/README.md`）に記録した、本チャット
 
 ---
 
-<a id="section-31"></a>
+<a id="section-33"></a>
 
 収録元 `docs/adr/0019-v0.4-connections.md`
 
@@ -2813,7 +4367,7 @@ R16は本チャットのv0.4着手指示。R15の採用方針はADR 0018、既�
 
 ---
 
-<a id="section-32"></a>
+<a id="section-34"></a>
 
 収録元 `docs/adr/0020-v0.5-task-manager.md`
 
@@ -2982,7 +4536,7 @@ Docsの根拠表（`docs/README.md`）のR2・R4・R10・R16・R17。R17はv0.5�
 
 ---
 
-<a id="section-33"></a>
+<a id="section-35"></a>
 
 収録元 `docs/adr/0021-v0.6-activity-changes.md`
 
@@ -3164,7 +4718,7 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 ---
 
-<a id="section-34"></a>
+<a id="section-36"></a>
 
 収録元 `docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`
 
@@ -3172,13 +4726,15 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 ### 状態
 
-**設計として採用。R19時点では未実装だった。後続R20・ADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）でv0.7を実装し、A07の結果は検証記録（`docs/validation/v0.7.md`）へ分離する。A08・A09は未完了。** 採用記録日2026年11月21日、判断者はユーザー。根拠はDocs根拠表（`docs/README.md`）のR19である。
+**設計として採用。R19時点では未実装だった。後続R20・ADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）でv0.7を実装し、A07の結果は検証記録（`docs/validation/v0.7.md`）へ分離する。A08・A09はR20時点では未完了だった。** 採用記録日2026年11月21日、判断者はユーザー。根拠はDocs根拠表（`docs/README.md`）のR19である。
 
 1〜18は一問一答での採用済み回答、19〜64は一覧提示時には推奨案だったが、今回の「19〜64はすべて推奨設定で採用してください。決定済みの1〜18と合わせて、ADR・ロードマップ・受入基準・引継ぎ書に反映してください。」で明示的に一括採用された。19〜64を一問ずつ回答した履歴に置き換えず、Codexへの残事項の判断委任とも区別する。
 
 [設計子Issue #60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)は[親#7](https://github.com/Tao-pyth/nymph-toolkit/issues/7)・[v0.7.0マイルストーン](https://github.com/Tao-pyth/nymph-toolkit/milestone/7)に所属する。v0.8は[親#8](https://github.com/Tao-pyth/nymph-toolkit/issues/8)、v0.9は[親#9](https://github.com/Tao-pyth/nymph-toolkit/issues/9)から追跡する。今回の資料反映は、各段階の実装開始・受入合格・リリースを意味しない。
 
 後続R22では親#8の子#72〜#78でA08を実施する。試験条件と管理RPC結果の明示解放の具体化はADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）、結果はv0.8検証記録（`docs/validation/v0.8.md`）へ記録する。以下の採用済み64項目は変更しない。
+
+R23でv0.8.0を公開した。後続R24では親#9の子#82〜#85、ADR 0025（`docs/adr/0025-v0.9-core-completion.md`）で完成監査を進める。番号別の証拠は対応表（`docs/validation/core-coverage.md`）、実施結果・公開前後の判定はv0.9検証記録（`docs/validation/v0.9.md`）に分離する。採用64行はそのまま保持する。
 
 ### 背景と既存ADRとの関係
 
@@ -3333,7 +4889,7 @@ R19：v0.9までの一問一答、確認事項1〜64の一覧、ユーザーに�
 
 ---
 
-<a id="section-35"></a>
+<a id="section-37"></a>
 
 収録元 `docs/adr/0023-v0.7-implementation-contracts.md`
 
@@ -3427,7 +4983,7 @@ A07-01〜14に対応する実TCP・実子プロセスの検証を行う。ロー
 
 ---
 
-<a id="section-36"></a>
+<a id="section-38"></a>
 
 収録元 `docs/adr/0024-v0.8-integration-validation.md`
 
@@ -3500,7 +5056,52 @@ Windows/Linux × CPython 3.12〜3.15で、ソース、通常wheelインストー
 
 ---
 
-<a id="section-37"></a>
+<a id="section-39"></a>
+
+収録元 `docs/adr/0025-v0.9-core-completion.md`
+
+## ADR 0025 v0.9のCore完成監査と配布前判定
+
+### 状態・根拠
+
+2026年11月22日、R24の実施指示に基づく検証・資料整備上の具体化として採用する。親Issue #9・マイルストーンv0.9.0配下へ、#82〜#85をコード変更前に登録し、GitHubの親子関係を確認した。ADR 0022の1〜64の採用内容を変更しない。R19の1〜18の個別回答と19〜64の一括採用を区別する。
+
+R24は「v0.9のCore機能完成に向けて進めてください。着手前に親Issue #9配下へ対応単位の子Issueを登録し、ADR 0022とA09の受入基準に沿って実装・検証・資料整備を行ってください。」である。v0.8.0の公開コミットad55669を基点にする。
+
+### 対応単位と成果物
+
+| 子Issue | 受入 | 作業 |
+|---|---|---|
+| #82 | A09-01・02 | 本ADR、R24根拠、採用番号別の実装・検証証拠、文書同期 |
+| #83 | A09-02 | 公開import・署名・型・エラー・ライフサイクル・配置差の資料、実装との整合検査 |
+| #84 | A09-01 | 採用機能の監査、証拠参照の検査、必要な境界試験、全ダミー回帰 |
+| #85 | A09-03・04準備 | 0.9.0配布候補、通常配布・全8環境CI、結果・制限・引継ぎ書・PR |
+
+製品不具合を検出した場合、修正前に別の子Issueを登録して再現・期待動作・影響を記録する。既存機能が合格する場合、完成段階という理由だけで新しい製品機能やAPI再設計を追加しない。
+
+### 完成判定の具体化
+
+1. ADR 0022の64行と既存A02〜A08の採用範囲を、実装箇所、実在するテストID、操作資料、測定記録へ対応付ける。番号対応表の存在だけを動作合格としない。
+2. 対応表の検査は番号の欠落・重複、採用文の相違、存在しないテスト・資料を拒否する。通常の全テスト実行と組み合わせて判定し、メタデータの成功と製品動作の成功を区別する。
+3. Core・Contractsの明示exportを一覧化し、公開する入口の入力・戻り値・失敗・所有期間を文章で説明する。署名・列挙値・データ型の一覧は実装から生成し、CIで一致を検査する。内部モジュールの再exportは公開名から使用する。内部補助メソッドの存在を、新しい安定契約の採用根拠にしない。
+4. 新しい環境へCore＋Contractsの通常wheelをインストールし、ソースツリーのsrcを参照せず全テスト・6実行例・短い4配置負荷を再現する。sdistから同一wheelを再ビルドし、API一覧・LICENSE・文書を照合する。Windows/Linux × CPython 3.12〜3.15を維持する。
+5. A08の30分測定はcb0cf61の正常経路の記録として参照する。後続#80と今回の変更の影響を区別し、最終版全体の30分測定と表現しない。新しい未測定の性能目標を設定しない。
+
+### 公開と判定の状態
+
+A09-01〜03は実装・受入・配布候補の結果で判定する。A09-04は実装子Issue・最終コミット・CIに加え、マージ後のタグ・Release・実際の取得物との照合を要求するため、公開前には完了としない。今回の成果はレビュー可能なPRと配布前の完成判定・証拠である。公開工程の未実施を省略せず、親Issue・マイルストーンを公開前に閉じない。
+
+公開済みv0.1.0〜v0.8.0のタグ・Release・添付を維持する。v1.0の接続契約体系化、本番Subsystem/Adapter、他PCへの分散、稼働中構成変更、自動再送・再起動・切替・活動復元、複製・移植・伝播は追加しない。
+
+### 影響・残る作業
+
+製品の仕様採用、実装完了、CIでの検証、公開後確認を分ける。A09の結果と再現手順はv0.9検証記録（`docs/validation/v0.9.md`）、APIの意味はCore API（`docs/core-api.md`）、署名・型の一覧はAPI一覧（`docs/api-reference.md`）に記録する。検証記録・API資料は単一引継ぎ書へ収録する。
+
+既知の制約が既存の採用要件と矛盾する場合、制約と書くことで免除しない。修正または明示した範囲再合意が必要であり、未解消の項目は未達として扱う。
+
+---
+
+<a id="section-40"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -3640,13 +5241,15 @@ R17・ADR 0020で、Nymphの終了指示を安全な区切りで実行する最�
 
 ### V0.9 Core機能完成
 
-- **採用状態・関連ADR** — 合意したCore機能完成は確定目標。ADR 0022・64とA09-01〜04で判定条件を採用。未実装・A09未検証。
+- **採用状態・関連ADR** — 合意したCore機能完成は確定目標。ADR 0022・64とA09-01〜04で判定条件を採用。R24・ADR 0025（`docs/adr/0025-v0.9-core-completion.md`）、子#82〜#85で実装済みCoreの完成監査・API整理・新規環境検証を進める。現在の判定はv0.9記録（`docs/validation/v0.9.md`）。
 - **着手条件** — A07・A08までの採用機能の証拠と、各ADRの実装詳細が揃う。親#9・マイルストーンv0.9.0と対応子Issueを確認し、判定を妨げる未決・不具合を解消する。
 - **作業** — ADR 0022の1〜64を受入結果へ照合し、公開APIの入出力・失敗通知・ライフサイクル・配置差を文書化する。新しい環境でダミー検証を再実行し、リリース対象の結果と残課題を記録する。
 - **成果物** — 合意したCore機能、再現手順、API資料、番号別の受入証拠、既知の制約、同期した引継ぎ書、CHANGELOGと対象コミットのリリース記録。
 - **残る具体化** — 既知の制約が完成条件を妨げる場合は修正または範囲の再合意を行い、履歴を残す。v1.0の接続契約体系化や本番機能の完成を暗黙に前倒ししない。
 - **検証手順** — A09-01〜04に従い、全採用シナリオ、両配置とストリーム、通常配布物、API・Docs・引継ぎ書、公開物と対象コミットを照合する。公開済みの過去タグ・添付は保持する。
 - **完了条件** — A09-01〜04を満たす。起動前・停止後の着脱、接続、ハイブリッド実行、ストリーム、Nymphが決めた活動と変更の管理をダミーだけで検証でき、受入未達がない。
+
+64項目の対応表（`docs/validation/core-coverage.md`）と公開API資料（`docs/core-api.md`）を成果物とし、API一覧・証拠参照をCIで照合する。A09-04の公開後確認は別工程として追跡し、実装子IssueとPRの完了だけで公開済みとはしない。
 
 V0.9の完成対象は合意したCore機能である。将来のPC状況取得Adapterと複製・移植は、この初期ロードマップの対象外とする。
 
@@ -3736,13 +5339,13 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-38"></a>
+<a id="section-41"></a>
 
 収録元 `docs/acceptance.md`
 
 ## 受入基準・検討案と検証記録
 
-以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続である。v1.xのB00〜B10は引き続き検討案とし、設計採用・文書検査・製品の受入合格を区別する。
+以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。v1.xのB00〜B10は引き続き検討案とし、設計採用・文書検査・製品の受入合格を区別する。
 
 ### バージョン別シナリオ
 
@@ -3758,8 +5361,8 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 | A05 V0.5 | ADR 0004・0020 | ダミーNymphが活動A、開始T、期間Dを指定。時刻・期間・経過時間・実行時間を採用した定義で観察し、下記の責務境界も確認する | Nymphの入力と予定・実行結果を対応付けられる。期間満了の処理と計時が採用定義に一致し、Coreが活動の価値に基づいて指定値を変更しない |
 | A06 V0.6 | ADR 0004・0021 | 各操作の採否表を確認。採用した繰り上げ・延期、延長・短縮、優先度変更、中断・再開、取消・終了をダミーNymphから入力し、競合や終了後の要求も試す | 入力と変更結果を照合できる。優先度の処理はNymphの指定と採用規則に一致し、実行可否・競合の通知と時間計測を確認できる。範囲外入力への応答が契約に一致する |
 | A07 V0.7 | ADR 0022・1〜59と既存採用ADR | 同一PC・4配置の要求／結果・ストリーム・活動変更、子の起動・障害・停止をA07-01〜14で再現 | 採用した共通契約・配置差・期限・上限・後処理に一致。A07合格、証拠はvalidation/v0.7.md |
-| A08 V0.8 | ADR 0022・60〜63と1〜59の振る舞い | 登録→起動→接続→活動・変更・ストリーム→停止→解除を通し、障害・競合・負荷・配布をA08-01〜07で検証 | 通常エラーと致命的障害を区別し、自動再試行・切替なしで停止仕様と状態が一貫。未検証 |
-| A09 V0.9 | v0.9対象の採用ADR・0022 | 新しい環境で全採用シナリオ、API・実装・Docs・引継ぎ書・公開物をA09-01〜04で照合 | 合意したCore機能をダミーで検証でき、受入未達がなく制約と残課題が明確。未検証 |
+| A08 V0.8 | ADR 0022・60〜63と1〜59の振る舞い | 登録→起動→接続→活動・変更・ストリーム→停止→解除を通し、障害・競合・負荷・配布をA08-01〜07で検証 | 通常エラーと致命的障害を区別し、自動再試行・切替なしで停止仕様と状態が一貫。A08合格、条件と制約はvalidation/v0.8.md |
+| A09 V0.9 | v0.9対象の採用ADR・0022 | 新しい環境で全採用シナリオ、API・実装・Docs・引継ぎ書・公開物をA09-01〜04で照合 | 合意したCore機能をダミーで検証でき、受入未達がなく制約と残課題が明確。R24の結果と公開前後の判定はvalidation/v0.9.md |
 
 A04の経路検証はCoreが提供する接続手段を対象とする。R14追補・R15に基づき、管理結果に従う機能間のエラー回避を扱い、任意のPython参照・OS通信への強制遮断は受入対象にしない。
 
@@ -3862,7 +5465,7 @@ R17・ADR 0020（`docs/adr/0020-v0.5-task-manager.md`）のD1〜D8によりA05�
 
 ### A07〜A09の採用した判定条件（R19）
 
-ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の確認番号1〜64を以下へ対応付ける。**全項目は設計採用済み。A07の実装・検証はR20で進め、A08・A09は未完了。** この表を追加したことを合格の証拠とせず、実装後の子Issue・検証記録へ対象コミット、再現手順、観測結果、制約を記録する。期限・容量・試験時間の具体値は設定と試験条件に明記し、未測定の共通固定値は作らない。
+ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の確認番号1〜64を以下へ対応付ける。**全項目は設計採用済み。A07はR20〜R21、A08はR22〜R23で検証・公開した。A09はR24・ADR 0025で完成確認を進める。** この表を追加したことを合格の証拠とせず、実装後の子Issue・検証記録へ対象コミット、再現手順、観測結果、制約を記録する。期限・容量・試験時間の具体値は設定と試験条件に明記し、未測定の共通固定値は作らない。
 
 #### A07 ハイブリッド実行と基本動作
 
@@ -3905,6 +5508,8 @@ R22の実施条件はADR 0024（`docs/adr/0024-v0.8-integration-validation.md`�
 | A09-02 | 64 | 公開APIの入力・結果・失敗・ライフサイクル・制約とREADME・Architecture・ADR・引継ぎ書を照合 | 文書と実装と結果が一致。番号1〜18の個別採用、19〜64の一括採用、実装・検証の完了を区別。v1.0の接続契約整備は別目標 |
 | A09-03 | 63・64 | 新しい環境で通常配布物からダミー例と全採用シナリオを再現 | ソースツリーへの暗黙依存なしで実行でき、環境・コマンド・証拠・制約が記録されている |
 | A09-04 | 64 | 完了した実装子Issue、対象コミット・CI・CHANGELOG・タグ・Release・取得物を照合 | 合意した範囲の実装・受入・文書が完了し、公開物が対象コミットに一致。残課題を明記し、過去のタグ・添付を差し替えない。今回の文書更新だけで合格にしない |
+
+R24のADR 0025（`docs/adr/0025-v0.9-core-completion.md`）に従い、64項目の証拠対応（`docs/validation/core-coverage.md`）、API資料（`docs/core-api.md`）、v0.9結果（`docs/validation/v0.9.md`）を照合する。A09-04のタグ・Release・匿名取得は公開後に判定し、配布候補の検証だけで全A09合格としない。
 
 ### 配布構成の検証案
 
@@ -3978,7 +5583,102 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-39"></a>
+<a id="section-42"></a>
+
+収録元 `docs/validation/core-coverage.md`
+
+## Core採用事項と検証証拠の対応
+
+この表はADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の64項目と、既存A02〜A08の実装・試験を照合する索引である。1〜18は個別採用、19〜64は一括採用。実行結果と公開前後の判定はv0.9検証記録（`docs/validation/v0.9.md`）に分ける。参照先の存在だけを合格としない。
+
+編集元はcore-coverage.json（`docs/validation/core-coverage.json`）。python tools/check_completion.py --writeで本表を再生成し、引数なしで採用文・番号・参照・本文の一致を検査する。テストIDの検査は静的な実在確認であり、実際の成功・skip・実行環境は別途テスト結果で確認する。
+
+### 既存機能の回帰
+
+| 受入 | 対象テストモジュール | 既存結果 |
+|---|---|---|
+| A02 | tests.core.test_runtime（`tests/core/test_runtime.py`） | docs/validation/v0.2.md（`docs/validation/v0.2.md`） |
+| A03 | tests.core.test_registry（`tests/core/test_registry.py`）<br>tests.core.test_registry_contracts（`tests/core/test_registry_contracts.py`）<br>tests.core.test_module_group（`tests/core/test_module_group.py`） | docs/validation/v0.3.md（`docs/validation/v0.3.md`） |
+| A04 | tests.core.test_connection_contracts（`tests/core/test_connection_contracts.py`）<br>tests.core.test_connections（`tests/core/test_connections.py`）<br>tests.core.test_connections_storage（`tests/core/test_connections_storage.py`）<br>tests.core.test_connected_group（`tests/core/test_connected_group.py`）<br>tests.core.test_storage（`tests/core/test_storage.py`）<br>tests.core.test_storage_io（`tests/core/test_storage_io.py`） | docs/validation/v0.4.md（`docs/validation/v0.4.md`） |
+| A05 | tests.core.test_activity_contracts（`tests/core/test_activity_contracts.py`）<br>tests.core.test_task_manager（`tests/core/test_task_manager.py`）<br>tests.core.test_activity_faults（`tests/core/test_activity_faults.py`）<br>tests.core.test_activity_group（`tests/core/test_activity_group.py`）<br>tests.core.test_activity_history（`tests/core/test_activity_history.py`） | docs/validation/v0.5.md（`docs/validation/v0.5.md`） |
+| A06 | tests.core.test_activity_change_contracts（`tests/core/test_activity_change_contracts.py`）<br>tests.core.test_activity_changes（`tests/core/test_activity_changes.py`）<br>tests.core.test_activity_controls（`tests/core/test_activity_controls.py`）<br>tests.core.test_activity_slots（`tests/core/test_activity_slots.py`）<br>tests.core.test_activity_v06_faults（`tests/core/test_activity_v06_faults.py`）<br>tests.core.test_activity_v06_history（`tests/core/test_activity_v06_history.py`） | docs/validation/v0.6.md（`docs/validation/v0.6.md`） |
+| A07 | tests.core.test_hybrid_transport（`tests/core/test_hybrid_transport.py`）<br>tests.core.test_hybrid_group（`tests/core/test_hybrid_group.py`）<br>tests.core.test_hybrid_activities（`tests/core/test_hybrid_activities.py`） | docs/validation/v0.7.md（`docs/validation/v0.7.md`） |
+| A08 | tests.core.test_v08_contention（`tests/core/test_v08_contention.py`）<br>tests.core.test_v08_integration（`tests/core/test_v08_integration.py`）<br>tests.core.test_v08_result_ownership（`tests/core/test_v08_result_ownership.py`）<br>tests.core.test_v08_storage（`tests/core/test_v08_storage.py`） | docs/validation/v0.8.md（`docs/validation/v0.8.md`） |
+
+### ADR 0022の64項目
+
+| 番号・項目 | 受入 | 実装・試験 | 資料・範囲 |
+|---|---|---|---|
+| 1 実行対象 | A07-01 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 2 着脱時期 | A07-02 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_registration_boundary_and_restart_binding（`tests/core/test_hybrid_group.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 3 プロセス単位 | A07-01 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 4 起動主体 | A07-01・A07-02 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`）<br>HybridGroupTests.test_stop_deadline_forces_only_owned_child_and_marks_unknown_cleanup（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 5 配置指定 | A07-01 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 6 Python環境 | A07-01 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 7 共通契約 | A07-04・A07-05 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`）<br>HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 8 別プロセス呼出し | A07-05 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>WireTests.test_settings_and_application_values（`tests/core/test_hybrid_transport.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 9 ストリームの範囲 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 10 混雑時の方針 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_drop_oldest_reports_gap_and_preserves_latest（`tests/core/test_hybrid_transport.py`）<br>HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 11 欠落の通知 | A07-08 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_end_without_following_data_exposes_missing_tail（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 12 上限の指定者 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 13 上限の種類 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure（`tests/core/test_hybrid_group.py`）<br>StreamTests.test_oversize_rejected_and_chunk_count_includes_empty_bytes（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 14 単一チャンク超過 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_oversize_rejected_and_chunk_count_includes_empty_bytes（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 15 送信成功 | A07-09 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_send_is_local_acceptance_and_payload_is_copied（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 16 通常終了 | A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_close_timeout_keeps_drain_alive_until_receiver_frees_capacity（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 17 送信・終了の待機期限 | A07-09・A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>WireTests.test_settings_and_application_values（`tests/core/test_hybrid_transport.py`）<br>StreamTests.test_failed_send_wait_is_not_enqueued_later（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 18 終了待機の期限切れ | A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_close_timeout_keeps_drain_alive_until_receiver_frees_capacity（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 19 管理情報の所在 | A07-01 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`）<br>StorageIntegrationTests.test_rescue_preserves_remote_final_report_and_blocks_only_new_admission（`tests/core/test_v08_storage.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 20 子の起動方法 | A07-01 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 21 起動時照合 | A07-02 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_dependency_order_partial_cleanup_and_contract_mismatch（`tests/core/test_hybrid_group.py`）<br>RpcTests.test_generation_mismatch_closes_channel（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 22 起動順序 | A07-02 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>IntegrationTests.test_partial_initialization_in_all_placements_reverses_cleanup（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 23 子の予期しない終了 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>IntegrationTests.test_data_disconnect_during_activity_is_local_interruption_without_replay（`tests/core/test_v08_integration.py`）<br>IntegrationTests.test_child_exit_or_parent_channel_loss_during_activity_and_stream（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 24 障害検出 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_start_timeout_and_lost_parent_channel_reap_owned_children（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 25 起動・停止の無応答 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_initialization_failure_and_deadline_owned_child_cleanup（`tests/core/test_hybrid_group.py`）<br>HybridGroupTests.test_stop_deadline_forces_only_owned_child_and_marks_unknown_cleanup（`tests/core/test_hybrid_group.py`）<br>IntegrationTests.test_shutdown_deadline_does_not_apply_to_nymph_finish（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 26 子だけの再起動 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>StorageIntegrationTests.test_new_runtime_preserves_history_and_requires_nymph_reregistration（`tests/core/test_v08_storage.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 27 通信方式 | A07-04 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>RpcTests.test_concurrent_requests_results_and_remote_exception（`tests/core/test_hybrid_transport.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 28 管理とデータの経路 | A07-04 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`）<br>HybridGroupTests.test_core_mediated_call_and_failure_updates_cached_route（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 29 転送データ | A07-05 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>WireTests.test_contract_roundtrip_and_unchanged_are_not_arbitrary_imports（`tests/core/test_hybrid_transport.py`）<br>HybridGroupTests.test_business_and_capacity_results_are_not_link_failures（`tests/core/test_hybrid_group.py`）<br>PlacementContractTests.test_local_sync_contract_keeps_python_object_identity_on_both_routes（`tests/core/test_v09_contract_boundaries.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 30 同期・非同期契約 | A07-05 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>PlacementContractTests.test_hybrid_rejects_same_sync_contract_without_partial_registration（`tests/core/test_v09_contract_boundaries.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 31 通信形式・識別 | A07-05 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>RpcTests.test_frame_limit_and_duplicate_json_keys（`tests/core/test_hybrid_transport.py`）<br>RpcTests.test_generation_mismatch_closes_channel（`tests/core/test_hybrid_transport.py`）<br>ContentionTests.test_restarted_binding_rejects_old_handshake_without_changing_live_target（`tests/core/test_v08_contention.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 32 通常要求の期限・取消 | A07-06 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>RpcTests.test_deadline_cancels_cooperatively_and_retains_late_result（`tests/core/test_hybrid_transport.py`）<br>ManagementIntegrationTests.test_child_can_release_repeated_management_timeouts_and_cancellation（`tests/core/test_v08_result_ownership.py`）<br>ResultOwnershipTests.test_unsent_deadlines_and_cancellations_do_not_exhaust_capacity（`tests/core/test_v08_result_ownership.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 33 エラーの伝達 | A07-05 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>HybridGroupTests.test_business_and_capacity_results_are_not_link_failures（`tests/core/test_hybrid_group.py`）<br>HybridGroupTests.test_child_run_failure_stops_runtime（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 34 同時受付数 | A07-06 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>RpcTests.test_request_capacity_and_caller_cancel_are_not_automatic_retry（`tests/core/test_hybrid_transport.py`）<br>HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 35 順序・重複・遅延 | A07-06 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>LateRpcTests.test_late_cancelled_result_is_not_delivered_to_next_request（`tests/core/test_v08_contention.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 36 方向 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 37 本文・所有 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_send_is_local_acceptance_and_payload_is_copied（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 38 方針・上限の変更 | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>WireTests.test_settings_and_application_values（`tests/core/test_hybrid_transport.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 39 受信バッファ | A07-07 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 40 破棄単位と通知 | A07-08 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_drop_oldest_reports_gap_and_preserves_latest（`tests/core/test_hybrid_transport.py`）<br>StreamTests.test_end_without_following_data_exposes_missing_tail（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 41 混雑時の管理 | A07-08 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>ContentionTests.test_capacity_cancel_and_new_calls_keep_control_available（`tests/core/test_v08_contention.py`）<br>ContentionTests.test_stream_pressure_drop_cancel_close_and_activity_change（`tests/core/test_v08_contention.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 42 通常終了の完了 | A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_close_timeout_keeps_drain_alive_until_receiver_frees_capacity（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 43 送信待機の期限切れ・取消 | A07-09 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_cancelled_send_is_not_admitted_after_capacity_recovers（`tests/core/test_hybrid_transport.py`）<br>StreamTests.test_failed_send_wait_is_not_enqueued_later（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 44 明示打切り | A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_receiver_abort_unblocks_waiting_sender（`tests/core/test_hybrid_transport.py`）<br>StreamTests.test_receive_timeout_does_not_abort_and_peer_abort_is_distinct（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 45 受信待機 | A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_receive_timeout_does_not_abort_and_peer_abort_is_distinct（`tests/core/test_hybrid_transport.py`）<br>StreamTests.test_oversize_rejected_and_chunk_count_includes_empty_bytes（`tests/core/test_hybrid_transport.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 46 切断後 | A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>StreamTests.test_disconnect_preserves_received_data_before_error（`tests/core/test_hybrid_transport.py`）<br>IntegrationTests.test_data_disconnect_during_activity_is_local_interruption_without_replay（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 47 活動・機能終了 | A07-10 | src/nymph_toolkit/core/_streams.py（`src/nymph_toolkit/core/_streams.py`）<br>src/nymph_toolkit/core/_module_node.py（`src/nymph_toolkit/core/_module_node.py`）<br>src/nymph_toolkit/contracts/hybrid.py（`src/nymph_toolkit/contracts/hybrid.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`）<br>IntegrationTests.test_child_exit_or_parent_channel_loss_during_activity_and_stream（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 48 Core操作の窓口 | A07-11 | src/nymph_toolkit/core/hybrid_tasks.py（`src/nymph_toolkit/core/hybrid_tasks.py`）<br>src/nymph_toolkit/core/_remote_activity.py（`src/nymph_toolkit/core/_remote_activity.py`）<br>src/nymph_toolkit/core/task_manager.py（`src/nymph_toolkit/core/task_manager.py`）<br>HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 49 実行処理の指定 | A07-11 | src/nymph_toolkit/core/hybrid_tasks.py（`src/nymph_toolkit/core/hybrid_tasks.py`）<br>src/nymph_toolkit/core/_remote_activity.py（`src/nymph_toolkit/core/_remote_activity.py`）<br>src/nymph_toolkit/core/task_manager.py（`src/nymph_toolkit/core/task_manager.py`）<br>HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 50 状態確定 | A07-12 | src/nymph_toolkit/core/hybrid_tasks.py（`src/nymph_toolkit/core/hybrid_tasks.py`）<br>src/nymph_toolkit/core/_remote_activity.py（`src/nymph_toolkit/core/_remote_activity.py`）<br>src/nymph_toolkit/core/task_manager.py（`src/nymph_toolkit/core/task_manager.py`）<br>HybridActivityTests.test_pause_while_resume_report_is_delayed_keeps_slot_until_safe_point（`tests/core/test_hybrid_activities.py`）<br>ContentionTests.test_revision_and_idempotency_with_pause_report_racing_shutdown（`tests/core/test_v08_contention.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 51 時計・計時 | A07-12 | src/nymph_toolkit/core/hybrid_tasks.py（`src/nymph_toolkit/core/hybrid_tasks.py`）<br>src/nymph_toolkit/core/_remote_activity.py（`src/nymph_toolkit/core/_remote_activity.py`）<br>src/nymph_toolkit/core/task_manager.py（`src/nymph_toolkit/core/task_manager.py`）<br>HybridActivityTests.test_pause_resume_and_finish_keep_child_continuation_and_confirmed_timing（`tests/core/test_hybrid_activities.py`）<br>HybridActivityTests.test_child_loss_records_unknown_cleanup_and_releases_slot_after_exit（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 52 子の消失 | A07-12 | src/nymph_toolkit/core/hybrid_tasks.py（`src/nymph_toolkit/core/hybrid_tasks.py`）<br>src/nymph_toolkit/core/_remote_activity.py（`src/nymph_toolkit/core/_remote_activity.py`）<br>src/nymph_toolkit/core/task_manager.py（`src/nymph_toolkit/core/task_manager.py`）<br>HybridActivityTests.test_child_loss_records_unknown_cleanup_and_releases_slot_after_exit（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 53 v0.6機能の対応 | A07-12 | src/nymph_toolkit/core/hybrid_tasks.py（`src/nymph_toolkit/core/hybrid_tasks.py`）<br>src/nymph_toolkit/core/_remote_activity.py（`src/nymph_toolkit/core/_remote_activity.py`）<br>src/nymph_toolkit/core/task_manager.py（`src/nymph_toolkit/core/task_manager.py`）<br>HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands（`tests/core/test_hybrid_activities.py`）<br>HybridActivityTests.test_changes_and_idempotency_preserve_nymph_authority（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 54 保存主体と受付境界 | A07-13 | src/nymph_toolkit/core/storage.py（`src/nymph_toolkit/core/storage.py`）<br>src/nymph_toolkit/core/_activity_history.py（`src/nymph_toolkit/core/_activity_history.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>StorageIntegrationTests.test_rescue_preserves_remote_final_report_and_blocks_only_new_admission（`tests/core/test_v08_storage.py`）<br>StorageIntegrationTests.test_unrecoverable_save_includes_final_reports_and_preserves_old_data（`tests/core/test_v08_storage.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 55 永続保存 | A07-13 | src/nymph_toolkit/core/storage.py（`src/nymph_toolkit/core/storage.py`）<br>src/nymph_toolkit/core/_activity_history.py（`src/nymph_toolkit/core/_activity_history.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>StorageIntegrationTests.test_new_runtime_preserves_history_and_requires_nymph_reregistration（`tests/core/test_v08_storage.py`）<br>ActivityV06HistoryTests.test_v05_and_v06_history_are_read_together_without_inventing_old_fields（`tests/core/test_activity_v06_history.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 56 結果・状態の保持 | A07-13 | src/nymph_toolkit/core/storage.py（`src/nymph_toolkit/core/storage.py`）<br>src/nymph_toolkit/core/_activity_history.py（`src/nymph_toolkit/core/_activity_history.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>ResultOwnershipTests.test_public_ids_result_and_release_cover_late_error_and_disconnect（`tests/core/test_v08_result_ownership.py`）<br>ResultOwnershipTests.test_internal_release_waits_for_result_or_disconnect（`tests/core/test_v08_result_ownership.py`）<br>StorageIntegrationTests.test_slow_healthy_save_keeps_accepting_and_does_not_lose_child_completion（`tests/core/test_v08_storage.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 57 運用情報 | A07-13 | src/nymph_toolkit/core/storage.py（`src/nymph_toolkit/core/storage.py`）<br>src/nymph_toolkit/core/_activity_history.py（`src/nymph_toolkit/core/_activity_history.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`）<br>HybridActivityTests.test_child_loss_records_unknown_cleanup_and_releases_slot_after_exit（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 58 バージョン配分 | A09-01 | tools/check_completion.py（`tools/check_completion.py`）<br>tools/check_dist.py（`tools/check_dist.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>docs/adr/0025-v0.9-core-completion.md（`docs/adr/0025-v0.9-core-completion.md`）<br>docs/core-api.md（`docs/core-api.md`）<br>docs/release.md（`docs/release.md`）<br>計画・資料・完成の条件。A09-04の公開後照合は公開工程で別途判定。 |
+| 59 配置の組合せ | A07-14 | tools/check_completion.py（`tools/check_completion.py`）<br>tools/check_dist.py（`tools/check_dist.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`）<br>HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands（`tests/core/test_hybrid_activities.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 60 障害・競合 | A08-01・A08-02・A08-03・A08-04 | tools/check_completion.py（`tools/check_completion.py`）<br>tools/check_dist.py（`tools/check_dist.py`）<br>IntegrationTests.test_partial_initialization_in_all_placements_reverses_cleanup（`tests/core/test_v08_integration.py`）<br>IntegrationTests.test_child_exit_or_parent_channel_loss_during_activity_and_stream（`tests/core/test_v08_integration.py`）<br>ContentionTests.test_stream_pressure_drop_cancel_close_and_activity_change（`tests/core/test_v08_contention.py`）<br>StorageIntegrationTests.test_unrecoverable_save_includes_final_reports_and_preserves_old_data（`tests/core/test_v08_storage.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
+| 61 性能 | A08-05 | tools/validate_hybrid_load.py（`tools/validate_hybrid_load.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>docs/validation/v0.8.md（`docs/validation/v0.8.md`）<br>docs/validation/v0.8-long.json（`docs/validation/v0.8-long.json`）<br>docs/validation/v0.8-pressure.json（`docs/validation/v0.8-pressure.json`）<br>docs/validation/v0.8-post-fix.json（`docs/validation/v0.8-post-fix.json`）<br>30分測定はcb0cf61・Windows 11/CPython3.15.2の正常経路。後続#80の検証を別記し、最終版全体の30分測定や無期限保証とはしない。 |
+| 62 長時間・高負荷 | A08-06 | tools/validate_hybrid_load.py（`tools/validate_hybrid_load.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>docs/validation/v0.8.md（`docs/validation/v0.8.md`）<br>docs/validation/v0.8-long.json（`docs/validation/v0.8-long.json`）<br>docs/validation/v0.8-pressure.json（`docs/validation/v0.8-pressure.json`）<br>docs/validation/v0.8-post-fix.json（`docs/validation/v0.8-post-fix.json`）<br>30分測定はcb0cf61・Windows 11/CPython3.15.2の正常経路。後続#80の検証を別記し、最終版全体の30分測定や無期限保証とはしない。 |
+| 63 環境・配布 | A08-07・A09-03 | tools/check_dist.py（`tools/check_dist.py`）<br>.github/workflows/ci.yml（`.github/workflows/ci.yml`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>docs/development.md（`docs/development.md`）<br>docs/api-reference.md（`docs/api-reference.md`）<br>8環境CIと通常wheelの全試験、sdist同一wheel再ビルド。実施結果はv0.9記録。 |
+| 64 v0.9完成 | A09-01・A09-02・A09-04 | tools/check_completion.py（`tools/check_completion.py`）<br>tools/check_dist.py（`tools/check_dist.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>docs/adr/0025-v0.9-core-completion.md（`docs/adr/0025-v0.9-core-completion.md`）<br>docs/core-api.md（`docs/core-api.md`）<br>docs/release.md（`docs/release.md`）<br>計画・資料・完成の条件。A09-04の公開後照合は公開工程で別途判定。 |
+
+v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播は本表の完成対象に含めない。
+
+---
+
+<a id="section-43"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -4048,7 +5748,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-40"></a>
+<a id="section-44"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -4119,7 +5819,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-41"></a>
+<a id="section-45"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -4198,7 +5898,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-42"></a>
+<a id="section-46"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -4250,7 +5950,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-43"></a>
+<a id="section-47"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -4311,7 +6011,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-44"></a>
+<a id="section-48"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -4372,7 +6072,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-45"></a>
+<a id="section-49"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -4501,7 +6201,80 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-46"></a>
+<a id="section-50"></a>
+
+収録元 `docs/validation/v0.9.md`
+
+## v0.9 Core機能完成の検証記録
+
+### 判定と対象
+
+R24・ADR 0025（`docs/adr/0025-v0.9-core-completion.md`）、親[#9](https://github.com/Tao-pyth/nymph-toolkit/issues/9)、着手前に登録した子#82〜#85で追跡する。基点は公開済みv0.8.0のad556693d3773d11e56249f5e4669238b13f3c32。開発中の配布候補は0.9.0。
+
+**ローカルの監査・回帰・配布候補検証を確認済み。追加した配置境界2件を含む最終全8環境CIを確認中。A09-04のレビュー・マージ・タグ・Release・公開後取得は未実施。** 全A09合格やv0.9.0公開済みとは扱わない。
+
+| 条件 | 対応と証拠 | 現在の判定 |
+|---|---|---|
+| A09-01 合意機能 | ADR 0022の64行を変更せず番号別対応（`docs/validation/core-coverage.md`）へ照合。既存288件と配置境界2件、実装・資料・測定を参照 | ローカル合格、最終CI確認中 |
+| A09-02 API・資料 | Core API（`docs/core-api.md`）、生成一覧（`docs/api-reference.md`）、README・Architecture・ADR・受入・引継ぎ書を同期 | ローカル合格、最終CI確認中 |
+| A09-03 通常配布 | 新規venvへwheelを通常導入。srcなしで試験・6実行例・API照合・4配置短負荷、sdist同一wheel再ビルド | 先行候補合格、最終候補CI確認中 |
+| A09-04 公開との一致 | 子Issueと変更・検証証拠、CHANGELOG、配布候補を準備。過去の8リリースを保持 | 未完了。レビュー・マージ、タグ・Release・公開後照合が残る |
+
+### 監査と追加検証
+
+Runtime、Registry・ModuleGroup、Connections・FileStore、TaskManagerと活動変更、HybridGroup・HybridTaskManager、CoreClient・直接RPC・連続ストリームを対象とした。要求側／提供側のLOCAL/PROCESSの4配置、着脱境界、要求・結果・期間通知、通信・活動変更・保存・停止の競合を既存受入と照合した。
+
+Nymphによる価値・内容・時刻・期間・優先度・変更の決定を維持する。Coreは予定到達を通知して継続し、終了指示を安全な区切りで実行管理する。接続先の要求側選定と固定、起動時・申請時ヘルス、通常履歴バッファ上限なし、保存障害時の救命を維持する。製品コードsrcは今回変更していない。
+
+同期契約について既存配置試験は直接の拒否証拠にならなかったため、#84で次の2件を追加した。
+
+- 同一プロセスのSYNC契約は、任意Pythonオブジェクトを直接呼出し・Core経由の双方で同一の値として返せる。
+- 同じSYNC契約をHybridGroupのLOCAL/PROCESSへ登録すると、ASYNC契約へ読み替えず拒否する。登録世代・一覧・接続宣言・保存先を部分的に変更しない。
+
+証拠検査は番号欠落・重複・採用文変更、動作試験なし、存在しないテスト・資料、リポジトリ外参照、既存受入群の欠落、未知schemaを拒否する。検査用5件と製品290件を区別し、参照の実在確認と動作試験の両方で判定する。
+
+### 再現と結果
+
+環境：Windows・CPython 3.15.2・リポジトリのvenv。実行時の外部依存なし。ビルド依存hatchling 1.33.0はrequirements-dev.txt・pyproject.tomlに従う。
+
+```powershell
+.venv/Scripts/python.exe tools/check_api.py
+.venv/Scripts/python.exe tools/check_completion.py
+.venv/Scripts/python.exe tools/build_handoff.py
+.venv/Scripts/python.exe tools/check_docs.py
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+.venv/Scripts/python.exe -m build --outdir .git/v09-dist
+.venv/Scripts/python.exe tools/check_dist.py --dist-dir .git/v09-dist
+```
+
+先行の全293件（既存製品288＋証拠検査5）は78.736秒で成功。配置境界2件は後に追加し単独で成功した。通常配布の先行候補も293件・6実行例・短い4配置負荷・Core 14件/Contracts 92件のAPI一覧・sdist同一wheel再ビルドが成功した。追加後の全295件と対象コミットの結果は最終CIへ記録する。
+
+配布検査は作業ツリー外の新規venvへ--no-index/--no-depsでwheelを導入する。PYTHONPATHを除去し、-Iで起動してインストール先を確認する。tests・examples・toolsと比較用API資料だけをコピーし、srcを実行環境へ置かない。証拠参照検査はソース側、API一覧と全動作試験は通常wheel側でも確認する。
+
+55文書の収録元一致、55 Markdown・ローカルリンク・UTF-8/LF・LICENSEを確認する。採用64行はv0.8.0と完全一致。公開済みv0.1.0〜v0.8.0を保持する。
+
+### CIと変更の追跡
+
+Windows/Linux × CPython 3.12〜3.15で、ソース・通常wheelの全295件、6実行例、短い4配置負荷、API・証拠参照・Docs、sdist同一wheelを確認する。対象コミット・最終CI URLは#85とPRへ記録する。失敗時は原因を解消するまで合格としない。
+
+| 子Issue | 内容 |
+|---|---|
+| #82 | R24・ADR 0025、64項目と既存受入、資料同期 |
+| #83 | 公開APIの説明・14＋92件の一覧と検査 |
+| #84 | 2件の配置境界、5件の証拠検査、全ダミー回帰 |
+| #85 | 0.9.0メタデータ、通常配布、全8環境CI、結果・PR |
+
+### 制約と残課題
+
+- v0.8の30分測定は固定cb0cf61・Windows 11/CPython 3.15.2の正常経路。1800.091秒・458944 RPC・1792.75 MiB・716活動、停止後資源0を確認した。後続#80は専用回帰・全環境CI・通常配布・短負荷による再検証。最終版全体を30分測定したとは表現しない。
+- 今回は資料・検証ツール・試験・配布メタデータを変更し、製品の実行経路を変えていない。既存長時間測定を証拠として参照し、未測定の速度保証や無期限のリーク不在を追加しない。
+- 活動・履歴・通知の保持と上限なし未保存バッファはメモリ増加を伴い得る。突然の子消失で未送信だった情報は不明。同一プロセスの協調しない処理を強制停止できない。
+- 本番Subsystem/Adapter、他PC分散、稼働中構成変更、子だけの再起動、自動再送・切替・活動復元、複製・移植・伝播は初期範囲外。v1.0の接続契約体系化は別目標。
+- **残るA09-04**：PRレビュー後のマージ、対象コミットのCI、タグとReleaseの4添付、匿名取得・SHA照合・通常配布再現。結果が揃ってから親#9・マイルストーンを完了する。公開手順（`docs/release.md`）を参照。
+
+---
+
+<a id="section-51"></a>
 
 収録元 `docs/development.md`
 
@@ -4540,6 +6313,23 @@ distには対象版のwheelとsdistを一つずつ置く。古い版が残って
 CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）、登録・依存管理と複数対象の実行はregistry.md（`docs/registry.md`）、接続・保存はconnections.md（`docs/connections.md`）、活動管理はtask-manager.md（`docs/task-manager.md`）に記載する。v0.5は当時の検証記録（`docs/validation/v0.5.md`）、v0.6の変更・中断再開はv0.6の検証記録（`docs/validation/v0.6.md`）を参照する。
 
 接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
+
+### v0.9の完成監査
+
+開発中の配布候補は0.9.0。Core API（`docs/core-api.md`）と証拠対応表（`docs/validation/core-coverage.md`）を読み、次を実行する。
+
+```powershell
+.venv/Scripts/python.exe tools/check_api.py
+.venv/Scripts/python.exe tools/check_completion.py
+.venv/Scripts/python.exe tools/check_docs.py
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+.venv/Scripts/python.exe -m build --outdir .git/v09-dist
+.venv/Scripts/python.exe tools/check_dist.py --dist-dir .git/v09-dist
+```
+
+check_apiは公開14＋92件の一覧と実装を照合する。API変更時は--writeで一覧を更新する。core-coverage.jsonは64項目の採用文・実在テストID・実装・資料の対応を保持し、check_completion.py --writeで表示表を再生成する。両検査は全動作試験の代わりにはならない。変更後はbuild_handoff.pyで単一引継ぎ書を同期する。
+
+配布検査は新規環境へ通常wheelを導入し、作業ツリーのsrcを含めず全試験・6実行例・API照合・4配置短負荷を実行して、sdist同一wheel再ビルドを確認する。--dist-dirは旧版のビルド成果物と混在させないための任意引数。CIは従来どおり空のdistを使う。A09の証拠と残る公開後確認は検証記録（`docs/validation/v0.9.md`）に記録する。
 
 ### v0.8の再現・負荷検証
 
@@ -4650,7 +6440,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ---
 
-<a id="section-47"></a>
+<a id="section-52"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -4706,7 +6496,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | R18・ADR 0021に従い実装。受入・公開を別途確認 |
 | [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | R19・ADR 0022で設計採用。R20・#61〜#68で実装・A07・配布を確認。R21でPR #69レビュー修正#70、マージ・公開#71を追跡 |
 | [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | R22・ADR 0024で#72〜#78・#80を実施。PR #79・validation/v0.8で追跡。R23の公開#81を追加 |
-| [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | 確定目標。R19・ADR 0022で完成条件採用、未検証 |
+| [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | 確定目標。R24・ADR 0025、子#82〜#85で64項目・API・通常配布・資料を照合。公開後判定は別工程 |
 | [v1.0.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/10) | [#10 Core接続契約](https://github.com/Tao-pyth/nymph-toolkit/issues/10) | 確定目標・契約詳細は提案 |
 | [v1.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/11) | [#11 Memory Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/11) | 名称・機能配分・実装順序は提案 |
 | [v1.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/12) | [#12 Document Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/12) | 名称・機能配分・実装順序は提案 |
@@ -4728,6 +6518,19 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 R18により、開始時刻変更・期間変更・優先度・中断再開の全4項目を対象として採用した。親Issue [#6](https://github.com/Tao-pyth/nymph-toolkit/issues/6)・マイルストーンv0.6.0配下へ、設計子Issue [#52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)を登録し、GitHubの親子関係と同一マイルストーンを確認した。
 
 #52はADR 0021、関連Docs、引継ぎ書と生成ヘッダーの同期、詳細契約・A06の設計判断を扱う。生成ヘッダーを更新する前に登録した。個別回答と残事項の判断委任を受け、振る舞い・API・A06-01〜12・実装単位を設計採用した。判断元はADR 0021 D1・D2とD3〜D10へ分ける。後続の子Issue分割はD10に記録し、製品コード変更前に各Issueを登録する。#52の設計完了を親#6・v0.6の実装完了と扱わない。
+
+### R24：v0.9の完成確認
+
+親#9・v0.9.0の子Issueをコード変更前に登録し、GitHubの親子関係と同じマイルストーンを確認した。
+
+| 子Issue | 対応単位 |
+|---|---|
+| [#82](https://github.com/Tao-pyth/nymph-toolkit/issues/82) | 完成判定・64項目と既存受入の証拠・ADR 0025 |
+| [#83](https://github.com/Tao-pyth/nymph-toolkit/issues/83) | 公開API資料と生成一覧・整合検査 |
+| [#84](https://github.com/Tao-pyth/nymph-toolkit/issues/84) | 全採用機能監査・ダミー再現・証拠検査の拒否試験 |
+| [#85](https://github.com/Tao-pyth/nymph-toolkit/issues/85) | 配布候補0.9.0・全8環境CI・結果と引継ぎ書 |
+
+製品不具合が見つかれば修正前に別子Issueを登録する。結果はvalidation/v0.9.md（`docs/validation/v0.9.md`）へ分離する。A09-04の公開後確認は別工程であり、親#9・マイルストーンを公開前に閉じない。
 
 ### R23：v0.8.0のレビュー・公開
 
@@ -4881,13 +6684,19 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 ---
 
-<a id="section-48"></a>
+<a id="section-53"></a>
 
 収録元 `docs/release.md`
 
 ## 公開準備とリリース手順
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
+
+### v0.9.0の配布候補と公開前後の判定
+
+R24・ADR 0025に基づき#82〜#85でCore完成監査と配布候補を整備する。開発中のメタデータは0.9.0。A09-01〜03の結果、API・64項目の証拠、全8環境CIはv0.9検証記録（`docs/validation/v0.9.md`）へ記録する。タグ・Releaseの作成と実際の取得物の照合を行う前は、A09-04を合格としない。
+
+公開工程では対応子Issueを先に登録し、レビュー済みPRのマージ後コミット・CIを確認する。同じコミットのwheel・sdist・単一引継ぎ書・SHA256SUMSを新しいv0.9.0タグとReleaseへ添付し、認証なしでタグ・4添付を取得してSHA・API・全テスト・6実行例・短負荷・再ビルド・文書を再確認する。結果をIssueとReleaseへ記録した後に親#9とマイルストーンを完了する。公開済みv0.1.0〜v0.8.0は差し替えない。
 
 ### v0.8.0の公開手順と記録
 
@@ -5092,15 +6901,19 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-49"></a>
+<a id="section-54"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
 
-### 未リリース
+### 未リリース — v0.9.0開発中
 
-なし。
+- R24により親#9・v0.9.0配下に#82〜#85を着手前に登録し、ADR 0025で完成監査・配布前後の判定を具体化した。
+- 公開APIの意味・ライフサイクル・エラー・制約、Core 14件・Contracts 92件の生成一覧、採用64項目・既存288件と配置境界2件の証拠対応を追加した。
+- 既存SYNC契約のローカル入力・オブジェクト同一性と、両ハイブリッド配置での同期契約の拒否を直接確認する2テストを追加した。
+- APIと証拠参照の検査、欠落・採用文変更・存在しない参照を拒否する5テスト、CIと通常配布からのAPI照合を追加した。
+- 0.9.0配布候補と資料・引継ぎ書を整備。結果はv0.9検証記録（`docs/validation/v0.9.md`）。A09-04の公開後確認は未実施であり、公開済みv0.8.0以前を維持する。
 
 ### v0.8.0 — 2026年11月22日
 
@@ -5216,7 +7029,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-50"></a>
+<a id="section-55"></a>
 
 収録元 `LICENSE`
 

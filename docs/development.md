@@ -34,6 +34,23 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・
 
 接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
 
+## v0.9の完成監査
+
+開発中の配布候補は0.9.0。[Core API](core-api.md)と[証拠対応表](validation/core-coverage.md)を読み、次を実行する。
+
+```powershell
+.venv/Scripts/python.exe tools/check_api.py
+.venv/Scripts/python.exe tools/check_completion.py
+.venv/Scripts/python.exe tools/check_docs.py
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+.venv/Scripts/python.exe -m build --outdir .git/v09-dist
+.venv/Scripts/python.exe tools/check_dist.py --dist-dir .git/v09-dist
+```
+
+check_apiは公開14＋92件の一覧と実装を照合する。API変更時は--writeで一覧を更新する。core-coverage.jsonは64項目の採用文・実在テストID・実装・資料の対応を保持し、check_completion.py --writeで表示表を再生成する。両検査は全動作試験の代わりにはならない。変更後はbuild_handoff.pyで単一引継ぎ書を同期する。
+
+配布検査は新規環境へ通常wheelを導入し、作業ツリーのsrcを含めず全試験・6実行例・API照合・4配置短負荷を実行して、sdist同一wheel再ビルドを確認する。--dist-dirは旧版のビルド成果物と混在させないための任意引数。CIは従来どおり空のdistを使う。A09の証拠と残る公開後確認は[検証記録](validation/v0.9.md)に記録する。
+
 ## v0.8の再現・負荷検証
 
 [ADR 0024](adr/0024-v0.8-integration-validation.md)に測定条件、[検証記録](validation/v0.8.md)にA08対応表と実測を記載する。

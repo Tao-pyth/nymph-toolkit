@@ -12,7 +12,9 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.8.0：統合・障害・負荷検証。** R22に基づき子Issue #72〜#77を先に登録し、管理通信の結果解放を#78、送信前の期限・取消による枠残存を#80で修正しました。[ADR 0024](docs/adr/0024-v0.8-integration-validation.md)に沿って288テスト・6実行例・全8環境CI・通常配布と、条件を明記した30分負荷を確認しました。変更は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、結果は[v0.8受入記録](docs/validation/v0.8.md)へ記録しています。R23による公開前レビュー・最終CI・公開後の確認は[公開課題 #81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)で追跡します。CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
+**開発中 v0.9.0：合意したCore機能の完成確認。** R24に基づき親#9配下へ子#82〜#85を登録し、[ADR 0025](docs/adr/0025-v0.9-core-completion.md)に沿って64項目の証拠照合、公開API資料、通常配布・全環境の検証を進めています。[Core API](docs/core-api.md)、[64項目の対応表](docs/validation/core-coverage.md)、[v0.9検証記録](docs/validation/v0.9.md)から採用範囲と結果を確認できます。A09-04のタグ・Release・公開後取得の判定は公開工程に残します。公開最新版は[v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)です。
+
+CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerとHybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。v0.8では288テスト・6実行例・全8環境CI・通常配布・条件を明記した30分負荷を確認し、PR #79をマージ・公開しました。証拠と測定範囲は[v0.8受入記録](docs/validation/v0.8.md)と[公開課題 #81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)にあります。
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。[操作契約](docs/task-manager.md)と[ADR 0020](docs/adr/0020-v0.5-task-manager.md)に採用範囲を記録しています。
 
@@ -62,7 +64,7 @@ Runtimeのダミーはstart → run → stopを表示します。Registryのダ�
 
 - 全体を一つの文書で読む場合は、[日本語初期設計・Codex引継ぎ書](docs/NTK-Core-v0.1-Handoff-ja.md)を参照してください。
 - 個別の設計や判断を更新する場合は、[Docs一覧と根拠の扱い](docs/README.md)から進んでください。
-- 開発の段階と完了条件は、[ロードマップ](docs/roadmap.md)と[受入基準案](docs/acceptance.md)にあります。
+- 開発の段階と完了条件は、[ロードマップ](docs/roadmap.md)と[受入基準](docs/acceptance.md)にあります。
 - Gitの用意は[開発手順](docs/development.md)、公開先と公開手順は[リリース手順](docs/release.md)にあります。
 - 提案・修正への参加方法は[CONTRIBUTING](CONTRIBUTING.md)を参照してください。公開先は個人アカウント配下の `Tao-pyth/nymph-toolkit`（public）に決定しています。
 
