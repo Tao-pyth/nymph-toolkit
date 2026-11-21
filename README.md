@@ -12,7 +12,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**開発中 v0.9.0：合意したCore機能の完成確認。** R24に基づき親#9配下へ子#82〜#85を登録し、[ADR 0025](docs/adr/0025-v0.9-core-completion.md)に沿って64項目の証拠照合、公開API資料、通常配布・全環境の検証を進めています。[Core API](docs/core-api.md)、[64項目の対応表](docs/validation/core-coverage.md)、[v0.9検証記録](docs/validation/v0.9.md)から採用範囲と結果を確認できます。A09-04のタグ・Release・公開後取得の判定は公開工程に残します。公開最新版は[v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)です。
+**開発中 v0.9.0：合意したCore機能の完成確認。** R24に基づき親#9配下へ子#82〜#85・#87を各変更前に登録し、[ADR 0025](docs/adr/0025-v0.9-core-completion.md)に沿って64項目の証拠照合、公開API資料、通常配布・全8環境の検証を完了しました。A09-01〜03は配布前判定に合格し、[PR #86](https://github.com/Tao-pyth/nymph-toolkit/pull/86)でレビューへ進めます。[Core API](docs/core-api.md)、[64項目の対応表](docs/validation/core-coverage.md)、[v0.9検証記録](docs/validation/v0.9.md)から採用範囲と結果を確認できます。A09-04のタグ・Release・公開後取得の判定は公開工程に残します。公開最新版は[v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)です。
 
 CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerとHybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。v0.8では288テスト・6実行例・全8環境CI・通常配布・条件を明記した30分負荷を確認し、PR #79をマージ・公開しました。証拠と測定範囲は[v0.8受入記録](docs/validation/v0.8.md)と[公開課題 #81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)にあります。
 

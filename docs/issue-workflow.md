@@ -85,8 +85,9 @@ CIで検出した通常終了試験の停止期限は、変更前に追加子[#8
 | [#83](https://github.com/Tao-pyth/nymph-toolkit/issues/83) | 公開API資料と生成一覧・整合検査 |
 | [#84](https://github.com/Tao-pyth/nymph-toolkit/issues/84) | 全採用機能監査・ダミー再現・証拠検査の拒否試験 |
 | [#85](https://github.com/Tao-pyth/nymph-toolkit/issues/85) | 配布候補0.9.0・全8環境CI・結果と引継ぎ書 |
+| [#87](https://github.com/Tao-pyth/nymph-toolkit/issues/87) | 通常終了と強制終了の試験条件を分離・snapshot診断 |
 
-製品不具合が見つかれば修正前に別子Issueを登録する。結果は[validation/v0.9.md](validation/v0.9.md)へ分離する。A09-04の公開後確認は別工程であり、親#9・マイルストーンを公開前に閉じない。
+A09-01〜03は全8環境の297テスト・通常配布・資料照合で合格した。変更と結果は[PR #86](https://github.com/Tao-pyth/nymph-toolkit/pull/86)、[validation/v0.9.md](validation/v0.9.md)で追跡し、子IssueはPRのマージ時に閉じる。A09-04の公開後確認は別工程であり、親#9・マイルストーンを公開前に閉じない。
 
 ## R23：v0.8.0のレビュー・公開
 
