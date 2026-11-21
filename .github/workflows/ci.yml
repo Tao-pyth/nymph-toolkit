@@ -27,6 +27,7 @@ jobs:
       - run: python examples/task_manager_demo.py
       - run: python examples/activity_changes_demo.py
       - run: python examples/hybrid_demo.py
+      - run: python -W error tools/validate_hybrid_load.py --duration 1 --requests 8 --chunks 4 --cycle-requests 4 --cycle-chunks 2 --sample-interval 1 --output .git/v08-load-smoke.json
       - run: python tools/check_docs.py
       - run: python -m build
       - run: python tools/check_dist.py

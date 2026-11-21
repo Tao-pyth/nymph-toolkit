@@ -2,6 +2,12 @@
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
 
+## v0.8開発版の検証状態
+
+R22は統合・障害・負荷検証の実施指示。親#8の子#72〜#78、[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、[ADR 0024](adr/0024-v0.8-integration-validation.md)、[A08検証記録](validation/v0.8.md)で追跡する。配布メタデータを0.8.0へ更新し通常wheel・sdistを検証するが、v0.8.0タグ・Releaseはまだ作成していない。マージ・公開は検証結果と別に記録する。
+
+公開する際は、レビューしたコミットの全8環境CI・A08証拠・通常配布・文書同期を確認し、そのコミットから配布物・引継ぎ書・チェックサムを作成する。公開後の匿名取得を確認し、Issueとマイルストーンの完了を記録する。公開済みv0.1.0〜v0.7.0のタグ・Release・添付を差し替えない。A09のCore完成判定は別段階である。
+
 ## v0.7.0の公開手順と記録
 
 R20の実装は[PR #69](https://github.com/Tao-pyth/nymph-toolkit/pull/69)、親#7、子#61〜#68で追跡した。R21でユーザーがレビュー後のマージ・v0.7.0公開を明示指示した。修正[#70](https://github.com/Tao-pyth/nymph-toolkit/issues/70)・公開[#71](https://github.com/Tao-pyth/nymph-toolkit/issues/71)を着手前に登録し、配布メタデータ0.7.0、[A07検証記録](validation/v0.7.md)、[操作契約](hybrid.md)に従う。

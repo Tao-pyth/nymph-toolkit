@@ -35,7 +35,7 @@ def main() -> None:
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
-        assert metadata["Version"] == "0.7.0"
+        assert metadata["Version"] == "0.8.0"
         assert metadata["Requires-Python"] == ">=3.12"
         assert metadata["License-Expression"] == "Apache-2.0"
         assert metadata.get_all("Requires-Dist", []) == []
@@ -56,7 +56,7 @@ def main() -> None:
             "from pathlib import Path; import nymph_toolkit.core as core; from nymph_toolkit.core import Runtime, Registry, ModuleGroup, Connections, FileStore, TaskManager; "
             "from nymph_toolkit.contracts import RuntimeService, RuntimeState, ModuleSpec, ModuleKind, BindingKey, ContractKey, StorageFailure, ActivityRequest, ActivityHistory, ActivityChange, ActivityCommandStatus, ActivityControlKind, UNCHANGED; "
             "from importlib.metadata import version; import sys; "
-            "assert version('nymph-toolkit') == '0.7.0'; "
+            "assert version('nymph-toolkit') == '0.8.0'; "
             "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "assert RuntimeState.NEW.value == 'new'; print('installed imports: PASS')"
         )
@@ -80,12 +80,17 @@ def main() -> None:
         # external working directory without exposing the checkout's src tree.
         shutil.copytree(root / "tests", work / "tests", ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copytree(root / "examples", work / "examples", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(root / "tools", work / "tools", ignore=shutil.ignore_patterns("__pycache__"))
         subprocess.run([str(python), "-I", str(work / "examples/hybrid_demo.py")], cwd=work, env=env, check=True)
         subprocess.run(
             [str(python), "-I", "-W", "error", "-m", "unittest", "discover",
              "-s", str(work / "tests"), "-t", str(work), "-v"],
             cwd=work, env=env, check=True,
         )
+        subprocess.run([str(python), "-I", "-W", "error", str(work / "tools/validate_hybrid_load.py"),
+                        "--duration", "1", "--requests", "8", "--chunks", "4", "--cycle-requests", "4",
+                        "--cycle-chunks", "2", "--sample-interval", "1", "--output", str(work / "load.json")],
+                       cwd=work, env=env, check=True)
         source = work / "source"
         source.mkdir()
         with tarfile.open(archive) as package:

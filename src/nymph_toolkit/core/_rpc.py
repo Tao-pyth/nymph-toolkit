@@ -38,10 +38,12 @@ class RpcPeer:
         self._auxiliary = set()
         self._reader = asyncio.create_task(self._read(), name=f"ntk-rpc:{module_id}")
 
-    async def _send(self, message):
+    async def _send(self, message, *, on_write=None):
         if self.closed.is_set():
             raise PeerClosed(str(self.error or "Connection closed"))
         async with self._write_lock:
+            if on_write is not None:
+                on_write()
             await write_frame(self.writer, {"version": VERSION, "generation": self.generation, **message},
                               self.settings.max_frame_bytes)
 
@@ -55,7 +57,7 @@ class RpcPeer:
         task.add_done_callback(done)
         return task
 
-    async def call(self, operation, payload=None, *, timeout):
+    async def call(self, operation, payload=None, *, timeout, retain_result=True):
         seconds(timeout)
         if self.closed.is_set():
             raise PeerClosed(str(self.error or "Connection closed"))
@@ -66,14 +68,29 @@ class RpcPeer:
         request_id = self._next
         future = asyncio.get_running_loop().create_future()
         self._pending[request_id] = future
+        sent = False
+        def mark_sent():
+            nonlocal sent
+            sent = True
         try:
             async with asyncio.timeout(timeout):
-                await self._send({"kind": "request", "id": request_id, "operation": operation, "payload": encoded})
+                await self._send({"kind": "request", "id": request_id, "operation": operation, "payload": encoded},
+                                 on_write=mark_sent)
                 result = await asyncio.shield(future)
         except TimeoutError as exc:
+            if not sent:
+                self._pending.pop(request_id, None)
+                raise TimeoutError("Request deadline expired before dispatch") from exc
+            if not retain_result:
+                future.add_done_callback(lambda _: self._pending.pop(request_id, None))
             self._background(self._cancel(request_id))
             raise OutcomeUnknown(request_id) from exc
         except asyncio.CancelledError:
+            if not sent:
+                self._pending.pop(request_id, None)
+                raise
+            if not retain_result:
+                future.add_done_callback(lambda _: self._pending.pop(request_id, None))
             self._background(self._cancel(request_id))
             raise
         except Exception:
