@@ -93,6 +93,34 @@ class HybridActivityTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(ended.ended_at)
         self.assertEqual(manager._running_slots, 0)
 
+    async def test_repeated_shutdown_cancel_during_final_timer_cleanup_keeps_failure_record(self):
+        group, manager, runtime = await self.setup_group()
+        request = self.request()
+        manager.submit_remote(request, "executor", "work")
+        await until(lambda: manager.snapshot(request.key).state == ActivityState.RUNNING)
+        entry = manager._entry(request.key)
+        entry.timer.cancel()
+        await asyncio.gather(entry.timer, return_exceptions=True)
+        cleaning, release = asyncio.Event(), asyncio.Event()
+        async def timer():
+            try:
+                await asyncio.Event().wait()
+            finally:
+                cleaning.set()
+                await release.wait()
+        entry.timer = manager._spawn(timer(), "delayed-test-timer", fatal=False)
+        await asyncio.sleep(0)
+        group.modules["executor"].process.kill()
+        await asyncio.wait_for(cleaning.wait(), 3)
+        entry.driver.cancel()
+        await asyncio.sleep(0)
+        release.set()
+        with self.assertRaises(RuntimeFailure):
+            await asyncio.wait_for(runtime.wait(), 4)
+        self.assertEqual(manager.snapshot(request.key).state, ActivityState.FAILED)
+        self.assertFalse(manager.snapshot(request.key).cleanup_confirmed)
+        self.assertEqual(manager._running_slots, 0)
+
     async def test_shutdown_guardian_breaks_unresponsive_child_cleanup_wait(self):
         group, manager, runtime = await self.setup_group()
         request = self.request()

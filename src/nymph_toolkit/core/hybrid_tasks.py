@@ -188,7 +188,16 @@ class HybridTaskManager(TaskManager):
             try:
                 if entry.timer is not None:
                     entry.timer.cancel()
-                    await asyncio.gather(entry.timer, return_exceptions=True)
+                    # Runtime shutdown can cancel this driver while a remote
+                    # failure is already being finalized. Preserve the final
+                    # observation just as the local TaskManager driver does.
+                    while not entry.timer.done():
+                        try:
+                            await asyncio.shield(entry.timer)
+                        except asyncio.CancelledError:
+                            pass
+                        except Exception:
+                            break
                 if entry.started_at is None and not remote.dispatch_entered:
                     entry.ended_at = self._now()
                     remote.cleanup_confirmed = remote.timing_confirmed = remote.execution_ended = True
