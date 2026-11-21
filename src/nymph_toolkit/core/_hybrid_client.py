@@ -5,7 +5,7 @@ import asyncio
 from uuid import uuid4
 
 from nymph_toolkit.contracts import (BindingKey, CapacityExceeded, ConnectionNotReadyError, LinkFailure,
-                                    OutcomeUnknown, PeerClosed, RemoteError, TemporaryUnavailable)
+                                    OutcomeUnknown, PeerClosed, ProtocolError, RemoteError, TemporaryUnavailable)
 from ._rpc import RpcPeer
 from ._streams import StreamSender
 from ._wire import VERSION, encode, json_value, read_frame, write_frame
@@ -35,7 +35,7 @@ class CoreClient:
 
     async def invoke(self, contract, operation, *args, timeout, **kwargs):
         return await self.request("invoke", {"contract": contract, "operation": operation,
-                                             "args": args, "kwargs": kwargs, "timeout": timeout}, timeout=timeout)
+                                             "args": json_value(args), "kwargs": json_value(kwargs), "timeout": timeout}, timeout=timeout)
 
     async def publish_usage(self, usage, *, contracts=None, timeout=None):
         return await self.request("usage", {"usage": usage, "contracts": contracts}, timeout=timeout)
@@ -113,7 +113,7 @@ class DirectLink:
             return await self._peer.call(operation, {"args": json_value(args), "kwargs": json_value(kwargs)}, timeout=remaining)
         except asyncio.CancelledError:
             raise
-        except (OutcomeUnknown, TimeoutError):
+        except (OutcomeUnknown, TimeoutError, ProtocolError):
             raise
         except Exception as exc:
             if isinstance(exc, CapacityExceeded) or isinstance(exc, RemoteError) and exc.remote_type == "CapacityExceeded":

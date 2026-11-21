@@ -105,6 +105,14 @@ class RpcPeer:
             message = {"kind": "error", "id": request_id, "payload": encode(error)}
         try:
             await self._send(message)
+        except ProtocolError as exc:
+            # A result that cannot fit the wire contract must not leave the caller
+            # waiting for an unrelated deadline with no explanation.
+            try:
+                await self._send({"kind": "error", "id": request_id,
+                                  "payload": encode(RemoteError(self.module_id, "ProtocolError", str(exc)[:512]))})
+            except (Exception, asyncio.CancelledError):
+                pass
         except (Exception, asyncio.CancelledError):
             pass
         finally:

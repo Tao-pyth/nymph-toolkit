@@ -362,7 +362,7 @@ class HybridGroup(ModuleGroup):
             try:
                 return await self.modules[prepared.snapshot.provider_id].invoke("invoke", {
                     k: payload[k] for k in ("contract", "operation", "args", "kwargs")}, timeout=payload["timeout"])
-            except (OutcomeUnknown, TimeoutError):
+            except (OutcomeUnknown, TimeoutError, ProtocolError):
                 raise
             except (CapacityExceeded, RemoteError) as exc:
                 if isinstance(exc, CapacityExceeded) or exc.remote_type == "CapacityExceeded":

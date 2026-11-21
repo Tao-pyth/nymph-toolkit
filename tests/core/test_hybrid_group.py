@@ -83,6 +83,12 @@ class HybridGroupTests(unittest.IsolatedAsyncioTestCase):
         link = await core.prepare(KEY, timeout=2)
         self.assertIsInstance(await link.acall("failure", "business", timeout=2), OperationFailure)
         self.assertIsInstance(await link.acall("failure", "capacity", timeout=2), TemporaryUnavailable)
+        from nymph_toolkit.contracts import ProtocolError
+        with self.assertRaises(ProtocolError):
+            await link.acall("echo", object(), timeout=2)
+        with self.assertRaises(ProtocolError):
+            await core.invoke(KEY, "echo", object(), timeout=2)
+        self.assertEqual((await link.acall("echo", "still valid", timeout=2))["value"], "still valid")
         self.assertEqual(group.connections.module_state("requester").value, "running")
 
     async def test_initialization_failure_and_deadline_owned_child_cleanup(self):

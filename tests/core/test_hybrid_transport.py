@@ -126,6 +126,14 @@ class RpcTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(await self.client.call("echo", "new request", timeout=1), "new request")
         self.assertEqual(self.peers[0]._received, 2)
 
+    async def test_oversized_response_returns_wire_failure_without_hanging(self):
+        async def huge(operation, payload):
+            return "x" * 65536
+        self.peers[0].handler = huge
+        with self.assertRaises(RemoteError) as caught:
+            await self.client.call("huge", timeout=1)
+        self.assertEqual(caught.exception.remote_type, "ProtocolError")
+
 
 class StreamTests(unittest.IsolatedAsyncioTestCase):
     async def pair(self, policy=OverflowPolicy.WAIT, send_bytes=4, send_chunks=2):
