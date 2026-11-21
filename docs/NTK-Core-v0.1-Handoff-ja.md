@@ -878,6 +878,7 @@ nymph-toolkit/
 ├─ examples/registry_demo.py
 ├─ examples/connections_demo.py
 ├─ examples/task_manager_demo.py
+├─ examples/activity_changes_demo.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
 ├─ tools/check_docs.py
@@ -890,7 +891,7 @@ nymph-toolkit/
 │  ├─ runtime.md
 │  ├─ registry.md
 │  ├─ connections.md                # v0.4の操作契約
-│  ├─ task-manager.md                # v0.5の活動管理契約
+│  ├─ task-manager.md                # v0.5基本・v0.6変更と中断再開
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
@@ -3710,6 +3711,8 @@ Windows・CPython 3.15.2でローカル検証する。Linuxは`.venv/bin/python`
 ```
 
 ### 配布・CI・公開の記録
+
+初回CIは7環境成功、Windows・Python3.12の新実行例で時刻分解能への依存が判明した。開始後すぐの1マイクロ秒への短縮を必ず過去とみなす例を修正し、実際にその時刻を越えたことを待ってから短縮する。Coreの期間・通知契約は変更せず、全環境で再検証する。
 
 最終ローカル結果と全8環境のCIを確認してA06を完了とする。最終SHA・タグ・添付4件・匿名clone/download・新規環境での実行結果は[公開課題 #59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)とv0.6.0のReleaseへ記録する。公開済みv0.1.0〜v0.5.0のタグ・本文・添付は保持する。
 

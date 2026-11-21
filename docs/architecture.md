@@ -134,6 +134,7 @@ nymph-toolkit/
 ├─ examples/registry_demo.py
 ├─ examples/connections_demo.py
 ├─ examples/task_manager_demo.py
+├─ examples/activity_changes_demo.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
 ├─ tools/check_docs.py
@@ -146,7 +147,7 @@ nymph-toolkit/
 │  ├─ runtime.md
 │  ├─ registry.md
 │  ├─ connections.md                # v0.4の操作契約
-│  ├─ task-manager.md                # v0.5の活動管理契約
+│  ├─ task-manager.md                # v0.5基本・v0.6変更と中断再開
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md

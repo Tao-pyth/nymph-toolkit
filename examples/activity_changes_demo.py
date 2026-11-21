@@ -60,6 +60,11 @@ class DummyNymph:
         await entered.wait()
         self.control(key, "pause", "pause")
         await self.manager.wait_command(key, "pause")
+        # Older Windows clocks can return the same timestamp across these operations.
+        # Establish that the new end is past, instead of assuming microsecond resolution.
+        short_end = self.manager.snapshot(key).planned_start_at + timedelta(microseconds=1)
+        while datetime.now(timezone.utc) <= short_end:
+            await asyncio.sleep(0.01)
         reached = self.change(key, "shorten", duration=timedelta(microseconds=1))
         assert reached.snapshot.planned_end_notified and reached.snapshot.state == ActivityState.PAUSED
         self.change(key, "extend", duration=timedelta(hours=2))
