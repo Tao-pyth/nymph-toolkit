@@ -7,6 +7,8 @@ from enum import Enum
 import inspect
 from pathlib import Path
 import re
+import types
+import typing
 
 import nymph_toolkit.core as core
 import nymph_toolkit.contracts as contracts
@@ -22,11 +24,35 @@ def stable(value):
     return repr(value)
 
 
+def annotation(value):
+    # Python 3.12/3.13 render Optional[TypeVar] differently from 3.14+.
+    # Preserve the contract while giving union annotations one spelling.
+    if typing.get_origin(value) in (typing.Union, types.UnionType):
+        return " | ".join("None" if part is type(None) else annotation(part)
+                          for part in typing.get_args(value))
+    return inspect.formatannotation(value)
+
+
+class _Annotation:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return annotation(self.value)
+
+
 def signature(value):
     try:
-        sig = str(inspect.signature(value))
+        original = inspect.signature(value)
     except (ValueError, TypeError):
         return None
+    parameters = [p if p.annotation is inspect.Parameter.empty
+                  else p.replace(annotation=_Annotation(p.annotation))
+                  for p in original.parameters.values()]
+    returned = original.return_annotation
+    if returned is not inspect.Signature.empty:
+        returned = _Annotation(returned)
+    sig = str(original.replace(parameters=parameters, return_annotation=returned))
     # UNCHANGED is an identity sentinel, whose address is not an API value.
     sig = re.sub(r"<object object at 0x[0-9a-fA-F]+>", "UNCHANGED", sig)
     return sig
@@ -50,7 +76,7 @@ def inventory():
                 else:
                     entry["signature"] = signature(value)
                     if is_dataclass(value):
-                        entry["fields"] = {f.name: inspect.formatannotation(f.type) for f in fields(value)}
+                        entry["fields"] = {f.name: annotation(f.type) for f in fields(value)}
                     members = {}
                     for base in reversed(value.__mro__):
                         if not base.__module__.startswith("nymph_toolkit."):

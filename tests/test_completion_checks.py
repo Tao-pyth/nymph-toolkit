@@ -5,8 +5,21 @@ from copy import deepcopy
 import tempfile
 from pathlib import Path
 import unittest
+from typing import Optional, TypeVar
 
+from tools.check_api import signature
 from tools.check_completion import ADR, validate
+
+
+class ApiInventoryTests(unittest.TestCase):
+    def test_optional_type_variable_has_one_spelling_on_supported_pythons(self):
+        value = TypeVar("Result")
+        def optional() -> Optional[value]:
+            pass
+        def union() -> value | None:
+            pass
+        self.assertEqual(signature(optional), "() -> ~Result | None")
+        self.assertEqual(signature(union), signature(optional))
 
 
 class CompletionEvidenceTests(unittest.TestCase):
