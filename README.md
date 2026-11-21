@@ -12,11 +12,11 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.5.0：TaskManagerとNymph主導の活動管理。** CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
+**v0.6.0の公開準備：活動の予定変更・中断再開・優先度。** CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。[操作契約](docs/task-manager.md)と[ADR 0020](docs/adr/0020-v0.5-task-manager.md)に採用範囲を記録しています。
 
-A05では177テスト、4実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。[v0.5受入記録](docs/validation/v0.5.md)に要件ごとの証拠と制約をまとめています。活動の時刻・期間・優先度変更、中断再開、IPC、本番Subsystemは後続段階です。
+A05では177テスト、4実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。[v0.5受入記録](docs/validation/v0.5.md)に要件ごとの証拠と制約をまとめています。v0.6では時刻・期間・優先度変更、中断箇所からの再開、任意の実行枠を追加しました。最終A06・配布・CIの進捗は[v0.6受入記録](docs/validation/v0.6.md)を参照してください。IPC・本番Subsystemは後続段階です。
 
 v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。v0.7〜v0.8の機能配分は開発計画案です。
 
@@ -30,7 +30,7 @@ V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0は
 
 Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管理します。初期開発ではCore Runtime、Registry、Connections、TaskManagerを実装し、周辺をダミーで検証します。ハイブリッド実行を採用し、Python `asyncio` と軽量なメソッド呼び出しを技術の方向性とします。
 
-活動の価値や優先度はNymphが判断します。R18により、**開始時刻変更・期間変更・優先度・中断再開の4項目すべてをv0.6の対象として採用**しました。一問一答の回答と、残事項をCodexが決定してよいという委任に基づき、対応状態・計時・優先度と任意の実行枠・競合・API・受入条件を設計しました。[ADR 0021](docs/adr/0021-v0.6-activity-changes.md)と[設計Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)に判断元を分けて記録しています。v0.6の製品コード・受入・公開は未完了です。
+活動の価値や優先度はNymphが判断します。R18により、**開始時刻変更・期間変更・優先度・中断再開の4項目すべてをv0.6の対象として採用**しました。一問一答の回答と、残事項をCodexが決定してよいという委任に基づき、対応状態・計時・優先度と任意の実行枠・競合・API・受入条件を設計しました。[ADR 0021](docs/adr/0021-v0.6-activity-changes.md)と[設計Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)に判断元を分けて記録しています。実装は子Issue #53〜#57で追跡し、#58で最終受入・配布を検証、#59で公開と匿名取得を確認します。設計採用と各検証・公開の完了を区別します。
 
 通信は、**Coreが管理・許可した接続ではSubsystem間の直接通信を認める**方針を採用しました。Core経由の通信も利用できます。方針の採用履歴は[ADR 0015](docs/adr/0015-core-authorized-direct-communication.md)、現在の公開入口・状態・失効の実装判断はADR 0019に記録しています。
 

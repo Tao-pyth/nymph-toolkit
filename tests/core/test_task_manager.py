@@ -219,7 +219,7 @@ class TaskManagerTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.manager.snapshot(request.key).elapsed_seconds, 3)
         self.clock.advance(100)
         await asyncio.sleep(0)
-        records = [r for kind, r in self.store.records if kind == "activity_planned_end"]
+        records = [r for kind, r in self.store.records if kind == "activity_v06_planned_end"]
         self.assertEqual(len(records), 1)
 
     async def test_stop_before_driver_entry_does_not_execute_and_unblocks_notice_waiters(self):
@@ -306,7 +306,7 @@ class TaskManagerTests(unittest.IsolatedAsyncioTestCase):
         result = self.manager.snapshot(request.key)
         self.assertEqual(result.state, ActivityState.STOPPED)
         self.assertEqual(result.finish_reason, ActivityFinishReason.RUNTIME)
-        reasons = [data["finish_reason"] for kind, data in self.store.records if kind == "activity_state_changed"]
+        reasons = [data["finish_reason"] for kind, data in self.store.records if kind == "activity_v06_state_changed"]
         self.assertIn("nymph", reasons)
         self.assertEqual(reasons[-1], "runtime")
 
@@ -333,7 +333,7 @@ class TaskManagerTests(unittest.IsolatedAsyncioTestCase):
         manager = TaskManager(self.connections, clock_check_interval=0.005)
         await manager.start()
         try:
-            request = self.request(duration=timedelta(milliseconds=10))
+            request = self.request(duration=timedelta(milliseconds=100))
             manager.submit(request, self.hold)
             async def until_notice():
                 while True:

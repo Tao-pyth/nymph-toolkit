@@ -9,8 +9,9 @@ from pathlib import Path
 from nymph_toolkit.contracts import (
     ActivityFinishReason, ActivityHistory, ActivityHistoryIssue, ActivityHistoryRecord,
     ActivityKey, ActivityRequest, ActivityState,
+    ActivityChange, ActivityCommandStatus,
 )
-from nymph_toolkit.contracts.activities import _utc
+from nymph_toolkit.contracts.activities import _utc, _identifier
 from ._storage_io import _HISTORY, _object
 
 
@@ -29,21 +30,69 @@ def _constant(value):
     raise ValueError("Non-finite JSON number: " + value)
 
 
-def _request(data):
+def _request(data, *, version=5):
     if not isinstance(data, dict) or set(data) != {
-        "requester_id", "activity_id", "content", "start_at", "duration_us", "parameters"
+        "requester_id", "activity_id", "content", "start_at", "duration_us", "parameters",
+        *({"priority"} if version == 6 else set())
     }:
         raise ValueError("Invalid activity request fields")
     _positive(data["duration_us"])
     return ActivityRequest(ActivityKey(data["requester_id"], data["activity_id"]), data["content"],
                            None if data["start_at"] is None else _time(data["start_at"]),
-                           timedelta(microseconds=data["duration_us"]), data["parameters"])
+                           timedelta(microseconds=data["duration_us"]), data["parameters"],
+                           data["priority"] if version == 6 else 0)
+
+
+def _nonnegative_int(value):
+    if type(value) is not int or value < 0:
+        raise ValueError("Revision must be a nonnegative integer")
+
+
+def _command(data, state):
+    if not isinstance(data, dict) or set(data) != {
+        "command_id", "operation", "expected_revision", "change", "received_at", "status", "reason"
+    }:
+        raise ValueError("Invalid activity command fields")
+    _identifier(data["command_id"], "command_id")
+    _nonnegative_int(data["expected_revision"])
+    _time(data["received_at"])
+    status = ActivityCommandStatus(data["status"])
+    if data["reason"] is not None:
+        _identifier(data["reason"], "reason")
+    if data["operation"] == "change":
+        change = data["change"]
+        if not isinstance(change, dict) or set(change) - {"start_at", "duration_us", "priority"}:
+            raise ValueError("Invalid activity change fields")
+        values = dict(change)
+        if "start_at" in values and values["start_at"] is not None:
+            values["start_at"] = _time(values["start_at"])
+        if "duration_us" in values:
+            _positive(values["duration_us"])
+            values["duration"] = timedelta(microseconds=values.pop("duration_us"))
+        ActivityChange(**values)
+        if status == ActivityCommandStatus.ACCEPTED:
+            raise ValueError("Synchronous change cannot remain accepted")
+    elif data["operation"] in ("pause", "resume"):
+        if data["change"] is not None:
+            raise ValueError("Control command cannot contain changed fields")
+        if status == ActivityCommandStatus.ACCEPTED and state != {
+            "pause": ActivityState.PAUSING, "resume": ActivityState.RESUME_PENDING
+        }[data["operation"]]:
+            raise ValueError("Accepted command has inconsistent state")
+    else:
+        raise ValueError("Unknown activity command")
 
 
 def _validate_activity(kind, data):
     if not isinstance(data, dict):
         raise ValueError("Activity data must be an object")
-    request = _request(data.get("request"))
+    if kind not in ("activity_rejected", "activity_state_changed", "activity_planned_end",
+                    "activity_v06_state_changed", "activity_v06_planned_end", "activity_v06_command"):
+        raise ValueError("Unknown activity history kind")
+    version = 6 if kind.startswith("activity_v06_") else 5
+    if kind == "activity_rejected" and isinstance(data.get("request"), dict) and "priority" in data["request"]:
+        version = 6
+    request = _request(data.get("request"), version=version)
     if kind == "activity_rejected":
         if set(data) != {"request", "reason", "observed_at"} or data["reason"] != "start_in_past":
             raise ValueError("Unknown activity rejection")
@@ -51,11 +100,16 @@ def _validate_activity(kind, data):
         if request.start_at is None or request.start_at >= observed:
             raise ValueError("Past-start rejection does not match its request")
         return request.key.requester_id
-    if kind not in ("activity_state_changed", "activity_planned_end"):
+    if kind not in ("activity_state_changed", "activity_planned_end",
+                    "activity_v06_state_changed", "activity_v06_planned_end", "activity_v06_command"):
         raise ValueError("Unknown activity history kind")
     times = ("accepted_at", "planned_start_at", "planned_end_at", "started_at", "ended_at", "finish_requested_at")
     expected = {"request", "state", "notice_sequence", "observed_at", "elapsed_seconds",
                 "planned_end_notified", "finish_reason", "result", "failures", *times}
+    if version == 6:
+        expected.update({"current_request", "revision", "scheduled_revision", "execution_seconds", "paused_at", "resumed_at"})
+    if kind == "activity_v06_command":
+        expected.add("command")
     if set(data) != expected:
         raise ValueError("Invalid activity observation fields")
     _positive(data["notice_sequence"])
@@ -63,7 +117,10 @@ def _validate_activity(kind, data):
     for name in times:
         if name in times[:3] or data[name] is not None:
             _time(data[name])
-    start, end = request.planned_times(_time(data["accepted_at"]))
+    current = _request(data["current_request"], version=6) if version == 6 else request
+    if (current.key, current.content, current.parameters) != (request.key, request.content, request.parameters):
+        raise ValueError("Current request changes immutable activity input")
+    start, end = current.planned_times(_time(data["accepted_at"]))
     if start != _time(data["planned_start_at"]) or end != _time(data["planned_end_at"]):
         raise ValueError("Planned times do not match Nymph's request")
     elapsed = data["elapsed_seconds"]
@@ -72,13 +129,30 @@ def _validate_activity(kind, data):
     if type(data["planned_end_notified"]) is not bool:
         raise ValueError("Invalid planned-end notification flag")
     state = ActivityState(data["state"])
+    if version == 5 and state in (ActivityState.PAUSING, ActivityState.PAUSED, ActivityState.RESUME_PENDING):
+        raise ValueError("New activity state in legacy history")
+    if version == 6:
+        _nonnegative_int(data["revision"])
+        _nonnegative_int(data["scheduled_revision"])
+        if data["scheduled_revision"] > data["revision"]:
+            raise ValueError("Schedule revision exceeds activity revision")
+        execution = data["execution_seconds"]
+        if type(execution) not in (int, float) or not math.isfinite(execution) or not 0 <= execution <= elapsed:
+            raise ValueError("Invalid execution seconds")
+        for name in ("paused_at", "resumed_at"):
+            if data[name] is not None:
+                _time(data[name])
+        if state in (ActivityState.PAUSED, ActivityState.RESUME_PENDING) and data["paused_at"] is None:
+            raise ValueError("Paused activity has no acknowledged pause")
+        if kind == "activity_v06_command":
+            _command(data["command"], state)
     if state.terminal != (data["ended_at"] is not None):
         raise ValueError("Terminal state and end timestamp disagree")
     if (data["finish_reason"] is None) != (data["finish_requested_at"] is None):
         raise ValueError("Finish reason and timestamp disagree")
     if data["finish_reason"] is not None:
         ActivityFinishReason(data["finish_reason"])
-    if kind == "activity_planned_end" and (not data["planned_end_notified"] or state.terminal):
+    if kind in ("activity_planned_end", "activity_v06_planned_end") and (not data["planned_end_notified"] or state.terminal):
         raise ValueError("Invalid planned-end observation")
     if not isinstance(data["failures"], list):
         raise ValueError("Failures must be an array")
@@ -94,7 +168,7 @@ def _validate_activity(kind, data):
         raise ValueError("Stopped or finishing activity has no finish reason")
     if state == ActivityState.PENDING and (data["started_at"] is not None or data["finish_reason"] is not None):
         raise ValueError("Pending activity has execution or finish evidence")
-    if state == ActivityState.RUNNING and (data["started_at"] is None or data["finish_reason"] is not None):
+    if state in (ActivityState.RUNNING, ActivityState.PAUSING, ActivityState.PAUSED, ActivityState.RESUME_PENDING) and (data["started_at"] is None or data["finish_reason"] is not None):
         raise ValueError("Running activity has inconsistent execution evidence")
     if data["started_at"] is None and elapsed != 0:
         raise ValueError("Unstarted activity has elapsed execution time")

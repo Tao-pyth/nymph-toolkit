@@ -2,6 +2,16 @@
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
 
+## v0.6.0の公開手順と記録
+
+親Issue #6、設計#52、実装#53〜#57、受入#58、公開[#59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)で追跡する。公開対象版は0.6.0で、[ADR 0021](adr/0021-v0.6-activity-changes.md)と[A06検証記録](validation/v0.6.md)に従う。
+
+1. 予定変更・期間通知・優先度・中断再開の全採用範囲、既存回帰、5実行例、通常インストール・sdist再ビルド、文書同期を確認する。
+2. 公開するコミットそのもののWindows/Linux × Python3.12〜3.15の全8環境が成功したことを確認する。
+3. 同じコミットへ`v0.6.0`タグを付け、wheel・sdist・単一引継ぎ書・SHA256SUMSを添付する。公開済みv0.1.0〜v0.5.0のタグ・本文・添付を変更しない。
+4. 認証情報を使わずにタグをcloneし、添付をdownload・照合する。新規環境へwheelを通常インストールし、公開import・全テスト・5実行例・Docsを確認する。
+5. 最終SHA・CI・チェックサム・匿名取得の結果をReleaseと#59へ記録してから、親Issueとマイルストーンを完了する。
+
 ## v0.5.0の公開手順と記録
 
 R17によりTaskManager基本機能へ着手した。公開課題は[#51](https://github.com/Tao-pyth/nymph-toolkit/issues/51)、先行する設計・実装・受入は親Issue #5・子Issue #45〜#50で管理する。採用範囲の実装・A05・配布検証を確認した。公開対象版は0.5.0。最終コミットのCI確認後、タグ・Releaseを作成する。公開後の結果は[Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.5.0)と#51へ記録する。

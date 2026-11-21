@@ -20,11 +20,11 @@ SPEC = ContractSpec(CONTRACT, (OperationSpec("echo", OperationMode.ASYNC),))
 
 
 class ActivityGroupTests(unittest.IsolatedAsyncioTestCase):
-    def configure(self, nymph_run, *, store=None, provider_run=None):
+    def configure(self, nymph_run, *, store=None, provider_run=None, max_running=None):
         group = ModuleGroup()
         store = MemoryStore() if store is None else store
         links = Connections(group, store)
-        manager = TaskManager(links, clock_check_interval=0.01)
+        manager = TaskManager(links, clock_check_interval=0.01, max_running=max_running)
         trace = []
         closed = set()
         class Module:
@@ -81,7 +81,7 @@ class ActivityGroupTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(runtime.state, RuntimeState.STOPPED)
         self.assertEqual(manager.state, RuntimeState.STOPPED)
         self.assertEqual(closed, {"nymph", "provider"})
-        self.assertTrue(any(kind == "activity_state_changed" for kind, _ in store.records))
+        self.assertTrue(any(kind == "activity_v06_state_changed" for kind, _ in store.records))
 
     async def test_shutdown_runs_activity_cleanup_before_destroying_provider_resources(self):
         entered = asyncio.Event()
@@ -110,7 +110,7 @@ class ActivityGroupTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.wait_for(runtime.stop(), 2)
         self.assertLess(trace.index(("activity", "cleanup")), trace.index(("provider", "stop")))
         self.assertLess(trace.index(("nymph", "run cleanup")), trace.index(("nymph", "stop")))
-        terminal = [record for kind, record in store.records if kind == "activity_state_changed"][-1]
+        terminal = [record for kind, record in store.records if kind == "activity_v06_state_changed"][-1]
         self.assertEqual(terminal["state"], "stopped")
         self.assertEqual(terminal["finish_reason"], "runtime")
 

@@ -121,7 +121,7 @@ class ActivityFaultTests(unittest.IsolatedAsyncioTestCase):
             await asyncio.wait_for(runtime.wait(), 5)
             records = [json.loads(line) for path in (base / "primary").glob("history-*.jsonl")
                        for line in path.read_text(encoding="utf-8").splitlines()]
-            activity = [record["data"] for record in records if record["kind"] == "activity_state_changed"]
+            activity = [record["data"] for record in records if record["kind"] == "activity_v06_state_changed"]
             self.assertEqual(activity[-1]["state"], "stopped")
             self.assertEqual(activity[-1]["result"], "cleaned")
             self.assertEqual(store.unsaved_events, 0)
@@ -158,7 +158,7 @@ class ActivityFaultTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(closed, {"nymph", "provider"})
             self.assertEqual(store.failure.unsaved_events, store.unsaved_events)
             self.assertGreater(store.unsaved_events, 0)
-            final = [record["data"] for record in store._buffer if record["kind"] == "activity_state_changed"][-1]
+            final = [record["data"] for record in store._buffer if record["kind"] == "activity_v06_state_changed"][-1]
             self.assertEqual(final["state"], "stopped")
             self.assertEqual(final["finish_reason"], "runtime")
 

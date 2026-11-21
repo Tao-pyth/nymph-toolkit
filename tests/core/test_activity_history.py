@@ -116,7 +116,7 @@ class ActivityHistoryTests(unittest.IsolatedAsyncioTestCase):
         # Simulate an abrupt exit: only persisted records up to RUNNING survived.
         lines = path.read_bytes().splitlines(keepends=True)
         through_running = next(i for i, line in enumerate(lines)
-                               if json.loads(line)["kind"] == "activity_state_changed"
+                               if json.loads(line)["kind"] == "activity_v06_state_changed"
                                and json.loads(line)["data"]["state"] == "running")
         path.write_bytes(b"".join(lines[:through_running + 1]))
         async def nymph(manager):
@@ -137,7 +137,7 @@ class ActivityHistoryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(history.records), 3)
         self.assertFalse(history.issues)
         lines = [json.loads(line) for line in original.splitlines()]
-        terminal = next(record for record in lines if record["kind"] == "activity_state_changed" and record["data"]["state"] == "completed")
+        terminal = next(record for record in lines if record["kind"] == "activity_v06_state_changed" and record["data"]["state"] == "completed")
         terminal["data"]["result"] = "conflict"
         archived.write_text("".join(json.dumps(record) + "\n" for record in lines), encoding="utf-8")
         conflict_bytes = archived.read_bytes()
@@ -163,7 +163,7 @@ class ActivityHistoryTests(unittest.IsolatedAsyncioTestCase):
         path = next(self.root.glob("history-*.jsonl"))
         original = path.read_bytes()
         lines = [json.loads(line) for line in original.splitlines()]
-        terminal = next(record for record in lines if record["kind"] == "activity_state_changed" and record["data"]["state"] == "completed")
+        terminal = next(record for record in lines if record["kind"] == "activity_v06_state_changed" and record["data"]["state"] == "completed")
         terminal["data"]["started_at"] = None
         path.write_text("".join(json.dumps(record) + "\n" for record in lines), encoding="utf-8")
         history = await self.read()
@@ -239,11 +239,11 @@ class ActivityHistoryTests(unittest.IsolatedAsyncioTestCase):
         path = next(self.root.glob("history-*.jsonl"))
         original = path.read_bytes()
         rows = [json.loads(line) for line in original.splitlines()]
-        sample = next(row for row in rows if row["kind"] == "activity_state_changed")
+        sample = next(row for row in rows if row["kind"] == "activity_v06_state_changed")
         cases = [dict(sample, format="ntk.history.future"), dict(sample, run_id="mismatch"),
                  dict(sample, sequence=True), dict(sample, at="2000-01-01T00:00:00+00:00")]
         extra = [json.dumps(row).encode() + b"\n" for row in cases]
-        extra.extend([b'{"kind":"activity_state_changed","kind":"duplicate"}\n',
+        extra.extend([b'{"kind":"activity_v06_state_changed","kind":"duplicate"}\n',
                       b'{"value":NaN}\n'])
         damaged = original + b"".join(extra)
         path.write_bytes(damaged)

@@ -2,7 +2,7 @@
 
 v0.5で採用したCore実装。[ADR 0020](adr/0020-v0.5-task-manager.md)のD1〜D4がユーザー回答、D5〜D8が実施指示に基づく実装判断である。実装と受入全体の完了は区別し、[検証記録](validation/v0.5.md)で現在の証拠と残作業を確認する。
 
-v0.6の変更・中断再開・優先度は[ADR 0021](adr/0021-v0.6-activity-changes.md)で設計として採用した。以下の実装済みv0.5の操作と、v0.6で追加予定のAPIを混同しない。特に同じ実行関数からの再開、累積実行時間、任意の実行枠、要求ID・版番号による変更はまだ製品コードに含まれない。
+v0.6は[ADR 0021](adr/0021-v0.6-activity-changes.md)に従い、同じ実行関数からの再開、累積実行時間、任意の実行枠、要求ID・版番号による変更を実装した。以下の基本操作は維持し、追加操作を後半に記載する。現在の受入・公開の証拠は[v0.6検証記録](validation/v0.6.md)を参照する。
 
 ## NymphとCoreの担当
 
@@ -91,12 +91,77 @@ for record in history.records:
 
 通常の履歴バッファは上限なしで、新規受付を継続する。保存障害時は既存の救命手順に従って新規受付を停止する。履歴読出しの問題を保存容量不足と混同せず、読出しで退避・修復処理を行わない。
 
+## v0.6の変更要求と結果
+
+```python
+from datetime import timedelta
+from nymph_toolkit.contracts import ActivityChange
+
+observed = manager.snapshot(key)
+result = manager.change(
+    key, ActivityChange(duration=timedelta(hours=3), priority=2),
+    command_id="extend-1", expected_revision=observed.revision,
+)
+print(result.status, result.reason, result.snapshot.current_request)
+```
+
+`start_at / duration / priority`を一括検証して適用する。未指定は`UNCHANGED`、`start_at=None`は明示的な即時変更。期間は現在の予定開始から数えた合計期間であり、追加時間ではない。開始時刻を変えられるのは未開始だけ。過去時刻・状態不整合・古い版などの拒否は元の予定を維持する。型・値の不正は例外、形式の正しい要求の拒否は`rejected`と理由で返す。
+
+`request`は初回入力、`current_request`は現在の実効入力で、どちらも不変。状態・実効値・通知フラグが変わると`revision`が進み、実効予定が変わると`scheduled_revision`も進む。短縮後の到達が過去なら直ちに通知して継続し、延長後は新しい予定で再通知する。同値・優先度だけの変更では予定版や通知をリセットしない。
+
+新しい変更・中断・再開には観測した`expected_revision`と活動内で一意の`command_id`が必要。同じID・同じ内容・同じ期待版の再送は元の要求の最新結果を返し、二重適用しない。IDの内容衝突は元結果を保持して拒否する。`command_result(key, id)`で結果を照会し、`await wait_command(key, id)`で終端結果を待つ。`accepted`だけが未完了で、`applied / no_change / rejected / superseded / failed`は終端。待機の取消は要求を取り消さない。
+
+`COMMAND_RESULT`通知は既存と同じ要求元別FIFOへ流れ、`notice.command`に不変の要求結果が入る。別IDによる進行中の同じ中断・再開への要求は同じ遷移を待つが、個別に結果を保持する。
+
+## v0.6の中断・再開と時間
+
+```python
+async def execute(context):
+    position = 0
+    while True:
+        await context.wait_for_control()
+        # 実行側が共有資源を解放した安全な区切りで呼ぶ。
+        if await context.checkpoint() is not None:
+            break
+        position += 1
+    return {"position": position}
+
+manager.submit(request, execute, supports_pause=True)
+# Nymphが中断を決めた時点で、現在のsnapshot.revisionを使って要求する。
+pause = manager.request_pause(key, command_id="pause-1",
+                              expected_revision=manager.snapshot(key).revision)
+paused = await manager.wait_command(key, "pause-1")
+# 再開もNymphが明示する。再開待ちを経て同じexecuteの続きへ戻る。
+resume = manager.request_resume(key, command_id="resume-1",
+                                expected_revision=manager.snapshot(key).revision)
+resumed = await manager.wait_command(key, "resume-1")
+```
+
+`RUNNING → PAUSING → PAUSED`と進み、実行側がcheckpointへ入るまで枠を保持する。`supports_pause=False`が既定で、非対応の要求は理由付きで拒否する。通常の中断に取消を使わない。`PAUSED → RESUME_PENDING → RUNNING`では実行枠・保存受付・要求元の条件を確認する。再開待ちへの中断要求は待機を撤回する。作業状態や共有資源の扱いは実行側が所有し、Coreは任意の処理を保存・復元しない。
+
+`elapsed_seconds`は実開始から後処理完了まで、`execution_seconds`はそのうち中断完了から実再開までを除いた秒数。再開待ちも除外し、通常のI/O待ち・中断準備・終了後処理は含める。CPU時間ではない。中断中も予定到達は動かさず通知し、Nymphの指示を待つ。
+
+終了要求は変更・中断・再開に優先し、未完了の要求へ`superseded`を返す。実行側の自然完了も中断完了とは扱わない。中断中の終了は通常の実行枠を待たず起こして後処理する。終了状態と終了時刻は後処理完了後に確定する。
+
+## v0.6の優先度・実行枠・保存
+
+`ActivityRequest.priority`はboolを除く整数で、既定0、大きい値を先にする。`TaskManager(..., max_running=None)`は上限なしで、正の整数を指定した場合だけ同時実行枠を制限する。予定到来済みの開始と明示再開を同じ待機列で扱い、同順位は待機に入った順。待機中の優先度変更では順番を維持し、開始延期で列から外れた場合は到来時に新しい順番を得る。
+
+実行中を優先度だけで中断せず、Coreによる優先度生成や自動引上げは行わない。実行側が枠内で互いの開始を待つような依存は構成者が避ける。Connectionsの容量不足への即時応答を待機列に入れない。
+
+保存救命中は新しい変更・再開を拒否する。受付済みの開始・再開は回復まで待ち、中断・終了や進行中の通知は記録する。接続中断は既存の要求元による終了・後処理・完了報告で処理し、活動の一時停止とは区別する。
+
+履歴の外枠は`ntk.history.v1`を維持し、新しい観測は`activity_v06_state_changed / activity_v06_planned_end / activity_v06_command`で識別する。v0.5の過去履歴も読めるが、新しい計時値などを補完しない。旧v0.5読出しによる新形式の互換性は保証しない。再起動時の自動復元・再実行は行わない。
+
 ## 実行例と残る範囲
 
 [実行例](../examples/task_manager_demo.py)は一時ディレクトリ内で二回起動し、通知後の継続→Nymphの終了要求→後処理→再起動時の履歴参照と明示登録を示す。
 
 ```powershell
 .venv/Scripts/python.exe examples/task_manager_demo.py
+.venv/Scripts/python.exe examples/activity_changes_demo.py
 ```
 
-活動の途中変更、期間延長後の再通知、優先度・専用実行枠、中断箇所からの再開、IPC、本番Subsystemはこの段階の実装に含めない。実行側が終了要求やRuntimeの取消に協調しない場合、Coreは後処理完了を偽装しない。現在の活動観測値・通知は同一起動中に保持するため、大量の活動や未取得通知を蓄積し続ける運用には別途保持方針が必要である。
+IPC、本番Subsystem、稼働中の機能取り外し、プロセスを越える中断状態の保存は実装に含めない。実行側が終了要求やRuntimeの取消に協調しない場合、Coreは後処理完了を偽装しない。現在の活動観測値・通知は同一起動中に保持するため、大量の活動や未取得通知を蓄積し続ける運用には別途保持方針が必要である。
+
+[v0.6実行例](../examples/activity_changes_demo.py)は開始の繰上げ、期間短縮・延長、優先度、有限枠での中断再開を通し、同じ処理の継続位置・後処理・再起動履歴・残存タスク0・未保存履歴0を確認する。

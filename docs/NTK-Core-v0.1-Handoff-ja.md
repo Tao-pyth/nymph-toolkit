@@ -18,7 +18,7 @@ R17でv0.5に着手し、ADR 0020へ判断を記録した。予定時間到達�
 
 本書にもApache-2.0を適用し、末尾にLICENSEの公式本文を収録する。第三者成果物と個体データの条件は別途扱う。ファイル名のv0.1は初稿の識別子であり、リポジトリ内の本文は更新する。公開済みRelease添付は各公開時点のスナップショットとして保持する。
 
-R18で、開始時刻変更・期間変更・優先度・中断再開の全4項目をv0.6の対象として採用した。ADR 0021のD1・D2へユーザーの範囲採用と個別回答を記録し、残事項を決める委任に基づくCodexの設計判断をD3〜D10へ分けた。振る舞い・API・A06条件・実装単位を設計済みだが、製品コード・受入・公開の完了とは扱わない。
+R18で、開始時刻変更・期間変更・優先度・中断再開の全4項目をv0.6の対象として採用した。ADR 0021のD1・D2へユーザーの範囲採用と個別回答を記録し、残事項を決める委任に基づくCodexの設計判断をD3〜D10へ分けた。子Issue #53〜#59をコード変更前に登録し、振る舞い・API・A06条件に従って実装した。実装、最終受入、配布・CI、公開後の取得確認の結果を個別に記録する。
 
 ## 収録文書
 
@@ -60,11 +60,12 @@ R18で、開始時刻変更・期間変更・優先度・中断再開の全4項�
 36. [v0.3受入記録](#section-36)
 37. [v0.4の受入記録](#section-37)
 38. [v0.5の受入確認と検証経過](#section-38)
-39. [開発準備とGit運用](#section-39)
-40. [マイルストーンと親子Issueの運用](#section-40)
-41. [公開準備とリリース手順](#section-41)
-42. [変更履歴](#section-42)
-43. [Apache License 2.0（原文）](#section-43)
+39. [v0.6の受入確認と検証経過](#section-39)
+40. [開発準備とGit運用](#section-40)
+41. [マイルストーンと親子Issueの運用](#section-41)
+42. [公開準備とリリース手順](#section-42)
+43. [変更履歴](#section-43)
+44. [Apache License 2.0（原文）](#section-44)
 
 ---
 
@@ -86,11 +87,11 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在の段階
 
-**v0.5.0：TaskManagerとNymph主導の活動管理。** CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
+**v0.6.0の公開準備：活動の予定変更・中断再開・優先度。** CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。操作契約（`docs/task-manager.md`）とADR 0020（`docs/adr/0020-v0.5-task-manager.md`）に採用範囲を記録しています。
 
-A05では177テスト、4実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。v0.5受入記録（`docs/validation/v0.5.md`）に要件ごとの証拠と制約をまとめています。活動の時刻・期間・優先度変更、中断再開、IPC、本番Subsystemは後続段階です。
+A05では177テスト、4実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。v0.5受入記録（`docs/validation/v0.5.md`）に要件ごとの証拠と制約をまとめています。v0.6では時刻・期間・優先度変更、中断箇所からの再開、任意の実行枠を追加しました。最終A06・配布・CIの進捗はv0.6受入記録（`docs/validation/v0.6.md`）を参照してください。IPC・本番Subsystemは後続段階です。
 
 v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。v0.7〜v0.8の機能配分は開発計画案です。
 
@@ -104,7 +105,7 @@ V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0は
 
 Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管理します。初期開発ではCore Runtime、Registry、Connections、TaskManagerを実装し、周辺をダミーで検証します。ハイブリッド実行を採用し、Python `asyncio` と軽量なメソッド呼び出しを技術の方向性とします。
 
-活動の価値や優先度はNymphが判断します。R18により、**開始時刻変更・期間変更・優先度・中断再開の4項目すべてをv0.6の対象として採用**しました。一問一答の回答と、残事項をCodexが決定してよいという委任に基づき、対応状態・計時・優先度と任意の実行枠・競合・API・受入条件を設計しました。ADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）と[設計Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)に判断元を分けて記録しています。v0.6の製品コード・受入・公開は未完了です。
+活動の価値や優先度はNymphが判断します。R18により、**開始時刻変更・期間変更・優先度・中断再開の4項目すべてをv0.6の対象として採用**しました。一問一答の回答と、残事項をCodexが決定してよいという委任に基づき、対応状態・計時・優先度と任意の実行枠・競合・API・受入条件を設計しました。ADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）と[設計Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)に判断元を分けて記録しています。実装は子Issue #53〜#57で追跡し、#58で最終受入・配布を検証、#59で公開と匿名取得を確認します。設計採用と各検証・公開の完了を区別します。
 
 通信は、**Coreが管理・許可した接続ではSubsystem間の直接通信を認める**方針を採用しました。Core経由の通信も利用できます。方針の採用履歴はADR 0015（`docs/adr/0015-core-authorized-direct-communication.md`）、現在の公開入口・状態・失効の実装判断はADR 0019に記録しています。
 
@@ -324,7 +325,7 @@ R17のv0.5作業はADR 0020（`docs/adr/0020-v0.5-task-manager.md`）へ記録�
 | 長期ビジョン | R7で示された最終到達目標・研究方針。具体的な実装要件・時期・合格基準は段階ごとに判断する |
 | 初期スコープ外 | 今回計画するCore初期開発の対象から除く事項 |
 
-計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で具体化した。v0.5はR17・ADR 0020で採用範囲を具体化した。後続の未決部分を実装仕様として扱わない。v0.6はR18・ADR 0021で範囲・詳細契約・受入条件を設計採用した。D1・D2の個別回答とD3〜D10の委任に基づく判断、実装と検証の未完了を区別する。v0.7〜v0.8への機能配分は提案を維持する。
+計画の整備を依頼されたことと、計画内の製品仕様案が採用されたことは、それぞれ状態を記録する。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で具体化した。v0.5はR17・ADR 0020で採用範囲を具体化した。後続の未決部分を実装仕様として扱わない。v0.6はR18・ADR 0021で範囲・詳細契約・受入条件を設計採用した。D1・D2の個別回答とD3〜D10の委任に基づく判断、実装の完了と最終受入・公開を区別し、v0.6受入記録（`docs/validation/v0.6.md`）に証拠を残す。v0.7〜v0.8への機能配分は提案を維持する。
 
 R4で列挙された時間・優先度の変更、中断・再開、取消・終了は採否を判断する対象として追記する。Subsystemの機能的依存と独立性の整理案のうち、v0.3の採用範囲はR13・ADR 0016で具体化した。Coreが扱う機械的な実行順序と、Nymphが決める活動の価値・優先度の境界を明示し、優先度機能とその作用、任意実行枠はR18・ADR 0021で設計採用した。過去の採否検討と、その後の採用判断を区別する。
 
@@ -931,7 +932,7 @@ nymph-toolkit/
    └─ doubles/
 ```
 
-R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `core/runtime.py`、Registryは `core/registry.py`、複数対象の実行入口は `core/module_group.py`、接続・保存は `core/connections.py` と `core/storage.py`、活動管理は `core/task_manager.py`、履歴読出しは内部モジュール `core/_activity_history.py` に置く。共有型は `contracts/registry.py`・`contracts/connections.py`・`contracts/activities.py` に置き、`contracts/__init__.py`から公開する。ダミーは `tests/doubles/`、検証は `tests/core/` に置く。
+R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `core/runtime.py`、Registryは `core/registry.py`、複数対象の実行入口は `core/module_group.py`、接続・保存は `core/connections.py` と `core/storage.py`、活動管理は `core/task_manager.py`、履歴読出しは内部モジュール `core/_activity_history.py`、変更要求の仲裁は `core/_activity_commands.py`、開始・再開の共通待機列は `core/_activity_slots.py` に置く。共有型は `contracts/registry.py`・`contracts/connections.py`・`contracts/activities.py` に置き、`contracts/__init__.py`から公開する。ダミーは `tests/doubles/`、検証は `tests/core/` に置く。
 
 #### Subsystem・Adapterを追加する際の配置案
 
@@ -963,7 +964,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 | 要求側選定、契約互換性、永続化、稼働通知、協調的中断・待機、ヘルス申請、履歴保存・救命措置 | R15で振る舞いを採用。未実装 | ADR 0018 |
 | 公開API・型、接続識別と競合、通知・待機の競合、保存形式・設定値、救命の具体手順 | Connectionsの対象範囲の実装前。前の計画の方式・数値は未採用案 | ADR 0018と後続ADR |
 | 時計、時刻・期間・経過時間・実行時間の意味、状態遷移、期間終了の意味 | V0.5着手時 | ADR 0004に関連付ける後続ADR |
-| 開始時刻変更・期間変更・優先度・中断再開の詳細、競合・応答 | R18で範囲・詳細設計を採用。製品コードは未実装 | ADR 0004・0021 |
+| 開始時刻変更・期間変更・優先度・中断再開の詳細、競合・応答 | R18・ADR 0021に従って実装。最終受入・公開はv0.6検証記録を参照 | ADR 0004・0021 |
 | IPC、配置間契約の共通範囲、切断時処理 | V0.7着手時 | ADR 0002に関連付ける後続ADR |
 | 接続設定・運用履歴以外の永続化、接続先固定と両立する追加の再試行・復旧機能 | 必要な設計段階、遅くともV0.8の検証範囲確定前。R15採用範囲と区別 | ADR 0018と後続ADR |
 
@@ -1224,7 +1225,7 @@ connections_demo.py（`examples/connections_demo.py`）は実際のModuleGroup�
 
 v0.5で採用したCore実装。ADR 0020（`docs/adr/0020-v0.5-task-manager.md`）のD1〜D4がユーザー回答、D5〜D8が実施指示に基づく実装判断である。実装と受入全体の完了は区別し、検証記録（`docs/validation/v0.5.md`）で現在の証拠と残作業を確認する。
 
-v0.6の変更・中断再開・優先度はADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）で設計として採用した。以下の実装済みv0.5の操作と、v0.6で追加予定のAPIを混同しない。特に同じ実行関数からの再開、累積実行時間、任意の実行枠、要求ID・版番号による変更はまだ製品コードに含まれない。
+v0.6はADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）に従い、同じ実行関数からの再開、累積実行時間、任意の実行枠、要求ID・版番号による変更を実装した。以下の基本操作は維持し、追加操作を後半に記載する。現在の受入・公開の証拠はv0.6検証記録（`docs/validation/v0.6.md`）を参照する。
 
 ### NymphとCoreの担当
 
@@ -1313,15 +1314,80 @@ for record in history.records:
 
 通常の履歴バッファは上限なしで、新規受付を継続する。保存障害時は既存の救命手順に従って新規受付を停止する。履歴読出しの問題を保存容量不足と混同せず、読出しで退避・修復処理を行わない。
 
+### v0.6の変更要求と結果
+
+```python
+from datetime import timedelta
+from nymph_toolkit.contracts import ActivityChange
+
+observed = manager.snapshot(key)
+result = manager.change(
+    key, ActivityChange(duration=timedelta(hours=3), priority=2),
+    command_id="extend-1", expected_revision=observed.revision,
+)
+print(result.status, result.reason, result.snapshot.current_request)
+```
+
+`start_at / duration / priority`を一括検証して適用する。未指定は`UNCHANGED`、`start_at=None`は明示的な即時変更。期間は現在の予定開始から数えた合計期間であり、追加時間ではない。開始時刻を変えられるのは未開始だけ。過去時刻・状態不整合・古い版などの拒否は元の予定を維持する。型・値の不正は例外、形式の正しい要求の拒否は`rejected`と理由で返す。
+
+`request`は初回入力、`current_request`は現在の実効入力で、どちらも不変。状態・実効値・通知フラグが変わると`revision`が進み、実効予定が変わると`scheduled_revision`も進む。短縮後の到達が過去なら直ちに通知して継続し、延長後は新しい予定で再通知する。同値・優先度だけの変更では予定版や通知をリセットしない。
+
+新しい変更・中断・再開には観測した`expected_revision`と活動内で一意の`command_id`が必要。同じID・同じ内容・同じ期待版の再送は元の要求の最新結果を返し、二重適用しない。IDの内容衝突は元結果を保持して拒否する。`command_result(key, id)`で結果を照会し、`await wait_command(key, id)`で終端結果を待つ。`accepted`だけが未完了で、`applied / no_change / rejected / superseded / failed`は終端。待機の取消は要求を取り消さない。
+
+`COMMAND_RESULT`通知は既存と同じ要求元別FIFOへ流れ、`notice.command`に不変の要求結果が入る。別IDによる進行中の同じ中断・再開への要求は同じ遷移を待つが、個別に結果を保持する。
+
+### v0.6の中断・再開と時間
+
+```python
+async def execute(context):
+    position = 0
+    while True:
+        await context.wait_for_control()
+        # 実行側が共有資源を解放した安全な区切りで呼ぶ。
+        if await context.checkpoint() is not None:
+            break
+        position += 1
+    return {"position": position}
+
+manager.submit(request, execute, supports_pause=True)
+# Nymphが中断を決めた時点で、現在のsnapshot.revisionを使って要求する。
+pause = manager.request_pause(key, command_id="pause-1",
+                              expected_revision=manager.snapshot(key).revision)
+paused = await manager.wait_command(key, "pause-1")
+# 再開もNymphが明示する。再開待ちを経て同じexecuteの続きへ戻る。
+resume = manager.request_resume(key, command_id="resume-1",
+                                expected_revision=manager.snapshot(key).revision)
+resumed = await manager.wait_command(key, "resume-1")
+```
+
+`RUNNING → PAUSING → PAUSED`と進み、実行側がcheckpointへ入るまで枠を保持する。`supports_pause=False`が既定で、非対応の要求は理由付きで拒否する。通常の中断に取消を使わない。`PAUSED → RESUME_PENDING → RUNNING`では実行枠・保存受付・要求元の条件を確認する。再開待ちへの中断要求は待機を撤回する。作業状態や共有資源の扱いは実行側が所有し、Coreは任意の処理を保存・復元しない。
+
+`elapsed_seconds`は実開始から後処理完了まで、`execution_seconds`はそのうち中断完了から実再開までを除いた秒数。再開待ちも除外し、通常のI/O待ち・中断準備・終了後処理は含める。CPU時間ではない。中断中も予定到達は動かさず通知し、Nymphの指示を待つ。
+
+終了要求は変更・中断・再開に優先し、未完了の要求へ`superseded`を返す。実行側の自然完了も中断完了とは扱わない。中断中の終了は通常の実行枠を待たず起こして後処理する。終了状態と終了時刻は後処理完了後に確定する。
+
+### v0.6の優先度・実行枠・保存
+
+`ActivityRequest.priority`はboolを除く整数で、既定0、大きい値を先にする。`TaskManager(..., max_running=None)`は上限なしで、正の整数を指定した場合だけ同時実行枠を制限する。予定到来済みの開始と明示再開を同じ待機列で扱い、同順位は待機に入った順。待機中の優先度変更では順番を維持し、開始延期で列から外れた場合は到来時に新しい順番を得る。
+
+実行中を優先度だけで中断せず、Coreによる優先度生成や自動引上げは行わない。実行側が枠内で互いの開始を待つような依存は構成者が避ける。Connectionsの容量不足への即時応答を待機列に入れない。
+
+保存救命中は新しい変更・再開を拒否する。受付済みの開始・再開は回復まで待ち、中断・終了や進行中の通知は記録する。接続中断は既存の要求元による終了・後処理・完了報告で処理し、活動の一時停止とは区別する。
+
+履歴の外枠は`ntk.history.v1`を維持し、新しい観測は`activity_v06_state_changed / activity_v06_planned_end / activity_v06_command`で識別する。v0.5の過去履歴も読めるが、新しい計時値などを補完しない。旧v0.5読出しによる新形式の互換性は保証しない。再起動時の自動復元・再実行は行わない。
+
 ### 実行例と残る範囲
 
 実行例（`examples/task_manager_demo.py`）は一時ディレクトリ内で二回起動し、通知後の継続→Nymphの終了要求→後処理→再起動時の履歴参照と明示登録を示す。
 
 ```powershell
 .venv/Scripts/python.exe examples/task_manager_demo.py
+.venv/Scripts/python.exe examples/activity_changes_demo.py
 ```
 
-活動の途中変更、期間延長後の再通知、優先度・専用実行枠、中断箇所からの再開、IPC、本番Subsystemはこの段階の実装に含めない。実行側が終了要求やRuntimeの取消に協調しない場合、Coreは後処理完了を偽装しない。現在の活動観測値・通知は同一起動中に保持するため、大量の活動や未取得通知を蓄積し続ける運用には別途保持方針が必要である。
+IPC、本番Subsystem、稼働中の機能取り外し、プロセスを越える中断状態の保存は実装に含めない。実行側が終了要求やRuntimeの取消に協調しない場合、Coreは後処理完了を偽装しない。現在の活動観測値・通知は同一起動中に保持するため、大量の活動や未取得通知を蓄積し続ける運用には別途保持方針が必要である。
+
+v0.6実行例（`examples/activity_changes_demo.py`）は開始の繰上げ、期間短縮・延長、優先度、有限枠での中断再開を通し、同じ処理の継続位置・後処理・再起動履歴・残存タスク0・未保存履歴0を確認する。
 
 ---
 
@@ -1355,7 +1421,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0018 要求側の接続選定・稼働管理・履歴保存と救命措置（`docs/adr/0018-connection-selection-health-and-recovery.md`） | 方針として採用。要求側の選定、契約互換性、永続化、稼働通知、中断・待機、個別ヘルス、履歴・救命を具体化。R15時点ではAPI・形式・数値等は提案でConnections未実装。後続判断は0019 | R15・#36・#4 |
 | 0019 v0.4のConnections実装判断（`docs/adr/0019-v0.4-connections.md`） | 採用。固定単位とバッファ上限なし・通常受付継続をユーザー回答で採用。契約型・接続・中断・ヘルス・非同期保存・救命を実装し、A04を確認 | R16・#37〜#44 |
 | 0020 v0.5のTaskManager基本機能と活動判断の境界（`docs/adr/0020-v0.5-task-manager.md`） | 採用。到達時の継続、Nymphによる再登録・再開、過去時刻拒否、安全な区切りでの終了を回答で採用。D5〜D8の実装判断を記録し、A05の採用範囲を検証済み | R17・#45〜#51 |
-| 0021 v0.6の活動変更の採用範囲と詳細設計（`docs/adr/0021-v0.6-activity-changes.md`） | 設計として採用、未実装。D1・D2はユーザーの範囲採用と個別回答、D3〜D10は委任に基づく時刻・制御・枠・競合・API・保存・受入・実装単位の判断 | R18・#6・#52 |
+| 0021 v0.6の活動変更の採用範囲と詳細設計（`docs/adr/0021-v0.6-activity-changes.md`） | 採用・実装。D1・D2はユーザーの範囲採用と個別回答、D3〜D10は委任に基づく時刻・制御・枠・競合・API・保存・受入・実装単位の判断。最終受入・公開は検証記録を参照 | R18・#6・#52〜#59 |
 
 ### 記録方法
 
@@ -2731,7 +2797,7 @@ Docsの根拠表（`docs/README.md`）のR2・R4・R10・R16・R17。R17はv0.5�
 
 ### 状態
 
-設計として採用、製品コードは未実装、A06は未検証。2026年11月21日のR18「①の全てを決定する」、続く一問一答、最後の「よい　全体想定回答で決め打ちして良い」を根拠とする。直前の①はv0.6の対象範囲であり、最後の「よい」は優先度を開始・再開待ちの順序に使い、実行中の中断はNymphの明示指示で行うことへの回答である。
+設計として採用し、子Issue #53〜#57で製品コードを実装。最終A06・配布・CI・公開は#58・#59と検証記録（`docs/validation/v0.6.md`）で別途追跡する。2026年11月21日のR18「①の全てを決定する」、続く一問一答、最後の「よい　全体想定回答で決め打ちして良い」を根拠とする。直前の①はv0.6の対象範囲であり、最後の「よい」は優先度を開始・再開待ちの順序に使い、実行中の中断はNymphの明示指示で行うことへの回答である。
 
 [親Issue #6](https://github.com/Tao-pyth/nymph-toolkit/issues/6)、[設計子Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)、[v0.6.0マイルストーン](https://github.com/Tao-pyth/nymph-toolkit/milestone/6)で追跡する。D1・D2はユーザーの個別採用、D3〜D10は残事項を決める委任に基づくCodexの設計判断である。後者をユーザーが一つずつ回答した事実に置き換えない。設計の採用と実装・受入・公開の完了は別に扱う。
 
@@ -2815,7 +2881,7 @@ v0.5で活動の予定・実行状態・到達通知、安全な終了、過去�
 
 ### D7 要求・通知・公開入口（委任に基づく設計判断）
 
-以下はv0.6で追加する契約で、現在の公開パッケージに実装済みではない。既存入口の名前・必須引数を変えず、追加する引数・観測値は後方互換を保つ配置・既定値で実装する。
+以下はv0.6で追加した契約である。v0.5.0の公開パッケージには含まれない。既存入口の名前・必須引数を変えず、追加する引数・観測値は後方互換を保つ配置・既定値で実装する。
 
 | 入口・型 | 採用する意味 |
 |---|---|
@@ -2864,11 +2930,9 @@ v0.5で活動の予定・実行状態・到達通知、安全な終了、過去�
 | A06・例・配布・CI・文書 | 採用範囲の実装 | A06-01〜12、既存回帰、同一プロセスの例、対応環境・配布検証・引継ぎ書同期 |
 | v0.6.0公開と取得確認 | A06・最終コミットのCI | 同一コミットのタグ・添付と匿名取得・実行、既存Release保全 |
 
-この表は実装時に登録する子Issueの分割であり、実装済み・Issue登録済みという記録ではない。各単位のコード変更前に親#6・マイルストーン6との関係を設定する。
+この表に従い、製品コード変更前に子Issue #53〜#59を登録し、親#6・マイルストーン6との関係を確認した。完了状況はIssueと検証記録に残す。
 
-### 維持する決定
-
-#### 実装時の契約補足（#53〜#59）
+### 実装時の契約補足（#53〜#59）
 
 実装単位を親#6・マイルストーン6の子Issue #53〜#59として、コード変更前に登録した。#53はContracts、#54は予定変更、#55は中断再開、#56は実行枠、#57は統合、#58は受入・資料、#59は公開確認を担当する。
 
@@ -2876,7 +2940,9 @@ v0.5で活動の予定・実行状態・到達通知、安全な終了、過去�
 
 要求の辞書出力には`priority`を追加する。v0.5の過去履歴はpriorityがない元の形式をそのまま識別し、書き換えない。新規登録時の過去時刻拒否は既存`activity_rejected`を維持し、優先度あり／なしの入力を識別して読む。中断／再開時刻は最後の実際の遷移を記録し、各遷移の履歴から経過を追える。要求IDの内容衝突は元の要求結果を上書きせず、衝突した呼出しへの拒否を返して通知・履歴に残す。
 
-Contractsの実装と15件の型・互換性テストを確認した時点では、TaskManagerと履歴読出しは移行作業中であり、v0.6受入・公開の完了とは扱わない。
+Contractsの実装時に15件の型・互換性テストを確認し、その後TaskManagerと旧新履歴読出しを実装した。終了状態・終了時刻・観測版を後処理完了後に一緒に確定し、途中の観測や変更拒否履歴に不完全な終了状態を残さない。検証と公開の結果は別途記録する。
+
+### 維持する決定
 
 - 活動の価値、時刻、期間、優先度、変更はNymphが決め、Coreが実行を管理する。
 - 予定時間への到達は通知して継続する。到達だけでCoreが終了・中断・延長しない。
@@ -2893,7 +2959,7 @@ Contractsの実装と15件の型・互換性テストを確認した時点では
 
 ### 影響・検証
 
-A06は4項目すべてを対象とし、D9の期待結果を検証する。既存A05とRuntime・Registry・Connectionsの契約を回帰検証する。今回は設計判断の完了であり、v0.6の製品コード・A06の受入・公開は未完了である。
+A06は4項目すべてを対象とし、D9の期待結果を検証する。既存A05とRuntime・Registry・Connectionsの契約を回帰検証する。製品コードの実装後、最終A06・配布・公開の結果を検証記録と関連Issueへ記録する。
 
 子Issue #52で資料と引継ぎ書生成ヘッダーの同期を行う。製品コードは各対応単位の子Issue登録と必要な判断の記録後に着手する。公開済みv0.5.0以前のタグ・Release添付は変更しない。
 
@@ -2917,7 +2983,7 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 全体原則は、Nymphが活動内容・時刻・期間・変更と活動の価値・優先度を判断し、Coreが実行を管理することである。Coreの実行可否判定、競合検出、採用した優先度規則に基づく機械的な順序処理を、この境界に従って設計する。R4で境界を再確認し、具体的な優先度機能や変更操作は採否の判断対象として追記した。
 
-未着手のv0.7〜v0.8の機能配分は、理由と依存関係・受入条件への影響を記録して再配分できる。v0.4の実施範囲はR16・ADR 0019、v0.5はR17・ADR 0020で具体化した。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コード・A06・公開は未完了である。V0.1とV0.9の確定目標に対応する完了条件を維持して計画を更新する。
+未着手のv0.7〜v0.8の機能配分は、理由と依存関係・受入条件への影響を記録して再配分できる。v0.4の実施範囲はR16・ADR 0019、v0.5はR17・ADR 0020で具体化した。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コードを実装し、最終A06・公開は検証記録（`docs/validation/v0.6.md`）で追跡する。V0.1とV0.9の確定目標に対応する完了条件を維持して計画を更新する。
 
 R6で採用した配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割することである。各拡張の設計時に依存関係・独立更新・単独配布の必要性を確認する。個別の分割対象・時期と、ロードマップの節目を分割後の各配布物のバージョンへどう対応させるかは未決である。ADR 0009（`docs/adr/0009-package-distribution.md`）
 
@@ -3012,13 +3078,13 @@ R17で実施に着手。ADR 0020（`docs/adr/0020-v0.5-task-manager.md`）と[�
 
 ### V0.6 活動変更
 
-R17・ADR 0020で、Nymphの終了指示を安全な区切りで実行する最小操作はv0.5へ先行した。R18・ADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）で、開始時刻変更・期間変更・優先度・中断再開の全4項目をv0.6の対象として採用した。D2の個別回答と、残事項の判断委任に基づくD3〜D10により、対応状態・計時・競合・応答・API・受入条件・実装単位を設計採用した。製品コードは未実装である。
+R17・ADR 0020で、Nymphの終了指示を安全な区切りで実行する最小操作はv0.5へ先行した。R18・ADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）で、開始時刻変更・期間変更・優先度・中断再開の全4項目をv0.6の対象として採用した。D2の個別回答と、残事項の判断委任に基づくD3〜D10により、対応状態・計時・競合・応答・API・受入条件・実装単位を設計採用した。製品コードは#53〜#57で実装し、最終受入・公開は#58・#59で追跡する。
 
 - **着手条件** — 基本的な活動の入力・開始・終了を検証できる。
 - **作業** — 採用した開始時刻の繰り上げ・延期、期間の延長・短縮、優先度とその変更、中断・再開について、対応状態と振る舞いを記録してから実装する。v0.5の最小終了操作との整合を確認し、Nymphの指示と結果を照合する。
 - **成果物** — 変更処理、競合や解除との関係を定めるADR、検証シナリオ。
 - **採用した判断** — 未開始だけの開始時刻変更、予定版ごとの到達通知、安全な中断と同じ実行関数からの再開、経過時間と累積実行時間の分離、指定優先度とFIFO、任意の通常実行枠、版番号と要求IDによる変更整合を採用。稼働中の機能取り外しは追加しない。判断元と詳細はADR 0021 D2〜D8を参照する。
-- **完了条件** — A06-01〜12を満たす。全4項目の入力・状態・結果を照合し、範囲外・競合の応答を確認する。次の実装単位はADR 0021 D10に従い、コード変更前に子Issueを登録する。設計完了だけでv0.6を完了としない。
+- **完了条件** — A06-01〜12を満たす。全4項目の入力・状態・結果を照合し、範囲外・競合の応答を確認する。ADR 0021 D10に従い、コード変更前に子Issue #53〜#59を登録した。設計完了だけでv0.6を完了としない。
 
 ### V0.7 ハイブリッド実行
 
@@ -3235,9 +3301,9 @@ R17・ADR 0020（`docs/adr/0020-v0.5-task-manager.md`）のD1〜D8によりA05�
 
 上表は初期の共通検証観点である。v0.6で採用した具体的な期待結果は次節を優先し、優先度・中断再開を未採用として除外しない。
 
-### A06の採用した判定条件（未検証）
+### A06の採用した判定条件
 
-全てADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）の設計に基づく。期待結果を記載した段階で、テスト済み・実装済みという意味ではない。実装単位を子Issueへ登録してから、制御可能な時計・ダミー・実ファイルで検証する。
+全てADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）の設計に基づく。コード変更前に#53〜#59を登録し、制御可能な時計・ダミー・実ファイルで検証した。各条件の証拠と最終A06・CI・公開の進捗はv0.6受入記録（`docs/validation/v0.6.md`）を参照する。
 
 | ID | 操作・条件 | 合格条件 |
 |---|---|---|
@@ -3600,6 +3666,63 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 <a id="section-39"></a>
 
+収録元 `docs/validation/v0.6.md`
+
+## v0.6の受入確認と検証経過
+
+### 現在の判定
+
+ADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）の4項目を子Issue #53〜#57で実装した。D1・D2はユーザー回答、D3〜D10は判断委任による採用設計である。最終A06・通常配布・CIは#58、公開と匿名取得は#59で追跡する。現在は最終検証中であり、公開完了とは扱わない。
+
+2026年11月21日、Windows・CPython 3.15.2でソース219テストと、作業ツリー外の新規venvへ通常インストールしたwheelの219テストが成功した。5実行例、公開import・0.6.0メタデータ・LICENSE、sdistから同一wheelへの再ビルドも成功。44文書・362ローカルリンクと、引継ぎ書への44収録元の全文一致を確認した。全8環境のCIと最終公開確認は継続中。
+
+### 要件と証拠
+
+| 受入条件 | 検証対象と観測結果 |
+|---|---|
+| A06-01 開始変更 | 変更テスト（`tests/core/test_activity_changes.py`）：未開始だけ繰上げ・延期・即時を許可し、過去・開始済みは元予定を維持して拒否 |
+| A06-02 期間 | 同テストと中断テスト（`tests/core/test_activity_controls.py`）：新合計期間、原子的変更、短縮による即時通知、元入力の保持 |
+| A06-03 通知版 | 延長後の再通知、旧予定の失効、同値と優先度だけでは再通知しないことを制御時計で確認 |
+| A06-04 安全な中断 | 実行側ゲートでPAUSINGを保持し、checkpoint後だけPAUSED、非対応拒否、通常中断で取消なし |
+| A06-05 継続再開 | 実行関数の呼出し1回、ローカル位置の継続、再開待ちの撤回、eager task factoryでも所有を維持 |
+| A06-06 計時 | 時計の後退、中断準備・中断・再開待ち・後処理を分離し、経過秒と累積実行秒を照合 |
+| A06-07 優先度・枠 | 実行枠テスト（`tests/core/test_activity_slots.py`）：任意上限、優先度降順・同順位FIFO、再開と開始の共通順、優先度変更で順番号維持、延期で再入列、自動中断なし |
+| A06-08 終了競合 | 未完了要求のsuperseded、自然終了・例外、満杯でも中断中の後処理を起動し、既存枠は後処理まで保持 |
+| A06-09 要求整合 | 追加Contracts（`tests/core/test_activity_change_contracts.py`）と変更・中断テスト：不変コピー、旧入力互換、要求ID再送・内容衝突、期待版不一致、待機取消 |
+| A06-10 Core統合 | 障害統合（`tests/core/test_activity_v06_faults.py`）：全状態での停止、取消された停止待機者と所有タスク回収、資源解放順、接続中断による要求元だけの終了・自動再実行なし。既存結合テストで部分初期化・タスク生成失敗も回帰 |
+| A06-11 保存・履歴 | 実FileStoreの救命・回復不能、変更/再開拒否・中断許可・受付済み再開の回復待ち。履歴テスト（`tests/core/test_activity_v06_history.py`）：旧新形式の併存、要求・現在値・中断時刻、未知/破損形式の原本保全、再起動では履歴のみ |
+| A06-12 回帰・配布 | 既存177テストに追加42テスト。5実行例、Windows/Linux・Python3.12〜3.15、通常wheelとsdist再ビルド、Docs同期を最終確認する |
+
+### 再現
+
+Windows・CPython 3.15.2でローカル検証する。Linuxは`.venv/bin/python`へ読み替える。
+
+```powershell
+.venv/Scripts/python.exe -W error -m unittest discover -s tests -t . -v
+.venv/Scripts/python.exe examples/runtime_demo.py
+.venv/Scripts/python.exe examples/registry_demo.py
+.venv/Scripts/python.exe examples/connections_demo.py
+.venv/Scripts/python.exe examples/task_manager_demo.py
+.venv/Scripts/python.exe examples/activity_changes_demo.py
+.venv/Scripts/python.exe tools/check_docs.py
+.venv/Scripts/python.exe -m build
+.venv/Scripts/python.exe tools/check_dist.py
+```
+
+### 配布・CI・公開の記録
+
+最終ローカル結果と全8環境のCIを確認してA06を完了とする。最終SHA・タグ・添付4件・匿名clone/download・新規環境での実行結果は[公開課題 #59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)とv0.6.0のReleaseへ記録する。公開済みv0.1.0〜v0.5.0のタグ・本文・添付は保持する。
+
+### 制約と対象外
+
+実行側には安全な区切り・共有資源の整理・協調的終了が必要であり、強制停止や固定時間内の応答を保証しない。任意の実行枠を持つ活動同士の循環待ちは構成者が避ける。観測・通知・要求結果は同一起動で保持し、通常履歴バッファは上限なし。未保存のまま急に終了したデータは復元しない。
+
+IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越える中断状態の保存、自動再開・再実行・接続先切替、個体データの複製・移植・伝播は追加していない。v0.7以降の計画は採用状況を維持する。
+
+---
+
+<a id="section-40"></a>
+
 収録元 `docs/development.md`
 
 ## 開発準備とGit運用
@@ -3622,6 +3745,7 @@ python -m venv .venv
 .venv/Scripts/python.exe examples/registry_demo.py
 .venv/Scripts/python.exe examples/connections_demo.py
 .venv/Scripts/python.exe examples/task_manager_demo.py
+.venv/Scripts/python.exe examples/activity_changes_demo.py
 .venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
@@ -3631,7 +3755,7 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）、登録・依存管理と複数対象の実行はregistry.md（`docs/registry.md`）、接続・保存はconnections.md（`docs/connections.md`）、活動管理はtask-manager.md（`docs/task-manager.md`）に記載する。v0.5の受入証拠は検証記録（`docs/validation/v0.5.md`）を参照する。
+CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）、登録・依存管理と複数対象の実行はregistry.md（`docs/registry.md`）、接続・保存はconnections.md（`docs/connections.md`）、活動管理はtask-manager.md（`docs/task-manager.md`）に記載する。v0.5は当時の検証記録（`docs/validation/v0.5.md`）、v0.6の変更・中断再開は最新の検証記録（`docs/validation/v0.6.md`）を参照する。
 
 接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
 
@@ -3639,7 +3763,7 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・
 
 v0.2での採用結果はADR 0014（`docs/adr/0014-v0.2-runtime.md`）に記録する。CPython 3.12以上、配布名 `nymph-toolkit`、venv・pip、build・Hatchling、標準unittestを使用する。実行時依存は追加しない。Core・Contractsの単一wheel・sdistをGitHub Releaseから配布する。以下にある「実装開始時に記録する」項目のうち、これらは本ADRで具体化した。
 
-ADR 0009（`docs/adr/0009-package-distribution.md`）に従い、CoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。v0.2のライフサイクル契約に加え、v0.3で登録・依存・変更通知の契約を実装した。v0.4で接続契約、v0.5で活動契約を具体化した。将来のIPC・変更操作の契約は各段階で判断する。
+ADR 0009（`docs/adr/0009-package-distribution.md`）に従い、CoreとContractsを一つの配布パッケージとして扱う。ルートの `pyproject.toml` に配布設定を置き、`src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` を同梱する。v0.2のライフサイクル契約に加え、v0.3で登録・依存・変更通知の契約を実装した。v0.4で接続契約、v0.5で活動契約を具体化した。v0.6で変更操作・中断再開・優先度の契約を追加した。将来のIPC等は各段階で判断する。
 
 ビルドした配布物をcheck_distで新しい環境へインストールし、採用したCore・Contractsの公開importとダミー実行を確認する。結果はacceptanceの記録形式で残す。
 
@@ -3732,7 +3856,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ---
 
-<a id="section-40"></a>
+<a id="section-41"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -3770,7 +3894,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 
 ### 計画と仕様の区別
 
-この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。v0.5はR17・ADR 0020で実施範囲を具体化した。後続の未決事項を実装要件へ含めない。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コード・A06・公開は未完了である。v0.7〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録だけでは採用や着手の宣言にならない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
+この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。v0.5はR17・ADR 0020で実施範囲を具体化した。後続の未決事項を実装要件へ含めない。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コードを実装した。最終A06・公開は検証記録（`docs/validation/v0.6.md`）で追跡する。v0.7〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録だけでは採用や着手の宣言にならない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
 
 v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝CoreとSubsystem・Adapterの接続契約整備という確定目標と、NymphとCoreの責務分離を維持する。通信方針はR12・ADR 0015（`docs/adr/0015-core-authorized-direct-communication.md`）で更新し、Coreが管理・許可した直接通信を採用した。詳細な許可条件・APIなどは実装前に判断する。
 
@@ -3785,7 +3909,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v0.3.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/3) | [#3 Registry](https://github.com/Tao-pyth/nymph-toolkit/issues/3) | R13・ADR 0016で実施範囲を具体化 |
 | [v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/4) | [#4 Connections](https://github.com/Tao-pyth/nymph-toolkit/issues/4) | R16・ADR 0019で実施範囲を具体化 |
 | [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | R17・ADR 0020で実施範囲を具体化 |
-| [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | R18・ADR 0021で詳細設計まで採用。実装前 |
+| [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | R18・ADR 0021に従い実装。受入・公開を別途確認 |
 | [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | 機能配分案 |
 | [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | 機能配分案 |
 | [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | 確定目標・詳細範囲は要合意 |
@@ -3809,7 +3933,7 @@ R18により、開始時刻変更・期間変更・優先度・中断再開の�
 
 #52はADR 0021、関連Docs、引継ぎ書と生成ヘッダーの同期、詳細契約・A06の設計判断を扱う。生成ヘッダーを更新する前に登録した。個別回答と残事項の判断委任を受け、振る舞い・API・A06-01〜12・実装単位を設計採用した。判断元はADR 0021 D1・D2とD3〜D10へ分ける。後続の子Issue分割はD10に記録し、製品コード変更前に各Issueを登録する。#52の設計完了を親#6・v0.6の実装完了と扱わない。
 
-### v0.5の対応単位
+### v0.6の対応単位
 
 v0.6の実装子Issueは、コード変更前に親#6・マイルストーン6への所属を確認して登録した。
 
@@ -3822,6 +3946,8 @@ v0.6の実装子Issueは、コード変更前に親#6・マイルストーン6�
 | [#57](https://github.com/Tao-pyth/nymph-toolkit/issues/57) | Runtime・Connections・FileStore統合 | #53〜#56 |
 | [#58](https://github.com/Tao-pyth/nymph-toolkit/issues/58) | A06・例・配布・CI・文書 | #53〜#57 |
 | [#59](https://github.com/Tao-pyth/nymph-toolkit/issues/59) | 公開と匿名取得確認 | #58・最終CI |
+
+### v0.5の対応単位
 
 2026年11月21日のR17により、次の子Issueをコード変更前に登録し、親Issue #5のsub-issueとマイルストーンv0.5.0への所属を確認した。ADR 0020（`docs/adr/0020-v0.5-task-manager.md`）の採用範囲と未決事項を各実装前に確認する。
 
@@ -3909,13 +4035,23 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 ---
 
-<a id="section-41"></a>
+<a id="section-42"></a>
 
 収録元 `docs/release.md`
 
 ## 公開準備とリリース手順
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
+
+### v0.6.0の公開手順と記録
+
+親Issue #6、設計#52、実装#53〜#57、受入#58、公開[#59](https://github.com/Tao-pyth/nymph-toolkit/issues/59)で追跡する。公開対象版は0.6.0で、ADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）とA06検証記録（`docs/validation/v0.6.md`）に従う。
+
+1. 予定変更・期間通知・優先度・中断再開の全採用範囲、既存回帰、5実行例、通常インストール・sdist再ビルド、文書同期を確認する。
+2. 公開するコミットそのもののWindows/Linux × Python3.12〜3.15の全8環境が成功したことを確認する。
+3. 同じコミットへ`v0.6.0`タグを付け、wheel・sdist・単一引継ぎ書・SHA256SUMSを添付する。公開済みv0.1.0〜v0.5.0のタグ・本文・添付を変更しない。
+4. 認証情報を使わずにタグをcloneし、添付をdownload・照合する。新規環境へwheelを通常インストールし、公開import・全テスト・5実行例・Docsを確認する。
+5. 最終SHA・CI・チェックサム・匿名取得の結果をReleaseと#59へ記録してから、親Issueとマイルストーンを完了する。
 
 ### v0.5.0の公開手順と記録
 
@@ -4086,13 +4222,15 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-42"></a>
+<a id="section-43"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
 
 ### 未リリース
+
+- v0.6の予定変更・期間再通知・優先度と任意実行枠・協調的中断再開を実装。revisionと要求IDで競合・再送を扱い、経過時間と累積実行時間、旧新履歴を区別する。#53〜#59で実装・受入・公開を追跡する。
 
 - R18の一問一答による10項目の回答をADR 0021 D2へ記録。「全体想定回答で決め打ちして良い」という委任に基づき、予定版・安全な中断再開・計時・任意実行枠・優先度/FIFO・変更競合・API・旧新履歴・A06-01〜12・実装単位をD3〜D10で設計採用。製品コード・版情報・公開済みReleaseは変更していない。
 
@@ -4176,7 +4314,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-43"></a>
+<a id="section-44"></a>
 
 収録元 `LICENSE`
 

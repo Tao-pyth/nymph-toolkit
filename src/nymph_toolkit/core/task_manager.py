@@ -13,10 +13,13 @@ from nymph_toolkit.contracts import (
     ActivityAdmissionError, ActivityFailure, ActivityFinishReason, ActivityKey,
     ActivityNotice, ActivityNoticeKind, ActivityRequest, ActivitySnapshot,
     ActivityStartInPastError, ActivityState, ActivityStateError, DuplicateActivityError,
+    ActivityCommandStatus, ActivityControlKind,
     ModuleExecutionState, RegistryError, RuntimeState, UnknownActivityError,
 )
 from nymph_toolkit.contracts.activities import _freeze_json, _json_data, _utc
 from .connections import Connections
+from ._activity_commands import _Commands
+from ._activity_slots import _Slots
 
 
 class _Clock:
@@ -33,9 +36,20 @@ class _Clock:
 @dataclass(frozen=True)
 class _Context:
     request: ActivityRequest
-    planned_start_at: datetime
-    planned_end_at: datetime
     _entry: "_Activity" = field(repr=False, compare=False)
+    _manager: "TaskManager" = field(repr=False, compare=False)
+
+    @property
+    def current_request(self):
+        return self._entry.current_request
+
+    @property
+    def planned_start_at(self):
+        return self._entry.start_at
+
+    @property
+    def planned_end_at(self):
+        return self._entry.end_at
 
     @property
     def finish_requested(self):
@@ -44,6 +58,21 @@ class _Context:
     @property
     def finish_reason(self):
         return self._entry.finish_reason
+
+    @property
+    def pause_requested(self):
+        return self._entry.state == ActivityState.PAUSING
+
+    async def wait_for_control(self):
+        while True:
+            if self.finish_requested:
+                return ActivityControlKind.FINISH
+            if self.pause_requested:
+                return ActivityControlKind.PAUSE
+            await self._entry.control.wait()
+
+    async def checkpoint(self):
+        return await self._manager._checkpoint(self._entry)
 
     async def wait_for_finish(self):
         await self._entry.finish.wait()
@@ -73,17 +102,44 @@ class _Activity:
     driver: asyncio.Task | None = None
     timer: asyncio.Task | None = None
     worker: asyncio.Task | None = None
+    current_request: ActivityRequest | None = None
+    revision: int = 0
+    scheduled_revision: int = 0
+    commands: dict = field(default_factory=dict)
+    start_changed: asyncio.Event = field(default_factory=asyncio.Event)
+    end_changed: asyncio.Event = field(default_factory=asyncio.Event)
+    supports_pause: bool = False
+    control: asyncio.Event = field(default_factory=asyncio.Event)
+    resumed: asyncio.Event = field(default_factory=asyncio.Event)
+    granted: asyncio.Event = field(default_factory=asyncio.Event)
+    ticket: int | None = None
+    slot: bool = False
+    paused_at: datetime | None = None
+    resumed_at: datetime | None = None
+    paused_mono: float | None = None
+    paused_total: float = 0.0
+
+    def __post_init__(self):
+        self.current_request = self.request
 
 
-class TaskManager:
+class TaskManager(_Slots, _Commands):
     """One-loop activities sharing the existing connection catalog and store."""
 
-    def __init__(self, connections: Connections, *, clock_check_interval: float, clock=None):
+    def __init__(self, connections: Connections, *, clock_check_interval: float, clock=None, max_running=None):
         if not isinstance(connections, Connections):
             raise TypeError("connections must be a Connections instance")
         if (type(clock_check_interval) not in (int, float)
                 or not math.isfinite(clock_check_interval) or clock_check_interval <= 0):
             raise ValueError("clock_check_interval must be finite positive seconds")
+        if max_running is not None and (type(max_running) is not int or max_running <= 0):
+            raise ValueError("max_running must be None or a positive integer")
+        self._max_running = max_running
+        self._running_slots = 0
+        self._ticket = 0
+        self._ready = {}
+        self._dispatch_changed = asyncio.Event()
+        self._dispatcher = None
         self.connections = connections
         self.store = connections.store
         self._clock = _Clock() if clock is None else clock
@@ -154,6 +210,7 @@ class TaskManager:
         self._loop = asyncio.get_running_loop()
         self._fatal = self._loop.create_future()
         self._state = RuntimeState.RUNNING
+        self._dispatcher = self._spawn(self._dispatch(), "ntk-activity-dispatch")
 
     async def run(self):
         self._check_running()
@@ -194,12 +251,17 @@ class TaskManager:
         elapsed = entry.elapsed
         if entry.started_mono is not None and not entry.state.terminal:
             elapsed = max(0.0, self._clock.monotonic() - entry.started_mono)
+        paused = entry.paused_total
+        if entry.paused_mono is not None:
+            paused += max(0.0, self._clock.monotonic() - entry.paused_mono)
         return ActivitySnapshot(
             request=entry.request, state=entry.state, accepted_at=entry.accepted_at,
             planned_start_at=entry.start_at, planned_end_at=entry.end_at,
             started_at=entry.started_at, ended_at=entry.ended_at, elapsed_seconds=elapsed,
             finish_reason=entry.finish_reason, finish_requested_at=entry.finish_requested_at,
             planned_end_notified=entry.notified, result=entry.result, failures=entry.failures,
+            current_request=entry.current_request, revision=entry.revision,
+            scheduled_revision=entry.scheduled_revision, execution_seconds=max(0.0, elapsed - paused),
         )
 
     def snapshot(self, key):
@@ -211,8 +273,8 @@ class TaskManager:
         return tuple(self._snapshot(entry) for key, entry in sorted(self._activities.items())
                      if requester_id is None or key.requester_id == requester_id)
 
-    def _emit(self, entry, kind=ActivityNoticeKind.STATE_CHANGED):
-        observed = self._snapshot(entry)
+    def _emit(self, entry, kind=ActivityNoticeKind.STATE_CHANGED, *, command=None):
+        observed = self._snapshot(entry) if command is None else command.result.snapshot
         at = self._now()
         self._sequence += 1
         record = {"request": entry.request.as_dict(), "state": observed.state.value,
@@ -221,18 +283,31 @@ class TaskManager:
                   "finish_reason": None if entry.finish_reason is None else entry.finish_reason.value,
                   "result": _json_data(entry.result),
                   "failures": [{"type": type(f.exception).__name__, "message": str(f.exception)} for f in entry.failures]}
+        record.update(current_request=entry.current_request.as_dict(), revision=entry.revision,
+                      scheduled_revision=entry.scheduled_revision, execution_seconds=observed.execution_seconds,
+                      paused_at=None if entry.paused_at is None else entry.paused_at.isoformat(),
+                      resumed_at=None if entry.resumed_at is None else entry.resumed_at.isoformat())
         for name in ("accepted_at", "planned_start_at", "planned_end_at", "started_at", "ended_at", "finish_requested_at"):
             value = getattr(observed, name)
             record[name] = None if value is None else value.isoformat()
-        self.store.append("activity_" + kind.value, record)
+        if command is not None:
+            record["command"] = {"command_id": command.command_id, "operation": command.operation,
+                                 "expected_revision": command.expected_revision,
+                                 "change": None if command.change is None else command.change.as_dict(),
+                                 "received_at": command.received_at.isoformat(),
+                                 "status": command.result.status.value, "reason": command.result.reason}
+        self.store.append("activity_v06_" + ("command" if command is not None else kind.value), record)
         queue = self._notices.setdefault(entry.request.key.requester_id, asyncio.Queue())
-        queue.put_nowait(ActivityNotice(self._sequence, kind, at, observed))
+        queue.put_nowait(ActivityNotice(self._sequence, kind, at, command.result.snapshot if command else observed,
+                                       command.result if command else None))
         return observed
 
-    def submit(self, request: ActivityRequest, execute: Callable):
+    def submit(self, request: ActivityRequest, execute: Callable, *, supports_pause=False):
         self._check_running()
         if not isinstance(request, ActivityRequest) or not callable(execute):
             raise TypeError("submit requires an ActivityRequest and async execution callable")
+        if type(supports_pause) is not bool:
+            raise TypeError("supports_pause must be a bool")
         if self.store.failure is not None:
             raise self.store.failure
         if not self.store.admitting:
@@ -246,7 +321,7 @@ class TaskManager:
                               "reason": "start_in_past", "observed_at": now.isoformat()})
             raise ActivityStartInPastError(request, now)
         start, end = request.planned_times(now)
-        entry = _Activity(request, execute, now, start, end)
+        entry = _Activity(request, execute, now, start, end, supports_pause=supports_pause)
         self._activities[request.key] = entry
         try:
             observed = self._emit(entry)
@@ -263,27 +338,76 @@ class TaskManager:
             raise
         return observed
 
-    async def _until(self, when):
+    async def _until(self, entry, name, changed):
         while True:
-            remaining = (when - self._now()).total_seconds()
+            changed.clear()
+            remaining = (getattr(entry, name) - self._now()).total_seconds()
             if remaining <= 0:
                 return
-            await self._clock.sleep(min(remaining, self._interval))
+            async def delay():
+                # Resolve at actual task entry; an injectable clock may advance before then.
+                seconds = (getattr(entry, name) - self._now()).total_seconds()
+                await self._clock.sleep(max(0, min(seconds, self._interval)))
+            sleeper = self._spawn(delay(), "ntk-activity-delay", fatal=False)
+            try:
+                wake = self._spawn(changed.wait(), "ntk-activity-revision", fatal=False)
+                try:
+                    done, _ = await asyncio.wait((sleeper, wake), return_when=asyncio.FIRST_COMPLETED)
+                    for task in done:
+                        task.result()
+                finally:
+                    wake.cancel()
+                    await asyncio.gather(wake, return_exceptions=True)
+            finally:
+                sleeper.cancel()
+                await asyncio.gather(sleeper, return_exceptions=True)
+
+    def _reach_end(self, entry):
+        if not entry.state.terminal and not entry.notified and entry.end_at <= self._now():
+            entry.notified = True
+            entry.revision += 1
+            self._emit(entry, ActivityNoticeKind.PLANNED_END)
 
     async def _notify_end(self, entry):
         await asyncio.sleep(0)
-        await self._until(entry.end_at)
-        if not entry.state.terminal and not entry.notified:
-            entry.notified = True
-            self._emit(entry, ActivityNoticeKind.PLANNED_END)
+        while not entry.state.terminal:
+            await self._until(entry, "end_at", entry.end_changed)
+            self._reach_end(entry)
+            entry.end_changed.clear()
+            await entry.end_changed.wait()
 
     async def _execute(self, entry):
         await asyncio.sleep(0)
-        context = _Context(entry.request, entry.start_at, entry.end_at, entry)
+        context = _Context(entry.request, entry, self)
         result = entry.execute(context)
         if not inspect.isawaitable(result):
             raise TypeError("Activity execution must return an awaitable")
         return await result
+
+    def _unpause_clock(self, entry):
+        if entry.paused_mono is not None:
+            entry.paused_total += max(0.0, self._clock.monotonic() - entry.paused_mono)
+            entry.paused_mono = None
+
+    async def _checkpoint(self, entry):
+        self._check_context()
+        if asyncio.current_task() is not entry.worker:
+            raise ActivityStateError("Only the activity executor may acknowledge its safe point")
+        if entry.finish_reason is not None:
+            return entry.finish_reason
+        if entry.state != ActivityState.PAUSING:
+            return None
+        entry.resumed.clear()
+        entry.control.clear()
+        entry.state = ActivityState.PAUSED
+        entry.paused_at = self._now()
+        entry.paused_mono = self._clock.monotonic()
+        entry.revision += 1
+        self._emit(entry)
+        self._release_slot(entry)
+        self._resolve_commands(entry, "pause", ActivityCommandStatus.APPLIED)
+        await entry.resumed.wait()
+        return entry.finish_reason
 
     async def _drive(self, entry):
         # Ownership must be established before any executor or eager factory can run.
@@ -293,21 +417,19 @@ class TaskManager:
             if self._state != RuntimeState.RUNNING:
                 self._request_finish(entry, ActivityFinishReason.RUNTIME)
             if entry.finish_reason is None:
-                await self._until(entry.start_at)
-                await self.store.wait_ready()
+                await self._await_start(entry)
                 if self._state != RuntimeState.RUNNING:
                     self._request_finish(entry, ActivityFinishReason.RUNTIME)
-                    entry.state = ActivityState.STOPPED
                     return
                 try:
                     self._owner(entry.request.key.requester_id)
                 except ActivityAdmissionError as exc:
                     entry.failures = (ActivityFailure(exc),)
-                    entry.state = ActivityState.FAILED
                 else:
                     entry.started_at = self._now()
                     entry.started_mono = self._clock.monotonic()
                     entry.state = ActivityState.RUNNING
+                    entry.revision += 1
                     self._emit(entry)
                     entry.worker = self._spawn(self._execute(entry), "ntk-activity-work:" + entry.request.key.activity_id, fatal=False)
                     try:
@@ -318,29 +440,36 @@ class TaskManager:
                             entry.failures = (ActivityFailure(exc),)
                     except Exception as exc:
                         entry.failures = (ActivityFailure(exc),)
-                    entry.state = (ActivityState.FAILED if entry.failures else
-                                   ActivityState.STOPPED if entry.finish_reason is not None else ActivityState.COMPLETED)
-            else:
-                entry.state = ActivityState.STOPPED
         except asyncio.CancelledError as exc:
-            entry.state = ActivityState.STOPPED
             if entry.finish_reason is None:
                 entry.failures = (ActivityFailure(exc),)
-                entry.state = ActivityState.FAILED
         except Exception as exc:
             entry.failures = (ActivityFailure(exc),)
-            entry.state = ActivityState.FAILED
             self._failed(exc)
         finally:
             try:
                 if entry.timer is not None:
                     entry.timer.cancel()
-                    await asyncio.gather(entry.timer, return_exceptions=True)
+                    while not entry.timer.done():
+                        try:
+                            await asyncio.shield(entry.timer)
+                        except asyncio.CancelledError:
+                            pass
+                        except Exception:
+                            break  # Owned timer failure is observed by _spawn.
                 if entry.started_mono is not None:
+                    self._unpause_clock(entry)
                     entry.elapsed = max(0.0, self._clock.monotonic() - entry.started_mono)
                 entry.ended_at = self._now()
+                entry.state = (ActivityState.FAILED if entry.failures else
+                               ActivityState.STOPPED if entry.finish_reason is not None else ActivityState.COMPLETED)
+                entry.revision += 1
                 self._emit(entry)
+                self._resolve_commands(entry, None, ActivityCommandStatus.FAILED if entry.failures else ActivityCommandStatus.SUPERSEDED,
+                                       "executor_failed" if entry.failures else "finished" if entry.finish_reason else "completed")
             finally:
+                self._remove_ready(entry)
+                self._release_slot(entry)
                 entry.done.set()
 
     def request_finish(self, key, *, reason=ActivityFinishReason.NYMPH):
@@ -356,9 +485,15 @@ class TaskManager:
             return self._snapshot(entry)
         entry.finish_reason = reason
         entry.finish.set()
+        entry.control.set()
+        self._withdraw_resume(entry)
+        self._unpause_clock(entry)
+        entry.resumed.set()
         entry.finish_requested_at = self._now()
         entry.state = ActivityState.FINISHING
+        entry.revision += 1
         observed = self._emit(entry)
+        self._resolve_commands(entry, None, ActivityCommandStatus.SUPERSEDED, "finished")
         # A pending schedule has no executor to reach a safe point. Wake its wait.
         if (entry.entered and entry.worker is None and entry.driver is not None
                 and entry.driver is not asyncio.current_task()):
@@ -425,6 +560,8 @@ class TaskManager:
             raise asyncio.CancelledError
 
     async def _stop(self):
+        if self._dispatcher is not None:
+            self._dispatcher.cancel()
         for entry in self._activities.values():
             if entry.timer is not None:
                 entry.timer.cancel()

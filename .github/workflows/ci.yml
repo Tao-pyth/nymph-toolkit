@@ -25,6 +25,7 @@ jobs:
       - run: python examples/registry_demo.py
       - run: python examples/connections_demo.py
       - run: python examples/task_manager_demo.py
+      - run: python examples/activity_changes_demo.py
       - run: python tools/check_docs.py
       - run: python -m build
       - run: python tools/check_dist.py
