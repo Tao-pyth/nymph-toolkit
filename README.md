@@ -18,7 +18,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 A05では177テスト、4実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。[v0.5受入記録](docs/validation/v0.5.md)に要件ごとの証拠と制約をまとめています。活動の時刻・期間・優先度変更、中断再開、IPC、本番Subsystemは後続段階です。
 
-v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。v0.6〜v0.8の機能配分は開発計画案です。
+v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。v0.7〜v0.8の機能配分は開発計画案です。
 
 採用範囲のA04では129件のテスト、3実行例、Windows／Linux・Python 3.12〜3.15、通常インストール・sdist再ビルドと性能測定を確認しました。[Connectionsの操作契約](docs/connections.md)と[v0.4受入記録](docs/validation/v0.4.md)に、使い方・結果・制約を記載しています。
 
@@ -30,7 +30,7 @@ V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0は
 
 Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管理します。初期開発ではCore Runtime、Registry、Connections、TaskManagerを実装し、周辺をダミーで検証します。ハイブリッド実行を採用し、Python `asyncio` と軽量なメソッド呼び出しを技術の方向性とします。
 
-活動の価値や優先度はNymphが判断します。優先度機能を採用する場合、Coreは与えられた値と採用済み規則に基づいて実行順序を処理します。時間変更、優先度変更、中断・再開などの具体的な採否はV0.6の判断対象です。
+活動の価値や優先度はNymphが判断します。R18により、**開始時刻変更・期間変更・優先度・中断再開の4項目すべてをv0.6の対象として採用**しました。各操作の対応状態・計時・優先度の作用・競合・APIは設計中です。[ADR 0021](docs/adr/0021-v0.6-activity-changes.md)と[設計Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)で判断を記録し、範囲採用と実装完了を区別します。
 
 通信は、**Coreが管理・許可した接続ではSubsystem間の直接通信を認める**方針を採用しました。Core経由の通信も利用できます。方針の採用履歴は[ADR 0015](docs/adr/0015-core-authorized-direct-communication.md)、現在の公開入口・状態・失効の実装判断はADR 0019に記録しています。
 
