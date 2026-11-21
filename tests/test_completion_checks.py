@@ -12,6 +12,11 @@ from tools.check_completion import ADR, validate
 
 
 class ApiInventoryTests(unittest.TestCase):
+    def test_path_uses_the_public_module_name_on_supported_pythons(self):
+        def accept(path: Path) -> Path:
+            return path
+        self.assertEqual(signature(accept), "(path: pathlib.Path) -> pathlib.Path")
+
     def test_optional_type_variable_has_one_spelling_on_supported_pythons(self):
         value = TypeVar("Result")
         def optional() -> Optional[value]:

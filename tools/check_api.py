@@ -4,6 +4,7 @@
 import argparse
 from dataclasses import fields, is_dataclass
 from enum import Enum
+import difflib
 import inspect
 from pathlib import Path
 import re
@@ -25,6 +26,9 @@ def stable(value):
 
 
 def annotation(value):
+    # Python 3.13 exposes pathlib's private implementation module in repr.
+    if value is Path:
+        return "pathlib.Path"
     # Python 3.12/3.13 render Optional[TypeVar] differently from 3.14+.
     # Preserve the contract while giving union annotations one spelling.
     if typing.get_origin(value) in (typing.Union, types.UnionType):
@@ -137,6 +141,14 @@ def main():
     if args.write:
         TARGET.write_bytes(expected)
     elif not TARGET.is_file() or TARGET.read_bytes() != expected:
+        previous = TARGET.read_text(encoding="utf-8") if TARGET.is_file() else ""
+        difference = difflib.unified_diff(previous.splitlines(), expected.decode().splitlines(),
+                                         fromfile="documented", tofile="implementation", lineterm="")
+        for index, line in enumerate(difference):
+            if index == 80:
+                print("... remaining API differences omitted")
+                break
+            print(line)
         raise SystemExit("API inventory is stale: run python tools/check_api.py --write")
     data = inventory()
     print("PASS: public API inventory:", ", ".join(f"{k}={len(v)}" for k, v in data.items()))
