@@ -73,6 +73,21 @@ R18により、開始時刻変更・期間変更・優先度・中断再開の�
 
 #52はADR 0021、関連Docs、引継ぎ書と生成ヘッダーの同期、詳細契約・A06の設計判断を扱う。生成ヘッダーを更新する前に登録した。個別回答と残事項の判断委任を受け、振る舞い・API・A06-01〜12・実装単位を設計採用した。判断元はADR 0021 D1・D2とD3〜D10へ分ける。後続の子Issue分割はD10に記録し、製品コード変更前に各Issueを登録する。#52の設計完了を親#6・v0.6の実装完了と扱わない。
 
+## R22：v0.8の検証単位
+
+親#8・マイルストーンv0.8.0に、コード変更前に以下の子Issueを登録しGitHubの親子関係を確認した。
+
+| 子Issue | 対応単位 |
+|---|---|
+| [#72](https://github.com/Tao-pyth/nymph-toolkit/issues/72) | A08条件・ADR・根拠と文書同期 |
+| [#73](https://github.com/Tao-pyth/nymph-toolkit/issues/73) | 4配置統合・ライフサイクル障害 |
+| [#74](https://github.com/Tao-pyth/nymph-toolkit/issues/74) | 通信・ストリーム・活動変更の競合 |
+| [#75](https://github.com/Tao-pyth/nymph-toolkit/issues/75) | 保存障害・最終通知・再起動 |
+| [#76](https://github.com/Tao-pyth/nymph-toolkit/issues/76) | 性能・継続負荷・資源保持 |
+| [#77](https://github.com/Tao-pyth/nymph-toolkit/issues/77) | A08受入・CI・配布・資料 |
+
+採用条件はADR 0022、具体的な検証条件はADR 0024、結果はvalidation/v0.8.mdで管理する。公開済みのタグ・添付を変更せず、Release作成とは別にPRでレビューする。
+
 ## R21：v0.7のレビュー・公開
 
 コード変更前に、[#70 レビュー修正](https://github.com/Tao-pyth/nymph-toolkit/issues/70)と[#71 マージ・公開・匿名取得](https://github.com/Tao-pyth/nymph-toolkit/issues/71)を親#7・マイルストーンv0.7.0のsub-issueとして登録した。#70は取消・完了報告の境界不具合と回帰検証、#71は生成ヘッダーを含む公開資料・最終CI・マージ・タグ・Release・配布物・匿名再現を扱う。#71の公開後確認が終わってから親#7・マイルストーンを閉じる。
