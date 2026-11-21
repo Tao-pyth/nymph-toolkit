@@ -30,7 +30,7 @@ V0.1・V0.9は、それぞれv0.1.0・v0.9.0の節目を表します。v1.0.0は
 
 Nymphが活動内容・時刻・期間・変更を決め、Coreが実行を管理します。初期開発ではCore Runtime、Registry、Connections、TaskManagerを実装し、周辺をダミーで検証します。ハイブリッド実行を採用し、Python `asyncio` と軽量なメソッド呼び出しを技術の方向性とします。
 
-活動の価値や優先度はNymphが判断します。R18により、**開始時刻変更・期間変更・優先度・中断再開の4項目すべてをv0.6の対象として採用**しました。各操作の対応状態・計時・優先度の作用・競合・APIは設計中です。[ADR 0021](docs/adr/0021-v0.6-activity-changes.md)と[設計Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)で判断を記録し、範囲採用と実装完了を区別します。
+活動の価値や優先度はNymphが判断します。R18により、**開始時刻変更・期間変更・優先度・中断再開の4項目すべてをv0.6の対象として採用**しました。一問一答の回答と、残事項をCodexが決定してよいという委任に基づき、対応状態・計時・優先度と任意の実行枠・競合・API・受入条件を設計しました。[ADR 0021](docs/adr/0021-v0.6-activity-changes.md)と[設計Issue #52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)に判断元を分けて記録しています。v0.6の製品コード・受入・公開は未完了です。
 
 通信は、**Coreが管理・許可した接続ではSubsystem間の直接通信を認める**方針を採用しました。Core経由の通信も利用できます。方針の採用履歴は[ADR 0015](docs/adr/0015-core-authorized-direct-communication.md)、現在の公開入口・状態・失効の実装判断はADR 0019に記録しています。
 
