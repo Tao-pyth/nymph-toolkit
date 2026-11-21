@@ -12,7 +12,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在の段階
 
-**v0.8.0開発版：統合・障害・負荷検証。** R22に基づき子Issue #72〜#77を先に登録し、検出した管理通信の結果解放不具合を#78で修正しました。[ADR 0024](docs/adr/0024-v0.8-integration-validation.md)の条件で検証を進めています。変更は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、結果は[v0.8受入記録](docs/validation/v0.8.md)へ記録し、公開済みv0.7.0と区別します。 CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
+**v0.8.0開発版：統合・障害・負荷検証。** R22に基づき子Issue #72〜#77を先に登録し、管理通信の結果解放を#78、送信前の期限・取消による枠残存を#80で修正しました。[ADR 0024](docs/adr/0024-v0.8-integration-validation.md)に沿って288テスト・6実行例・全8環境CI・通常配布と、条件を明記した30分負荷を確認しました。変更は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、結果は[v0.8受入記録](docs/validation/v0.8.md)へ記録し、公開済みv0.7.0と区別します。 CoreとContractsの単一パッケージにRuntime・Registry・ModuleGroup・Connections・FileStore・TaskManagerと、HybridGroup・HybridTaskManagerを含みます。CPython 3.12以上、実行時の外部依存はありません。
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。[操作契約](docs/task-manager.md)と[ADR 0020](docs/adr/0020-v0.5-task-manager.md)に採用範囲を記録しています。
 
