@@ -1,0 +1,1351 @@
+{
+  "schema": 1,
+  "decisions": [
+    {
+      "number": 1,
+      "topic": "実行対象",
+      "decision": "v0.9までは同じPC内。他のPCを使う分散実行は対象外",
+      "acceptance": "A07-01",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 2,
+      "topic": "着脱時期",
+      "decision": "Core起動前・停止後に着脱し、稼働中の機能構成は固定",
+      "acceptance": "A07-02",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_registration_boundary_and_restart_binding",
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 3,
+      "topic": "プロセス単位",
+      "decision": "別プロセス配置ではSubsystem・Adapterごとに1プロセス。同一プロセスには複数機能を配置可能",
+      "acceptance": "A07-01",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 4,
+      "topic": "起動主体",
+      "decision": "Coreが起動した子プロセスだけを管理する",
+      "acceptance": "A07-01・A07-02",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_stop_deadline_forces_only_owned_child_and_marks_unknown_cleanup"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 5,
+      "topic": "配置指定",
+      "decision": "起動設定で機能ごとに明示し、その稼働中は固定",
+      "acceptance": "A07-01",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams",
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 6,
+      "topic": "Python環境",
+      "decision": "Coreと同じPython実行環境・仮想環境を使う",
+      "acceptance": "A07-01",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 7,
+      "topic": "共通契約",
+      "decision": "要求・結果・状態通知の基本契約を同一・別プロセスで共通化し、配置固有の制約を明記",
+      "acceptance": "A07-04・A07-05",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams",
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 8,
+      "topic": "別プロセス呼出し",
+      "decision": "非同期APIを使う",
+      "acceptance": "A07-05",
+      "tests": [
+        "tests.core.test_hybrid_transport.WireTests.test_settings_and_application_values",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 9,
+      "topic": "ストリームの範囲",
+      "decision": "連続ストリームをv0.9までの対象に含め、ダミーで検証",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 10,
+      "topic": "混雑時の方針",
+      "decision": "利用機能がストリームごとに送信待機または古いデータの破棄を選ぶ",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_drop_oldest_reports_gap_and_preserves_latest",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 11,
+      "topic": "欠落の通知",
+      "decision": "データ欠落を受信側へ通知",
+      "acceptance": "A07-08",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_end_without_following_data_exposes_missing_tail"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 12,
+      "topic": "上限の指定者",
+      "decision": "利用機能がストリームごとに転送バッファ上限を指定",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 13,
+      "topic": "上限の種類",
+      "decision": "バイト数とチャンク数の両方。追加でどちらかを超えると混雑時の方針を適用",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure",
+        "tests.core.test_hybrid_transport.StreamTests.test_oversize_rejected_and_chunk_count_includes_empty_bytes"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 14,
+      "topic": "単一チャンク超過",
+      "decision": "バイト上限より大きいチャンクはエラー。分割は送信側の責任",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_oversize_rejected_and_chunk_count_includes_empty_bytes"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 15,
+      "topic": "送信成功",
+      "decision": "ローカル転送キューへの受付完了を意味し、相手の受信・処理完了を意味しない",
+      "acceptance": "A07-09",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_send_is_local_acceptance_and_payload_is_copied"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 16,
+      "topic": "通常終了",
+      "decision": "受付済みで未破棄のデータを送り終えてから終端通知",
+      "acceptance": "A07-10",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_close_timeout_keeps_drain_alive_until_receiver_frees_capacity"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 17,
+      "topic": "送信・終了の待機期限",
+      "decision": "呼出し側が有限の期限を指定",
+      "acceptance": "A07-09・A07-10",
+      "tests": [
+        "tests.core.test_hybrid_transport.WireTests.test_settings_and_application_values",
+        "tests.core.test_hybrid_transport.StreamTests.test_failed_send_wait_is_not_enqueued_later"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 18,
+      "topic": "終了待機の期限切れ",
+      "decision": "呼出しへタイムアウトを返すが終了処理は継続。状態確認と明示的な打切りを可能にする",
+      "acceptance": "A07-10",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_close_timeout_keeps_drain_alive_until_receiver_frees_capacity"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 19,
+      "topic": "管理情報の所在",
+      "decision": "親Coreを唯一の管理主体とする。Registry・接続情報・TaskManager・保存処理を子ごとに複製せず、子は実行と報告を担当",
+      "acceptance": "A07-01",
+      "tests": [
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach",
+        "tests.core.test_v08_storage.StorageIntegrationTests.test_rescue_preserves_remote_final_report_and_blocks_only_new_admission"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 20,
+      "topic": "子の起動方法",
+      "decision": "同じPythonで指定の起動入口と設定から新しく起動。実行中のオブジェクトや関数を丸ごと転送して起動しない",
+      "acceptance": "A07-01",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 21,
+      "topic": "起動時照合",
+      "decision": "機能ID、実装版、契約ID・版、通信形式の版、今回の起動識別情報を照合し、不一致の子を利用可能にしない",
+      "acceptance": "A07-02",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_dependency_order_partial_cleanup_and_contract_mismatch",
+        "tests.core.test_hybrid_transport.RpcTests.test_generation_mismatch_closes_channel"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 22,
+      "topic": "起動順序",
+      "decision": "既存の依存順序を維持し、必要な初期化の完了後に実行。起動途中の失敗では初期化に入った機能を逆順に後処理",
+      "acceptance": "A07-02",
+      "tests": [
+        "tests.core.test_v08_integration.IntegrationTests.test_partial_initialization_in_all_placements_reverses_cleanup"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 23,
+      "topic": "子の予期しない終了",
+      "decision": "未処理の機能障害としてRuntimeを停止。通常の連携エラーは要求元の協調的中断で扱い、区別する",
+      "acceptance": "A07-03",
+      "tests": [
+        "tests.core.test_v08_integration.IntegrationTests.test_data_disconnect_during_activity_is_local_interruption_without_replay",
+        "tests.core.test_v08_integration.IntegrationTests.test_child_exit_or_parent_channel_loss_during_activity_and_stream"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 24,
+      "topic": "障害検出",
+      "decision": "プロセス終了通知・通信切断・実際の操作失敗を使い、定期ヘルスチェックは追加しない。親との管理接続を失った子は後処理して終了",
+      "acceptance": "A07-03",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_start_timeout_and_lost_parent_channel_reap_owned_children"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 25,
+      "topic": "起動・停止の無応答",
+      "decision": "Core設定で有限の待機期限を指定。Core停止期限後はCore所有の子に限って強制終了を可能にし、後処理未確認を記録。通常の活動終了には適用しない",
+      "acceptance": "A07-03",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_initialization_failure_and_deadline_owned_child_cleanup",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_stop_deadline_forces_only_owned_child_and_marks_unknown_cleanup",
+        "tests.core.test_v08_integration.IntegrationTests.test_shutdown_deadline_does_not_apply_to_nymph_finish",
+        "tests.core.test_v09_shutdown_race.ShutdownRaceTests.test_stop_reaps_exit_racing_kill_before_store_closes",
+        "tests.core.test_v09_shutdown_race.ShutdownRaceTests.test_guardian_accepts_already_exited_child_and_stop_saves_final_state",
+        "tests.core.test_v09_shutdown_race.ShutdownRaceTests.test_other_termination_error_is_not_hidden"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。 R25/#89で子の終了とkillの競合後も監視・最終履歴を回収することを追加検証。"
+    },
+    {
+      "number": 26,
+      "topic": "子だけの再起動",
+      "decision": "v0.9までは採用しない。Core停止後に新しいRuntimeとして起動し、活動や失敗要求を自動再実行しない",
+      "acceptance": "A07-03",
+      "tests": [
+        "tests.core.test_v08_storage.StorageIntegrationTests.test_new_runtime_preserves_history_and_requires_nymph_reregistration"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid.py",
+        "src/nymph_toolkit/core/_child.py",
+        "src/nymph_toolkit/core/module_group.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 27,
+      "topic": "通信方式",
+      "decision": "同じPCのループバックTCPを採用。127.0.0.1とOS割当ポートを使い、外部ネットワーク向けに待ち受けない",
+      "acceptance": "A07-04",
+      "tests": [
+        "tests.core.test_hybrid_transport.RpcTests.test_concurrent_requests_results_and_remote_exception",
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 28,
+      "topic": "管理とデータの経路",
+      "decision": "Coreとの管理通信と許可済み機能間のデータ通信を分ける。データは直接通信を基本とし、Core経由も利用可能",
+      "acceptance": "A07-04",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_core_mediated_call_and_failure_updates_cached_route"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 29,
+      "topic": "転送データ",
+      "decision": "要求・結果・通知はJSONで表現できる値、ストリーム本文はバイト列を基本とする。任意のPythonオブジェクト・関数は転送しない。同一プロセスの既存入力まで制限しない",
+      "acceptance": "A07-05",
+      "tests": [
+        "tests.core.test_hybrid_transport.WireTests.test_contract_roundtrip_and_unchanged_are_not_arbitrary_imports",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_business_and_capacity_results_are_not_link_failures",
+        "tests.core.test_v09_contract_boundaries.PlacementContractTests.test_local_sync_contract_keeps_python_object_identity_on_both_routes"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 30,
+      "topic": "同期・非同期契約",
+      "decision": "別プロセスに公開する操作は非同期契約と明示。同じ契約ID・版の同期契約を暗黙に非同期へ読み替えない",
+      "acceptance": "A07-05",
+      "tests": [
+        "tests.core.test_v09_contract_boundaries.PlacementContractTests.test_hybrid_rejects_same_sync_contract_without_partial_registration"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 31,
+      "topic": "通信形式・識別",
+      "decision": "形式の版、メッセージ長、要求ID、接続・ストリームID、起動世代を明示。不正な長さ・未対応形式・古い起動の通知を拒否",
+      "acceptance": "A07-05",
+      "tests": [
+        "tests.core.test_hybrid_transport.RpcTests.test_frame_limit_and_duplicate_json_keys",
+        "tests.core.test_hybrid_transport.RpcTests.test_generation_mismatch_closes_channel",
+        "tests.core.test_v08_contention.ContentionTests.test_restarted_binding_rejects_old_handshake_without_changing_live_target"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 32,
+      "topic": "通常要求の期限・取消",
+      "decision": "別プロセス呼出しに有限の待機期限を指定。操作取消を協調的に伝え、確認できなければ結果不明とする。受付済みCore管理処理の待機取消とは区別",
+      "acceptance": "A07-06",
+      "tests": [
+        "tests.core.test_hybrid_transport.RpcTests.test_deadline_cancels_cooperatively_and_retains_late_result",
+        "tests.core.test_v08_result_ownership.ManagementIntegrationTests.test_child_can_release_repeated_management_timeouts_and_cancellation",
+        "tests.core.test_v08_result_ownership.ResultOwnershipTests.test_unsent_deadlines_and_cancellations_do_not_exhaust_capacity"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 33,
+      "topic": "エラーの伝達",
+      "decision": "業務上の失敗・容量不足・連携エラー・子の障害を区別。発生機能・例外種別・説明等を転送し、元の例外オブジェクトと同一とは扱わない",
+      "acceptance": "A07-05",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_business_and_capacity_results_are_not_link_failures",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_child_run_failure_stops_runtime"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 34,
+      "topic": "同時受付数",
+      "decision": "同時呼出し数・開いているストリーム数に設定可能な上限を設け、超過は明示的に拒否。活動実行枠・履歴バッファとは別に扱う",
+      "acceptance": "A07-06",
+      "tests": [
+        "tests.core.test_hybrid_transport.RpcTests.test_request_capacity_and_caller_cancel_are_not_automatic_retry",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 35,
+      "topic": "順序・重複・遅延",
+      "decision": "同じストリーム・同じ操作系列内の順序を保証し、全機能共通の順序は保証しない。要求IDで照合し遅い結果を別の要求へ渡さず、自動再送しない",
+      "acceptance": "A07-06",
+      "tests": [
+        "tests.core.test_v08_contention.LateRpcTests.test_late_cancelled_result_is_not_delivered_to_next_request",
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_wire.py",
+        "src/nymph_toolkit/core/_rpc.py",
+        "src/nymph_toolkit/core/_hybrid_client.py",
+        "src/nymph_toolkit/core/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 36,
+      "topic": "方向",
+      "decision": "1ストリームは片方向。双方向は2本で構成し、終了・混雑・取消を方向ごとに扱う",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 37,
+      "topic": "本文・所有",
+      "decision": "バイト列の意味と形式は利用機能の契約で定義。受付後の内容を送信側の書換えで変化させず、Coreは音声等の意味を解釈しない",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_send_is_local_acceptance_and_payload_is_copied"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 38,
+      "topic": "方針・上限の変更",
+      "decision": "開始時に指定してそのストリーム中は固定。変更時は終了・打切り後に新しく開く",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_transport.WireTests.test_settings_and_application_values",
+        "tests.core.test_hybrid_group.HybridGroupTests.test_four_placements_direct_calls_and_streams"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 39,
+      "topic": "受信バッファ",
+      "decision": "受信側にも明示した上限を設け、受信可能量に応じて転送。送信側だけを制限して受信側が無制限に増える構造にしない。OS内部のバッファとは区別",
+      "acceptance": "A07-07",
+      "tests": [
+        "tests.core.test_hybrid_group.HybridGroupTests.test_stream_capacity_and_management_responsiveness_during_backpressure"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 40,
+      "topic": "破棄単位と通知",
+      "decision": "まだ転送していない古いチャンクを丸ごと破棄。欠落番号範囲・件数を通知し、後続データがなくても終端時に欠落を確認可能にする",
+      "acceptance": "A07-08",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_drop_oldest_reports_gap_and_preserves_latest",
+        "tests.core.test_hybrid_transport.StreamTests.test_end_without_following_data_exposes_missing_tail"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 41,
+      "topic": "混雑時の管理",
+      "decision": "大量データ中も停止・中断・障害通知を通し、管理通信をデータ待ちの後ろへ滞留させない",
+      "acceptance": "A07-08",
+      "tests": [
+        "tests.core.test_v08_contention.ContentionTests.test_capacity_cancel_and_new_calls_keep_control_available",
+        "tests.core.test_v08_contention.ContentionTests.test_stream_pressure_drop_cancel_close_and_activity_change"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 42,
+      "topic": "通常終了の完了",
+      "decision": "受信側の通信機構が先行データと終端を受け取った確認までとする。受信機能による内容処理の完了は含めない",
+      "acceptance": "A07-10",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_close_timeout_keeps_drain_alive_until_receiver_frees_capacity"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 43,
+      "topic": "送信待機の期限切れ・取消",
+      "decision": "キュー受付前なら送信を取り消して後から勝手に受け付けない。受付後は受付済みとして扱い、待機取消だけでデータを撤回しない",
+      "acceptance": "A07-09",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_cancelled_send_is_not_admitted_after_capacity_recovers",
+        "tests.core.test_hybrid_transport.StreamTests.test_failed_send_wait_is_not_enqueued_later"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 44,
+      "topic": "明示打切り",
+      "decision": "送信・受信の双方から可能。未転送データを破棄し、理由を通知して待機を解除。正常終了と区別",
+      "acceptance": "A07-10",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_receiver_abort_unblocks_waiting_sender",
+        "tests.core.test_hybrid_transport.StreamTests.test_receive_timeout_does_not_abort_and_peer_abort_is_distinct"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 45,
+      "topic": "受信待機",
+      "decision": "有限の期限を指定。期限切れはその待機のみ終了しストリームを維持。空データ・正常終端・障害を区別",
+      "acceptance": "A07-10",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_receive_timeout_does_not_abort_and_peer_abort_is_distinct",
+        "tests.core.test_hybrid_transport.StreamTests.test_oversize_rejected_and_chunk_count_includes_empty_bytes"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 46,
+      "topic": "切断後",
+      "decision": "そのストリームを失敗として終了し、自動再開・再送しない。受信済みデータの後に障害を通知。必要なら機能が新しいストリームを要求",
+      "acceptance": "A07-10",
+      "tests": [
+        "tests.core.test_hybrid_transport.StreamTests.test_disconnect_preserves_received_data_before_error",
+        "tests.core.test_v08_integration.IntegrationTests.test_data_disconnect_during_activity_is_local_interruption_without_replay"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 47,
+      "topic": "活動・機能終了",
+      "decision": "利用機能が所有ストリームの終了・打切りを担当。活動の中断・終了に必要な処理を実行側が行い、機能停止時に残存資源を回収",
+      "acceptance": "A07-10",
+      "tests": [
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach",
+        "tests.core.test_v08_integration.IntegrationTests.test_child_exit_or_parent_channel_loss_during_activity_and_stream"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/_streams.py",
+        "src/nymph_toolkit/core/_module_node.py",
+        "src/nymph_toolkit/contracts/hybrid.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 48,
+      "topic": "Core操作の窓口",
+      "decision": "別プロセスから候補照会・接続要求・活動登録・変更をCoreへ届ける。要求側選定とCore管理の境界を維持",
+      "acceptance": "A07-11",
+      "tests": [
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid_tasks.py",
+        "src/nymph_toolkit/core/_remote_activity.py",
+        "src/nymph_toolkit/core/task_manager.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 49,
+      "topic": "実行処理の指定",
+      "decision": "登録済み実行処理IDと引数で指定し、関数そのものは転送しない。既存の同一プロセス入口を維持",
+      "acceptance": "A07-11",
+      "tests": [
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid_tasks.py",
+        "src/nymph_toolkit/core/_remote_activity.py",
+        "src/nymph_toolkit/core/task_manager.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 50,
+      "topic": "状態確定",
+      "decision": "実行側の適用報告で開始・中断・再開・終了を確定。指示送信だけで確定せず、変更の版管理と命令IDを維持",
+      "acceptance": "A07-12",
+      "tests": [
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_pause_while_resume_report_is_delayed_keeps_slot_until_safe_point",
+        "tests.core.test_v08_contention.ContentionTests.test_revision_and_idempotency_with_pause_report_racing_shutdown"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid_tasks.py",
+        "src/nymph_toolkit/core/_remote_activity.py",
+        "src/nymph_toolkit/core/task_manager.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 51,
+      "topic": "時計・計時",
+      "decision": "予定時刻はCoreが管理し、実行時間は実行側の単調時計で計測。通信遅延を実行時間に加算せず、未確定の観測値を未確定と示す",
+      "acceptance": "A07-12",
+      "tests": [
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_pause_resume_and_finish_keep_child_continuation_and_confirmed_timing",
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_child_loss_records_unknown_cleanup_and_releases_slot_after_exit"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid_tasks.py",
+        "src/nymph_toolkit/core/_remote_activity.py",
+        "src/nymph_toolkit/core/task_manager.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 52,
+      "topic": "子の消失",
+      "decision": "活動障害と結果・後処理の未確認部分を記録し、正常終了に置き換えない。実行枠は実行終了またはプロセス終了を確認して解放",
+      "acceptance": "A07-12",
+      "tests": [
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_child_loss_records_unknown_cleanup_and_releases_slot_after_exit"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid_tasks.py",
+        "src/nymph_toolkit/core/_remote_activity.py",
+        "src/nymph_toolkit/core/task_manager.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 53,
+      "topic": "v0.6機能の対応",
+      "decision": "開始時刻変更・期間変更・優先度変更・中断再開を両配置で検証。Nymphの判断権限、協調的変更、再起動後の再登録方針を維持",
+      "acceptance": "A07-12",
+      "tests": [
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands",
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_changes_and_idempotency_preserve_nymph_authority"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/hybrid_tasks.py",
+        "src/nymph_toolkit/core/_remote_activity.py",
+        "src/nymph_toolkit/core/task_manager.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 54,
+      "topic": "保存主体と受付境界",
+      "decision": "親Coreが保存を集約。子での発生・Core受付・保存済みを区別し、子の消失で未送信分が不明なら不明と記録",
+      "acceptance": "A07-13",
+      "tests": [
+        "tests.core.test_v08_storage.StorageIntegrationTests.test_rescue_preserves_remote_final_report_and_blocks_only_new_admission",
+        "tests.core.test_v08_storage.StorageIntegrationTests.test_unrecoverable_save_includes_final_reports_and_preserves_old_data"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/storage.py",
+        "src/nymph_toolkit/core/_activity_history.py",
+        "src/nymph_toolkit/core/_rpc.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 55,
+      "topic": "永続保存",
+      "decision": "構成・接続設定・活動と変更の履歴を保存。PID・ソケット・ストリーム途中データ・実行中処理を復元しない。形式変更は版で識別し既存履歴を保全",
+      "acceptance": "A07-13",
+      "tests": [
+        "tests.core.test_v08_storage.StorageIntegrationTests.test_new_runtime_preserves_history_and_requires_nymph_reregistration",
+        "tests.core.test_activity_v06_history.ActivityV06HistoryTests.test_v05_and_v06_history_are_read_together_without_inventing_old_fields"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/storage.py",
+        "src/nymph_toolkit/core/_activity_history.py",
+        "src/nymph_toolkit/core/_rpc.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 56,
+      "topic": "結果・状態の保持",
+      "decision": "既存の活動結果・変更結果の保持を維持。新しい通信結果には明示的解放方法を設け、保存履歴・重複判定に必要な情報・一時バッファを分ける",
+      "acceptance": "A07-13",
+      "tests": [
+        "tests.core.test_v08_result_ownership.ResultOwnershipTests.test_public_ids_result_and_release_cover_late_error_and_disconnect",
+        "tests.core.test_v08_result_ownership.ResultOwnershipTests.test_internal_release_waits_for_result_or_disconnect",
+        "tests.core.test_v08_storage.StorageIntegrationTests.test_slow_healthy_save_keeps_accepting_and_does_not_lose_child_completion"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/storage.py",
+        "src/nymph_toolkit/core/_activity_history.py",
+        "src/nymph_toolkit/core/_rpc.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 57,
+      "topic": "運用情報",
+      "decision": "プロセス状態・終了理由・通信待ち・バッファ量・破棄件数・未保存件数を確認可能にする。ストリーム本文を一律に履歴保存せず、開始・終了・障害・欠落を記録",
+      "acceptance": "A07-13",
+      "tests": [
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach",
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_child_loss_records_unknown_cleanup_and_releases_slot_after_exit"
+      ],
+      "implementation": [
+        "src/nymph_toolkit/core/storage.py",
+        "src/nymph_toolkit/core/_activity_history.py",
+        "src/nymph_toolkit/core/_rpc.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 58,
+      "topic": "バージョン配分",
+      "decision": "v0.7でプロセス管理・呼出し・ストリームの基本、v0.8で統合と障害検証、v0.9で合意範囲の完成確認と資料整備。再配分時は理由を記録",
+      "acceptance": "A09-01",
+      "tests": [],
+      "implementation": [
+        "tools/check_completion.py",
+        "tools/check_dist.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md",
+        "docs/adr/0025-v0.9-core-completion.md",
+        "docs/core-api.md",
+        "docs/release.md"
+      ],
+      "note": "計画・資料・完成の条件。A09-04の公開後照合は公開工程で別途判定。"
+    },
+    {
+      "number": 59,
+      "topic": "配置の組合せ",
+      "decision": "要求側・提供側がそれぞれCore同一／別プロセスとなる4通りを検証。要求・結果・ストリーム・活動管理を含む",
+      "acceptance": "A07-14",
+      "tests": [
+        "tests.core.test_v08_integration.IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach",
+        "tests.core.test_hybrid_activities.HybridActivityTests.test_four_placements_requester_owns_remote_activity_commands"
+      ],
+      "implementation": [
+        "tools/check_completion.py",
+        "tools/check_dist.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。"
+    },
+    {
+      "number": 60,
+      "topic": "障害・競合",
+      "decision": "起動途中失敗・子異常終了・切断・容量超過・混雑・欠落・期限切れ・取消・古い通知・保存失敗・停止との競合を検証。自動再実行・接続先切替がないことも確認",
+      "acceptance": "A08-01・A08-02・A08-03・A08-04",
+      "tests": [
+        "tests.core.test_v08_integration.IntegrationTests.test_partial_initialization_in_all_placements_reverses_cleanup",
+        "tests.core.test_v08_integration.IntegrationTests.test_child_exit_or_parent_channel_loss_during_activity_and_stream",
+        "tests.core.test_v08_contention.ContentionTests.test_stream_pressure_drop_cancel_close_and_activity_change",
+        "tests.core.test_v08_storage.StorageIntegrationTests.test_unrecoverable_save_includes_final_reports_and_preserves_old_data",
+        "tests.core.test_v09_shutdown_race.ShutdownRaceTests.test_stop_reaps_exit_racing_kill_before_store_closes",
+        "tests.core.test_v09_shutdown_race.ShutdownRaceTests.test_guardian_accepts_already_exited_child_and_stop_saves_final_state",
+        "tests.core.test_v09_shutdown_race.ShutdownRaceTests.test_other_termination_error_is_not_hidden"
+      ],
+      "implementation": [
+        "tools/check_completion.py",
+        "tools/check_dist.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md"
+      ],
+      "note": "試験と実装を併読し、全回帰の結果で判定する。 R25/#89で子の終了とkillの競合後も監視・最終履歴を回収することを追加検証。"
+    },
+    {
+      "number": 61,
+      "topic": "性能",
+      "decision": "起動時間・呼出し遅延・転送量・メモリ量・停止時間を測定。未測定の速度目標を固定せず、バッファ上限と管理操作の応答性を確認",
+      "acceptance": "A08-05",
+      "tests": [],
+      "implementation": [
+        "tools/validate_hybrid_load.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md",
+        "docs/validation/v0.8.md",
+        "docs/validation/v0.8-long.json",
+        "docs/validation/v0.8-pressure.json",
+        "docs/validation/v0.8-post-fix.json"
+      ],
+      "note": "30分測定はcb0cf61・Windows 11/CPython3.15.2の正常経路。後続#80の検証を別記し、最終版全体の30分測定や無期限保証とはしない。"
+    },
+    {
+      "number": 62,
+      "topic": "長時間・高負荷",
+      "decision": "CIの短い再現試験と別途実行する長時間試験を用意。条件・時間・結果を記録し、保持仕様の増加とリークを区別",
+      "acceptance": "A08-06",
+      "tests": [],
+      "implementation": [
+        "tools/validate_hybrid_load.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md",
+        "docs/validation/v0.8.md",
+        "docs/validation/v0.8-long.json",
+        "docs/validation/v0.8-pressure.json",
+        "docs/validation/v0.8-post-fix.json"
+      ],
+      "note": "30分測定はcb0cf61・Windows 11/CPython3.15.2の正常経路。後続#80の検証を別記し、最終版全体の30分測定や無期限保証とはしない。"
+    },
+    {
+      "number": 63,
+      "topic": "環境・配布",
+      "decision": "Windows・Linux、Python 3.12〜3.15を維持。ソースと通常インストールした配布物で検証し、Core＋Contractsの単一パッケージを維持",
+      "acceptance": "A08-07・A09-03",
+      "tests": [],
+      "implementation": [
+        "tools/check_dist.py",
+        ".github/workflows/ci.yml"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md",
+        "docs/development.md",
+        "docs/api-reference.md"
+      ],
+      "note": "8環境CIと通常wheelの全試験、sdist同一wheel再ビルド。実施結果はv0.9記録。"
+    },
+    {
+      "number": 64,
+      "topic": "v0.9完成",
+      "decision": "合意したCore機能をダミーだけで検証可能とし、受入条件を満たす。API・エラー・制約・検証結果・引継ぎ書を一致させ、v1.0の接続契約整備を別の節目として残す",
+      "acceptance": "A09-01・A09-02・A09-04",
+      "tests": [],
+      "implementation": [
+        "tools/check_completion.py",
+        "tools/check_dist.py"
+      ],
+      "documents": [
+        "docs/hybrid.md",
+        "docs/validation/v0.9.md",
+        "docs/adr/0025-v0.9-core-completion.md",
+        "docs/core-api.md",
+        "docs/release.md"
+      ],
+      "note": "計画・資料・完成の条件。A09-04の公開後照合は公開工程で別途判定。"
+    }
+  ],
+  "baseline": [
+    {
+      "acceptance": "A02",
+      "modules": [
+        "tests.core.test_runtime"
+      ],
+      "document": "docs/validation/v0.2.md"
+    },
+    {
+      "acceptance": "A03",
+      "modules": [
+        "tests.core.test_registry",
+        "tests.core.test_registry_contracts",
+        "tests.core.test_module_group"
+      ],
+      "document": "docs/validation/v0.3.md"
+    },
+    {
+      "acceptance": "A04",
+      "modules": [
+        "tests.core.test_connection_contracts",
+        "tests.core.test_connections",
+        "tests.core.test_connections_storage",
+        "tests.core.test_connected_group",
+        "tests.core.test_storage",
+        "tests.core.test_storage_io"
+      ],
+      "document": "docs/validation/v0.4.md"
+    },
+    {
+      "acceptance": "A05",
+      "modules": [
+        "tests.core.test_activity_contracts",
+        "tests.core.test_task_manager",
+        "tests.core.test_activity_faults",
+        "tests.core.test_activity_group",
+        "tests.core.test_activity_history"
+      ],
+      "document": "docs/validation/v0.5.md"
+    },
+    {
+      "acceptance": "A06",
+      "modules": [
+        "tests.core.test_activity_change_contracts",
+        "tests.core.test_activity_changes",
+        "tests.core.test_activity_controls",
+        "tests.core.test_activity_slots",
+        "tests.core.test_activity_v06_faults",
+        "tests.core.test_activity_v06_history"
+      ],
+      "document": "docs/validation/v0.6.md"
+    },
+    {
+      "acceptance": "A07",
+      "modules": [
+        "tests.core.test_hybrid_transport",
+        "tests.core.test_hybrid_group",
+        "tests.core.test_hybrid_activities"
+      ],
+      "document": "docs/validation/v0.7.md"
+    },
+    {
+      "acceptance": "A08",
+      "modules": [
+        "tests.core.test_v08_contention",
+        "tests.core.test_v08_integration",
+        "tests.core.test_v08_result_ownership",
+        "tests.core.test_v08_storage"
+      ],
+      "document": "docs/validation/v0.8.md"
+    }
+  ]
+}

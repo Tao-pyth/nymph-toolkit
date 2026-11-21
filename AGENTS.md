@@ -33,4 +33,6 @@ v0.7〜v0.9はR19・[ADR 0022](docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md)
 
 v0.8の統合・障害・負荷検証は[ADR 0024](docs/adr/0024-v0.8-integration-validation.md)と[A08検証記録](docs/validation/v0.8.md)を参照する。管理RPCと直接RPCの一時結果は照会・明示解放できる。内部報告の完了後回収と、既存活動・命令・保存履歴の保持を混同しない。短いCI試験と別途の長時間測定を区別し、実測条件・未検証範囲を記録する。
 
+v0.9の完成確認はR24・[ADR 0025](docs/adr/0025-v0.9-core-completion.md)を参照する。公開API一覧と64項目の証拠はtools/check_api.py・tools/check_completion.pyで照合し、動作試験の代わりにしない。A09-01〜03の実装・配布候補の結果と、A09-04のタグ・Release・公開後照合を分け、公開前に全A09合格や親#9完了としない。
+
 Docs更新時は[文書の更新方法](docs/README.md)に従って単一配布用引継ぎ書を同期する。公開済みのタグやRelease添付を後続の文書修正で差し替えない。

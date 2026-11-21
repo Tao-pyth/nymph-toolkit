@@ -19,6 +19,10 @@
 | [hybrid.md](hybrid.md) | v0.7の配置・CoreClient・直接通信・ストリーム・遠隔活動と制約 |
 | [validation/v0.7.md](validation/v0.7.md) | A07・回帰・配布・CIの検証記録 |
 | [validation/v0.8.md](validation/v0.8.md) | A08・統合障害・競合・保存・負荷・配布の検証記録 |
+| [core-api.md](core-api.md) | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
+| [api-reference.md](api-reference.md) | Core 14件・Contracts 92件の生成API一覧 |
+| [validation/core-coverage.md](validation/core-coverage.md) | 採用64項目と製品293テストへの証拠参照 |
+| [validation/v0.9.md](validation/v0.9.md) | A09の完成監査・通常配布・公開前後の判定 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
 | [ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md) | v0.9までの64項目の採用記録と受入ID対応。v0.7の具体化は0023 |
 | [roadmap.md](roadmap.md) | 各段階の着手条件、作業、成果物、完了条件 |
@@ -60,6 +64,8 @@
 | R21 | 本チャットのPR #69レビュー・マージ・v0.7.0公開指示 | 問題解消後のマージと公開をユーザーが明示承認。コード変更前に修正#70・公開#71を親#7・v0.7.0の子Issueとして登録。採用済み64項目と既存公開物は維持 |
 | R22 | 本チャットのv0.8統合・障害・負荷検証の実施指示 | 親#8配下へ対応単位の子Issueを先に登録し、ADR 0022・A08に従って実装・検証。#72〜#77を先行登録し、再現した不具合#78・#80を各製品修正前に追加。詳細試験条件はADR 0024。新規ReleaseとA09判定を含めない |
 | R23 | 本チャットのPR #79レビュー・マージ・v0.8.0公開指示 | 問題がなければマージと公開まで進める明示指示。公開#81を親#8・v0.8.0配下へ先に登録し、公開状態の文書・生成ヘッダー、最終検証・タグ・Release・匿名取得を追跡。R22の非公開範囲は当時の履歴として維持 |
+| R24 | 本チャットのv0.9実装・検証・資料整備の指示 | 親#9配下へ子#82〜#85をコード変更前に登録。ADR 0022とA09を根拠に64項目・公開API・通常配布を照合。実施の具体化はADR 0025。公開後判定は別工程 |
+| R25 | 本チャットのPR #86レビュー・マージ・v0.9.0公開・親#9とマイルストーン完了の指示 | 公開#88を先に登録し、レビューで再現した停止競合の修正#89も変更前に登録。最終CI・マージ・タグ・Release・4添付の匿名取得でA09-04を確認後、親#9とマイルストーンを完了する |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -110,6 +116,10 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 既存のV0.1〜V0.9という表記はv0.1.0〜v0.9.0の節目を指す。v1.xの名称・配分の変更時には、roadmap、architecture、関連ADR、acceptance、releaseと単一配布用引継ぎ書を照合する。
 
+## R24によるv0.9の完成確認
+
+2026年11月22日の実施指示をR24として記録する。#82〜#85を親#9・v0.9.0のsub-issueとして先に登録した。[ADR 0025](adr/0025-v0.9-core-completion.md)で完成監査と配布前判定を具体化し、64項目と既存受入の証拠、APIの意味と生成一覧、通常配布物の再現を整える。v0.8.0は公開済み。v0.9の実装・受入結果は[検証記録](validation/v0.9.md)へ分離し、A09-04の公開後照合を完了前に合格としない。
+
 ## R23によるv0.8.0レビュー・公開
 
 2026年11月22日の「PR #79をレビューし、問題がなければマージしてv0.8.0の公開まで進めてください。」をR23として記録する。公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を親#8・同じマイルストーンへ登録し、生成ヘッダー変更前に親子関係を確認した。RPC・保持・送信境界・統合試験・測定記録・配布をレビューし、製品コードに追加の修正を必要とする問題は見つからなかった。最終CI・マージ・タグ・4添付・公開後の匿名取得を追跡し、[release](release.md)と[v0.8検証記録](validation/v0.8.md)へ対応を記載する。公開済みタグ・添付と採用済み64項目を維持する。
@@ -130,13 +140,13 @@ R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7�
 
 2026年11月21日のR19を[ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md)に記録する。1〜18の個別回答と19〜64の明示一括採用を区別し、全64項目をA07〜A09へ対応付ける。v0.7〜v0.8の機能配分はこの後続判断で開発計画として採用し、理由を記録した再配分を認める。前節の提案・未決という記述はR18以前の判断範囲を示す。v1.xの名称・順序・配分案は今回採用しない。
 
-設計子Issue [#60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)を親#7・マイルストーンv0.7.0配下へ登録し、引継ぎ書生成ヘッダー変更前にGitHubの親子関係を確認した。API名・型・フレーム・具体的設定値などの実装詳細は後続の対応単位で記録し、採用済みの64項目を再質問しない。これはR19時点の状態である。R20によるv0.7の実装・A07確認は[検証記録](validation/v0.7.md)で追跡し、A08は後続R22で実施し、[v0.8検証記録](validation/v0.8.md)で追跡する。A09は後続である。
+設計子Issue [#60](https://github.com/Tao-pyth/nymph-toolkit/issues/60)を親#7・マイルストーンv0.7.0配下へ登録し、引継ぎ書生成ヘッダー変更前にGitHubの親子関係を確認した。API名・型・フレーム・具体的設定値などの実装詳細は後続の対応単位で記録し、採用済みの64項目を再質問しない。これはR19時点の状態である。R20によるv0.7の実装・A07確認は[検証記録](validation/v0.7.md)で追跡し、A08は後続R22で実施し、[v0.8検証記録](validation/v0.8.md)で追跡する。A09は後続R24・ADR 0025で実施し、現在の判定は[検証記録](validation/v0.9.md)へ分離する。
 
 ## 文書の更新
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、hybrid、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。[再生成ツール](../tools/build_handoff.py)と[文書確認ツール](../tools/check_docs.py)はCIでも使用する。
 

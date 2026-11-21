@@ -103,7 +103,11 @@ class _Service:
         await asyncio.sleep(self.hub.settings.shutdown_timeout)
         if self.process is not None and self.process.returncode is None:
             self.observe(state="forcing", reason="Core shutdown deadline exceeded; cleanup unconfirmed", cleanup_confirmed=False)
-            self.process.kill()
+            try:
+                self.process.kill()
+            except ProcessLookupError:
+                # Exit can race this deadline or the service's own stop path.
+                pass
             await self.process.wait()
 
     async def stop(self):
@@ -129,7 +133,11 @@ class _Service:
                         await self.process.wait()
                 except TimeoutError:
                     self.observe(reason="Core shutdown deadline exceeded; cleanup unconfirmed", cleanup_confirmed=False)
-                    self.process.kill()
+                    try:
+                        self.process.kill()
+                    except ProcessLookupError:
+                        # Still reap and join the monitor before storage closes.
+                        pass
                     await self.process.wait()
             if self.monitor is not None:
                 await self.monitor
