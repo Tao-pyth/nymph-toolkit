@@ -20,7 +20,7 @@ python -m venv .venv
 .venv/Scripts/python.exe examples/task_manager_demo.py
 .venv/Scripts/python.exe examples/activity_changes_demo.py
 .venv/Scripts/python.exe examples/hybrid_demo.py
-.venv/Scripts/python.exe examples/activity_changes_demo.py
+.venv/Scripts/python.exe -W error tools/validate_hybrid_load.py --output .git/v08-short.json
 .venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
@@ -33,6 +33,18 @@ distには対象版のwheelとsdistを一つずつ置く。古い版が残って
 CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)、登録・依存管理と複数対象の実行は[registry.md](registry.md)、接続・保存は[connections.md](connections.md)、活動管理は[task-manager.md](task-manager.md)に記載する。v0.5は[当時の検証記録](validation/v0.5.md)、v0.6の変更・中断再開は[v0.6の検証記録](validation/v0.6.md)を参照する。
 
 接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
+
+## v0.8の再現・負荷検証
+
+[ADR 0024](adr/0024-v0.8-integration-validation.md)に測定条件、[検証記録](validation/v0.8.md)にA08対応表と実測を記載する。
+
+```powershell
+.venv/Scripts/python.exe -W error -m unittest tests.core.test_v08_integration tests.core.test_v08_contention tests.core.test_v08_storage tests.core.test_v08_result_ownership -v
+.venv/Scripts/python.exe -W error tools/validate_hybrid_load.py --output .git/v08-short.json
+.venv/Scripts/python.exe -W error tools/validate_hybrid_load.py --duration 1800 --output .git/v08-long.json
+```
+
+測定CLIはテスト専用ダミーを使用し、4配置を実TCP・実子で動かす。起動・遅延・転送・メモリ・管理応答・停止と資源数をJSONへ記録する。長時間試験は変更のないコミットから実施し、変更が入った場合はその影響と再検証を記録する。通常履歴は捨てず、活動結果の保持件数と不要資源を分ける。CIでは1秒の短い継続区間を使い、30分試験の代替にしない。機械・計測器・併走処理による影響を含む観測であり、速度保証ではない。
 
 ## 実装開始時の配布構成
 

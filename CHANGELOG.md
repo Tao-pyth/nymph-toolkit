@@ -1,8 +1,10 @@
 # 変更履歴
 
-## 未リリース
+## 未リリース — v0.8開発
 
-なし。
+- R22により親#8配下へ子#72〜#77を着手前に登録。ADR 0024でA08の4配置統合、障害・競合・保存、測定・30分継続負荷、8環境CI・配布の条件を具体化した。
+- #78で管理RPCの期限・取消後に完了結果を解放できない不具合を修正。CoreClientへpending_requests/result/release、DirectLinkへpending_requestsを追加し、内部報告の完了結果を回収する。活動・変更・保存履歴の保持は維持する。
+- 再現用ダミー・A08試験・測定CLIを追加。0.8.0の配布メタデータを整え、結果と制約は[v0.8検証記録](docs/validation/v0.8.md)、変更全体は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)で追跡する。新規Releaseは作成していない。
 
 ## v0.7.0 — 2026年11月21日
 
