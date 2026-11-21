@@ -90,6 +90,7 @@ from .connections import (
 
 
 from .activities import (
+    UNCHANGED, ActivityChange, ActivityCommandResult, ActivityCommandStatus, ActivityControlKind,
     ActivityAdmissionError, ActivityContext, ActivityError, ActivityExecutor,
     ActivityFailure, ActivityFinishReason, ActivityKey, ActivityNotice,
     ActivityNoticeKind, ActivityRequest, ActivitySnapshot, ActivityStartInPastError,
@@ -100,6 +101,7 @@ from .activities import (
 
 
 __all__ = [
+    "UNCHANGED", "ActivityChange", "ActivityCommandResult", "ActivityCommandStatus", "ActivityControlKind",
     "ActivityAdmissionError", "ActivityContext", "ActivityError", "ActivityExecutor",
     "ActivityFailure", "ActivityFinishReason", "ActivityKey", "ActivityNotice",
     "ActivityNoticeKind", "ActivityRequest", "ActivitySnapshot", "ActivityStartInPastError",

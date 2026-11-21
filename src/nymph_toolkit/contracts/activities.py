@@ -4,7 +4,7 @@
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from enum import StrEnum
+from enum import Enum, StrEnum
 import math
 from types import MappingProxyType
 from typing import Protocol
@@ -81,8 +81,11 @@ class ActivityRequest:
     start_at: datetime | None
     duration: timedelta
     parameters: Mapping[str, object] = field(default_factory=dict, hash=False)
+    priority: int = 0
 
     def __post_init__(self) -> None:
+        if type(self.priority) is not int:
+            raise TypeError("priority must be an integer, not bool")
         if not isinstance(self.key, ActivityKey):
             raise TypeError("key must be an ActivityKey")
         if not isinstance(self.content, str):
@@ -115,12 +118,52 @@ class ActivityRequest:
                        + self.duration.microseconds)
         return {"requester_id": self.key.requester_id, "activity_id": self.key.activity_id,
                 "content": self.content, "start_at": None if self.start_at is None else self.start_at.isoformat(),
-                "duration_us": duration_us, "parameters": _json_data(self.parameters)}
+                "duration_us": duration_us, "parameters": _json_data(self.parameters), "priority": self.priority}
+
+
+class _Unchanged(Enum):
+    VALUE = "unchanged"
+
+
+UNCHANGED = _Unchanged.VALUE
+
+
+@dataclass(frozen=True)
+class ActivityChange:
+    start_at: datetime | None | _Unchanged = UNCHANGED
+    duration: timedelta | _Unchanged = UNCHANGED
+    priority: int | _Unchanged = UNCHANGED
+
+    def __post_init__(self):
+        if all(value is UNCHANGED for value in (self.start_at, self.duration, self.priority)):
+            raise ValueError("An activity change must specify at least one field")
+        if self.start_at is not UNCHANGED and self.start_at is not None:
+            object.__setattr__(self, "start_at", _utc(self.start_at))
+        if self.duration is not UNCHANGED:
+            if not isinstance(self.duration, timedelta):
+                raise TypeError("duration must be a timedelta")
+            if self.duration <= timedelta(0):
+                raise ValueError("duration must be positive")
+        if self.priority is not UNCHANGED and type(self.priority) is not int:
+            raise TypeError("priority must be an integer, not bool")
+
+    def as_dict(self):
+        result = {}
+        if self.start_at is not UNCHANGED:
+            result["start_at"] = None if self.start_at is None else self.start_at.isoformat()
+        if self.duration is not UNCHANGED:
+            result["duration_us"] = self.duration // timedelta(microseconds=1)
+        if self.priority is not UNCHANGED:
+            result["priority"] = self.priority
+        return result
 
 
 class ActivityState(StrEnum):
     PENDING = "pending"
     RUNNING = "running"
+    PAUSING = "pausing"
+    PAUSED = "paused"
+    RESUME_PENDING = "resume_pending"
     FINISHING = "finishing"
     COMPLETED = "completed"
     FAILED = "failed"
@@ -161,10 +204,21 @@ class ActivitySnapshot:
     planned_end_notified: bool = False
     result: object = field(default=None, hash=False)
     failures: tuple[ActivityFailure, ...] = ()
+    revision: int = 0
+    scheduled_revision: int = 0
+    current_request: ActivityRequest | None = None
+    execution_seconds: float = 0.0
 
     def __post_init__(self) -> None:
         if not isinstance(self.request, ActivityRequest) or not isinstance(self.state, ActivityState):
             raise TypeError("Snapshot requires an ActivityRequest and ActivityState")
+        if self.current_request is None:
+            object.__setattr__(self, "current_request", self.request)
+        if not isinstance(self.current_request, ActivityRequest) or self.current_request.key != self.request.key:
+            raise ValueError("current_request must retain the activity key")
+        for value in (self.revision, self.scheduled_revision):
+            if type(value) is not int or value < 0:
+                raise ValueError("Revisions must be nonnegative integers")
         for name in ("accepted_at", "planned_start_at", "planned_end_at"):
             object.__setattr__(self, name, _utc(getattr(self, name)))
         for name in ("started_at", "ended_at", "finish_requested_at"):
@@ -174,6 +228,9 @@ class ActivitySnapshot:
         if (type(self.elapsed_seconds) not in (int, float)
                 or not math.isfinite(self.elapsed_seconds) or self.elapsed_seconds < 0):
             raise ValueError("elapsed_seconds must be finite nonnegative seconds")
+        if (type(self.execution_seconds) not in (int, float) or not math.isfinite(self.execution_seconds)
+                or not 0 <= self.execution_seconds <= self.elapsed_seconds):
+            raise ValueError("execution_seconds must be between zero and elapsed_seconds")
         if self.finish_reason is not None and not isinstance(self.finish_reason, ActivityFinishReason):
             raise TypeError("finish_reason must be an ActivityFinishReason")
         if type(self.planned_end_notified) is not bool:
@@ -188,6 +245,48 @@ class ActivitySnapshot:
 class ActivityNoticeKind(StrEnum):
     STATE_CHANGED = "state_changed"
     PLANNED_END = "planned_end"
+    COMMAND_RESULT = "command_result"
+
+
+class ActivityControlKind(StrEnum):
+    PAUSE = "pause"
+    FINISH = "finish"
+
+
+class ActivityCommandStatus(StrEnum):
+    ACCEPTED = "accepted"
+    APPLIED = "applied"
+    NO_CHANGE = "no_change"
+    REJECTED = "rejected"
+    SUPERSEDED = "superseded"
+    FAILED = "failed"
+
+    @property
+    def terminal(self):
+        return self != ActivityCommandStatus.ACCEPTED
+
+
+@dataclass(frozen=True)
+class ActivityCommandResult:
+    key: ActivityKey
+    command_id: str
+    operation: str
+    received_at: datetime
+    status: ActivityCommandStatus
+    reason: str | None
+    snapshot: ActivitySnapshot
+
+    def __post_init__(self):
+        _identifier(self.command_id, "command_id")
+        if self.operation not in ("change", "pause", "resume"):
+            raise ValueError("Unknown activity command operation")
+        if not isinstance(self.status, ActivityCommandStatus):
+            raise TypeError("status must be an ActivityCommandStatus")
+        if not isinstance(self.key, ActivityKey) or not isinstance(self.snapshot, ActivitySnapshot) or self.snapshot.request.key != self.key:
+            raise ValueError("Command result must reference its activity snapshot")
+        if self.reason is not None:
+            _identifier(self.reason, "reason")
+        object.__setattr__(self, "received_at", _utc(self.received_at))
 
 
 @dataclass(frozen=True)
@@ -196,6 +295,7 @@ class ActivityNotice:
     kind: ActivityNoticeKind
     at: datetime
     snapshot: ActivitySnapshot
+    command: ActivityCommandResult | None = None
 
     def __post_init__(self) -> None:
         if type(self.sequence) is not int or self.sequence <= 0:
@@ -203,6 +303,11 @@ class ActivityNotice:
         if not isinstance(self.kind, ActivityNoticeKind) or not isinstance(self.snapshot, ActivitySnapshot):
             raise TypeError("Notice requires an ActivityNoticeKind and ActivitySnapshot")
         object.__setattr__(self, "at", _utc(self.at))
+        if self.kind == ActivityNoticeKind.COMMAND_RESULT:
+            if not isinstance(self.command, ActivityCommandResult) or self.command.snapshot != self.snapshot:
+                raise ValueError("Command notice requires the matching command result")
+        elif self.command is not None:
+            raise ValueError("Only command notices may contain a command result")
 
 
 class ActivityContext(Protocol):
@@ -210,6 +315,16 @@ class ActivityContext(Protocol):
 
     @property
     def request(self) -> ActivityRequest: ...
+
+    @property
+    def current_request(self) -> ActivityRequest: ...
+
+    @property
+    def pause_requested(self) -> bool: ...
+
+    async def wait_for_control(self) -> ActivityControlKind: ...
+
+    async def checkpoint(self) -> ActivityFinishReason | None: ...
 
     @property
     def planned_start_at(self) -> datetime: ...

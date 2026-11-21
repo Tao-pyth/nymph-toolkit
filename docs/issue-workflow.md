@@ -73,6 +73,18 @@ R18により、開始時刻変更・期間変更・優先度・中断再開の�
 
 ## v0.5の対応単位
 
+v0.6の実装子Issueは、コード変更前に親#6・マイルストーン6への所属を確認して登録した。
+
+| 子Issue | 対応単位 | 先行成果 |
+|---|---|---|
+| [#53](https://github.com/Tao-pyth/nymph-toolkit/issues/53) | Contracts・履歴形式 | #52 |
+| [#54](https://github.com/Tao-pyth/nymph-toolkit/issues/54) | 予定変更・競合・要求結果 | #53 |
+| [#55](https://github.com/Tao-pyth/nymph-toolkit/issues/55) | 協調的中断再開・計時 | #53・#54 |
+| [#56](https://github.com/Tao-pyth/nymph-toolkit/issues/56) | 優先度・実行枠 | #54・#55 |
+| [#57](https://github.com/Tao-pyth/nymph-toolkit/issues/57) | Runtime・Connections・FileStore統合 | #53〜#56 |
+| [#58](https://github.com/Tao-pyth/nymph-toolkit/issues/58) | A06・例・配布・CI・文書 | #53〜#57 |
+| [#59](https://github.com/Tao-pyth/nymph-toolkit/issues/59) | 公開と匿名取得確認 | #58・最終CI |
+
 2026年11月21日のR17により、次の子Issueをコード変更前に登録し、親Issue #5のsub-issueとマイルストーンv0.5.0への所属を確認した。[ADR 0020](adr/0020-v0.5-task-manager.md)の採用範囲と未決事項を各実装前に確認する。
 
 | 子Issue | 対応単位 | 先行する判断・成果 |
