@@ -30,7 +30,7 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)、登録・依存管理と複数対象の実行は[registry.md](registry.md)、接続・保存は[connections.md](connections.md)、活動管理は[task-manager.md](task-manager.md)に記載する。v0.5は[当時の検証記録](validation/v0.5.md)、v0.6の変更・中断再開は[最新の検証記録](validation/v0.6.md)を参照する。
+CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)、登録・依存管理と複数対象の実行は[registry.md](registry.md)、接続・保存は[connections.md](connections.md)、活動管理は[task-manager.md](task-manager.md)に記載する。v0.5は[当時の検証記録](validation/v0.5.md)、v0.6の変更・中断再開は[v0.6の検証記録](validation/v0.6.md)を参照する。
 
 接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
 

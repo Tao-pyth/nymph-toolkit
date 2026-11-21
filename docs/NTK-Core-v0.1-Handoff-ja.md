@@ -99,7 +99,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 予定時間に達するとNymphへ通知して活動を継続し、終了指示を受けた実行側が安全な区切りで終了します。受付時点で過去の開始時刻なら開始せず返し、再起動後は過去履歴を渡してNymphが再登録・再開を判断します。Coreによる活動の価値判断、自動延長、自動再実行は行いません。操作契約（`docs/task-manager.md`）とADR 0020（`docs/adr/0020-v0.5-task-manager.md`）に採用範囲を記録しています。
 
-A06では219テスト、5実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。時刻・期間・優先度変更、同じ処理の続きからの再開、任意の実行枠、要求ID・観測版による競合処理を含みます。v0.6受入記録（`docs/validation/v0.6.md`）に証拠と制約をまとめています。v0.7の使い方はハイブリッド実行（`docs/hybrid.md`）、検証状況はv0.7受入記録（`docs/validation/v0.7.md`）に記載します。本番Subsystemは後続段階です。
+A06では219テスト、5実行例、Windows／Linux・Python 3.12〜3.15の全8環境、wheelの通常インストールとsdist再ビルドを確認しました。時刻・期間・優先度変更、同じ処理の続きからの再開、任意の実行枠、要求ID・観測版による競合処理を含みます。v0.6受入記録（`docs/validation/v0.6.md`）に証拠と制約をまとめています。v0.7は262テスト・6実行例・Windows/Linux全8環境、通常wheelとsdist再ビルドでA07を確認しました。使い方はハイブリッド実行（`docs/hybrid.md`）、証拠と制約はv0.7受入記録（`docs/validation/v0.7.md`）に記載します。本番Subsystemは後続段階です。
 
 v0.1.0は初期資料・開発基盤、v0.2.0は最小Runtime、v0.3.0はRegistry・ModuleGroup、v0.4.0はConnections・非同期保存と救命処理の公開です。v0.9.0は合意したCore機能の完成を目標とします。R19・ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）でv0.9までの64項目を設計採用しました。1〜18は個別回答、19〜64は推奨設定の明示一括採用です。v0.7は同一PCの子プロセス・通信・ストリーム・活動管理、v0.8は統合・障害・負荷検証、v0.9は合意範囲の完成確認とする配分を採用しています。R20により#61〜#68を先に登録してv0.7を実装しました。A07・配布・CIの結果は受入記録で管理し、A08・A09の完了とは区別します。新規のv0.7.0 Releaseは作成していません。
 
@@ -299,8 +299,8 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | R16 | 本チャットのv0.4着手指示と、接続先固定単位・バッファ受付方針への回答 | v0.4の設計・実装・検証へ着手する。要求元＋契約ID・版につき1接続、バッファ上限なしで新規受付継続を明示採用。保存失敗時の受付停止は維持。具体的な実装判断はADR 0019へ記録し、R15時点の未採用案との違いを明示する |
 | R17 | 本チャットのv0.5実施指示と、時間到達・再起動・過去時刻・終了指示への回答 | 時間到達時は通知して継続し、Nymphが判断する。再起動時は履歴を返してNymphが再登録・再開を決める。過去時刻は開始せず返し、終了要求は実行側の安全な区切りを待つ。API等の実装判断はADR 0020へ区別して記録 |
 | R18 | 本チャットの「①の全てを決定する」、続く一問一答、最後の「よい　全体想定回答で決め打ちして良い」 | 全4項目の範囲採用と、開始時刻・期間・通知・安全な中断再開・計時・優先度の個別回答をADR 0021 D1・D2へ記録。残事項の判断委任を受け、D3〜D10をCodexの設計判断として採用。設計の採用を製品コード・受入・公開の完了と扱わない |
-| R20 | 本チャットの資料GitHub反映・v0.7実装指示 | 資料をmainへ反映し、#61〜#68を子Issueとして先に登録。ADR 0022に沿って実装・検証し、詳細判断は0023へ記録。新規Release作成は含めない |
 | R19 | 本チャットのv0.9までの一問一答、確認事項1〜64の一覧、「19〜64はすべて推奨設定で採用してください。決定済みの1〜18と合わせて、ADR・ロードマップ・受入基準・引継ぎ書に反映してください。」 | 1〜18は個別回答、19〜64は推奨案から明示一括採用。ADR 0022で番号と採用内容を維持し、v0.7〜v0.9の配置・IPC・ストリーム・活動管理・保存・受入・完成条件を記録。今回の設計反映は製品実装・受入合格・公開を意味しない |
+| R20 | 本チャットの資料GitHub反映・v0.7実装指示 | 資料をmainへ反映し、#61〜#68を子Issueとして先に登録。ADR 0022に沿って実装・検証し、詳細判断は0023へ記録。新規Release作成は含めない |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -353,7 +353,7 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 ### R20によるv0.7の実施
 
-R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7の実装を進めてください。着手前に対応単位の子Issueを登録し、ADR 0022に沿って実装・検証してください。」である。資料コミットc3f0868をGitHub mainへ反映し、親#7・マイルストーンv0.7.0配下に#61〜#68を登録してから着手する。具体的なAPI・通信・プロセス・ストリーム・遠隔活動はADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）へ実装判断として記録する。R19の採用済み64項目を再決定せず、新規Release作成とは区別する。
+R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7の実装を進めてください。着手前に対応単位の子Issueを登録し、ADR 0022に沿って実装・検証してください。」である。資料コミットc3f0868をGitHub mainへ反映し、親#7・マイルストーンv0.7.0配下に#61〜#68を登録してから着手した。具体的なAPI・通信・プロセス・ストリーム・遠隔活動はADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）へ実装判断として記録する。R19の採用済み64項目を再決定せず、新規Release作成とは区別する。
 
 ### R19によるv0.9までの採用
 
@@ -1279,6 +1279,8 @@ connections_demo.py（`examples/connections_demo.py`）は実際のModuleGroup�
 v0.5で採用したCore実装。ADR 0020（`docs/adr/0020-v0.5-task-manager.md`）のD1〜D4がユーザー回答、D5〜D8が実施指示に基づく実装判断である。実装と受入全体の完了は区別し、検証記録（`docs/validation/v0.5.md`）で現在の証拠と残作業を確認する。
 
 v0.6はADR 0021（`docs/adr/0021-v0.6-activity-changes.md`）に従い、同じ実行関数からの再開、累積実行時間、任意の実行枠、要求ID・版番号による変更を実装した。以下の基本操作は維持し、追加操作を後半に記載する。現在の受入・公開の証拠はv0.6検証記録（`docs/validation/v0.6.md`）を参照する。
+
+v0.7ではHybridTaskManager（`docs/hybrid.md`）が遠隔実行処理IDを使う入口を追加した。STARTING、実行側報告による状態確定、計時・後処理確認フラグとv0.7履歴は同資料に記載する。本書の既存ローカル入口とNymphの判断権限は維持する。
 
 ### NymphとCoreの担当
 
@@ -3500,7 +3502,7 @@ R17・ADR 0020で、Nymphの終了指示を安全な区切りで実行する最�
 
 ### V0.7 ハイブリッド実行
 
-- **採用状態・関連ADR** — R19・ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の1〜59を中心とする設計を採用。ADR 0015・0016・0019〜0021との境界を維持する。R20・ADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）で実装した。A07・配布・CIは検証記録（`docs/validation/v0.7.md`）に記載する。
+- **採用状態・関連ADR** — R19・ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の1〜59を中心とする設計を採用。ADR 0015・0016・0019〜0021との境界を維持する。R20・ADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）で実装した。A07は262テスト・6実行例・全8環境CI・通常配布で合格し、検証記録（`docs/validation/v0.7.md`）に証拠を記載する。PR #69でマージを待ち、新規Release作成は別途扱う。
 - **着手条件** — v0.6までの同一プロセスの通信・活動・変更を確認できる。親#7・マイルストーンv0.7.0と、各実装単位の子Issueを確認する。#60は設計・文書同期、#61〜#68はR20で先行登録した実装・検証単位である。
 - **作業** — 同じPC・同じPython環境にCore所有の子を機能ごとに起動する。管理を親Coreに集約し、ループバックTCP、非同期操作、JSONとバイト列、許可済み直接通信とCore経由通信を整える。ストリームの上限・欠落・期限・終了を実装し、実行処理IDによる活動管理と4種の活動変更へ接続する。
 - **成果物** — プロセス管理、配置間の公開契約、要求・結果・状態通知、連続ストリーム、ダミー例、配置固有の制約、A07検証記録。
@@ -3637,7 +3639,7 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 | A04 V0.4 | ADR 0003の履歴・0015・0017・0018と後続判断 | 要求側選定、接続保存・再起動・固定、契約互換性、稼働通知、協調的中断・待機・個別ヘルス申請、履歴保存と救命を試す | 下記のR15対応シナリオと採用契約に一致する。再審査・自動切替・失敗処理の自動再実行を追加せず、未採用案を暗黙に確定しない |
 | A05 V0.5 | ADR 0004・0020 | ダミーNymphが活動A、開始T、期間Dを指定。時刻・期間・経過時間・実行時間を採用した定義で観察し、下記の責務境界も確認する | Nymphの入力と予定・実行結果を対応付けられる。期間満了の処理と計時が採用定義に一致し、Coreが活動の価値に基づいて指定値を変更しない |
 | A06 V0.6 | ADR 0004・0021 | 各操作の採否表を確認。採用した繰り上げ・延期、延長・短縮、優先度変更、中断・再開、取消・終了をダミーNymphから入力し、競合や終了後の要求も試す | 入力と変更結果を照合できる。優先度の処理はNymphの指定と採用規則に一致し、実行可否・競合の通知と時間計測を確認できる。範囲外入力への応答が契約に一致する |
-| A07 V0.7 | ADR 0022・1〜59と既存採用ADR | 同一PC・4配置の要求／結果・ストリーム・活動変更、子の起動・障害・停止をA07-01〜14で再現 | 採用した共通契約・配置差・期限・上限・後処理に一致。結果はvalidation/v0.7.md |
+| A07 V0.7 | ADR 0022・1〜59と既存採用ADR | 同一PC・4配置の要求／結果・ストリーム・活動変更、子の起動・障害・停止をA07-01〜14で再現 | 採用した共通契約・配置差・期限・上限・後処理に一致。A07合格、証拠はvalidation/v0.7.md |
 | A08 V0.8 | ADR 0022・60〜63と1〜59の振る舞い | 登録→起動→接続→活動・変更・ストリーム→停止→解除を通し、障害・競合・負荷・配布をA08-01〜07で検証 | 通常エラーと致命的障害を区別し、自動再試行・切替なしで停止仕様と状態が一貫。未検証 |
 | A09 V0.9 | v0.9対象の採用ADR・0022 | 新しい環境で全採用シナリオ、API・実装・Docs・引継ぎ書・公開物をA09-01〜04で照合 | 合意したCore機能をダミーで検証でき、受入未達がなく制約と残課題が明確。未検証 |
 
@@ -4197,9 +4199,13 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ### 対象と状態
 
-R20に基づき、資料採用コミット`c3f0868`をGitHub mainへ反映した。実装前に#61〜#68を親#7・マイルストーンv0.7.0のsub-issueとして登録した。ADR 0022の採用内容を維持し、ADR 0023で具体化したHybridGroup・IPC・ストリーム・遠隔活動を実装した。**現在はソース検証を実施し、配布・全8環境CIを確認中。新規Releaseは作成していない。**
+R20に基づき、資料採用コミット`c3f0868`をGitHub mainへ反映した。実装前に#61〜#68を親#7・マイルストーンv0.7.0のsub-issueとして登録した。ADR 0022の採用内容を維持し、ADR 0023で具体化したHybridGroup・IPC・ストリーム・遠隔活動を実装した。**A07の採用範囲は合格。ソース・通常配布・全8環境CIを確認した。新規Releaseは作成していない。**
+
+実装コミット`ae9b066bb3a605333b095ce87834a9d450842b29`の[CI run 44914206466](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44914206466)でWindows/Linux × CPython3.12〜3.15の全8環境が成功した。ソースと通常wheelの各262テスト、6実行例、文書検査、ビルド、sdistから同一wheelへの再ビルドを含む。ローカルWindows・CPython3.15.2でもソース262テストを確認した。A07の合格をA08・A09やRelease公開の完了と扱わない。最終の文書更新コミットとCIは[PR #69](https://github.com/Tao-pyth/nymph-toolkit/pull/69)と[#68](https://github.com/Tao-pyth/nymph-toolkit/issues/68)から追跡する。
 
 ### A07と検証対象
+
+ローカルの新規venvでも通常wheelの262テストと6実行例が成功し、sdist再ビルドのwheelが一致した。48 Markdown文書・420ローカルリンク・UTF-8/LF・LICENSEと、引継ぎ書への48収録元全文の一致を確認した。ADR 0022の1〜64の採用行は資料公開コミットc3f0868と完全一致し、仕様の採否を変更していない。
 
 | 受入ID | 証拠と観測 |
 |---|---|
@@ -4234,7 +4240,7 @@ distには今回のwheelとsdistだけを置く。check_distは作業ツリー�
 
 ### 残る範囲
 
-初回CI（[run 44913847313](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44913847313)）はLinux全4環境とWindows/Python3.15が成功し、Windows/Python3.12〜3.14で子消失時の最終状態がFINISHINGに残る競合を検出した。タイマー後処理中にRuntime停止の取消が重なることが原因で、既存ローカル活動と同様に最終記録まで取消を受け止める修正と、順序を固定した再現試験を追加した。仕様・期待結果を弱めず、修正後の全環境を再検証する。
+初回CI（[run 44913847313](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44913847313)）はLinux全4環境とWindows/Python3.15が成功し、Windows/Python3.12〜3.14で子消失時の最終状態がFINISHINGに残る競合を検出した。タイマー後処理中にRuntime停止の取消が重なることが原因で、既存ローカル活動と同様に最終記録まで取消を受け止める修正と、順序を固定した再現試験を追加した。仕様・期待結果を弱めず、修正後の全8環境で成功した。さらに呼出し側の転送不可入力で接続を失効させないこと、応答上限超過を明示エラーで返すこと、共有接続待機を操作期限へ含めることを試験した。
 
 v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時間・高負荷）とv0.9のA09は未完了。今回の短い基本試験を長時間性能の保証としない。API・制約はhybrid.md（`docs/hybrid.md`）を参照する。Core停止時の子回収とNymphの通常の終了要求、送信受付と内容処理完了、通信期限と活動期間、転送容量と無制限履歴を区別する。公開済みのタグ・添付は変更しない。
 
@@ -4276,7 +4282,7 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）、登録・依存管理と複数対象の実行はregistry.md（`docs/registry.md`）、接続・保存はconnections.md（`docs/connections.md`）、活動管理はtask-manager.md（`docs/task-manager.md`）に記載する。v0.5は当時の検証記録（`docs/validation/v0.5.md`）、v0.6の変更・中断再開は最新の検証記録（`docs/validation/v0.6.md`）を参照する。
+CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知はruntime.md（`docs/runtime.md`）、登録・依存管理と複数対象の実行はregistry.md（`docs/registry.md`）、接続・保存はconnections.md（`docs/connections.md`）、活動管理はtask-manager.md（`docs/task-manager.md`）に記載する。v0.5は当時の検証記録（`docs/validation/v0.5.md`）、v0.6の変更・中断再開はv0.6の検証記録（`docs/validation/v0.6.md`）を参照する。
 
 接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
 
@@ -4431,7 +4437,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v0.4.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/4) | [#4 Connections](https://github.com/Tao-pyth/nymph-toolkit/issues/4) | R16・ADR 0019で実施範囲を具体化 |
 | [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | R17・ADR 0020で実施範囲を具体化 |
 | [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | R18・ADR 0021に従い実装。受入・公開を別途確認 |
-| [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | R19・ADR 0022で設計採用。R20・#61〜#68で実装・A07・配布を追跡 |
+| [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | R19・ADR 0022で設計採用。R20・#61〜#68で実装・A07・配布を確認、PR #69でマージ待ち |
 | [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | R19・ADR 0022で配分とA08を採用。未検証 |
 | [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | 確定目標。R19・ADR 0022で完成条件採用、未検証 |
 | [v1.0.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/10) | [#10 Core接続契約](https://github.com/Tao-pyth/nymph-toolkit/issues/10) | 確定目標・契約詳細は提案 |
@@ -4590,6 +4596,12 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 ## 公開準備とリリース手順
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
+
+### v0.7.0の開発成果と公開の区別
+
+R20により、既存の資料採用コミットc3f0868をmainへ反映した。v0.7の実装・検証・関連資料は[PR #69](https://github.com/Tao-pyth/nymph-toolkit/pull/69)、親#7、子#61〜#68で追跡する。配布メタデータは0.7.0で、A07検証記録（`docs/validation/v0.7.md`）と操作契約（`docs/hybrid.md`）を更新する。今回の依頼は新規Release作成を含まず、v0.7.0のタグ・Release・添付は作成していない。
+
+マージは参加方針に従ってメンテナーが判断する。後続の公開作業では、公開対象コミットの全8環境CI・配布物・文書の一致、タグ・添付・チェックサム、公開後の匿名取得と再現を別途確認する。公開済みv0.1.0〜v0.6.0のタグ・添付は保持する。
 
 ### v0.6.0の公開手順と記録
 
@@ -4779,7 +4791,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 ### 未リリース
 
 - R20で資料採用コミットc3f0868をmainへ反映。#61〜#68を先に登録し、ADR 0023に沿ってv0.7を実装した。
-- HybridGroup・CoreClient・直接RPC・有限転送キュー・遠隔活動と計時／後処理確認を追加。配布版情報を0.7.0へ更新し、実行例・A07・通常配布・全8環境CI・引継ぎ書を整える。新規Release作成は含めない。
+- HybridGroup・CoreClient・直接RPC・有限転送キュー・遠隔活動と計時／後処理確認を追加。配布版情報を0.7.0へ更新し、262テスト・6実行例・通常配布・全8環境CIでA07を確認し、引継ぎ書を同期した。新規Release作成は含めない。
 
 以下2項目はR19の資料反映時点の記録である。
 
