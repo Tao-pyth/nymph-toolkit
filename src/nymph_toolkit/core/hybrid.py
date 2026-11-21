@@ -91,7 +91,8 @@ class _Service:
             return await self.node.dispatch(operation, payload)
         if self.peer is None:
             raise PeerClosed("Child control channel is not ready")
-        return await self.peer.call(operation, payload, timeout=self.hub.settings.call_timeout if timeout is None else timeout)
+        return await self.peer.call(operation, payload, timeout=self.hub.settings.call_timeout if timeout is None else timeout,
+                                    retain_result=False)
 
     async def run(self):
         self.observe(state="running")

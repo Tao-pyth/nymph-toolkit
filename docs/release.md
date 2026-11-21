@@ -2,6 +2,18 @@
 
 GitHub公開をV0.1、Core機能完成をV0.9とする目標は確定している。2026年11月20日に初期資料・開発基盤のv0.1.0と、最小Runtimeのv0.2.0を公開した。v0.1.0欄は初回公開時の記録として保持する。
 
+## v0.8.0の公開手順と記録
+
+R22の統合・障害・負荷検証は親#8の子#72〜#78・#80、[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)、[ADR 0024](adr/0024-v0.8-integration-validation.md)、[A08検証記録](validation/v0.8.md)で追跡した。R23でユーザーがレビュー後のマージ・v0.8.0公開を明示指示した。公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を先に登録し、公開対象を配布メタデータ0.8.0とする。
+
+1. 公開前レビュー・関連42テストの再実行結果、288テスト・6実行例・通常配布・A08証拠・文書同期を確認する。製品コードに追加修正が必要な問題は見つからなかった。
+2. マージ対象headのWindows/Linux × CPython3.12〜3.15の全8環境CIを確認し、SHAを指定してPR #79をマージする。マージコミットのツリーが検証済みheadと同一であることと、そのコミットのCI成功を確認する。
+3. マージコミットからwheel・sdist・単一引継ぎ書・SHA256SUMSを作り、新しい`v0.8.0`タグと[Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.8.0)へ4件を添付して公開する。
+4. 認証情報を使わずにタグをcloneし、添付を取得してチェックサム・タグ内文書・製品コードを照合する。作業ツリー外の新規環境へwheelを通常インストールし、全テスト・6実行例・短い負荷・sdist同一wheel再ビルド・Docsを再現する。
+5. 最終SHA・CI・レビュー・公開後の匿名取得結果を#81とReleaseへ記録してから、公開課題・親#8・マイルストーンv0.8.0を完了する。
+
+30分測定は`cb0cf61`、後続#80は専用回帰・通常配布・短い負荷・全環境CIでの再検証であり、最終コード全体の30分測定とは表現しない。R22時点で公開を含めなかった判断は履歴として保持し、R23を今回の公開根拠とする。公開済みv0.1.0〜v0.7.0のタグ・Release・添付は差し替えない。A09のCore完成判定は別段階である。
+
 ## v0.7.0の公開手順と記録
 
 R20の実装は[PR #69](https://github.com/Tao-pyth/nymph-toolkit/pull/69)、親#7、子#61〜#68で追跡した。R21でユーザーがレビュー後のマージ・v0.7.0公開を明示指示した。修正[#70](https://github.com/Tao-pyth/nymph-toolkit/issues/70)・公開[#71](https://github.com/Tao-pyth/nymph-toolkit/issues/71)を着手前に登録し、配布メタデータ0.7.0、[A07検証記録](validation/v0.7.md)、[操作契約](hybrid.md)に従う。

@@ -32,7 +32,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 ## 計画と仕様の区別
 
-この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。v0.5はR17・ADR 0020で実施範囲を具体化した。後続の未決事項を実装要件へ含めない。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コードを実装した。最終A06・公開は[検証記録](validation/v0.6.md)で追跡する。v0.7〜v0.8とv1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録だけでは採用や着手の宣言にならない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
+この運用ルールは採用済みである。v0.2はR11・ADR 0014、v0.3はR13・ADR 0016、v0.4はR16・ADR 0019で実施範囲を具体化した。v0.5はR17・ADR 0020で実施範囲を具体化した。後続の未決事項を実装要件へ含めない。v0.6はR18・ADR 0021で全4項目の範囲と詳細契約を設計採用した。製品コードを実装した。最終A06・公開は[検証記録](validation/v0.6.md)で追跡する。v0.7〜v0.8の配分は後続R19・ADR 0022で採用した。v1.1.0〜v1.10.0の機能配分、Subsystem・Adapterの名称や実装順序、契約詳細などは既存の提案状態を維持する。登録だけでは採用や着手の宣言にならない。計画を変更する場合は理由・依存関係・受入への影響を記録し、ロードマップ、Issue、関連ADRを整合させる。
 
 v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝CoreとSubsystem・Adapterの接続契約整備という確定目標と、NymphとCoreの責務分離を維持する。通信方針はR12・[ADR 0015](adr/0015-core-authorized-direct-communication.md)で更新し、Coreが管理・許可した直接通信を採用した。詳細な許可条件・APIなどは実装前に判断する。
 
@@ -49,7 +49,7 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v0.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/5) | [#5 TaskManager基本](https://github.com/Tao-pyth/nymph-toolkit/issues/5) | R17・ADR 0020で実施範囲を具体化 |
 | [v0.6.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/6) | [#6 活動変更](https://github.com/Tao-pyth/nymph-toolkit/issues/6) | R18・ADR 0021に従い実装。受入・公開を別途確認 |
 | [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | R19・ADR 0022で設計採用。R20・#61〜#68で実装・A07・配布を確認。R21でPR #69レビュー修正#70、マージ・公開#71を追跡 |
-| [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | R19・ADR 0022で配分とA08を採用。未検証 |
+| [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | R22・ADR 0024で#72〜#78・#80を実施。PR #79・validation/v0.8で追跡。R23の公開#81を追加 |
 | [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | 確定目標。R19・ADR 0022で完成条件採用、未検証 |
 | [v1.0.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/10) | [#10 Core接続契約](https://github.com/Tao-pyth/nymph-toolkit/issues/10) | 確定目標・契約詳細は提案 |
 | [v1.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/11) | [#11 Memory Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/11) | 名称・機能配分・実装順序は提案 |
@@ -72,6 +72,27 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 R18により、開始時刻変更・期間変更・優先度・中断再開の全4項目を対象として採用した。親Issue [#6](https://github.com/Tao-pyth/nymph-toolkit/issues/6)・マイルストーンv0.6.0配下へ、設計子Issue [#52](https://github.com/Tao-pyth/nymph-toolkit/issues/52)を登録し、GitHubの親子関係と同一マイルストーンを確認した。
 
 #52はADR 0021、関連Docs、引継ぎ書と生成ヘッダーの同期、詳細契約・A06の設計判断を扱う。生成ヘッダーを更新する前に登録した。個別回答と残事項の判断委任を受け、振る舞い・API・A06-01〜12・実装単位を設計採用した。判断元はADR 0021 D1・D2とD3〜D10へ分ける。後続の子Issue分割はD10に記録し、製品コード変更前に各Issueを登録する。#52の設計完了を親#6・v0.6の実装完了と扱わない。
+
+## R23：v0.8.0のレビュー・公開
+
+公開子Issue [#81](https://github.com/Tao-pyth/nymph-toolkit/issues/81)を親#8・v0.8.0配下へ先に登録し、生成ヘッダー変更前に親子関係を確認した。最終CI・通常配布・マージ・新しいタグ/Release・4添付・匿名取得を検証し、結果を#81へ記録してから閉じる。PR #79のClosesで閉じる実装子Issueとは区別し、公開課題#81をマージだけで閉じない。
+
+## R22：v0.8の検証単位
+
+親#8・マイルストーンv0.8.0に、コード変更前に以下の子Issueを登録しGitHubの親子関係を確認した。
+
+| 子Issue | 対応単位 |
+|---|---|
+| [#72](https://github.com/Tao-pyth/nymph-toolkit/issues/72) | A08条件・ADR・根拠と文書同期 |
+| [#73](https://github.com/Tao-pyth/nymph-toolkit/issues/73) | 4配置統合・ライフサイクル障害 |
+| [#74](https://github.com/Tao-pyth/nymph-toolkit/issues/74) | 通信・ストリーム・活動変更の競合 |
+| [#75](https://github.com/Tao-pyth/nymph-toolkit/issues/75) | 保存障害・最終通知・再起動 |
+| [#76](https://github.com/Tao-pyth/nymph-toolkit/issues/76) | 性能・継続負荷・資源保持 |
+| [#77](https://github.com/Tao-pyth/nymph-toolkit/issues/77) | A08受入・CI・配布・資料 |
+
+不具合修正[#78](https://github.com/Tao-pyth/nymph-toolkit/issues/78)は管理通信の期限・取消後の結果解放を対象とし、製品コード変更前に追加登録した。送信前の期限・取消で枠が残る不具合も、製品修正前に[#80](https://github.com/Tao-pyth/nymph-toolkit/issues/80)を登録して対応する。変更全体は[PR #79](https://github.com/Tao-pyth/nymph-toolkit/pull/79)に紐付ける。
+
+採用条件はADR 0022、具体的な検証条件はADR 0024、結果は[validation/v0.8.md](validation/v0.8.md)で管理する。公開済みのタグ・添付を変更せず、Release作成とは別にPRでレビューする。
 
 ## R21：v0.7のレビュー・公開
 

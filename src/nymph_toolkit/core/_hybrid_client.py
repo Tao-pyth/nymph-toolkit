@@ -15,6 +15,22 @@ from nymph_toolkit.contracts.hybrid import seconds
 class CoreClient:
     def __init__(self, context, dispatch):
         self.context, self._dispatch = context, dispatch
+        self._result_peer = None
+
+    @property
+    def pending_requests(self):
+        """RPC IDs owned by this client, including completed retained results."""
+        return () if self._result_peer is None else tuple(self._result_peer._pending)
+
+    def result(self, request_id):
+        if self._result_peer is None:
+            raise KeyError(request_id)
+        return self._result_peer.result(request_id)
+
+    def release(self, request_id):
+        if self._result_peer is None:
+            raise KeyError(request_id)
+        self._result_peer.release(request_id)
 
     async def request(self, operation, payload=None, *, timeout=None):
         timeout = self.context.settings.call_timeout if timeout is None else timeout
@@ -141,6 +157,10 @@ class DirectLink:
             raise
         finally:
             context.opening_streams -= 1
+
+    @property
+    def pending_requests(self):
+        return () if self._peer is None else tuple(self._peer._pending)
 
     def result(self, request_id):
         if self._peer is None:
