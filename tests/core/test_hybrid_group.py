@@ -242,3 +242,23 @@ class HybridGroupTests(unittest.IsolatedAsyncioTestCase):
         group.modules["returned"].process.kill()
         with self.assertRaises(RuntimeFailure):
             await asyncio.wait_for(runtime.wait(), 4)
+
+    async def test_call_deadline_includes_waiting_for_shared_connection(self):
+        group = self.group()
+        self.register(group, "requester", Placement.LOCAL)
+        self.register(group, "provider", Placement.PROCESS)
+        await self.start(group)
+        core = group.client("requester")
+        await core.bind(KEY, "provider", timeout=2)
+        link = await core.prepare(KEY, timeout=2)
+        await link._connect_lock.acquire()
+        try:
+            started = asyncio.get_running_loop().time()
+            with self.assertRaises(TimeoutError):
+                await asyncio.wait_for(link.acall("echo", "never dispatched", timeout=.02), .5)
+            self.assertLess(asyncio.get_running_loop().time() - started, .3)
+            self.assertIsNone(link._peer)
+        finally:
+            link._connect_lock.release()
+        self.assertEqual((await link.acall("echo", "new request", timeout=2))["value"], "new request")
+        self.assertEqual(group.connections.module_state("requester").value, "running")

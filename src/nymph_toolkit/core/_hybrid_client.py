@@ -92,20 +92,25 @@ class DirectLink:
         seconds(timeout)
         self._check(operation)
         context = self.client.context
+        deadline = asyncio.get_running_loop().time() + timeout
         try:
             if context.local_hub is not None and self.route["provider_id"] in context.local_hub.local_nodes:
                 node = context.local_hub.local_nodes[self.route["provider_id"]]
                 async with asyncio.timeout(timeout):
                     return await node.invoke(self.route["contract"], operation, args, kwargs)
-            async with self._connect_lock:
-                if self._peer is None:
-                    reader, writer = await self._connect("rpc", timeout=timeout)
-                    self._peer = RpcPeer(reader, writer, generation=self.route["generation"], module_id=context.module_id,
-                                         settings=context.settings, handler=context.reject)
-                    context.peers.add(self._peer)
-                elif self._peer.closed.is_set():
-                    raise PeerClosed("Direct channel closed; explicitly prepare after health recovery")
-            return await self._peer.call(operation, {"args": json_value(args), "kwargs": json_value(kwargs)}, timeout=timeout)
+            async with asyncio.timeout(timeout):
+                async with self._connect_lock:
+                    if self._peer is None:
+                        reader, writer = await self._connect("rpc", timeout=timeout)
+                        self._peer = RpcPeer(reader, writer, generation=self.route["generation"], module_id=context.module_id,
+                                             settings=context.settings, handler=context.reject)
+                        context.peers.add(self._peer)
+                    elif self._peer.closed.is_set():
+                        raise PeerClosed("Direct channel closed; explicitly prepare after health recovery")
+            remaining = deadline - asyncio.get_running_loop().time()
+            if remaining <= 0:
+                raise TimeoutError("Call deadline expired before dispatch")
+            return await self._peer.call(operation, {"args": json_value(args), "kwargs": json_value(kwargs)}, timeout=remaining)
         except asyncio.CancelledError:
             raise
         except (OutcomeUnknown, TimeoutError):
