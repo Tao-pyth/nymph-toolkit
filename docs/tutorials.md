@@ -153,3 +153,9 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 保持日数、バッチ件数、通知間隔、通信期限、実行枠、転送量などの例中の値はデモ用であり、ライブラリの既定値や性能保証ではない。ファイル保存の詳細は[Connectionsの保存契約](connections.md)を参照する。
 
 全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せず[トラブルシューティング](troubleshooting.md)へ進む。8例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲は[B01検証記録](validation/v1.1.md)と既存[B00](validation/v1.0.md)、本版の公開後再現は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。過去のv0.9版ガイドの確認範囲は[文書整備の検証記録](validation/docs-onboarding.md)に残す。
+
+## 開発候補v1.2の9番目の例
+
+公開v1.1.0の8例とは別に、このcheckoutでは`python examples/document_demo.py`を実行できる。公開v1.1.0のwheelにはDocumentは含まれないため、[開発手順](development.md)でeditable導入する。
+
+一時rootの自作Markdown→Document Adapter→Memoryを接続し、直接/Core経由の取込、冪等性、失敗/競合、再起動取得、後処理を確認する。最後に`PASS: Document text, provenance/hash, Memory commit/restart, direct/Core RPC, cleanup`を表示し、文書/DBを含む一時保存物を削除する。途中でdict以外の結果が出た場合は[Documentガイド](document.md)の失敗・結果不明を確認する。

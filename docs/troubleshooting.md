@@ -73,3 +73,7 @@ Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`�
 - 発生頻度と最後に正常だった条件。共有できるダミーで再現する手順。
 
 公開ログには認証情報や他者の非公開データを含めず、必要ならパス等を伏せる。今回のガイドの検証範囲は[文書整備の記録](validation/docs-onboarding.md)を参照する。
+
+## v1.2開発候補のDocument取込
+
+公開v1.1のwheelではDocumentをimportできない。開発checkoutのeditable導入と版/import元を確認する。`document.too_large`は本文だけでなく出典URI/hash等を含む4096 JSON bytes制限の場合もある。切捨て・部分保存は行わない。kind/source_kind/時刻・IDは要求元が指定し、再取込で変えるとmemory.conflictになる。失敗/取消/結果不明の判断とMemory照合、接続中断後の再prepareは[Document利用ガイド](document.md)を参照する。

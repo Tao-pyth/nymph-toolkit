@@ -110,7 +110,7 @@ R29・[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)でv1.0目標を具�
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象は[ADR 0006](adr/0006-core-connection-contracts.md)、R29の採用詳細はADR 0026で管理する。
 
-Memoryの採用部分は[ADR 0027](adr/0027-v1.1-memory.md)・[利用ガイド](memory.md)に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+Documentの採用部分は[ADR 0028](adr/0028-v1.2-document-adapter.md)・[利用ガイド](document.md)に従う。Memoryの採用部分は[ADR 0027](adr/0027-v1.1-memory.md)・[利用ガイド](memory.md)に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
 
 | 構成案 | 役割と境界 |
 |---|---|
@@ -191,6 +191,7 @@ nymph-toolkit/
 │  ├─ module-contracts.md            # 6契約と接続開発
 │  ├─ migration-v1.md                # v0.9からの移行
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
+│  ├─ document.md                    # v1.2文書入力とMemory連携
 │  ├─ memory.md                      # v1.1保存・取得と運用
 │  ├─ validation/v1.1.md              # B01受入結果
 │  ├─ validation/v1.0.md             # B00受入結果
@@ -238,14 +239,17 @@ nymph-toolkit/
 │     ├─ 0024-v0.8-integration-validation.md
 │     ├─ 0025-v0.9-core-completion.md
 │     ├─ 0026-v1.0-core-connection-contracts.md
-│     └─ 0027-v1.1-memory.md
+│     ├─ 0027-v1.1-memory.md
+│     └─ 0028-v1.2-document-adapter.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     ├─ contracts/                  # memory.pyにMemory契約宣言
+│     ├─ contracts/                  # memory.py / document.pyの業務契約
+│     ├─ adapters/document/          # ローカル文書入力とMemory連携
 │     └─ subsystems/memory/           # 同梱する最小Memory
 └─ tests/                            # subsystems/にMemory単体・統合試験
    ├─ core/
+   ├─ adapters/                     # Document単体・4配置・障害試験
    ├─ subsystems/
    └─ doubles/
 ```
@@ -290,3 +294,9 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
 v1.0の共通Contract公開範囲・互換性はADR 0026で具体化した。後続の業務契約、Subsystemの正式名称と学習・意思決定方式、Adapterの形式・権限、Personaへの修正値、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+
+## R33：DocumentとMemoryの境界
+
+`src/nymph_toolkit/adapters/document/`へ同梱し、`contracts/document.py`に宣言を置く。ModuleKind.ADAPTERでMemoryへの依存を宣言し、公開Contractsだけを参照する。ローカル文書読込と出典/hash作成をAdapter、commitと保存/取得をMemory、接続許可/実行管理をCoreが担当する。区分・ID・時刻・活動の選択は要求側に残す。
+
+`docs/document.md`・ADR 0028・`docs/validation/v1.2.md`・`examples/document_demo.py`・`tests/adapters/`で仕様と証拠を追跡する。v1.2の単一パッケージへの追加であり、将来の独立配布を確定しない。

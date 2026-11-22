@@ -4,6 +4,8 @@
 
 R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memory.md)・[B01結果](validation/v1.1.md)を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
 
+開発候補v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)・[B02結果](validation/v1.2.md)を参照する。公開版の導入資料と区別する。
+
 ## 目的別の読み順
 
 **v1.0.0の接続契約と導入資料を整備した。** 実装・受入は[B00記録](validation/v1.0.md)、公開後の取得確認と完了は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡する。v0.9.0のCore完成・公開後確認は[#88](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)の記録を保持する。
@@ -214,3 +216,9 @@ Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し
 ## R32のv1.1レビュー・公開
 
 PR #109のレビュー、問題がなければマージ・v1.1.0公開、公開後確認、対応済み子#105〜#108と親#11・マイルストーン終了という明示指示を根拠とする。子[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を同じマイルストーン・実親子関係へ先に登録し、公開用資料・生成ヘッダー・最終CI・公開後取得を追跡する。R31のPRまでという範囲を公開まで拡張する。契約や延期事項の新たな採用はなく、最終SHA・公開後結果は#110・Releaseへ記録する。
+
+## R33：v1.2 Document Adapter
+
+本チャットのv1.2.0開発・Memory連携・設計/実装/検証/資料整備指示をR33とする。親#12・子#112〜#115をコード変更前に登録し、実親子関係と同じマイルストーンを確認した。[ADR 0028](adr/0028-v1.2-document-adapter.md)のAPI・形式・具体値は今回の指示を具体化するCodexの実装判断で、過去に個別採用された仕様とは区別する。
+
+[Document利用ガイド](document.md)で設定・取込・失敗/取消と図解、[B02結果](validation/v1.2.md)で検証を追う。公開済みv1.1の導入/8例と区別し、開発候補には9番目のDocument例を追加する。新規Release・公開後確認・親/マイルストーン終了を含めない。引継ぎ書へ新規Docs/ADR/検証記録を収録する。
