@@ -15,6 +15,7 @@ from nymph_toolkit.contracts import (
 from .connections import Connections
 from .module_group import ModuleGroup
 from ._module_node import ModuleNode
+from ._net import start_server
 from ._rpc import RpcPeer
 from ._wire import VERSION, decode, encode, json_value, read_frame, write_frame
 
@@ -308,7 +309,7 @@ class HybridGroup(ModuleGroup):
 
     async def start(self):
         self._fatal = _future()
-        self.server = await asyncio.start_server(self._accept, "127.0.0.1", 0)
+        self.server = await start_server(self._accept, "127.0.0.1", 0)
         self.connections.store.append("hybrid_configuration", {"modules": [
             {"module_id": name, "placement": s.placement.value, "factory": s.factory, "config": s.config,
              "implementation_version": s.advertisement.implementation_version}

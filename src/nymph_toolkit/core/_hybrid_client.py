@@ -7,6 +7,7 @@ from uuid import uuid4
 from nymph_toolkit.contracts import (BindingKey, CapacityExceeded, ConnectionNotReadyError, LinkFailure,
                                     OutcomeUnknown, PeerClosed, ProtocolError, RemoteError, TemporaryUnavailable)
 from ._rpc import RpcPeer
+from ._net import open_connection
 from ._streams import StreamSender
 from ._wire import VERSION, encode, json_value, read_frame, write_frame
 from nymph_toolkit.contracts.hybrid import seconds
@@ -89,7 +90,7 @@ class DirectLink:
     async def _connect(self, kind, *, timeout, **extra):
         context = self.client.context
         async with asyncio.timeout(timeout):
-            reader, writer = await asyncio.open_connection("127.0.0.1", self.route["port"])
+            reader, writer = await open_connection("127.0.0.1", self.route["port"])
             try:
                 await write_frame(writer, {"version": VERSION, "generation": self.route["generation"],
                                           "token": self.route["token"], "kind": kind, **extra}, context.settings.max_frame_bytes)
