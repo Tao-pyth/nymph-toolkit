@@ -8,16 +8,17 @@ import sys
 from uuid import uuid4
 
 from nymph_toolkit.contracts import (
-    BindingKey, HybridSettings, ModuleAdvertisement, OperationMode, PeerClosed, Placement,
+    BindingKey, HybridSettings, OperationMode, PeerClosed, Placement,
     ProcessSnapshot, ProtocolError, RemoteError, RuntimeState, Usage, OperatingState,
     CapacityExceeded, TemporaryUnavailable, OutcomeUnknown,
 )
 from .connections import Connections
 from .module_group import ModuleGroup
+from ._module_contract import validate_module_registration
 from ._module_node import ModuleNode
 from ._net import start_server
 from ._rpc import RpcPeer
-from ._wire import VERSION, decode, encode, json_value, read_frame, write_frame
+from ._wire import VERSION, decode, encode, read_frame, write_frame
 
 
 def _future():
@@ -174,15 +175,8 @@ class HybridGroup(ModuleGroup):
         return manager
 
     def register_module(self, spec, advertisement, factory, config, placement):
-        if not isinstance(advertisement, ModuleAdvertisement) or advertisement.module_id != spec.module_id:
-            raise ValueError("Advertisement must match module ID")
-        if not isinstance(placement, Placement):
-            raise TypeError("placement must be explicit")
-        if not isinstance(factory, str) or factory.count(":") != 1 or not all(factory.split(":")):
-            raise ValueError("factory must be an importable module:attribute")
-        if any(op.mode != OperationMode.ASYNC for c in advertisement.contracts for op in c.operations):
-            raise ValueError("Hybrid declarations require ASYNC; existing sync declarations must not be reinterpreted")
-        service = _Service(self, spec, advertisement, factory, json_value(config), placement)
+        config = validate_module_registration(spec, advertisement, factory, config, placement)
+        service = _Service(self, spec, advertisement, factory, config, placement)
         update = self.register(spec, service)
         handlers = {}
         for contract in advertisement.contracts:

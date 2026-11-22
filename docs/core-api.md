@@ -1,6 +1,6 @@
 # Core APIと利用上の契約
 
-本書はv0.9の完成確認で整理した、実装済みCore・Contractsの入口である。仕様の根拠はADR 0014〜0025。公開名は `nymph_toolkit.core` の14件、`nymph_toolkit.contracts` の92件で、[実装一覧](api-reference.md)に構築引数・メソッド・型・列挙値を収録する。v1.0の接続契約体系化・互換性保証の範囲は別目標であり、本書だけで採用しない。
+本書は実装済みCore・Contractsの入口である。v0.9の整理をR29・ADR 0026で更新した。v1.0.0の公開名はCore 15件・Contracts 98件。[実装一覧](api-reference.md)と[6契約・安定対象](module-contracts.md)、[移行手順](migration-v1.md)を併読する。仕様の根拠はADR 0014〜0026で、公開済みv0.9.0の14件・92件とは区別する。
 
 ## 入口と返却値
 
@@ -15,6 +15,7 @@
 | PreparedConnection | prepareが返す窓口。callはSYNC、acallはASYNCの宣言と引数→提供側の値 | 直接構築しない。許可済み接続を使用し、ローカルの無効状態を確認。毎回の候補選定・許可再審査は行わない |
 | FileStore | 主・予備ディレクトリ、retention、batch_size、flush_interval。`append(kind, data)`→None、`flush()`→None | Group/Connectionsが所有。appendはメモリ受付、flushはその時点までの保存。主保存先はCore間で共用しない |
 | TaskManager | Connections、時計監視間隔、任意のmax_running。`submit(request, execute, supports_pause=...)`→ActivitySnapshot | Groupが所有する。状態と結果は起動内で保持。実行関数はActivityContextを受け取る |
+| validate_module_registration | spec・advertisement・factory・config・placement→独立したJSON設定コピー | import/起動/登録/保存を伴わない入力検証。実体の契約試験を別途行う |
 | HybridGroup | settingsとstore。`register_module(spec, advertisement, factory, config, placement)`→RegistryUpdate | factoryはimport可能なmodule:attribute。既存Groupと同じライフサイクル、稼働中構成は固定 |
 | HybridTaskManager | `enable_activities(...)`で取り付け。`submit_remote(request, module_id, executor_id, arguments)`→ActivitySnapshot | 登録済み実行処理IDを使用。関数・継続状態の転送や再起動後の自動復元なし |
 | ModuleContext | factoryに渡される機能用コンテキスト。provide / provide_stream / provide_executor→None | 直接構築しない。初期化中に宣言と一致するハンドラーを登録。coreから管理へ操作を届ける |

@@ -4,6 +4,8 @@
 
 ## 構成と起動
 
+v1.0候補では[R29の6契約](module-contracts.md)と[移行手順](migration-v1.md)を追加した。機能はContractsのProtocolを使え、起動アプリはvalidate_module_registrationで入力を事前検証できる。provide系はfactory/start中に限り、起動後・停止後はProtocolErrorとなる。以下の通信・活動・所有動作は維持する。
+
 `HybridGroup(settings, store)`はModuleGroupを拡張する。親CoreだけがRegistry・Connections・TaskManager・FileStoreを所有し、`Runtime(group)`で起動・停止する。`register_module(spec, advertisement, factory, config, placement)`で機能を登録する。`Placement.LOCAL`は同一プロセス、`PROCESS`は機能ごとにCore所有の子を起動する。
 
 `factory`は共有Python環境からimportできる`module:attribute`、`config`はJSON値である。factoryは`ModuleContext`と設定を受け取り、非同期の`start/run/stop`を持つサービスを返す。通常は機能を同じ環境にインストールする。ダミー例は例のディレクトリだけを親・子からimport可能にする。子はCoreと同じ`sys.executable`を使用し、標準出力・標準エラーをIPCに流用しない。

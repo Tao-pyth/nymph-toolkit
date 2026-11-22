@@ -24,7 +24,7 @@ class LifecyclePhase(StrEnum):
 
 
 class RuntimeService(Protocol[T_co]):
-    """One execution entry point, not the complete future module contract."""
+    """Lifecycle portion of the module contract; stop handles partial startup."""
 
     async def start(self) -> None:
         """Initialize resources; stop must also handle partial initialization."""
@@ -146,3 +146,9 @@ __all__ = [
     "RuntimeState",
     "RuntimeStateError",
 ]
+
+from .modules import (ModuleFactory, ModuleContextProtocol, CoreClientProtocol, DirectLinkProtocol,
+                      StreamSenderProtocol, StreamReceiverProtocol)
+
+__all__ += ["ModuleFactory", "ModuleContextProtocol", "CoreClientProtocol", "DirectLinkProtocol",
+            "StreamSenderProtocol", "StreamReceiverProtocol"]

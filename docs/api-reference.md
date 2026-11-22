@@ -2,11 +2,11 @@
 
 この一覧は明示された公開import（core / contractsの__all__）を実装から生成する。
 引数、列挙値、データ型、継承したメソッド・プロパティの存在を照合するための資料であり、入力検証・返却値・所有期間・失敗時動作は[Core API](core-api.md)と各操作資料を併読する。
-型注釈がない入口から新しい型保証を推測しない。内部補助メソッドを含む実体の一覧は、全メソッドの安定保証やv1.0の接続契約採用を意味しない。直接構築しない窓口もCore APIで区別する。
+型注釈がない入口から新しい型保証を推測しない。内部補助メソッドを含む実体の一覧は、全メソッドの安定保証を意味しない。安定対象は[接続契約](module-contracts.md)とcontracts-v1.json、移行は[migration-v1](migration-v1.md)を参照する。
 
 再生成：python tools/check_api.py --write。照合：python tools/check_api.py。
 
-## nymph_toolkit.core（14件）
+## nymph_toolkit.core（15件）
 
 <a id="core-Connections"></a>
 
@@ -55,7 +55,6 @@ CoreClient(context, dispatch)
   async prepare(self, contract, *, timeout)
   async publish_usage(self, usage, *, contracts=None, timeout=None)
   def release(self, request_id)
-  async request(self, operation, payload=None, *, timeout=None)
   def result(self, request_id)
   async submit_remote(self, request, module_id, executor_id, arguments=None, *, timeout=None)
 ```
@@ -163,13 +162,9 @@ HybridTaskManager(group, *, clock_check_interval, max_running=None)
 
 ```text
 ModuleContext(module_id, generation, settings, dispatch, local_hub=None)
-  def check_stream_capacity(self)
-  async own_sender(self, sender, route, stream_id)
   def provide(self, contract, handlers)
   def provide_executor(self, executor_id, handler, *, supports_pause=False)
   def provide_stream(self, contract, operation, handler)
-  async reject(self, operation, payload)
-  def reserve_stream(self)
 ```
 
 <a id="core-ModuleGroup"></a>
@@ -292,7 +287,15 @@ TaskManager(connections: nymph_toolkit.core.connections.Connections, *, clock_ch
   async wait(self, key)
 ```
 
-## nymph_toolkit.contracts（92件）
+<a id="core-validate_module_registration"></a>
+
+### validate_module_registration
+
+```text
+validate_module_registration(spec, advertisement, factory, config, placement)
+```
+
+## nymph_toolkit.contracts（98件）
 
 <a id="contracts-ActivityAdmissionError"></a>
 
@@ -793,6 +796,29 @@ ContractSpec(key: nymph_toolkit.contracts.connections.ContractKey, operations: t
   operations: tuple[nymph_toolkit.contracts.connections.OperationSpec, ...]
 ```
 
+<a id="contracts-CoreClientProtocol"></a>
+
+### CoreClientProtocol
+
+基底：Protocol。
+
+```text
+CoreClientProtocol(*args, **kwargs)
+  async acknowledge_interruption(self, notice_id, *, timeout=None)
+  async activity(self, operation, key=None, *, timeout=None, **arguments)
+  async bind(self, contract: 'ContractKey', provider_id: 'str', *, timeout)
+  async candidates(self, contract: 'ContractKey', *, timeout=None)
+  async health_check(self, *, module_ids=None, bindings=None, timeout=None)
+  async invoke(self, contract: 'ContractKey', operation, *args, timeout, **kwargs)
+  async next_notice(self, *, timeout)
+  property pending_requests(self) -> 'tuple[str, ...]'
+  async prepare(self, contract: 'ContractKey', *, timeout) -> 'DirectLinkProtocol'
+  async publish_usage(self, usage: 'Usage', *, contracts=None, timeout=None)
+  def release(self, request_id) -> 'None'
+  def result(self, request_id)
+  async submit_remote(self, request: 'ActivityRequest', module_id, executor_id, arguments=None, *, timeout=None)
+```
+
 <a id="contracts-DependencyCycleError"></a>
 
 ### DependencyCycleError
@@ -811,6 +837,22 @@ DependencyCycleError（構築署名はPython標準の基底例外に従う）
 
 ```text
 DependencyUnavailableError(missing_dependencies: frozenset[str]) -> None
+```
+
+<a id="contracts-DirectLinkProtocol"></a>
+
+### DirectLinkProtocol
+
+基底：Protocol。
+
+```text
+DirectLinkProtocol(*args, **kwargs)
+  async acall(self, operation, *args, timeout, **kwargs)
+  async close(self) -> 'None'
+  async open_stream(self, operation, options: 'StreamOptions', metadata=None, *, timeout) -> 'StreamSenderProtocol'
+  property pending_requests(self) -> 'tuple[str, ...]'
+  def release(self, request_id) -> 'None'
+  def result(self, request_id)
 ```
 
 <a id="contracts-DuplicateActivityError"></a>
@@ -924,6 +966,23 @@ ModuleAdvertisement(module_id: str, implementation_version: str, contracts: tupl
   attributes: collections.abc.Mapping[str, str | bool | int | float | None]
 ```
 
+<a id="contracts-ModuleContextProtocol"></a>
+
+### ModuleContextProtocol
+
+基底：Protocol。
+
+```text
+ModuleContextProtocol(*args, **kwargs)
+  property core(self) -> 'CoreClientProtocol'
+  property generation(self) -> 'str'
+  property module_id(self) -> 'str'
+  def provide(self, contract: 'ContractKey', handlers: 'Mapping[str, Callable[..., Awaitable[object]]]') -> 'None'
+  def provide_executor(self, executor_id: 'str', handler: 'Callable[[ActivityContext, object], Awaitable[object]]', *, supports_pause=False) -> 'None'
+  def provide_stream(self, contract: 'ContractKey', operation: 'str', handler: 'Callable[[StreamReceiverProtocol, object], Awaitable[None]]') -> 'None'
+  property settings(self) -> 'HybridSettings'
+```
+
 <a id="contracts-ModuleExecutionState"></a>
 
 ### ModuleExecutionState
@@ -934,6 +993,17 @@ ModuleAdvertisement(module_id: str, implementation_version: str, contracts: tupl
 RUNNING = 'running'
 INTERRUPTING = 'interrupting'
 SUSPENDED = 'suspended'
+```
+
+<a id="contracts-ModuleFactory"></a>
+
+### ModuleFactory
+
+基底：Protocol。
+
+```text
+ModuleFactory(*args, **kwargs)
+  def __call__(self, context: 'ModuleContextProtocol', config: 'object') -> 'RuntimeService[object] | Awaitable[RuntimeService[object]]'
 ```
 
 <a id="contracts-ModuleFailure"></a>
@@ -1324,6 +1394,46 @@ StreamOptions(send_bytes: int, send_chunks: int, receive_bytes: int, receive_chu
   receive_bytes: int
   receive_chunks: int
   overflow: nymph_toolkit.contracts.hybrid.OverflowPolicy
+```
+
+<a id="contracts-StreamReceiverProtocol"></a>
+
+### StreamReceiverProtocol
+
+基底：Protocol。
+
+```text
+StreamReceiverProtocol(*args, **kwargs)
+  async abort(self, reason='Explicit stream abort') -> 'None'
+  async aclose(self) -> 'None'
+  property buffered_bytes(self) -> 'int'
+  property buffered_chunks(self) -> 'int'
+  async fail(self, reason) -> 'None'
+  property options(self) -> 'StreamOptions'
+  property reason(self) -> 'str | None'
+  async receive(self, *, timeout) -> 'StreamEvent'
+  property state(self) -> 'StreamState'
+```
+
+<a id="contracts-StreamSenderProtocol"></a>
+
+### StreamSenderProtocol
+
+基底：Protocol。
+
+```text
+StreamSenderProtocol(*args, **kwargs)
+  async abort(self, reason='Explicit stream abort') -> 'None'
+  async aclose(self) -> 'None'
+  property buffered_bytes(self) -> 'int'
+  property buffered_chunks(self) -> 'int'
+  async close(self, *, timeout) -> 'None'
+  property dropped_chunks(self) -> 'int'
+  async fail(self, reason) -> 'None'
+  property options(self) -> 'StreamOptions'
+  property reason(self) -> 'str | None'
+  async send(self, data: 'bytes | bytearray | memoryview', *, timeout) -> 'int'
+  property state(self) -> 'StreamState'
 ```
 
 <a id="contracts-StreamState"></a>

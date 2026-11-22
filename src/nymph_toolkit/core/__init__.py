@@ -12,6 +12,8 @@ from .hybrid_tasks import HybridTaskManager
 from ._module_node import ModuleContext
 from ._hybrid_client import CoreClient, DirectLink
 from ._streams import StreamSender, StreamReceiver
+from ._module_contract import validate_module_registration
 
 __all__ = ["Connections", "FileStore", "ModuleGroup", "PreparedConnection", "Registry", "Runtime", "TaskManager", "HybridGroup", "HybridTaskManager"]
 __all__ += ["ModuleContext", "CoreClient", "DirectLink", "StreamSender", "StreamReceiver"]
+__all__ += ["validate_module_registration"]

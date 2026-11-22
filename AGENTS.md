@@ -36,3 +36,5 @@ v0.8の統合・障害・負荷検証は[ADR 0024](docs/adr/0024-v0.8-integratio
 v0.9の完成確認はR24・[ADR 0025](docs/adr/0025-v0.9-core-completion.md)を参照する。公開API一覧と64項目の証拠はtools/check_api.py・tools/check_completion.pyで照合し、動作試験の代わりにしない。A09-01〜03の実装・配布候補の結果と、A09-04のタグ・Release・公開後照合を分け、公開前に全A09合格や親#9完了としない。
 
 Docs更新時は[文書の更新方法](docs/README.md)に従って単一配布用引継ぎ書を同期する。公開済みのタグやRelease添付を後続の文書修正で差し替えない。
+
+v1.0の接続契約はR29・[ADR 0026](docs/adr/0026-v1.0-core-connection-contracts.md)に従う。必要な破壊的API整理は許可され、理由と移行手順を記録する。採用64項目の動作やNymph/Core境界を暗黙に変えない。公開型・登録前検証・初期化中の提供登録、安定APIの基準はdocs/module-contracts.mdとdocs/contracts-v1.jsonを参照する。tools/check_contracts.pyの差分を基準の無条件再生成で解消せず、互換性とIssue/ADRを先に確認する。B00の実装・受入とタグ/Release・公開後確認は区別する。

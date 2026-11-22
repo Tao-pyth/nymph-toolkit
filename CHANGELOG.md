@@ -1,6 +1,12 @@
 # 変更履歴
 
-## 未リリース
+## v1.0.0 — 2026年11月23日
+
+- R30・#104でPR #103のレビュー、公開用資料整備、マージ・タグ・Release・公開後取得確認を実施。最終コミットとCI・添付の照合結果は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)に記録する。
+
+- R29・親#10、子#98〜#102で6区分の接続契約・B00をADR 0026に具体化。公開Contractsに6つの機能側Protocol、Coreに登録前検証を追加。
+- 必要な破壊的API整理としてCoreClientの内部要求とModuleContextの資源補助を非公開化し、起動後/停止後のprovide系を拒否。[移行手順](docs/migration-v1.md)を参照。
+- 安定API基準と照合・拒否試験、Contractsのみを使う両kind/4配置の統合試験、7番目の実行例、通常配布・CI検証を追加。採用64項目とNymph/Core境界を維持する。
 
 - R28・親#10の子#94でWindows Proactorの終了時resetによるソケット解放・server登録解除漏れを修正。NTK所有のTCP接続だけに互換処理を限定し、通信失敗・停止失敗の通知は維持する。制御されたエラー注入、通常4配置、既存の障害・強制終了を検証し、[原因と確認範囲](docs/validation/windows-shutdown.md)へ記録する。
 

@@ -148,7 +148,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 
 ## v1.0.0以降のロードマップ案
 
-**以下はR5に基づく設計提案である。** v1.0.0でCoreとSubsystem・Adapterの接続契約を大きく形作る目標は確定している。契約詳細、Subsystem・Adapterの名称、実装順序、各バージョンへの機能配分、受入条件は未確定である。日付・開発期間・工数の見積もりは設定しない。
+**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1以降のSubsystem・Adapterの名称、順序、配分、業務契約と受入は未確定である。日付・開発期間・工数の見積もりは設定しない。
 
 ### リリース運用案
 
@@ -180,6 +180,10 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 各段階の実装内容と受入条件は設計・ADRで具体化する。上表の検証IDは[acceptance.md](acceptance.md)の案に対応し、機能完成を宣言するものではない。
 
 ### v1.0.0 — Core接続契約
+
+**R29で実施・具体化。** 親#10・子#98〜#102、[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)で6契約・Protocol・登録前検証・必要な破壊的API整理と移行・安定API基準を採用した。着手条件はv0.9完成と#94修正完了、成果物は[契約資料](module-contracts.md)、[移行表](migration-v1.md)、公開型・補助・7番目の例・契約試験。検証は[受入基準](acceptance.md)のB00-01〜08と[結果](validation/v1.0.md)に従う。通常wheel・8環境CI・Docs同期までを実装完了条件とし、タグ/Releaseと公開後確認は後続の公開指示で扱う。
+
+以下は当初の検討範囲であり、未決のまま実装する指示ではない。
 
 - **着手時に確認すること** — v0.9.0のCore受入結果、既存API、ADR 0015と後続の通信経路判断を確認する。
 - **検討・成果物の案** — Module Contract、Lifecycle Contract、Capability Contract、Communication Contract、Task Contract、Error Contractを具体化する。Coreと同じ配布物のContractsを公開接続契約として体系化し、公開API資料、接続用の開発補助機能、ダミーを用いた契約テストを整備する。本番Subsystemの完成は必須条件としない。

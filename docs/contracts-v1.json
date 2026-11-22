@@ -1,0 +1,2016 @@
+{
+  "api_version": "1.0.0",
+  "decision": "ADR 0026; changes require compatibility review",
+  "schema": 1,
+  "surface": {
+    "nymph_toolkit.contracts": {
+      "ActivityAdmissionError": {
+        "bases": [
+          "ActivityError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ActivityChange": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "duration": "datetime.timedelta | nymph_toolkit.contracts.activities._Unchanged",
+          "priority": "int | nymph_toolkit.contracts.activities._Unchanged",
+          "start_at": "datetime.datetime | None | nymph_toolkit.contracts.activities._Unchanged"
+        },
+        "kind": "class",
+        "members": {
+          "as_dict": {
+            "kind": "def",
+            "signature": "(self)"
+          }
+        },
+        "signature": "(start_at: datetime.datetime | None | nymph_toolkit.contracts.activities._Unchanged = <_Unchanged.VALUE: 'unchanged'>, duration: datetime.timedelta | nymph_toolkit.contracts.activities._Unchanged = <_Unchanged.VALUE: 'unchanged'>, priority: int | nymph_toolkit.contracts.activities._Unchanged = <_Unchanged.VALUE: 'unchanged'>) -> None"
+      },
+      "ActivityCommandResult": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "command_id": "str",
+          "key": "nymph_toolkit.contracts.activities.ActivityKey",
+          "operation": "str",
+          "reason": "str | None",
+          "received_at": "datetime.datetime",
+          "snapshot": "nymph_toolkit.contracts.activities.ActivitySnapshot",
+          "status": "nymph_toolkit.contracts.activities.ActivityCommandStatus"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(key: nymph_toolkit.contracts.activities.ActivityKey, command_id: str, operation: str, received_at: datetime.datetime, status: nymph_toolkit.contracts.activities.ActivityCommandStatus, reason: str | None, snapshot: nymph_toolkit.contracts.activities.ActivitySnapshot) -> None"
+      },
+      "ActivityCommandStatus": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "ACCEPTED": "accepted",
+          "APPLIED": "applied",
+          "FAILED": "failed",
+          "NO_CHANGE": "no_change",
+          "REJECTED": "rejected",
+          "SUPERSEDED": "superseded"
+        }
+      },
+      "ActivityContext": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "checkpoint": {
+            "kind": "async",
+            "signature": "(self) -> nymph_toolkit.contracts.activities.ActivityFinishReason | None"
+          },
+          "current_request": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.activities.ActivityRequest"
+          },
+          "finish_reason": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.activities.ActivityFinishReason | None"
+          },
+          "finish_requested": {
+            "kind": "property",
+            "signature": "(self) -> bool"
+          },
+          "pause_requested": {
+            "kind": "property",
+            "signature": "(self) -> bool"
+          },
+          "planned_end_at": {
+            "kind": "property",
+            "signature": "(self) -> datetime.datetime"
+          },
+          "planned_start_at": {
+            "kind": "property",
+            "signature": "(self) -> datetime.datetime"
+          },
+          "request": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.activities.ActivityRequest"
+          },
+          "wait_for_control": {
+            "kind": "async",
+            "signature": "(self) -> nymph_toolkit.contracts.activities.ActivityControlKind"
+          },
+          "wait_for_finish": {
+            "kind": "async",
+            "signature": "(self) -> nymph_toolkit.contracts.activities.ActivityFinishReason"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "ActivityControlKind": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "FINISH": "finish",
+          "PAUSE": "pause"
+        }
+      },
+      "ActivityError": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ActivityExecutor": {
+        "kind": "constant",
+        "value": "collections.abc.Callable[[nymph_toolkit.contracts.activities.ActivityContext], collections.abc.Awaitable[object]]"
+      },
+      "ActivityFailure": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "exception": "BaseException"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(exception: BaseException) -> None"
+      },
+      "ActivityFinishReason": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "CONNECTION_INTERRUPTION": "connection_interruption",
+          "NYMPH": "nymph",
+          "RUNTIME": "runtime"
+        }
+      },
+      "ActivityHistory": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "issues": "tuple[nymph_toolkit.contracts.activities.ActivityHistoryIssue, ...]",
+          "records": "tuple[nymph_toolkit.contracts.activities.ActivityHistoryRecord, ...]"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(records: tuple[nymph_toolkit.contracts.activities.ActivityHistoryRecord, ...], issues: tuple[nymph_toolkit.contracts.activities.ActivityHistoryIssue, ...]) -> None"
+      },
+      "ActivityHistoryIssue": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "line": "int | None",
+          "message": "str",
+          "path": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(path: str, line: int | None, message: str) -> None"
+      },
+      "ActivityHistoryRecord": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "at": "datetime.datetime",
+          "data": "collections.abc.Mapping[str, object]",
+          "kind": "str",
+          "run_id": "str",
+          "sequence": "int"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(run_id: str, sequence: int, at: datetime.datetime, kind: str, data: collections.abc.Mapping[str, object]) -> None"
+      },
+      "ActivityKey": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "activity_id": "str",
+          "requester_id": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(requester_id: str, activity_id: str) -> None"
+      },
+      "ActivityNotice": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "at": "datetime.datetime",
+          "command": "nymph_toolkit.contracts.activities.ActivityCommandResult | None",
+          "kind": "nymph_toolkit.contracts.activities.ActivityNoticeKind",
+          "sequence": "int",
+          "snapshot": "nymph_toolkit.contracts.activities.ActivitySnapshot"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(sequence: int, kind: nymph_toolkit.contracts.activities.ActivityNoticeKind, at: datetime.datetime, snapshot: nymph_toolkit.contracts.activities.ActivitySnapshot, command: nymph_toolkit.contracts.activities.ActivityCommandResult | None = None) -> None"
+      },
+      "ActivityNoticeKind": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "COMMAND_RESULT": "command_result",
+          "PLANNED_END": "planned_end",
+          "STATE_CHANGED": "state_changed"
+        }
+      },
+      "ActivityRequest": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "content": "str",
+          "duration": "datetime.timedelta",
+          "key": "nymph_toolkit.contracts.activities.ActivityKey",
+          "parameters": "collections.abc.Mapping[str, object]",
+          "priority": "int",
+          "start_at": "datetime.datetime | None"
+        },
+        "kind": "class",
+        "members": {
+          "as_dict": {
+            "kind": "def",
+            "signature": "(self) -> dict"
+          },
+          "planned_times": {
+            "kind": "def",
+            "signature": "(self, accepted_at: datetime.datetime) -> tuple[datetime.datetime, datetime.datetime]"
+          }
+        },
+        "signature": "(key: nymph_toolkit.contracts.activities.ActivityKey, content: str, start_at: datetime.datetime | None, duration: datetime.timedelta, parameters: collections.abc.Mapping[str, object] = <factory>, priority: int = 0) -> None"
+      },
+      "ActivitySnapshot": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "accepted_at": "datetime.datetime",
+          "cleanup_confirmed": "bool",
+          "current_request": "nymph_toolkit.contracts.activities.ActivityRequest | None",
+          "elapsed_seconds": "float",
+          "ended_at": "datetime.datetime | None",
+          "execution_seconds": "float",
+          "failures": "tuple[nymph_toolkit.contracts.activities.ActivityFailure, ...]",
+          "finish_reason": "nymph_toolkit.contracts.activities.ActivityFinishReason | None",
+          "finish_requested_at": "datetime.datetime | None",
+          "planned_end_at": "datetime.datetime",
+          "planned_end_notified": "bool",
+          "planned_start_at": "datetime.datetime",
+          "request": "nymph_toolkit.contracts.activities.ActivityRequest",
+          "result": "object",
+          "revision": "int",
+          "scheduled_revision": "int",
+          "started_at": "datetime.datetime | None",
+          "state": "nymph_toolkit.contracts.activities.ActivityState",
+          "timing_confirmed": "bool"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(request: nymph_toolkit.contracts.activities.ActivityRequest, state: nymph_toolkit.contracts.activities.ActivityState, accepted_at: datetime.datetime, planned_start_at: datetime.datetime, planned_end_at: datetime.datetime, started_at: datetime.datetime | None = None, ended_at: datetime.datetime | None = None, elapsed_seconds: float = 0.0, finish_reason: nymph_toolkit.contracts.activities.ActivityFinishReason | None = None, finish_requested_at: datetime.datetime | None = None, planned_end_notified: bool = False, result: object = None, failures: tuple[nymph_toolkit.contracts.activities.ActivityFailure, ...] = (), revision: int = 0, scheduled_revision: int = 0, current_request: nymph_toolkit.contracts.activities.ActivityRequest | None = None, execution_seconds: float = 0.0, timing_confirmed: bool = True, cleanup_confirmed: bool = True) -> None"
+      },
+      "ActivityStartInPastError": {
+        "bases": [
+          "ActivityError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(request: nymph_toolkit.contracts.activities.ActivityRequest, observed_at: datetime.datetime) -> None"
+      },
+      "ActivityState": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "COMPLETED": "completed",
+          "FAILED": "failed",
+          "FINISHING": "finishing",
+          "PAUSED": "paused",
+          "PAUSING": "pausing",
+          "PENDING": "pending",
+          "RESUME_PENDING": "resume_pending",
+          "RUNNING": "running",
+          "STARTING": "starting",
+          "STOPPED": "stopped"
+        }
+      },
+      "ActivityStateError": {
+        "bases": [
+          "ActivityError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "BindingHealth": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "healthy": "bool",
+          "key": "nymph_toolkit.contracts.connections.BindingKey",
+          "provider_id": "str",
+          "reason": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(key: nymph_toolkit.contracts.connections.BindingKey, provider_id: str, healthy: bool, reason: str = '') -> None"
+      },
+      "BindingKey": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "contract": "nymph_toolkit.contracts.connections.ContractKey",
+          "requester_id": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(requester_id: str, contract: nymph_toolkit.contracts.connections.ContractKey) -> None"
+      },
+      "BindingRecord": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "key": "nymph_toolkit.contracts.connections.BindingKey",
+          "provider_id": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(key: nymph_toolkit.contracts.connections.BindingKey, provider_id: str) -> None"
+      },
+      "BindingState": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "CHECKING": "checking",
+          "INVALID": "invalid",
+          "VALID": "valid"
+        }
+      },
+      "Candidate": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "advertisement": "nymph_toolkit.contracts.connections.ModuleAdvertisement",
+          "contract": "nymph_toolkit.contracts.connections.ContractKey",
+          "contract_usage": "nymph_toolkit.contracts.connections.Usage",
+          "module_usage": "nymph_toolkit.contracts.connections.Usage",
+          "registration": "nymph_toolkit.contracts.registry.RegistryEntry"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(registration: nymph_toolkit.contracts.registry.RegistryEntry, advertisement: nymph_toolkit.contracts.connections.ModuleAdvertisement, contract: nymph_toolkit.contracts.connections.ContractKey, module_usage: nymph_toolkit.contracts.connections.Usage, contract_usage: nymph_toolkit.contracts.connections.Usage) -> None"
+      },
+      "CapacityExceeded": {
+        "bases": [
+          "HybridError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ChunkTooLarge": {
+        "bases": [
+          "HybridError",
+          "ValueError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ConnectionConflictError": {
+        "bases": [
+          "ConnectionsError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ConnectionNotReadyError": {
+        "bases": [
+          "ConnectionsError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ConnectionNotice": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "binding": "nymph_toolkit.contracts.connections.BindingKey | None",
+          "kind": "nymph_toolkit.contracts.connections.NoticeKind",
+          "module_id": "str",
+          "notice_id": "int",
+          "reason": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(notice_id: int, module_id: str, kind: nymph_toolkit.contracts.connections.NoticeKind, binding: nymph_toolkit.contracts.connections.BindingKey | None, reason: str = '') -> None"
+      },
+      "ConnectionSnapshot": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "key": "nymph_toolkit.contracts.connections.BindingKey",
+          "provider_id": "str",
+          "reason": "str",
+          "state": "nymph_toolkit.contracts.connections.BindingState"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(key: nymph_toolkit.contracts.connections.BindingKey, provider_id: str, state: nymph_toolkit.contracts.connections.BindingState, reason: str = '') -> None"
+      },
+      "ConnectionUnavailableError": {
+        "bases": [
+          "ConnectionsError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ConnectionsError": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ConnectionsLifecycleFailure": {
+        "bases": [
+          "ConnectionsError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(failures: tuple[nymph_toolkit.contracts.LifecycleFailure, ...]) -> None"
+      },
+      "ConnectionsStateError": {
+        "bases": [
+          "ConnectionsError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ContractDeclarationError": {
+        "bases": [
+          "ConnectionsError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ContractKey": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "contract_id": "str",
+          "version": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(contract_id: str, version: str) -> None"
+      },
+      "ContractSpec": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "key": "nymph_toolkit.contracts.connections.ContractKey",
+          "operations": "tuple[nymph_toolkit.contracts.connections.OperationSpec, ...]"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(key: nymph_toolkit.contracts.connections.ContractKey, operations: tuple[nymph_toolkit.contracts.connections.OperationSpec, ...]) -> None"
+      },
+      "CoreClientProtocol": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "acknowledge_interruption": {
+            "kind": "async",
+            "signature": "(self, notice_id, *, timeout=None)"
+          },
+          "activity": {
+            "kind": "async",
+            "signature": "(self, operation, key=None, *, timeout=None, **arguments)"
+          },
+          "bind": {
+            "kind": "async",
+            "signature": "(self, contract: 'ContractKey', provider_id: 'str', *, timeout)"
+          },
+          "candidates": {
+            "kind": "async",
+            "signature": "(self, contract: 'ContractKey', *, timeout=None)"
+          },
+          "health_check": {
+            "kind": "async",
+            "signature": "(self, *, module_ids=None, bindings=None, timeout=None)"
+          },
+          "invoke": {
+            "kind": "async",
+            "signature": "(self, contract: 'ContractKey', operation, *args, timeout, **kwargs)"
+          },
+          "next_notice": {
+            "kind": "async",
+            "signature": "(self, *, timeout)"
+          },
+          "pending_requests": {
+            "kind": "property",
+            "signature": "(self) -> 'tuple[str, ...]'"
+          },
+          "prepare": {
+            "kind": "async",
+            "signature": "(self, contract: 'ContractKey', *, timeout) -> 'DirectLinkProtocol'"
+          },
+          "publish_usage": {
+            "kind": "async",
+            "signature": "(self, usage: 'Usage', *, contracts=None, timeout=None)"
+          },
+          "release": {
+            "kind": "def",
+            "signature": "(self, request_id) -> 'None'"
+          },
+          "result": {
+            "kind": "def",
+            "signature": "(self, request_id)"
+          },
+          "submit_remote": {
+            "kind": "async",
+            "signature": "(self, request: 'ActivityRequest', module_id, executor_id, arguments=None, *, timeout=None)"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "DependencyCycleError": {
+        "bases": [
+          "RegistryError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "DependencyUnavailableError": {
+        "bases": [
+          "RegistryError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(missing_dependencies: frozenset[str]) -> None"
+      },
+      "DirectLinkProtocol": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "acall": {
+            "kind": "async",
+            "signature": "(self, operation, *args, timeout, **kwargs)"
+          },
+          "close": {
+            "kind": "async",
+            "signature": "(self) -> 'None'"
+          },
+          "open_stream": {
+            "kind": "async",
+            "signature": "(self, operation, options: 'StreamOptions', metadata=None, *, timeout) -> 'StreamSenderProtocol'"
+          },
+          "pending_requests": {
+            "kind": "property",
+            "signature": "(self) -> 'tuple[str, ...]'"
+          },
+          "release": {
+            "kind": "def",
+            "signature": "(self, request_id) -> 'None'"
+          },
+          "result": {
+            "kind": "def",
+            "signature": "(self, request_id)"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "DuplicateActivityError": {
+        "bases": [
+          "ActivityError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "DuplicateModuleError": {
+        "bases": [
+          "RegistryError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "HealthResult": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "connections": "tuple[nymph_toolkit.contracts.connections.BindingHealth, ...]",
+          "modules": "tuple[nymph_toolkit.contracts.connections.ModuleHealth, ...]",
+          "request_id": "int"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(request_id: int, modules: tuple[nymph_toolkit.contracts.connections.ModuleHealth, ...], connections: tuple[nymph_toolkit.contracts.connections.BindingHealth, ...]) -> None"
+      },
+      "HybridError": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "HybridSettings": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "call_timeout": "float",
+          "max_frame_bytes": "int",
+          "max_requests": "int",
+          "max_streams": "int",
+          "shutdown_timeout": "float",
+          "startup_timeout": "float"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(startup_timeout: float, shutdown_timeout: float, call_timeout: float, max_frame_bytes: int, max_requests: int, max_streams: int) -> None"
+      },
+      "LifecycleFailure": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "exception": "BaseException",
+          "phase": "nymph_toolkit.contracts.LifecyclePhase"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(phase: nymph_toolkit.contracts.LifecyclePhase, exception: BaseException) -> None"
+      },
+      "LifecyclePhase": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "RUN": "run",
+          "START": "start",
+          "STOP": "stop"
+        }
+      },
+      "LinkFailure": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "binding": "nymph_toolkit.contracts.connections.BindingKey",
+          "exception": "Exception",
+          "interruption_id": "int | None"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(binding: nymph_toolkit.contracts.connections.BindingKey, exception: Exception, interruption_id: int | None) -> None"
+      },
+      "ModuleAdvertisement": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "attributes": "collections.abc.Mapping[str, str | bool | int | float | None]",
+          "contracts": "tuple[nymph_toolkit.contracts.connections.ContractSpec, ...]",
+          "implementation_version": "str",
+          "module_id": "str",
+          "tags": "frozenset[str]"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(module_id: str, implementation_version: str, contracts: tuple[nymph_toolkit.contracts.connections.ContractSpec, ...] = (), tags: frozenset[str] = <factory>, attributes: collections.abc.Mapping[str, str | bool | int | float | None] = <factory>) -> None"
+      },
+      "ModuleContextProtocol": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "core": {
+            "kind": "property",
+            "signature": "(self) -> 'CoreClientProtocol'"
+          },
+          "generation": {
+            "kind": "property",
+            "signature": "(self) -> 'str'"
+          },
+          "module_id": {
+            "kind": "property",
+            "signature": "(self) -> 'str'"
+          },
+          "provide": {
+            "kind": "def",
+            "signature": "(self, contract: 'ContractKey', handlers: 'Mapping[str, Callable[..., Awaitable[object]]]') -> 'None'"
+          },
+          "provide_executor": {
+            "kind": "def",
+            "signature": "(self, executor_id: 'str', handler: 'Callable[[ActivityContext, object], Awaitable[object]]', *, supports_pause=False) -> 'None'"
+          },
+          "provide_stream": {
+            "kind": "def",
+            "signature": "(self, contract: 'ContractKey', operation: 'str', handler: 'Callable[[StreamReceiverProtocol, object], Awaitable[None]]') -> 'None'"
+          },
+          "settings": {
+            "kind": "property",
+            "signature": "(self) -> 'HybridSettings'"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "ModuleExecutionState": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "INTERRUPTING": "interrupting",
+          "RUNNING": "running",
+          "SUSPENDED": "suspended"
+        }
+      },
+      "ModuleFactory": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "__call__": {
+            "kind": "def",
+            "signature": "(self, context: 'ModuleContextProtocol', config: 'object') -> 'RuntimeService[object] | Awaitable[RuntimeService[object]]'"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "ModuleFailure": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "exception": "BaseException",
+          "module_id": "str",
+          "phase": "nymph_toolkit.contracts.LifecyclePhase"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(module_id: str, phase: nymph_toolkit.contracts.LifecyclePhase, exception: BaseException) -> None"
+      },
+      "ModuleGroupFailure": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(failures: tuple[nymph_toolkit.contracts.registry.ModuleFailure, ...]) -> None"
+      },
+      "ModuleHealth": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "healthy": "bool",
+          "module_id": "str",
+          "reason": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(module_id: str, healthy: bool, reason: str = '') -> None"
+      },
+      "ModuleKind": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "ADAPTER": "adapter",
+          "SUBSYSTEM": "subsystem"
+        }
+      },
+      "ModuleSpec": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "kind": "nymph_toolkit.contracts.registry.ModuleKind",
+          "module_id": "str",
+          "requires": "frozenset[str]"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(module_id: str, kind: nymph_toolkit.contracts.registry.ModuleKind, requires: frozenset[str] = <factory>) -> None"
+      },
+      "NoticeKind": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "INTERRUPT": "interrupt",
+          "INVALIDATED": "invalidated",
+          "RECOVERED": "recovered",
+          "RESUMED": "resumed",
+          "SHUTDOWN": "shutdown"
+        }
+      },
+      "OperatingState": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "FAILED": "failed",
+          "RUNNING": "running",
+          "STOPPED": "stopped",
+          "UNKNOWN": "unknown"
+        }
+      },
+      "OperationFailure": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "code": "str",
+          "message": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(code: str, message: str) -> None"
+      },
+      "OperationMode": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "ASYNC": "async",
+          "SYNC": "sync"
+        }
+      },
+      "OperationSpec": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "mode": "nymph_toolkit.contracts.connections.OperationMode",
+          "name": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(name: str, mode: nymph_toolkit.contracts.connections.OperationMode) -> None"
+      },
+      "OutcomeUnknown": {
+        "bases": [
+          "HybridError",
+          "TimeoutError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(request_id, message='Request outcome is not confirmed')"
+      },
+      "OverflowPolicy": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "DROP_OLDEST": "drop_oldest",
+          "WAIT": "wait"
+        }
+      },
+      "PeerClosed": {
+        "bases": [
+          "HybridError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "Placement": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "LOCAL": "local",
+          "PROCESS": "process"
+        }
+      },
+      "PreparationTimeoutError": {
+        "bases": [
+          "ConnectionsError",
+          "TimeoutError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "ProcessSnapshot": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "cleanup_confirmed": "bool",
+          "generation": "str",
+          "module_id": "str",
+          "pid": "int | None",
+          "placement": "nymph_toolkit.contracts.hybrid.Placement",
+          "reason": "str",
+          "returncode": "int | None",
+          "state": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(module_id: str, placement: nymph_toolkit.contracts.hybrid.Placement, generation: str, state: str, pid: int | None = None, returncode: int | None = None, cleanup_confirmed: bool = False, reason: str = '') -> None"
+      },
+      "ProtocolError": {
+        "bases": [
+          "HybridError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "RegistryChange": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "after": "nymph_toolkit.contracts.registry.RegistryEntry | None",
+          "before": "nymph_toolkit.contracts.registry.RegistryEntry | None",
+          "module_id": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(module_id: str, before: nymph_toolkit.contracts.registry.RegistryEntry | None, after: nymph_toolkit.contracts.registry.RegistryEntry | None) -> None"
+      },
+      "RegistryEntry": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "generation": "int",
+          "missing_dependencies": "frozenset[str]",
+          "spec": "nymph_toolkit.contracts.registry.ModuleSpec"
+        },
+        "kind": "class",
+        "members": {
+          "available": {
+            "kind": "property",
+            "signature": "(self) -> bool"
+          }
+        },
+        "signature": "(spec: nymph_toolkit.contracts.registry.ModuleSpec, generation: int, missing_dependencies: frozenset[str] = <factory>) -> None"
+      },
+      "RegistryError": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "RegistryStateError": {
+        "bases": [
+          "RegistryError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "RegistryUpdate": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "changes": "tuple[nymph_toolkit.contracts.registry.RegistryChange, ...]",
+          "revision": "int"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(revision: int, changes: tuple[nymph_toolkit.contracts.registry.RegistryChange, ...]) -> None"
+      },
+      "RemoteError": {
+        "bases": [
+          "HybridError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(module_id, remote_type, message)"
+      },
+      "RuntimeFailure": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(failures: tuple[nymph_toolkit.contracts.LifecycleFailure, ...]) -> None"
+      },
+      "RuntimeService": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "run": {
+            "kind": "async",
+            "signature": "(self) -> +T_co"
+          },
+          "start": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "RuntimeState": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "FAILED": "failed",
+          "NEW": "new",
+          "RUNNING": "running",
+          "STARTING": "starting",
+          "STOPPED": "stopped",
+          "STOPPING": "stopping"
+        }
+      },
+      "RuntimeStateError": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "StorageCorruptionError": {
+        "bases": [
+          "StorageError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "StorageError": {
+        "bases": [
+          "RuntimeError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "StorageFailure": {
+        "bases": [
+          "StorageError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(cause: Exception, unsaved_events: int, pending_configuration: bool) -> None"
+      },
+      "StreamClosed": {
+        "bases": [
+          "HybridError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "StreamEvent": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "data": "bytes",
+          "kind": "str",
+          "missing": "tuple[int, int] | None",
+          "reason": "str",
+          "sequence": "int"
+        },
+        "kind": "class",
+        "members": {
+          "missing_count": {
+            "kind": "property",
+            "signature": "(self)"
+          }
+        },
+        "signature": "(kind: str, sequence: int, data: bytes = b'', missing: tuple[int, int] | None = None, reason: str = '') -> None"
+      },
+      "StreamOptions": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "overflow": "nymph_toolkit.contracts.hybrid.OverflowPolicy",
+          "receive_bytes": "int",
+          "receive_chunks": "int",
+          "send_bytes": "int",
+          "send_chunks": "int"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(send_bytes: int, send_chunks: int, receive_bytes: int, receive_chunks: int, overflow: nymph_toolkit.contracts.hybrid.OverflowPolicy) -> None"
+      },
+      "StreamReceiverProtocol": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "abort": {
+            "kind": "async",
+            "signature": "(self, reason='Explicit stream abort') -> 'None'"
+          },
+          "aclose": {
+            "kind": "async",
+            "signature": "(self) -> 'None'"
+          },
+          "buffered_bytes": {
+            "kind": "property",
+            "signature": "(self) -> 'int'"
+          },
+          "buffered_chunks": {
+            "kind": "property",
+            "signature": "(self) -> 'int'"
+          },
+          "fail": {
+            "kind": "async",
+            "signature": "(self, reason) -> 'None'"
+          },
+          "options": {
+            "kind": "property",
+            "signature": "(self) -> 'StreamOptions'"
+          },
+          "reason": {
+            "kind": "property",
+            "signature": "(self) -> 'str | None'"
+          },
+          "receive": {
+            "kind": "async",
+            "signature": "(self, *, timeout) -> 'StreamEvent'"
+          },
+          "state": {
+            "kind": "property",
+            "signature": "(self) -> 'StreamState'"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "StreamSenderProtocol": {
+        "bases": [
+          "Protocol"
+        ],
+        "kind": "class",
+        "members": {
+          "abort": {
+            "kind": "async",
+            "signature": "(self, reason='Explicit stream abort') -> 'None'"
+          },
+          "aclose": {
+            "kind": "async",
+            "signature": "(self) -> 'None'"
+          },
+          "buffered_bytes": {
+            "kind": "property",
+            "signature": "(self) -> 'int'"
+          },
+          "buffered_chunks": {
+            "kind": "property",
+            "signature": "(self) -> 'int'"
+          },
+          "close": {
+            "kind": "async",
+            "signature": "(self, *, timeout) -> 'None'"
+          },
+          "dropped_chunks": {
+            "kind": "property",
+            "signature": "(self) -> 'int'"
+          },
+          "fail": {
+            "kind": "async",
+            "signature": "(self, reason) -> 'None'"
+          },
+          "options": {
+            "kind": "property",
+            "signature": "(self) -> 'StreamOptions'"
+          },
+          "reason": {
+            "kind": "property",
+            "signature": "(self) -> 'str | None'"
+          },
+          "send": {
+            "kind": "async",
+            "signature": "(self, data: 'bytes | bytearray | memoryview', *, timeout) -> 'int'"
+          },
+          "state": {
+            "kind": "property",
+            "signature": "(self) -> 'StreamState'"
+          }
+        },
+        "signature": "(*args, **kwargs)"
+      },
+      "StreamState": {
+        "bases": [
+          "StrEnum"
+        ],
+        "kind": "enum",
+        "values": {
+          "ABORTED": "aborted",
+          "CLOSED": "closed",
+          "CLOSING": "closing",
+          "FAILED": "failed",
+          "OPEN": "open"
+        }
+      },
+      "TaskManagerLifecycleFailure": {
+        "bases": [
+          "ActivityError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": "(failures: tuple[nymph_toolkit.contracts.LifecycleFailure, ...])"
+      },
+      "TemporaryUnavailable": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "message": "str"
+        },
+        "kind": "class",
+        "members": {},
+        "signature": "(message: str = 'Provider has no capacity or is not accepting work') -> None"
+      },
+      "UNCHANGED": {
+        "kind": "constant",
+        "value": "UNCHANGED"
+      },
+      "UnknownActivityError": {
+        "bases": [
+          "ActivityError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "UnknownConnectionError": {
+        "bases": [
+          "ConnectionsError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "UnknownModuleError": {
+        "bases": [
+          "RegistryError"
+        ],
+        "kind": "class",
+        "members": {},
+        "signature": null
+      },
+      "Usage": {
+        "bases": [
+          "object"
+        ],
+        "fields": {
+          "accepting": "bool",
+          "active": "int",
+          "capacity": "int",
+          "state": "nymph_toolkit.contracts.connections.OperatingState"
+        },
+        "kind": "class",
+        "members": {
+          "free": {
+            "kind": "property",
+            "signature": "(self) -> int"
+          }
+        },
+        "signature": "(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingState.UNKNOWN: 'unknown'>, accepting: bool = False, active: int = 0, capacity: int = 0) -> None"
+      }
+    },
+    "nymph_toolkit.core": {
+      "Connections": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "acknowledge_interruption": {
+            "kind": "def",
+            "signature": "(self, module_id: str, notice_id: int) -> bool"
+          },
+          "activate": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "begin_shutdown": {
+            "kind": "def",
+            "signature": "(self) -> None"
+          },
+          "bind": {
+            "kind": "async",
+            "signature": "(self, requester_id: str, contract: nymph_toolkit.contracts.connections.ContractKey, provider_id: str, *, wait_timeout: float) -> nymph_toolkit.contracts.connections.ConnectionSnapshot"
+          },
+          "candidates": {
+            "kind": "def",
+            "signature": "(self, contract: nymph_toolkit.contracts.connections.ContractKey) -> tuple[nymph_toolkit.contracts.connections.Candidate, ...]"
+          },
+          "connection": {
+            "kind": "def",
+            "signature": "(self, key: nymph_toolkit.contracts.connections.BindingKey) -> nymph_toolkit.contracts.connections.ConnectionSnapshot"
+          },
+          "declare": {
+            "kind": "def",
+            "signature": "(self, advertisement: nymph_toolkit.contracts.connections.ModuleAdvertisement, handlers: collections.abc.Mapping | None = None) -> None"
+          },
+          "health_check": {
+            "kind": "async",
+            "signature": "(self, *, module_ids=None, bindings=None) -> nymph_toolkit.contracts.connections.HealthResult"
+          },
+          "invoke": {
+            "kind": "async",
+            "signature": "(self, key: nymph_toolkit.contracts.connections.BindingKey, operation: str, *, wait_timeout: float, args=(), kwargs=None)"
+          },
+          "module_state": {
+            "kind": "def",
+            "signature": "(self, module_id: str) -> nymph_toolkit.contracts.connections.ModuleExecutionState"
+          },
+          "next_notice": {
+            "kind": "async",
+            "signature": "(self, module_id: str) -> nymph_toolkit.contracts.connections.ConnectionNotice"
+          },
+          "prepare": {
+            "kind": "async",
+            "signature": "(self, key: nymph_toolkit.contracts.connections.BindingKey, *, wait_timeout: float) -> nymph_toolkit.core.connections.PreparedConnection"
+          },
+          "publish_usage": {
+            "kind": "def",
+            "signature": "(self, module_id: str, usage: nymph_toolkit.contracts.connections.Usage, *, contracts: collections.abc.Mapping[nymph_toolkit.contracts.connections.ContractKey, nymph_toolkit.contracts.connections.Usage] | None = None) -> None"
+          },
+          "report_link_error": {
+            "kind": "def",
+            "signature": "(self, key: nymph_toolkit.contracts.connections.BindingKey, exception: Exception) -> int"
+          },
+          "run": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "start": {
+            "kind": "async",
+            "signature": "(self, *, defer_activation: bool = False) -> None"
+          },
+          "state": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.RuntimeState"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          }
+        },
+        "signature": "(catalog, store: 'FileStore') -> None"
+      },
+      "CoreClient": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "acknowledge_interruption": {
+            "kind": "async",
+            "signature": "(self, notice_id, *, timeout=None)"
+          },
+          "activity": {
+            "kind": "async",
+            "signature": "(self, operation, key=None, *, timeout=None, **arguments)"
+          },
+          "bind": {
+            "kind": "async",
+            "signature": "(self, contract, provider_id, *, timeout)"
+          },
+          "candidates": {
+            "kind": "async",
+            "signature": "(self, contract, *, timeout=None)"
+          },
+          "health_check": {
+            "kind": "async",
+            "signature": "(self, *, module_ids=None, bindings=None, timeout=None)"
+          },
+          "invoke": {
+            "kind": "async",
+            "signature": "(self, contract, operation, *args, timeout, **kwargs)"
+          },
+          "next_notice": {
+            "kind": "async",
+            "signature": "(self, *, timeout)"
+          },
+          "pending_requests": {
+            "kind": "property",
+            "signature": "(self)"
+          },
+          "prepare": {
+            "kind": "async",
+            "signature": "(self, contract, *, timeout)"
+          },
+          "publish_usage": {
+            "kind": "async",
+            "signature": "(self, usage, *, contracts=None, timeout=None)"
+          },
+          "release": {
+            "kind": "def",
+            "signature": "(self, request_id)"
+          },
+          "result": {
+            "kind": "def",
+            "signature": "(self, request_id)"
+          },
+          "submit_remote": {
+            "kind": "async",
+            "signature": "(self, request, module_id, executor_id, arguments=None, *, timeout=None)"
+          }
+        }
+      },
+      "DirectLink": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "acall": {
+            "kind": "async",
+            "signature": "(self, operation, *args, timeout, **kwargs)"
+          },
+          "close": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "open_stream": {
+            "kind": "async",
+            "signature": "(self, operation, options, metadata=None, *, timeout)"
+          },
+          "pending_requests": {
+            "kind": "property",
+            "signature": "(self)"
+          },
+          "release": {
+            "kind": "def",
+            "signature": "(self, request_id)"
+          },
+          "result": {
+            "kind": "def",
+            "signature": "(self, request_id)"
+          }
+        }
+      },
+      "FileStore": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "admitting": {
+            "kind": "property",
+            "signature": "(self) -> bool"
+          },
+          "append": {
+            "kind": "def",
+            "signature": "(self, kind: str, data: dict) -> None"
+          },
+          "changed": {
+            "kind": "property",
+            "signature": "(self) -> asyncio.locks.Event"
+          },
+          "failure": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.connections.StorageFailure | None"
+          },
+          "flush": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "load_bindings": {
+            "kind": "async",
+            "signature": "(self) -> tuple[nymph_toolkit.contracts.connections.BindingRecord, ...]"
+          },
+          "read_activity_history": {
+            "kind": "async",
+            "signature": "(self, requester_id: str)"
+          },
+          "save_bindings": {
+            "kind": "async",
+            "signature": "(self, bindings: tuple[nymph_toolkit.contracts.connections.BindingRecord, ...]) -> None"
+          },
+          "start": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "state": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.RuntimeState"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "unsaved_events": {
+            "kind": "property",
+            "signature": "(self) -> int"
+          },
+          "wait_failure": {
+            "kind": "async",
+            "signature": "(self) -> nymph_toolkit.contracts.connections.StorageFailure"
+          },
+          "wait_ready": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          }
+        },
+        "signature": "(root: pathlib.Path, archive: pathlib.Path, *, retention: datetime.timedelta, batch_size: int, flush_interval: float) -> None"
+      },
+      "HybridGroup": {
+        "bases": [
+          "ModuleGroup"
+        ],
+        "kind": "class",
+        "members": {
+          "attach_connections": {
+            "kind": "def",
+            "signature": "(self, connections) -> None"
+          },
+          "attach_task_manager": {
+            "kind": "def",
+            "signature": "(self, manager) -> None"
+          },
+          "client": {
+            "kind": "def",
+            "signature": "(self, module_id)"
+          },
+          "diagnostics": {
+            "kind": "async",
+            "signature": "(self, module_id)"
+          },
+          "enable_activities": {
+            "kind": "def",
+            "signature": "(self, *, clock_check_interval, max_running=None)"
+          },
+          "entries": {
+            "kind": "def",
+            "signature": "(self) -> tuple[nymph_toolkit.contracts.registry.RegistryEntry, ...]"
+          },
+          "fail": {
+            "kind": "def",
+            "signature": "(self, error)"
+          },
+          "get": {
+            "kind": "def",
+            "signature": "(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryEntry"
+          },
+          "port": {
+            "kind": "property",
+            "signature": "(self)"
+          },
+          "process": {
+            "kind": "def",
+            "signature": "(self, module_id)"
+          },
+          "register": {
+            "kind": "def",
+            "signature": "(self, spec: nymph_toolkit.contracts.registry.ModuleSpec, service: nymph_toolkit.contracts.RuntimeService[object]) -> nymph_toolkit.contracts.registry.RegistryUpdate"
+          },
+          "register_module": {
+            "kind": "def",
+            "signature": "(self, spec, advertisement, factory, config, placement)"
+          },
+          "revision": {
+            "kind": "property",
+            "signature": "(self) -> int"
+          },
+          "run": {
+            "kind": "async",
+            "signature": "(self) -> dict[str, object]"
+          },
+          "start": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "unregister": {
+            "kind": "def",
+            "signature": "(self, module_id)"
+          }
+        },
+        "signature": "(settings: nymph_toolkit.contracts.hybrid.HybridSettings, store)"
+      },
+      "HybridTaskManager": {
+        "bases": [
+          "TaskManager"
+        ],
+        "kind": "class",
+        "members": {
+          "activities": {
+            "kind": "def",
+            "signature": "(self, requester_id=None)"
+          },
+          "begin_shutdown": {
+            "kind": "def",
+            "signature": "(self)"
+          },
+          "change": {
+            "kind": "def",
+            "signature": "(self, key, change, *, command_id, expected_revision)"
+          },
+          "command_result": {
+            "kind": "def",
+            "signature": "(self, key, command_id)"
+          },
+          "history": {
+            "kind": "async",
+            "signature": "(self, requester_id)"
+          },
+          "next_notice": {
+            "kind": "async",
+            "signature": "(self, requester_id)"
+          },
+          "request_finish": {
+            "kind": "def",
+            "signature": "(self, key, *, reason=<ActivityFinishReason.NYMPH: 'nymph'>)"
+          },
+          "request_pause": {
+            "kind": "def",
+            "signature": "(self, key, *, command_id, expected_revision)"
+          },
+          "request_resume": {
+            "kind": "def",
+            "signature": "(self, key, *, command_id, expected_revision)"
+          },
+          "run": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "snapshot": {
+            "kind": "def",
+            "signature": "(self, key)"
+          },
+          "start": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "state": {
+            "kind": "property",
+            "signature": "(self)"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "submit": {
+            "kind": "def",
+            "signature": "(self, request: nymph_toolkit.contracts.activities.ActivityRequest, execute: collections.abc.Callable, *, supports_pause=False)"
+          },
+          "submit_remote": {
+            "kind": "def",
+            "signature": "(self, request, module_id, executor_id, arguments=None)"
+          },
+          "wait": {
+            "kind": "async",
+            "signature": "(self, key)"
+          },
+          "wait_command": {
+            "kind": "async",
+            "signature": "(self, key, command_id)"
+          }
+        },
+        "signature": "(group, *, clock_check_interval, max_running=None)"
+      },
+      "ModuleContext": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "provide": {
+            "kind": "def",
+            "signature": "(self, contract, handlers)"
+          },
+          "provide_executor": {
+            "kind": "def",
+            "signature": "(self, executor_id, handler, *, supports_pause=False)"
+          },
+          "provide_stream": {
+            "kind": "def",
+            "signature": "(self, contract, operation, handler)"
+          }
+        }
+      },
+      "ModuleGroup": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "attach_connections": {
+            "kind": "def",
+            "signature": "(self, connections) -> None"
+          },
+          "attach_task_manager": {
+            "kind": "def",
+            "signature": "(self, manager) -> None"
+          },
+          "entries": {
+            "kind": "def",
+            "signature": "(self) -> tuple[nymph_toolkit.contracts.registry.RegistryEntry, ...]"
+          },
+          "get": {
+            "kind": "def",
+            "signature": "(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryEntry"
+          },
+          "register": {
+            "kind": "def",
+            "signature": "(self, spec: nymph_toolkit.contracts.registry.ModuleSpec, service: nymph_toolkit.contracts.RuntimeService[object]) -> nymph_toolkit.contracts.registry.RegistryUpdate"
+          },
+          "revision": {
+            "kind": "property",
+            "signature": "(self) -> int"
+          },
+          "run": {
+            "kind": "async",
+            "signature": "(self) -> dict[str, object]"
+          },
+          "start": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "unregister": {
+            "kind": "def",
+            "signature": "(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryUpdate"
+          }
+        },
+        "signature": "() -> None"
+      },
+      "PreparedConnection": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "acall": {
+            "kind": "async",
+            "signature": "(self, operation: str, *args, **kwargs)"
+          },
+          "call": {
+            "kind": "def",
+            "signature": "(self, operation: str, *args, **kwargs)"
+          },
+          "snapshot": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.connections.ConnectionSnapshot"
+          }
+        }
+      },
+      "Registry": {
+        "bases": [
+          "object"
+        ],
+        "kind": "class",
+        "members": {
+          "entries": {
+            "kind": "def",
+            "signature": "(self) -> tuple[nymph_toolkit.contracts.registry.RegistryEntry, ...]"
+          },
+          "get": {
+            "kind": "def",
+            "signature": "(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryEntry"
+          },
+          "register": {
+            "kind": "def",
+            "signature": "(self, spec: nymph_toolkit.contracts.registry.ModuleSpec) -> nymph_toolkit.contracts.registry.RegistryUpdate"
+          },
+          "revision": {
+            "kind": "property",
+            "signature": "(self) -> int"
+          },
+          "unregister": {
+            "kind": "def",
+            "signature": "(self, module_id: str) -> nymph_toolkit.contracts.registry.RegistryUpdate"
+          }
+        },
+        "signature": "() -> None"
+      },
+      "Runtime": {
+        "bases": [
+          "Generic"
+        ],
+        "kind": "class",
+        "members": {
+          "start": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "state": {
+            "kind": "property",
+            "signature": "(self) -> nymph_toolkit.contracts.RuntimeState"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self) -> None"
+          },
+          "wait": {
+            "kind": "async",
+            "signature": "(self) -> ~T | None"
+          }
+        },
+        "signature": "(service: nymph_toolkit.contracts.RuntimeService[~T]) -> None"
+      },
+      "StreamReceiver": {
+        "bases": [],
+        "kind": "class",
+        "members": {
+          "abort": {
+            "kind": "async",
+            "signature": "(self, reason='Explicit stream abort')"
+          },
+          "aclose": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "buffered_chunks": {
+            "kind": "property",
+            "signature": "(self)"
+          },
+          "fail": {
+            "kind": "async",
+            "signature": "(self, reason)"
+          },
+          "receive": {
+            "kind": "async",
+            "signature": "(self, *, timeout)"
+          }
+        }
+      },
+      "StreamSender": {
+        "bases": [],
+        "kind": "class",
+        "members": {
+          "abort": {
+            "kind": "async",
+            "signature": "(self, reason='Explicit stream abort')"
+          },
+          "aclose": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "buffered_chunks": {
+            "kind": "property",
+            "signature": "(self)"
+          },
+          "close": {
+            "kind": "async",
+            "signature": "(self, *, timeout)"
+          },
+          "fail": {
+            "kind": "async",
+            "signature": "(self, reason)"
+          },
+          "send": {
+            "kind": "async",
+            "signature": "(self, data, *, timeout)"
+          }
+        }
+      },
+      "TaskManager": {
+        "bases": [],
+        "kind": "class",
+        "members": {
+          "activities": {
+            "kind": "def",
+            "signature": "(self, requester_id=None)"
+          },
+          "begin_shutdown": {
+            "kind": "def",
+            "signature": "(self)"
+          },
+          "change": {
+            "kind": "def",
+            "signature": "(self, key, change, *, command_id, expected_revision)"
+          },
+          "command_result": {
+            "kind": "def",
+            "signature": "(self, key, command_id)"
+          },
+          "history": {
+            "kind": "async",
+            "signature": "(self, requester_id)"
+          },
+          "next_notice": {
+            "kind": "async",
+            "signature": "(self, requester_id)"
+          },
+          "request_finish": {
+            "kind": "def",
+            "signature": "(self, key, *, reason=<ActivityFinishReason.NYMPH: 'nymph'>)"
+          },
+          "request_pause": {
+            "kind": "def",
+            "signature": "(self, key, *, command_id, expected_revision)"
+          },
+          "request_resume": {
+            "kind": "def",
+            "signature": "(self, key, *, command_id, expected_revision)"
+          },
+          "run": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "snapshot": {
+            "kind": "def",
+            "signature": "(self, key)"
+          },
+          "start": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "state": {
+            "kind": "property",
+            "signature": "(self)"
+          },
+          "stop": {
+            "kind": "async",
+            "signature": "(self)"
+          },
+          "submit": {
+            "kind": "def",
+            "signature": "(self, request: nymph_toolkit.contracts.activities.ActivityRequest, execute: collections.abc.Callable, *, supports_pause=False)"
+          },
+          "wait": {
+            "kind": "async",
+            "signature": "(self, key)"
+          },
+          "wait_command": {
+            "kind": "async",
+            "signature": "(self, key, command_id)"
+          }
+        },
+        "signature": "(connections: nymph_toolkit.core.connections.Connections, *, clock_check_interval: float, clock=None, max_running=None)"
+      },
+      "validate_module_registration": {
+        "kind": "function",
+        "signature": "(spec, advertisement, factory, config, placement)"
+      }
+    }
+  }
+}
