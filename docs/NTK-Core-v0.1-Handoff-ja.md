@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R29を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R30を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -42,6 +42,8 @@ R28で既知課題#94のWindows終了時エラーの調査・修正・回帰検�
 
 R29でv1.0のCore接続契約整備と必要な破壊的API整理が指示された。親#10・子#98〜#102をコード変更前に登録し、ADR 0026で6契約・公開Protocol・登録前検証・安定API基準・B00を具体化した。移行資料と契約資料を全文収録し、実装・受入・公開を区別する。新規Releaseや過去の公開物の差替えは行わない。
 
+R30でPR #103レビュー・マージ・v1.0.0公開と公開後確認・課題終了が指示された。公開子#104をヘッダー変更前に登録し、最終CI・マージ・タグ・4添付の匿名取得と通常導入を追跡する。最終証拠は#104とReleaseへ残し、公開済みスナップショットを差し替えない。
+
 ## 収録文書
 
 1. [Nymph Toolkit（NTK）](#section-1)
@@ -50,8 +52,8 @@ R29でv1.0のCore接続契約整備と必要な破壊的API整理が指示され
 4. [Docsの読み方と根拠](#section-4)
 5. [NTK Core 契約・利用ガイド](#section-5)
 6. [顧客向け契約・利用ガイドの更新と配布](#section-6)
-7. [v0.9.0のインストールと最初の実行](#section-7)
-8. [v0.9.0の6つの実行例ガイド](#section-8)
+7. [v1.0.0のインストールと最初の実行](#section-7)
+8. [v1.0.0の7つの実行例ガイド](#section-8)
 9. [v0.9.0のトラブルシューティング](#section-9)
 10. [Project Vision — 人工人格Nymphの最終到達目標](#section-10)
 11. [Architecture](#section-11)
@@ -63,7 +65,7 @@ R29でv1.0のCore接続契約整備と必要な破壊的API整理が指示され
 17. [Core APIと利用上の契約](#section-17)
 18. [公開APIの実装一覧](#section-18)
 19. [v1.0 Core接続契約](#section-19)
-20. [v0.9からv1.0候補への移行](#section-20)
+20. [v0.9からv1.0への移行](#section-20)
 21. [ADR索引と更新方法](#section-21)
 22. [ADR 0001 Coreと統合リポジトリ](#section-22)
 23. [ADR 0002 実行モデル](#section-23)
@@ -130,15 +132,13 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterを必要に応じて分割するものです。個別の分割は依存関係・独立更新・単独配布の必要性に基づいて判断します。採用した配布方針（`docs/adr/0009-package-distribution.md`）
 
-### 開発中のv1.0.0候補
+### v1.0.0 — Core接続契約
 
-R29・親#10の子#98〜#102で、6区分のCore接続契約（`docs/module-contracts.md`）を整備しています。必要な破壊的API整理を含め、変更理由と移行手順（`docs/migration-v1.md`）、ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）、B00の結果（`docs/validation/v1.0.md`）を記録します。この作業ツリーの配布版は1.0.0候補で、公開済みの最新版とは区別します。7番目の例は`python examples/module_contract_demo.py`です。
+CoreとSubsystem・Adapterをつなぐ6区分の接続契約（`docs/module-contracts.md`）を整備しました。公開ContractsのProtocol、登録前検証、安定API基準、両種別・4配置の契約試験を提供します。v0.9から必要なAPI整理を含むため、移行手順（`docs/migration-v1.md`）を確認してください。ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）に判断を記録しています。
 
-### 現在の公開版
+配布先は[v1.0.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.0.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開対象とします。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)に記録します。
 
-**v0.9.0を公開済みです。合意したCore機能の完成を、ダミーで検証しました。** [v0.9.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.9.0)からwheel・sdist・引継ぎ書・SHA256SUMSを取得できます。CPython 3.12以上、実行時の外部Python依存はありません。公開時の検証範囲はWindows／Linux × CPython 3.12〜3.15です。
-
-現在の成果物はCoreとContractsのライブラリです。6つの実行例で起動・接続・活動・別プロセス実行を試せます。各例は後処理を終えると終了します。人工人格としての会話・学習を行う本番Subsystem、常駐アプリ、GUIはこの版に含まれません。
+成果物はCoreとContractsのライブラリです。7つの実行例で起動・接続・活動・別プロセス実行を試せます。各例は後処理を終えると終了します。本番の会話・学習Subsystem、常駐アプリ、GUIは含まれません。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -157,8 +157,8 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 
 | やりたいこと | 最初に読む資料 | 確認できること |
 |---|---|---|
-| 導入・接続の全体像を説明する | 顧客向け契約・利用ガイド（`docs/customer-guide.md`） | 図解付きの現行契約・設定・運用と開発者向けAPI付録 |
-| 公開版を試す | インストールと最初の実行（`docs/getting-started.md`） → 6つの実行例（`docs/tutorials.md`） | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
+| 導入・接続の全体像を説明する | 顧客向け契約・利用ガイド（v0.9版）（`docs/customer-guide.md`） | 図解付きの現行契約・設定・運用と開発者向けAPI付録 |
+| 公開版を試す | インストールと最初の実行（`docs/getting-started.md`） → 7つの実行例（`docs/tutorials.md`） | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
 | 機能を接続する | Architecture（`docs/architecture.md`） → Core API（`docs/core-api.md`） | 責務と配置、現在の契約、各機能Docsへの入口 |
 | 開発に参加する | 参加方針（`CONTRIBUTING.md`） → Issue運用（`docs/issue-workflow.md`） → 開発手順（`docs/development.md`） | 着手前の課題管理、editable環境、テストと配布検証 |
 | 問題を調べる | トラブルシューティング（`docs/troubleshooting.md`） | 症状からの確認・対処・回復確認、報告に必要な情報 |
@@ -169,15 +169,15 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 
 ### 検証結果と今後の範囲
 
-v0.9.0は300テスト（製品293件＋資料検査7件）、6実行例、全8環境CI、通常配布の再現を確認しました。A09-04を含む公開後の照合と親Issue #9・マイルストーンの完了は[公開課題 #88の結果](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)で確認できます。v0.9検証記録（`docs/validation/v0.9.md`）は公開前の確認と公開後の参照先を区別し、64項目の対応表（`docs/validation/core-coverage.md`）で採用範囲を追跡できます。
+v1.0.0は316テスト（製品304件＋検査12件）、7実行例、全8環境CI、通常wheelとsdistの再現を確認しています。LinuxではWindows専用6件をskipします。B00検証記録（`docs/validation/v1.0.md`）と採用64項目（`docs/validation/core-coverage.md`）を参照してください。最終コミット・マージ後CI・タグ・公開添付の照合結果は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡します。
 
 30分の負荷測定はv0.8の特定コミットに対する結果です。後続修正の検証範囲とともにv0.8検証記録（`docs/validation/v0.8.md`）へ記録しており、現在の全環境で同じ長時間性能を保証するものではありません。
 
-v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。次のv1.0.0はCoreとSubsystem・Adapterの接続契約を大きく形作る目標です。v1.1.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
+v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
 
 将来のPC全体の状況取得はAdapterが担当します。Desktop Adapterはv1.10.0までの配分に含めず将来課題とし、複製・移植・伝播機構は初期スコープ外です。
 
-このREADMEと新しい利用ガイドはv0.9.0公開後も更新します。公開済みタグ・Release添付は公開時点の記録として保持します。今回のDocs整備は導入資料の検証（`docs/validation/docs-onboarding.md`）・顧客資料の検証（`docs/validation/customer-guide.md`）、過去の変更はCHANGELOG（`CHANGELOG.md`）を参照してください。顧客資料は配布用PDF・HTMLの再生成手順（`docs/customer-guide-authoring.md`）も用意しています。
+公開済みタグ・Release添付は公開時点の記録として保持します。顧客向け図解・PDFはv0.9版の資料です。v1.0では接続契約と移行手順を併読してください。過去の変更はCHANGELOG（`CHANGELOG.md`）を参照してください。
 
 ### ライセンス
 
@@ -283,19 +283,19 @@ v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contr
 
 ### 目的別の読み順
 
-**現在の公開版はv0.9.0。合意したCore機能をダミーで検証し、A09-04の公開後照合まで完了している。** 実装状況はルートREADME（`README.md`）、公開後の結果は[#88](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)を参照する。
+**v1.0.0の接続契約と導入資料を整備した。** 実装・受入はB00記録（`docs/validation/v1.0.md`）、公開後の取得確認と完了は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡する。v0.9.0のCore完成・公開後確認は[#88](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)の記録を保持する。
 
 | 目的 | 読み順 |
 |---|---|
 | 導入担当者・開発担当者へ説明する | 顧客向け契約・利用ガイド（`docs/customer-guide.md`） → 配布用PDFの作成（`docs/customer-guide-authoring.md`） |
-| まず試す | 通常導入（`docs/getting-started.md`） → 6つの実行例（`docs/tutorials.md`） |
-| v1.0候補へ機能を接続する | 6契約（`docs/module-contracts.md`） → 移行手順（`docs/migration-v1.md`） → B00結果（`docs/validation/v1.0.md`） |
+| まず試す | 通常導入（`docs/getting-started.md`） → 7つの実行例（`docs/tutorials.md`） |
+| v1.0へ機能を接続する | 6契約（`docs/module-contracts.md`） → 移行手順（`docs/migration-v1.md`） → B00結果（`docs/validation/v1.0.md`） |
 | 機能を接続する | Architecture（`docs/architecture.md`） → Core API（`docs/core-api.md`） → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
 | 開発する | 参加方針（`CONTRIBUTING.md`） → Issue運用（`docs/issue-workflow.md`） → 開発手順（`docs/development.md`） |
 | 問題を調べる | トラブルシューティング（`docs/troubleshooting.md`） → 対象機能のDocs・検証記録 |
 | 判断を追う | ADR索引（`docs/adr/README.md`） → 採用64項目（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`） → 証拠対応表（`docs/validation/core-coverage.md`） |
 
-利用ガイドはv0.9.0の現行機能を説明する。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。Vision（`docs/vision.md`）は長期目標、v1.xの名称・配分はロードマップ（`docs/roadmap.md`）の採用状態に従う。
+導入・実行例・接続契約はv1.0、顧客向け図解/PDFはv0.9版を説明する。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。Vision（`docs/vision.md`）は長期目標、v1.xの名称・配分はロードマップ（`docs/roadmap.md`）の採用状態に従う。
 
 ### 文書一覧と格納場所
 
@@ -309,8 +309,8 @@ v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contr
 | customer-guide-authoring.md（`docs/customer-guide-authoring.md`） | 同じ原稿からPDF・HTMLを再生成し、表示と同期を確認する手順 |
 | validation/customer-guide.md（`docs/validation/customer-guide.md`） | 顧客資料の契約照合・PDF表示・実行例・同期の検証範囲 |
 | validation/windows-shutdown.md（`docs/validation/windows-shutdown.md`） | #94のWindows終了時エラーの原因・内部修正・制御再現・回帰 |
-| getting-started.md（`docs/getting-started.md`） | v0.9.0の通常導入・checksum・版とimport元・最初の実行 |
-| tutorials.md（`docs/tutorials.md`） | 6実行例の目的・コマンド・期待結果・終了・保存物 |
+| getting-started.md（`docs/getting-started.md`） | v1.0.0の通常導入・checksum・版とimport元・最初の実行 |
+| tutorials.md（`docs/tutorials.md`） | 7実行例の目的・コマンド・期待結果・終了・保存物 |
 | troubleshooting.md（`docs/troubleshooting.md`） | 症状別の確認・対処・回復確認と報告方法 |
 | validation/docs-onboarding.md（`docs/validation/docs-onboarding.md`） | D01〜D04・D09の検証結果、対象版、確認範囲 |
 | vision.md（`docs/vision.md`） | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
@@ -323,7 +323,7 @@ v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contr
 | validation/v0.7.md（`docs/validation/v0.7.md`） | A07・回帰・配布・CIの検証記録 |
 | validation/v0.8.md（`docs/validation/v0.8.md`） | A08・統合障害・競合・保存・負荷・配布の検証記録 |
 | core-api.md（`docs/core-api.md`） | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
-| api-reference.md（`docs/api-reference.md`） | 開発中1.0.0候補のCore 15件・Contracts 98件の生成API一覧 |
+| api-reference.md（`docs/api-reference.md`） | v1.0のCore 15件・Contracts 98件の生成API一覧 |
 | validation/core-coverage.md（`docs/validation/core-coverage.md`） | 採用64項目と製品テストへの証拠参照。Windows専用回帰の実行／skipは結果記録を参照 |
 | validation/v0.9.md（`docs/validation/v0.9.md`） | A09の完成監査・通常配布・公開前後の判定 |
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
@@ -475,6 +475,10 @@ Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し
 ### R29のv1.0 Core接続契約
 
 親#10と既存ADRを確認し未決・受入を整理して設計・実装・検証・資料整備を行う指示、および「必要な破壊的API整理も今回に含める」という回答を根拠とする。子#98〜#102をコード変更前に登録し、同じv1.0.0マイルストーンと実親子関係を確認した。公開型・補助・安定対象・B00はADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）のCodex実装判断。過去会話で個別採用された仕様とは区別する。6契約（`docs/module-contracts.md`）・移行（`docs/migration-v1.md`）・結果（`docs/validation/v1.0.md`）を全文収録する。
+
+### R30のv1.0レビュー・公開
+
+ユーザーのPR #103レビュー、問題解消後のマージ・v1.0.0公開、公開後確認と対応済み子/親#10/マイルストーン終了の指示を根拠とする。公開子#104を同じマイルストーン・実親子関係へ登録し、引継ぎ書ヘッダー更新前に範囲・完了条件を記録した。R29の「PRまで」という範囲を今回の公開まで拡張する。採用64項目とADR 0026の契約は変更しない。公開後の最終証拠は#104・Releaseへ記録し、公開済みタグ/添付は差し替えない。
 
 ---
 
@@ -1152,19 +1156,19 @@ git diff --check
 
 収録元 `docs/getting-started.md`
 
-## v0.9.0のインストールと最初の実行
+## v1.0.0のインストールと最初の実行
 
-対象は、公開済みのNTK Coreを初めて試す人。ここでは **v0.9.0のwheelを通常インストール**し、同じ版のsdistに含まれるダミー例を実行する。NTKはCoreとContractsのライブラリであり、この版に常駐アプリ・GUI・会話相手としてのNymphは含まれない。例は処理と後処理を終えると終了する。
+対象は、公開済みのNTK Coreを初めて試す人。ここでは **v1.0.0のwheelを通常インストール**し、同じ版のsdistに含まれるダミー例を実行する。NTKはCoreとContractsのライブラリであり、この版に常駐アプリ・GUI・会話相手としてのNymphは含まれない。例は処理と後処理を終えると終了する。
 
 ### 用意するもの
 
-- CPython 3.12以上。v0.9.0で検証済みの範囲はWindows／Linux × CPython 3.12〜3.15。下限の指定は、将来の全Python版を検証済みという意味ではない。
+- CPython 3.12以上。v1.0.0で検証済みの範囲はWindows／Linux × CPython 3.12〜3.15。下限の指定は、将来の全Python版を検証済みという意味ではない。
 - `venv`と`pip`を使えるPython、インターネット接続、書き込める作業フォルダ。Linuxではこの手順に`curl`・`sha256sum`・`tar`も使う。
 - Pythonが未導入なら[Python公式のダウンロード](https://www.python.org/downloads/)または利用OSの配布元から用意する。既存の古いPythonを上書きする必要はない。
 
 実行時の外部Python依存はない。Git、開発用ビルドツール、GitHub認証はこの導入には不要。Windowsで`python --version`が3.8などを示す場合は、用意した3.12以上の実行ファイルを指定するか、インストール済みなら`py -3.12`を使う。以下の最初の`python`を、そのコマンドへ置き換える。
 
-作業場所は任意。以下では現在のフォルダに新しい`ntk-v0.9.0`を作る。同名フォルダが既にある場合は別名を使い、既存環境へ混在させない。各段階で失敗したらトラブルシューティング（`docs/troubleshooting.md`）へ進む。
+作業場所は任意。以下では現在のフォルダに新しい`ntk-v1.0.0`を作る。同名フォルダが既にある場合は別名を使い、既存環境へ混在させない。各段階で失敗したらトラブルシューティング（`docs/troubleshooting.md`）へ進む。
 
 ### Windows / PowerShell
 
@@ -1172,8 +1176,8 @@ git diff --check
 
 ```powershell
 python --version
-New-Item -ItemType Directory -Path ntk-v0.9.0
-Set-Location -LiteralPath ntk-v0.9.0
+New-Item -ItemType Directory -Path ntk-v1.0.0
+Set-Location -LiteralPath ntk-v1.0.0
 python -m venv .venv
 if ($LASTEXITCODE -ne 0) { throw 'venv creation failed' }
 .\.venv\Scripts\python.exe --version
@@ -1184,12 +1188,12 @@ if ($LASTEXITCODE -ne 0) { throw 'venv creation failed' }
 
 #### 2. 公開ファイルを取得して照合
 
-[v0.9.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.9.0)の添付から、wheel、sdist、`SHA256SUMS`を取得する。wheelに実行例は入っていないため、同版のsdistも用意する。GitHubが自動生成する「Source code」アーカイブと、ここで使う添付sdistは別のファイルである。
+[v1.0.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.0.0)の添付から、wheel、sdist、`SHA256SUMS`を取得する。wheelに実行例は入っていないため、同版のsdistも用意する。GitHubが自動生成する「Source code」アーカイブと、ここで使う添付sdistは別のファイルである。
 
 ```powershell
 $ErrorActionPreference = 'Stop'
-$releaseUrl = 'https://github.com/Tao-pyth/nymph-toolkit/releases/download/v0.9.0'
-$packages = @('nymph_toolkit-0.9.0-py3-none-any.whl', 'nymph_toolkit-0.9.0.tar.gz')
+$releaseUrl = 'https://github.com/Tao-pyth/nymph-toolkit/releases/download/v1.0.0'
+$packages = @('nymph_toolkit-1.0.0-py3-none-any.whl', 'nymph_toolkit-1.0.0.tar.gz')
 foreach ($file in ($packages + @('SHA256SUMS'))) {
     Invoke-WebRequest -UseBasicParsing -Uri "$releaseUrl/$file" -OutFile $file
 }
@@ -1209,19 +1213,19 @@ foreach ($file in $packages) {
 #### 3. wheelを導入し、版とimport元を確認
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install --no-index --no-deps .\nymph_toolkit-0.9.0-py3-none-any.whl
+.\.venv\Scripts\python.exe -m pip install --no-index --no-deps .\nymph_toolkit-1.0.0-py3-none-any.whl
 if ($LASTEXITCODE -ne 0) { throw 'wheel installation failed' }
 .\.venv\Scripts\python.exe -I -c "import sys, importlib.metadata as m, nymph_toolkit.core as c; print(sys.executable); print(m.version('nymph-toolkit')); print(c.__file__)"
-.\.venv\Scripts\python.exe -m tarfile -e .\nymph_toolkit-0.9.0.tar.gz .
+.\.venv\Scripts\python.exe -m tarfile -e .\nymph_toolkit-1.0.0.tar.gz .
 if ($LASTEXITCODE -ne 0) { throw 'sdist extraction failed' }
 ```
 
-表示される版は`0.9.0`、import元はこの環境の`.venv\Lib\site-packages\nymph_toolkit\core\__init__.py`となる。展開先は`nymph_toolkit-0.9.0`。sdistは例の取得に使い、その中の`src`をPythonの検索パスに加えない。
+表示される版は`1.0.0`、import元はこの環境の`.venv\Lib\site-packages\nymph_toolkit\core\__init__.py`となる。展開先は`nymph_toolkit-1.0.0`。sdistは例の取得に使い、その中の`src`をPythonの検索パスに加えない。
 
 #### 4. 最初の例を実行
 
 ```powershell
-.\.venv\Scripts\python.exe -I -W error .\nymph_toolkit-0.9.0\examples\runtime_demo.py
+.\.venv\Scripts\python.exe -I -W error .\nymph_toolkit-1.0.0\examples\runtime_demo.py
 if ($LASTEXITCODE -ne 0) { throw 'runtime demo failed' }
 ```
 
@@ -1232,25 +1236,25 @@ if ($LASTEXITCODE -ne 0) { throw 'runtime demo failed' }
 ```bash
 set -e
 python3 --version
-mkdir ntk-v0.9.0
-cd ntk-v0.9.0
+mkdir ntk-v1.0.0
+cd ntk-v1.0.0
 python3 -m venv .venv
 .venv/bin/python --version
 .venv/bin/python -m pip --version
 
-release_url='https://github.com/Tao-pyth/nymph-toolkit/releases/download/v0.9.0'
-for file in nymph_toolkit-0.9.0-py3-none-any.whl nymph_toolkit-0.9.0.tar.gz SHA256SUMS; do
+release_url='https://github.com/Tao-pyth/nymph-toolkit/releases/download/v1.0.0'
+for file in nymph_toolkit-1.0.0-py3-none-any.whl nymph_toolkit-1.0.0.tar.gz SHA256SUMS; do
     curl --fail --location "$release_url/$file" --output "$file"
 done
 sha256sum --check --ignore-missing SHA256SUMS
 
-.venv/bin/python -m pip install --no-index --no-deps ./nymph_toolkit-0.9.0-py3-none-any.whl
+.venv/bin/python -m pip install --no-index --no-deps ./nymph_toolkit-1.0.0-py3-none-any.whl
 .venv/bin/python -I -c "import sys, importlib.metadata as m, nymph_toolkit.core as c; print(sys.executable); print(m.version('nymph-toolkit')); print(c.__file__)"
-tar -xzf nymph_toolkit-0.9.0.tar.gz
-.venv/bin/python -I -W error nymph_toolkit-0.9.0/examples/runtime_demo.py
+tar -xzf nymph_toolkit-1.0.0.tar.gz
+.venv/bin/python -I -W error nymph_toolkit-1.0.0/examples/runtime_demo.py
 ```
 
-チェックサムでwheelとsdistの2件が`OK`になり、版が`0.9.0`、import元がこの`.venv/lib/python3.x/site-packages`配下になることを確認する。`--ignore-missing`は取得していない引継ぎ書を照合対象から外すために使う。2件のどちらかが表示されなければ取得を確認する。
+チェックサムでwheelとsdistの2件が`OK`になり、版が`1.0.0`、import元がこの`.venv/lib/python3.x/site-packages`配下になることを確認する。`--ignore-missing`は取得していない引継ぎ書を照合対象から外すために使う。2件のどちらかが表示されなければ取得を確認する。
 
 ### 正常終了の確認と次の手順
 
@@ -1262,9 +1266,9 @@ tar -xzf nymph_toolkit-0.9.0.tar.gz
 
 これはダミーの起動・実行・停止を確認した結果。プロセスが終了しているため、バックグラウンドでNymphが活動し続けている状態ではない。`-I`は呼出時の`PYTHONPATH`やユーザーサイト等の影響を避け、`-W error`は警告も失敗として見つける検証用指定である。
 
-続いて6つの実行例ガイド（`docs/tutorials.md`）で登録、接続、活動変更、別プロセス実行を確認する。コードを修正する場合は開発手順（`docs/development.md`）で別の開発環境を用意する。`pip install -e .`は作業ツリーを読む開発用導入であり、この手順の通常導入とは区別する。
+続いて7つの実行例ガイド（`docs/tutorials.md`）で登録、接続、活動変更、別プロセス実行を確認する。コードを修正する場合は開発手順（`docs/development.md`）で別の開発環境を用意する。`pip install -e .`は作業ツリーを読む開発用導入であり、この手順の通常導入とは区別する。
 
-このガイドはv0.9.0公開後の文書改善である。Release内のDocs・引継ぎ書は公開時点の記録を保持する。今回の手順確認範囲は文書整備の検証記録（`docs/validation/docs-onboarding.md`）、製品の公開判定はv0.9検証記録（`docs/validation/v0.9.md`）と[公開後の確認結果](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)に分けて記録する。
+R30・[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)でv1.0.0向けに更新した。v0.9版の手順検証は過去の記録（`docs/validation/docs-onboarding.md`）、本版の受入はB00記録（`docs/validation/v1.0.md`）、公開後取得の結果は#104で追跡する。公開済みv0.9.0のタグ・添付は更新しない。
 
 ---
 
@@ -1272,23 +1276,23 @@ tar -xzf nymph_toolkit-0.9.0.tar.gz
 
 収録元 `docs/tutorials.md`
 
-## v0.9.0の6つの実行例ガイド
+## v1.0.0の7つの実行例ガイド
 
-対象は、インストール手順（`docs/getting-started.md`）を終え、NTK Coreの動きを確認したい人。使うのは公開v0.9.0と同版sdistの`examples/`で、すべてダミーである。本番Memory・AgencyなどのSubsystemを実装した例ではない。
+対象は、インストール手順（`docs/getting-started.md`）を終え、NTK Coreの動きを確認したい人。使うのは公開v1.0.0と同版sdistの`examples/`で、すべてダミーである。本番Memory・AgencyなどのSubsystemを実装した例ではない。
 
 ### 共通の前提と実行方法
 
-作業場所は導入手順で作った`ntk-v0.9.0`。`.venv`へwheelを通常インストール済みで、`nymph_toolkit-0.9.0/examples/`を展開していることを前提とする。外部サービスの認証やデータは不要。ハイブリッド例は同じPCのループバックTCPとCore所有の子プロセスを使う。
+作業場所は導入手順で作った`ntk-v1.0.0`。`.venv`へwheelを通常インストール済みで、`nymph_toolkit-1.0.0/examples/`を展開していることを前提とする。外部サービスの認証やデータは不要。ハイブリッド例は同じPCのループバックTCPとCore所有の子プロセスを使う。
 
-順に6例を実行し、標準出力と標準エラーを`logs/`へ保存する。失敗した例で止まり、原因を確認してから再実行する。既存の同名ログは上書きされるので、過去の結果を残す場合は先に別名で保管する。
+順に7例を実行し、標準出力と標準エラーを`logs/`へ保存する。失敗した例で止まり、原因を確認してから再実行する。既存の同名ログは上書きされるので、過去の結果を残す場合は先に別名で保管する。
 
 PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Path logs -Force | Out-Null
-$demos = @('runtime', 'registry', 'connections', 'task_manager', 'activity_changes', 'hybrid')
+$demos = @('runtime', 'registry', 'connections', 'task_manager', 'activity_changes', 'hybrid', 'module_contract')
 foreach ($demo in $demos) {
-    & .\.venv\Scripts\python.exe -I -W error ".\nymph_toolkit-0.9.0\examples\${demo}_demo.py" 2>&1 |
+    & .\.venv\Scripts\python.exe -I -W error ".\nymph_toolkit-1.0.0\examples\${demo}_demo.py" 2>&1 |
         Tee-Object -FilePath ".\logs\${demo}.log"
     if ($LASTEXITCODE -ne 0) { throw "Demo failed: $demo" }
 }
@@ -1300,8 +1304,8 @@ Bash:
 set -e
 set -o pipefail
 mkdir -p logs
-for demo in runtime registry connections task_manager activity_changes hybrid; do
-    .venv/bin/python -I -W error "nymph_toolkit-0.9.0/examples/${demo}_demo.py" 2>&1 |
+for demo in runtime registry connections task_manager activity_changes hybrid module_contract; do
+    .venv/bin/python -I -W error "nymph_toolkit-1.0.0/examples/${demo}_demo.py" 2>&1 |
         tee "logs/${demo}.log"
 done
 ```
@@ -1391,19 +1395,29 @@ PASS: direct RPC, stream, period notification, Nymph finish, child cleanup; rema
 
 例はダミーのimport用に`examples/`を親・子へ渡す処理を含む。通常の機能はCoreと同じPython環境へインストールする。例の`PYTHONPATH`調整を製品共通の配置要件にはしない。詳細はハイブリッド実行（`docs/hybrid.md`）。
 
+### 7. 接続契約：Contractsだけを参照する機能
+
+ソース：module_contract_demo.py（`examples/module_contract_demo.py`）とcontract_dummy.py（`examples/contract_dummy.py`）。同じフォルダに置く。起動側が事前検証・登録し、公開ContractsだけをimportするSubsystem/Adapterが直接/Core経由RPC、byte stream、予定時間通知後の継続、Nymphの終了指示と後処理を確認する。
+
+```text
+PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activity, cleanup
+```
+
+前の行にrpc/stream/activity/registrationの結果を表示する。初期化後のprovide拒否も確認する。恒久保存や本番機能の実装例ではない。6契約（`docs/module-contracts.md`）と移行手順（`docs/migration-v1.md`）を参照する。
+
 ### 保存物と確認の限界
 
 | 対象 | この例での扱い |
 |---|---|
 | Runtime・Registry | FileStoreの履歴を作らない |
-| Connections・TaskManager・活動変更・Hybrid | OSの一時フォルダにFileStoreを作る。通常終了時に例がフォルダを削除する |
+| Connections・TaskManager・活動変更・Hybrid・接続契約 | OSの一時フォルダにFileStoreを作る。通常終了時に例がフォルダを削除する |
 | Connections等の2回起動 | 1回のスクリプト実行内で同じ一時保存先を使う。次回スクリプト実行は新しい一時保存先になる |
 | `logs/*.log` | 上のコマンドで保存した出力。例の終了後も作業フォルダに残る |
 | 恒久保存先 | ライブラリ利用者がFileStore構築時に指定する。主・予備を分け、同じ主保存先を複数Coreで同時使用しない |
 
 保持日数、バッチ件数、通知間隔、通信期限、実行枠、転送量などの例中の値はデモ用であり、ライブラリの既定値や性能保証ではない。ファイル保存の詳細はConnectionsの保存契約（`docs/connections.md`）を参照する。
 
-全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せずトラブルシューティング（`docs/troubleshooting.md`）へ進む。6例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲はv0.9検証記録（`docs/validation/v0.9.md`）、このガイドの確認範囲は文書整備の検証記録（`docs/validation/docs-onboarding.md`）で追跡する。
+全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せずトラブルシューティング（`docs/troubleshooting.md`）へ進む。7例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲はB00検証記録（`docs/validation/v1.0.md`）、本版の公開後再現は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡する。過去のv0.9版ガイドの確認範囲は文書整備の検証記録（`docs/validation/docs-onboarding.md`）に残す。
 
 ---
 
@@ -2700,7 +2714,7 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 ## Core APIと利用上の契約
 
-本書は実装済みCore・Contractsの入口である。v0.9の整理をR29・ADR 0026で更新した。開発中の1.0.0候補の公開名はCore 15件・Contracts 98件。実装一覧（`docs/api-reference.md`）と6契約・安定対象（`docs/module-contracts.md`）、移行手順（`docs/migration-v1.md`）を併読する。仕様の根拠はADR 0014〜0026で、公開済みv0.9.0の14件・92件とは区別する。
+本書は実装済みCore・Contractsの入口である。v0.9の整理をR29・ADR 0026で更新した。v1.0.0の公開名はCore 15件・Contracts 98件。実装一覧（`docs/api-reference.md`）と6契約・安定対象（`docs/module-contracts.md`）、移行手順（`docs/migration-v1.md`）を併読する。仕様の根拠はADR 0014〜0026で、公開済みv0.9.0の14件・92件とは区別する。
 
 ### 入口と返却値
 
@@ -4333,7 +4347,7 @@ Usage(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingStat
 
 ## v1.0 Core接続契約
 
-対象は開発中の1.0.0配布候補。公開済みv0.9.0の説明は導入ガイド（`docs/getting-started.md`）、移行差分は移行手順（`docs/migration-v1.md`）を参照する。本資料はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で具体化した契約であり、将来のMemory等の本実装を含まない。
+対象はv1.0.0。導入ガイド（`docs/getting-started.md`）から通常導入できる。移行差分は移行手順（`docs/migration-v1.md`）を参照する。本資料はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で具体化した契約であり、将来のMemory等の本実装を含まない。
 
 ### 接続までの流れ
 
@@ -4425,9 +4439,9 @@ python tools/check_contracts.py
 
 収録元 `docs/migration-v1.md`
 
-## v0.9からv1.0候補への移行
+## v0.9からv1.0への移行
 
-R29で「必要な破壊的API整理も今回に含める」と明示されたため、ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で以下を具体化した。既存の通信・活動動作を変える変更ではない。公開v0.9.0のタグ・添付は維持し、本書は開発中の1.0.0候補に対応する。
+R29で「必要な破壊的API整理も今回に含める」と明示されたため、ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で以下を具体化した。既存の通信・活動動作を変える変更ではない。公開v0.9.0のタグ・添付は維持し、本書は1.0.0に対応する。
 
 | v0.9で利用していたもの | v1.0での扱い・移行先 | 理由 |
 |---|---|---|
@@ -6517,6 +6531,10 @@ Core/Contractsの明示exportと、module-contractsに記す利用者向けメ�
 
 実装・受入・公開を区別する。本作業は配布前のB00結果とレビュー可能なPRまで。v1.0.0タグ/Release、公開後取得照合、親/マイルストーンの最終終了は後続の公開指示で扱う。v0.9公開物を差し替えない。未解消のB00項目は未達として残し、仕様判断が必要なら先にIssue/ADRへ記録する。
 
+### R30による公開段階への移行
+
+2026年11月23日、PR #103のレビュー・問題解消後のマージ・v1.0.0公開・公開後確認と課題終了が明示指示された。D1〜D6の契約は維持し、R29時点のPRまでという実施範囲を公開段階へ拡張する。公開子#104の結果とReleaseを最終証拠として参照する。
+
 ---
 
 <a id="section-48"></a>
@@ -7913,6 +7931,12 @@ v1.0実装に必要な6契約・必須入力・安定対象・初期化境界は
 
 実装・受入・公開は別の完了条件。今回の作業はレビュー可能なPRまで。v1.0.0タグ/Releaseと公開後取得照合、親#10・マイルストーンの終了は後続の公開指示で扱う。
 
+### R30のレビュー・公開後確認
+
+PR #103のhead cc445daをレビューし、契約型と実体、検証の副作用、初期化境界、内部API整理と移行、通常配布・B00を確認した。マージを妨げる製品上の指摘はない。重点35テストはWindows/Python 3.15.2で成功（42.641秒）。公開向け資料とR30ヘッダーを追加し、最終head/CIを再確認する。
+
+公開手順と結果は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡する。タグ/Release・4添付の匿名取得・checksumと同じ版の通常wheel/7例/API照合が完了するまで、公開後確認や親/マイルストーンを完了としない。公開後の結果は#104・Releaseに残し、本スナップショットを差し替えない。
+
 ---
 
 <a id="section-62"></a>
@@ -8429,6 +8453,10 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親#10・マイルストーンv1.0.0。コード変更前に子#98（設計/B00）、#99（Contracts/登録検証/API整理）、#100（安定API/例）、#101（統合）、#102（配布/CI/資料）を登録し、GitHubの親子関係を設定した。必要な破壊的整理も含める回答を範囲へ反映済み。判断はADR 0026、結果はvalidation/v1.0、レビュー用PRへ紐付ける。親・マイルストーンの公開完了は今回の実装完了とは区別する。
 
+### R30のv1.0.0レビュー・公開
+
+親#10・マイルストーンv1.0.0配下に、[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)を公開用文書/生成ヘッダー変更前に登録し、実親子関係を確認した。PR #103のレビューと最終CI、マージ、タグ/Release、4添付の匿名取得・通常導入を記録する。#98〜#102の採用範囲の完了と、#104の公開後確認を分けて追跡し、その後に親#10とマイルストーンを閉じる。
+
 ---
 
 <a id="section-65"></a>
@@ -8650,6 +8678,10 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 R29の開発指示では新規Releaseを作成しない。1.0.0候補はADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）とB00結果（`docs/validation/v1.0.md`）に従い、移行資料・全テスト・7例・通常配布・8環境CI・引継ぎ書を照合する。レビュー後の公開指示で、対象コミットとCIを再確認し、タグ/Release・添付checksum・匿名取得による公開後確認を行う。その結果を親#10へ記録して親とマイルストーンの終了を判断する。公開済みv0.9.0は差し替えない。
 
+### R30：v1.0.0の公開実施
+
+R30でレビュー後のマージ・v1.0.0公開・公開後確認・課題終了が明示指示された。公開子[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で、最終head・マージ後8環境CI・タグ・wheel/sdist/引継ぎ書/SHA256SUMSを追跡する。匿名取得でchecksumを照合し、公開wheelを新規venvへ通常導入して版・import元・7例・契約基準を確認する。完了結果を#104とReleaseへ記録してから親#10とマイルストーンを閉じる。
+
 ---
 
 <a id="section-66"></a>
@@ -8658,7 +8690,9 @@ R29の開発指示では新規Releaseを作成しない。1.0.0候補はADR 0026
 
 ## 変更履歴
 
-### 未リリース（1.0.0候補）
+### v1.0.0 — 2026年11月23日
+
+- R30・#104でPR #103のレビュー、公開用資料整備、マージ・タグ・Release・公開後取得確認を実施。最終コミットとCI・添付の照合結果は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)に記録する。
 
 - R29・親#10、子#98〜#102で6区分の接続契約・B00をADR 0026に具体化。公開Contractsに6つの機能側Protocol、Coreに登録前検証を追加。
 - 必要な破壊的API整理としてCoreClientの内部要求とModuleContextの資源補助を非公開化し、起動後/停止後のprovide系を拒否。移行手順（`docs/migration-v1.md`）を参照。

@@ -1,6 +1,6 @@
 # Core APIと利用上の契約
 
-本書は実装済みCore・Contractsの入口である。v0.9の整理をR29・ADR 0026で更新した。開発中の1.0.0候補の公開名はCore 15件・Contracts 98件。[実装一覧](api-reference.md)と[6契約・安定対象](module-contracts.md)、[移行手順](migration-v1.md)を併読する。仕様の根拠はADR 0014〜0026で、公開済みv0.9.0の14件・92件とは区別する。
+本書は実装済みCore・Contractsの入口である。v0.9の整理をR29・ADR 0026で更新した。v1.0.0の公開名はCore 15件・Contracts 98件。[実装一覧](api-reference.md)と[6契約・安定対象](module-contracts.md)、[移行手順](migration-v1.md)を併読する。仕様の根拠はADR 0014〜0026で、公開済みv0.9.0の14件・92件とは区別する。
 
 ## 入口と返却値
 

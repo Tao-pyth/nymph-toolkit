@@ -1,6 +1,8 @@
 # 変更履歴
 
-## 未リリース（1.0.0候補）
+## v1.0.0 — 2026年11月23日
+
+- R30・#104でPR #103のレビュー、公開用資料整備、マージ・タグ・Release・公開後取得確認を実施。最終コミットとCI・添付の照合結果は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)に記録する。
 
 - R29・親#10、子#98〜#102で6区分の接続契約・B00をADR 0026に具体化。公開Contractsに6つの機能側Protocol、Coreに登録前検証を追加。
 - 必要な破壊的API整理としてCoreClientの内部要求とModuleContextの資源補助を非公開化し、起動後/停止後のprovide系を拒否。[移行手順](docs/migration-v1.md)を参照。
