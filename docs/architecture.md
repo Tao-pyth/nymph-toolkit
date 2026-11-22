@@ -234,7 +234,8 @@ nymph-toolkit/
 │     ├─ 0022-v0.7-v0.9-hybrid-and-completion.md
 │     ├─ 0023-v0.7-implementation-contracts.md
 │     ├─ 0024-v0.8-integration-validation.md
-│     └─ 0025-v0.9-core-completion.md
+│     ├─ 0025-v0.9-core-completion.md
+│     └─ 0026-v1.0-core-connection-contracts.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/

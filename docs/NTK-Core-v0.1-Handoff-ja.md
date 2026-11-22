@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R28を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R29を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -268,6 +268,8 @@ v0.8の統合・障害・負荷検証はADR 0024（`docs/adr/0024-v0.8-integrati
 v0.9の完成確認はR24・ADR 0025（`docs/adr/0025-v0.9-core-completion.md`）を参照する。公開API一覧と64項目の証拠はtools/check_api.py・tools/check_completion.pyで照合し、動作試験の代わりにしない。A09-01〜03の実装・配布候補の結果と、A09-04のタグ・Release・公開後照合を分け、公開前に全A09合格や親#9完了としない。
 
 Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配布用引継ぎ書を同期する。公開済みのタグやRelease添付を後続の文書修正で差し替えない。
+
+v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）に従う。必要な破壊的API整理は許可され、理由と移行手順を記録する。採用64項目の動作やNymph/Core境界を暗黙に変えない。公開型・登録前検証・初期化中の提供登録、安定APIの基準はdocs/module-contracts.mdとdocs/contracts-v1.jsonを参照する。tools/check_contracts.pyの差分を基準の無条件再生成で解消せず、互換性とIssue/ADRを先に確認する。B00の実装・受入とタグ/Release・公開後確認は区別する。
 
 ---
 
@@ -2120,7 +2122,8 @@ nymph-toolkit/
 │     ├─ 0022-v0.7-v0.9-hybrid-and-completion.md
 │     ├─ 0023-v0.7-implementation-contracts.md
 │     ├─ 0024-v0.8-integration-validation.md
-│     └─ 0025-v0.9-core-completion.md
+│     ├─ 0025-v0.9-core-completion.md
+│     └─ 0026-v1.0-core-connection-contracts.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -2601,6 +2604,8 @@ v0.6実行例（`examples/activity_changes_demo.py`）は開始の繰上げ、�
 ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`）の採用方針を、ADR 0023（`docs/adr/0023-v0.7-implementation-contracts.md`）で実装契約へ具体化した。実行可能な例はhybrid_demo.py（`examples/hybrid_demo.py`）、試験結果はv0.7受入記録（`docs/validation/v0.7.md`）にある。v0.7で導入した機能に、v0.8で統合検証と通信結果・受付枠の回収を追加した。
 
 ### 構成と起動
+
+v1.0候補ではR29の6契約（`docs/module-contracts.md`）と移行手順（`docs/migration-v1.md`）を追加した。機能はContractsのProtocolを使え、起動アプリはvalidate_module_registrationで入力を事前検証できる。provide系はfactory/start中に限り、起動後・停止後はProtocolErrorとなる。以下の通信・活動・所有動作は維持する。
 
 `HybridGroup(settings, store)`はModuleGroupを拡張する。親CoreだけがRegistry・Connections・TaskManager・FileStoreを所有し、`Runtime(group)`で起動・停止する。`register_module(spec, advertisement, factory, config, placement)`で機能を登録する。`Placement.LOCAL`は同一プロセス、`PROCESS`は機能ごとにCore所有の子を起動する。
 
@@ -6668,7 +6673,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 
 ### v1.0.0以降のロードマップ案
 
-**以下はR5に基づく設計提案である。** v1.0.0でCoreとSubsystem・Adapterの接続契約を大きく形作る目標は確定している。契約詳細、Subsystem・Adapterの名称、実装順序、各バージョンへの機能配分、受入条件は未確定である。日付・開発期間・工数の見積もりは設定しない。
+**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1以降のSubsystem・Adapterの名称、順序、配分、業務契約と受入は未確定である。日付・開発期間・工数の見積もりは設定しない。
 
 #### リリース運用案
 
@@ -7855,7 +7860,22 @@ R29・親#10・子#98〜#102。ADR 0026（`docs/adr/0026-v1.0-core-connection-co
 
 ### 検証状況
 
-Windows・CPython 3.15.2で全316テスト成功（2026年11月23日、88.461秒）。既存306件と今回の製品5件・検査5件を含む。新しい統合テスト1件は両ModuleKind×要求元/提供先の4配置、計8シナリオを実行する。通常wheelと8環境CIは実施中であり、完了前にB00-08合格とはしない。
+**B00-01〜08は配布前検証に合格。** 対象は`c3cd13ce8a13538b073d5edebdafaee00733cde0`、[PR #103](https://github.com/Tao-pyth/nymph-toolkit/pull/103)、[8環境CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45039837423)。後続の文書記録コミットの最終CIはPRへ記録し、製品・テスト・配布設定の差分有無とともに確認する。
+
+Windows・CPython 3.15.2で全316テスト成功（2026年11月23日、ソース88.461秒、通常wheel89.819秒）。既存306件と今回の製品5件・検査5件、計製品304件＋検査12件を含む。新しい統合テスト1件は両ModuleKind×要求元/提供先の4配置、計8シナリオを実行する。同期factoryとAwaitable factoryの両方を通す。
+
+全8環境でソースと通常wheelの各316件、7実行例、短い4配置負荷、sdistから同一wheelの再構築、API/安定基準/64項目/Docs同期が成功。LinuxではWindows専用6件をskip（310件実行）し、Windowsは316件すべて実行した。全8ログに終了時callback例外・未回収例外・未完了タスク破棄の診断はない。
+
+| CI環境 | ソース316件 | 通常wheel316件 |
+|---|---|---|
+| Windows / 3.12 | 44.436秒 | 45.137秒 |
+| Windows / 3.13 | 36.888秒 | 37.139秒 |
+| Windows / 3.14 | 41.408秒 | 42.357秒 |
+| Windows / 3.15 | 38.408秒 | 40.566秒 |
+| Linux / 3.12 | 15.796秒・skip 6 | 15.697秒・skip 6 |
+| Linux / 3.13 | 19.990秒・skip 6 | 19.659秒・skip 6 |
+| Linux / 3.14 | 21.136秒・skip 6 | 21.250秒・skip 6 |
+| Linux / 3.15 | 18.124秒・skip 6 | 18.090秒・skip 6 |
 
 | 受入 | 証拠 | 確認内容 |
 |---|---|---|
@@ -7866,7 +7886,7 @@ Windows・CPython 3.15.2で全316テスト成功（2026年11月23日、88.461秒
 | B00-05 | test_module_contracts、A08障害・競合、Windows終了回帰（`docs/validation/windows-shutdown.md`） | 業務失敗/容量と連携障害・結果不明・子/管理切断・停止失敗を区別 |
 | B00-06 | 機能ダミー（`examples/contract_dummy.py`）、起動例（`examples/module_contract_demo.py`）、import依存検査 | 機能は公開Contractsだけをimport。Runtime側との構造的Protocol一致と動作を検証 |
 | B00-07 | 安定基準（`docs/contracts-v1.json`）、拒否試験（`tests/test_contract_checks.py`）、check_api/check_contracts | export欠落・署名/列挙/フィールド変更の検出。Core所有窓口の構築署名は安定対象外 |
-| B00-08 | check_dist・全8環境CI・check_docs/check_completion | 通常導入・7例・全テスト・短い4配置負荷・sdist同一wheel・API/Docs/引継ぎ書の結果を追記 |
+| B00-08 | check_dist・上記全8環境CI・check_docs/check_completion | 通常導入・7例・全テスト・短い4配置負荷・sdist同一wheel・API/Docs/引継ぎ書一致。ローカルの負荷実測1.059秒、4配置とも完了 |
 
 ### 再現手順
 
@@ -7879,11 +7899,11 @@ python tools/check_api.py
 python tools/check_contracts.py
 python tools/check_completion.py
 python tools/check_docs.py
-python -m build --outdir dist-v1
-python tools/check_dist.py --dist-dir dist-v1
+python -m build --outdir dist
+python tools/check_dist.py --dist-dir dist
 ```
 
-配布検査はソースツリー外の隔離venvへwheelを通常導入し、コピーしたテスト・7例とAPI/安定基準・短い4配置負荷を再実行する。sdist再構築と元wheelのバイト一致も確認する。CIはWindows/Linux×CPython 3.12〜3.15を対象とし、Windows専用回帰のLinuxでのskipを失敗と混同しない。
+出力先は当該版のwheel/sdist各1件だけを含む空のディレクトリを用いる。既存成果物がある場合は別の出力先を指定する。ローカル確認は`.git/v10-dist`を使用した。配布検査はソースツリー外の隔離venvへwheelを通常導入し、コピーしたテスト・7例とAPI/安定基準・短い4配置負荷を再実行する。sdist再構築と元wheelのバイト一致も確認する。CIはWindows/Linux×CPython 3.12〜3.15を対象とし、Windows専用回帰のLinuxでのskipを失敗と混同しない。
 
 ### 未決・延期・公開との区別
 
