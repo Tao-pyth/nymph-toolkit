@@ -1,6 +1,6 @@
 # Memory Subsystem v1.1
 
-R31・[ADR 0027](adr/0027-v1.1-memory.md)に基づく最小の経験・知識の保存/取得。v1.1.0開発候補の説明であり、公開済みv1.0.0には含まれない。結果は[B01検証記録](validation/v1.1.md)を参照する。
+R31・[ADR 0027](adr/0027-v1.1-memory.md)に基づく最小の経験・知識の保存/取得。v1.1.0で追加した機能の説明。公開先は[v1.1.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.1.0)。結果は[B01検証記録](validation/v1.1.md)を参照する。
 
 ## 役割と構成
 
@@ -117,7 +117,7 @@ sequenceDiagram
 
 ## 試す・検証する
 
-v1.1開発ブランチを導入した環境で、リポジトリ直下から実行する。
+公開wheelと同版sdistでの実行は[通常導入](getting-started.md)と[8つの例](tutorials.md)に従う。以下はリポジトリ直下からの開発用手順。
 
 ```text
 python -m pip install -e .

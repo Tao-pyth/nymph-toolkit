@@ -176,8 +176,8 @@ nymph-toolkit/
 │  ├─ customer-guide.md             # 顧客向け契約・利用・図解・API付録
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
-│  ├─ getting-started.md            # v1.0.0通常導入・初回実行
-│  ├─ tutorials.md                  # 公開v1.0の7実行例・期待結果・保存物
+│  ├─ getting-started.md            # v1.1.0通常導入・初回実行
+│  ├─ tutorials.md                  # 公開v1.1の8実行例・期待結果・保存物
 │  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md

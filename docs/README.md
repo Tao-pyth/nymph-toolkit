@@ -2,7 +2,7 @@
 
 初稿の文書整備日は2026年11月19日。対象はNymph Toolkit（NTK）の最終ビジョン、Core初期開発、公開準備からV0.9までの計画、およびv1.0.0以降のロードマップ案である。
 
-R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memory.md)・[B01結果](validation/v1.1.md)を参照する。公開済みv1.0と未公開の開発候補を区別する。
+R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memory.md)・[B01結果](validation/v1.1.md)を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
 
 ## 目的別の読み順
 
@@ -11,14 +11,14 @@ R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memo
 | 目的 | 読み順 |
 |---|---|
 | 導入担当者・開発担当者へ説明する | [顧客向け契約・利用ガイド](customer-guide.md) → [配布用PDFの作成](customer-guide-authoring.md) |
-| まず試す | [通常導入](getting-started.md) → [7つの実行例](tutorials.md) |
+| まず試す | [通常導入](getting-started.md) → [8つの実行例](tutorials.md) |
 | v1.0へ機能を接続する | [6契約](module-contracts.md) → [移行手順](migration-v1.md) → [B00結果](validation/v1.0.md) |
 | 機能を接続する | [Architecture](architecture.md) → [Core API](core-api.md) → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
 | 開発する | [参加方針](../CONTRIBUTING.md) → [Issue運用](issue-workflow.md) → [開発手順](development.md) |
 | 問題を調べる | [トラブルシューティング](troubleshooting.md) → 対象機能のDocs・検証記録 |
 | 判断を追う | [ADR索引](adr/README.md) → [採用64項目](adr/0022-v0.7-v0.9-hybrid-and-completion.md) → [証拠対応表](validation/core-coverage.md) |
 
-導入・実行例・接続契約はv1.0、顧客向け図解/PDFはv0.9版を説明する。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
+導入・実行例とMemoryはv1.1、Core接続契約はv1.0から維持し、顧客向け図解/PDFはv0.9版を説明する。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
 
 ## 文書一覧と格納場所
 
@@ -32,11 +32,11 @@ R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memo
 | [customer-guide-authoring.md](customer-guide-authoring.md) | 同じ原稿からPDF・HTMLを再生成し、表示と同期を確認する手順 |
 | [validation/customer-guide.md](validation/customer-guide.md) | 顧客資料の契約照合・PDF表示・実行例・同期の検証範囲 |
 | [validation/windows-shutdown.md](validation/windows-shutdown.md) | #94のWindows終了時エラーの原因・内部修正・制御再現・回帰 |
-| [getting-started.md](getting-started.md) | v1.0.0の通常導入・checksum・版とimport元・最初の実行 |
-| [tutorials.md](tutorials.md) | 7実行例の目的・コマンド・期待結果・終了・保存物 |
+| [getting-started.md](getting-started.md) | v1.1.0の通常導入・checksum・版とimport元・最初の実行 |
+| [tutorials.md](tutorials.md) | 8実行例の目的・コマンド・期待結果・終了・保存物 |
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
 | [validation/docs-onboarding.md](validation/docs-onboarding.md) | D01〜D04・D09の検証結果、対象版、確認範囲 |
-| [memory.md](memory.md) | v1.1開発候補の保存/取得・出典・運用・実行例 |
+| [memory.md](memory.md) | v1.1の保存/取得・出典・運用・実行例 |
 | [validation/v1.1.md](validation/v1.1.md) | B01の実装・回帰・配布・CI結果 |
 | [vision.md](vision.md) | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | [architecture.md](architecture.md) | Coreの責務、境界、フォルダ構成、未決事項 |
@@ -210,3 +210,7 @@ Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し
 ## R31のv1.1 Memory開発
 
 ユーザーの「v1.1.0のMemory Subsystem開発、親Issue・ADR確認、初期スコープ/未決/受入整理、コード変更前の子Issue登録、設計・実装・検証・資料整備」という明示指示を根拠とする。子#105〜#108を親#11・マイルストーン11へ実親子関係付きで先行登録した。ADR 0027の具体的API・SQLite・上限等は今回のCodex実装判断であり、過去の会話で個別採用された仕様とは区別する。未決だったMemoryの最小範囲を具体化し、残りのSubsystem/Adapter案・長期ビジョンとCoreの安定契約は維持する。レビュー用PRまでを今回の範囲とし、タグ/Release・公開後確認は別段階とする。
+
+## R32のv1.1レビュー・公開
+
+PR #109のレビュー、問題がなければマージ・v1.1.0公開、公開後確認、対応済み子#105〜#108と親#11・マイルストーン終了という明示指示を根拠とする。子[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を同じマイルストーン・実親子関係へ先に登録し、公開用資料・生成ヘッダー・最終CI・公開後取得を追跡する。R31のPRまでという範囲を公開まで拡張する。契約や延期事項の新たな採用はなく、最終SHA・公開後結果は#110・Releaseへ記録する。

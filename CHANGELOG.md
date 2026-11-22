@@ -1,6 +1,8 @@
 # 変更履歴
 
-## v1.1.0 — 未リリース
+## v1.1.0 — 2026年11月23日
+
+- R32・#110でPR #109のレビュー、公開用資料・導入ガイド整備、マージ・タグ/Release・公開後取得確認を追跡。最終SHA・CI・公開添付の結果は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を参照。
 
 - R31・親#11、子#105〜#108でMemoryの初期範囲・保存/取得・B01をADR 0027へ記録。
 - 同梱Memory、公開契約`ntk.memory.records/1`、出典・時刻付き記録、SQLite永続化、IDとフィルタ/カーソル取得を追加。既存Core/Contractsの安定APIを維持。
