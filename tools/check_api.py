@@ -72,6 +72,8 @@ def inventory():
         for name in sorted(names):
             value = getattr(module, name)  # missing export is a hard failure
             entry = {"kind": "constant", "value": stable(value)} if not inspect.isclass(value) else {}
+            if inspect.isfunction(value):
+                entry = {"kind": "function", "signature": signature(value)}
             if inspect.isclass(value):
                 entry["kind"] = "enum" if issubclass(value, Enum) else "class"
                 entry["bases"] = [base.__name__ for base in value.__bases__]
@@ -106,7 +108,8 @@ def render():
         "引数、列挙値、データ型、継承したメソッド・プロパティの存在を照合するための資料であり、"
         "入力検証・返却値・所有期間・失敗時動作は[Core API](core-api.md)と各操作資料を併読する。",
         "型注釈がない入口から新しい型保証を推測しない。内部補助メソッドを含む実体の一覧は、"
-        "全メソッドの安定保証やv1.0の接続契約採用を意味しない。直接構築しない窓口もCore APIで区別する。", "",
+        "全メソッドの安定保証を意味しない。安定対象は[接続契約](module-contracts.md)と"
+        "contracts-v1.json、移行は[migration-v1](migration-v1.md)を参照する。", "",
         "再生成：python tools/check_api.py --write。照合：python tools/check_api.py。", "",
     ]
     data = inventory()
@@ -116,6 +119,9 @@ def render():
             lines += [f'<a id="{module.rsplit(".", 1)[-1]}-{name}"></a>', "", f"### {name}", ""]
             if entry["kind"] == "constant":
                 lines += [f'値：`{entry["value"]}`。', ""]
+                continue
+            if entry["kind"] == "function":
+                lines += ["```text", name + entry["signature"], "```", ""]
                 continue
             lines += [f'基底：{", ".join(entry["bases"])}。', "", "```text"]
             if entry["kind"] == "enum":

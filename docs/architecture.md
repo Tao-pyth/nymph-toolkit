@@ -104,11 +104,13 @@ v0.7で基本機能、v0.8で統合・障害・負荷・配布、v0.9で全採�
 
 R24では構成と責務を維持したまま、[公開APIの入力・結果・失敗・所有](core-api.md)と[採用64項目の証拠](validation/core-coverage.md)を整理する。生成API一覧は現在の実装との照合に用い、v1.0の安定契約体系や本番機能を新たに採用しない。
 
-## v1.0.0以降の構成案
+## v1.0.0の接続契約と後続構成案
 
-R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。具体的な契約は[ADR 0006](adr/0006-core-connection-contracts.md)で判断対象を管理する。
+R29・[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)でv1.0目標を具体化した。[接続契約](module-contracts.md)に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、[移行資料](migration-v1.md)に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。後段の本番機能の名称・配分は引き続き提案。
 
-以下はv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。実装順序、各バージョンへの機能配分、契約の型やAPIは未確定。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象は[ADR 0006](adr/0006-core-connection-contracts.md)、R29の採用詳細はADR 0026で管理する。
+
+以下はv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
 
 | 構成案 | 役割と境界 |
 |---|---|
@@ -128,7 +130,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 配布パッケージはインストール・配布の単位を指す。ルートの `pyproject.toml` でCoreとContractsを同梱し、ソース上では `src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` に分ける。ADR 0014で配布名を `nymph-toolkit`、import名を `nymph_toolkit` として採用した。
 
-ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要なものから配置する。v1.0.0で公開接続契約として体系化する。依存方向の設計案として、Core・Subsystem・Adapterが公開Contractsを参照し、Contractsを具体的な実装から独立させる。契約の型やAPIはADR 0006で具体化する。
+ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
 ### 初期の配置
 
@@ -153,9 +155,12 @@ nymph-toolkit/
 ├─ examples/activity_changes_demo.py
 ├─ examples/hybrid_demo.py
 ├─ examples/hybrid_dummy.py
+├─ examples/module_contract_demo.py  # v1接続契約の起動例
+├─ examples/contract_dummy.py        # 公開Contractsだけを使う機能
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
 ├─ tools/check_api.py              # 公開export・署名・型の一致
+├─ tools/check_contracts.py        # v1安定API基準の照合
 ├─ tools/check_completion.py       # 64項目・既存受入の証拠参照
 ├─ tools/validate_hybrid_load.py
 ├─ tools/check_docs.py
@@ -183,6 +188,10 @@ nymph-toolkit/
 │  ├─ hybrid.md                      # v0.7の操作・配置・制約
 │  ├─ core-api.md                    # 公開入口の意味と制限
 │  ├─ api-reference.md               # 実装から生成する型・署名
+│  ├─ module-contracts.md            # 6契約と接続開発
+│  ├─ migration-v1.md                # v0.9からの移行
+│  ├─ contracts-v1.json              # レビュー済み安定API基準
+│  ├─ validation/v1.0.md             # B00受入結果
 │  ├─ validation/core-coverage.json  # 証拠対応の編集元
 │  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
 │  ├─ validation/v0.9.md             # A09の公開前判定・公開後結果の参照先
@@ -274,4 +283,4 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.xでは、各Contractの公開範囲・互換性、Subsystemの正式名称と学習・意思決定方式、Adapterの対応形式と権限、Personaへの修正値、Sleepの処理範囲、音声受信・ASRの実現方法を追加の判断対象とする。具体化はroadmapとADR 0006〜0008に従う。
+v1.0の共通Contract公開範囲・互換性はADR 0026で具体化した。後続の業務契約、Subsystemの正式名称と学習・意思決定方式、Adapterの形式・権限、Personaへの修正値、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。

@@ -10,7 +10,11 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterを必要に応じて分割するものです。個別の分割は依存関係・独立更新・単独配布の必要性に基づいて判断します。[採用した配布方針](docs/adr/0009-package-distribution.md)
 
-## 現在の段階
+## 開発中のv1.0.0候補
+
+R29・親#10の子#98〜#102で、6区分の[Core接続契約](docs/module-contracts.md)を整備しています。必要な破壊的API整理を含め、変更理由と[移行手順](docs/migration-v1.md)、[ADR 0026](docs/adr/0026-v1.0-core-connection-contracts.md)、[B00の結果](docs/validation/v1.0.md)を記録します。この作業ツリーの配布版は1.0.0候補で、公開済みの最新版とは区別します。7番目の例は`python examples/module_contract_demo.py`です。
+
+## 現在の公開版
 
 **v0.9.0を公開済みです。合意したCore機能の完成を、ダミーで検証しました。** [v0.9.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.9.0)からwheel・sdist・引継ぎ書・SHA256SUMSを取得できます。CPython 3.12以上、実行時の外部Python依存はありません。公開時の検証範囲はWindows／Linux × CPython 3.12〜3.15です。
 

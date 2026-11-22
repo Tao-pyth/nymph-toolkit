@@ -50,6 +50,8 @@ R27で導入担当者・開発担当者の両方に向けた契約・利用の�
 
 R28で既知課題#94のWindows終了時エラーの調査・修正・回帰検証が指示された。親#10・v1.0.0配下で範囲・完了条件・内部修正判断をコード変更前に記録し、NTK所有TCPの解放を妨げる終了時resetへ対処する。制御再現と自然発生の確認範囲は検証記録へ分け、公開API・採用64項目・版と公開済み配布物は維持する。
 
+R29でv1.0のCore接続契約整備と必要な破壊的API整理が指示された。親#10・子#98〜#102をコード変更前に登録し、ADR 0026で6契約・公開Protocol・登録前検証・安定API基準・B00を具体化した。移行資料と契約資料を全文収録し、実装・受入・公開を区別する。新規Releaseや過去の公開物の差替えは行わない。
+
 """
 
 
@@ -60,7 +62,7 @@ def sources():
         "docs/getting-started.md", "docs/tutorials.md", "docs/troubleshooting.md",
         "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md",
         "docs/connections.md", "docs/task-manager.md", "docs/hybrid.md",
-        "docs/core-api.md", "docs/api-reference.md", "docs/adr/README.md",
+        "docs/core-api.md", "docs/api-reference.md", "docs/module-contracts.md", "docs/migration-v1.md", "docs/adr/README.md",
     ]
     result += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/adr").glob("[0-9]*.md"))]
     result += ["docs/roadmap.md", "docs/acceptance.md"]

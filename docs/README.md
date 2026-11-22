@@ -10,6 +10,7 @@
 |---|---|
 | 導入担当者・開発担当者へ説明する | [顧客向け契約・利用ガイド](customer-guide.md) → [配布用PDFの作成](customer-guide-authoring.md) |
 | まず試す | [通常導入](getting-started.md) → [6つの実行例](tutorials.md) |
+| v1.0候補へ機能を接続する | [6契約](module-contracts.md) → [移行手順](migration-v1.md) → [B00結果](validation/v1.0.md) |
 | 機能を接続する | [Architecture](architecture.md) → [Core API](core-api.md) → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
 | 開発する | [参加方針](../CONTRIBUTING.md) → [Issue運用](issue-workflow.md) → [開発手順](development.md) |
 | 問題を調べる | [トラブルシューティング](troubleshooting.md) → 対象機能のDocs・検証記録 |
@@ -43,7 +44,7 @@
 | [validation/v0.7.md](validation/v0.7.md) | A07・回帰・配布・CIの検証記録 |
 | [validation/v0.8.md](validation/v0.8.md) | A08・統合障害・競合・保存・負荷・配布の検証記録 |
 | [core-api.md](core-api.md) | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
-| [api-reference.md](api-reference.md) | Core 14件・Contracts 92件の生成API一覧 |
+| [api-reference.md](api-reference.md) | 開発中1.0.0候補のCore 15件・Contracts 98件の生成API一覧 |
 | [validation/core-coverage.md](validation/core-coverage.md) | 採用64項目と製品テストへの証拠参照。Windows専用回帰の実行／skipは結果記録を参照 |
 | [validation/v0.9.md](validation/v0.9.md) | A09の完成監査・通常配布・公開前後の判定 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
@@ -184,10 +185,14 @@ R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7�
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、customer-guide、customer-guide-authoring、getting-started、tutorials、troubleshooting、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、customer-guide、customer-guide-authoring、getting-started、tutorials、troubleshooting、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、module-contracts、migration-v1、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。[再生成ツール](../tools/build_handoff.py)と[文書確認ツール](../tools/check_docs.py)はCIでも使用する。
 
 新しいトップレベルDocsを追加する場合は、`sources()`の収録一覧も更新する。そのツール変更には着手前の親子Issue登録が必要である。APIの説明は`python tools/check_api.py`、採用64項目と証拠参照は`python tools/check_completion.py`でも照合する。コマンド・期待出力を変える場合は実行例と照らし合わせ、使用版・OS・結果・未検証範囲を記録する。外部URLの到達性とMarkdownの画面表示は`check_docs.py`の検査対象には含まれない。
 
 リポジトリ内の引継ぎ書は最新の資料へ同期し、公開済みReleaseの添付とタグはその時点のスナップショットとして保持する。v0.1.0以降の更新内容はCHANGELOGの未リリース欄で区別する。
+
+## R29のv1.0 Core接続契約
+
+親#10と既存ADRを確認し未決・受入を整理して設計・実装・検証・資料整備を行う指示、および「必要な破壊的API整理も今回に含める」という回答を根拠とする。子#98〜#102をコード変更前に登録し、同じv1.0.0マイルストーンと実親子関係を確認した。公開型・補助・安定対象・B00は[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)のCodex実装判断。過去会話で個別採用された仕様とは区別する。[6契約](module-contracts.md)・[移行](migration-v1.md)・[結果](validation/v1.0.md)を全文収録する。

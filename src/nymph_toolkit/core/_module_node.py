@@ -23,35 +23,43 @@ class ModuleContext:
         self.peers, self.streams = set(), set()
         self.owned = set()
         self.opening_streams = 0
+        self._registration_open = True
+
+    def _check_registration(self):
+        if not self._registration_open:
+            raise ProtocolError("Handlers may only be registered during factory/start initialization")
 
     def provide(self, contract, handlers):
+        self._check_registration()
         for name, handler in handlers.items():
             if not callable(handler) or (contract, name) in self.handlers:
                 raise ValueError("Invalid or duplicate operation handler")
             self.handlers[contract, name] = handler
 
     def provide_stream(self, contract, operation, handler):
+        self._check_registration()
         if not callable(handler) or (contract, operation) in self.stream_handlers:
             raise ValueError("Invalid or duplicate stream handler")
         self.stream_handlers[contract, operation] = handler
 
     def provide_executor(self, executor_id, handler, *, supports_pause=False):
+        self._check_registration()
         if not isinstance(executor_id, str) or not executor_id or executor_id in self.executors or not callable(handler):
             raise ValueError("Invalid or duplicate executor ID")
         if type(supports_pause) is not bool:
             raise TypeError("supports_pause must be bool")
         self.executors[executor_id] = (handler, supports_pause)
 
-    def check_stream_capacity(self):
+    def _check_stream_capacity(self):
         active = sum(s.state in (StreamState.OPEN, StreamState.CLOSING) for s in self.streams)
         if active + self.opening_streams >= self.settings.max_streams:
             raise CapacityExceeded("Open stream limit reached")
 
-    def reserve_stream(self):
-        self.check_stream_capacity()
+    def _reserve_stream(self):
+        self._check_stream_capacity()
         self.opening_streams += 1
 
-    async def own_sender(self, sender, route, stream_id):
+    async def _own_sender(self, sender, route, stream_id):
         self.streams.add(sender)
         def record(phase):
             return {"stream_id": stream_id, "provider_id": route["provider_id"],
@@ -59,18 +67,18 @@ class ModuleContext:
                     "phase": phase, "state": sender.state.value, "reason": sender.reason,
                     "accepted_chunks": sender._last, "dropped_chunks": sender.dropped_chunks,
                     "buffered_bytes": sender.buffered_bytes, "buffered_chunks": sender.buffered_chunks}
-        await self.core.request("stream_event", record("opened"))
+        await self.core._request("stream_event", record("opened"))
         async def watch():
             try:
                 while sender.state in (StreamState.OPEN, StreamState.CLOSING):
                     await sender._changed.wait()
                 if sender.state == StreamState.FAILED:
-                    await self.core.request("link_error", {"contract": route["contract"],
+                    await self.core._request("link_error", {"contract": route["contract"],
                                             "error": RemoteError(route["provider_id"], "StreamFailure", sender.reason)})
             finally:
                 await sender.aclose()
                 try:
-                    await self.core.request("stream_event", record("ended"))
+                    await self.core._request("stream_event", record("ended"))
                 finally:
                     self.streams.discard(sender)
         task = asyncio.create_task(watch(), name="ntk-stream-owner")
@@ -81,7 +89,7 @@ class ModuleContext:
                 t.exception()
         task.add_done_callback(done)
 
-    async def reject(self, operation, payload):
+    async def _reject(self, operation, payload):
         raise ProtocolError("Unsolicited data request")
 
 
@@ -124,6 +132,7 @@ class ModuleNode:
         actual = set(self.context.handlers) | set(self.context.stream_handlers)
         if declared != actual or set(self.context.handlers) & set(self.context.stream_handlers):
             raise ProtocolError("Declared operations must match exactly one operation or stream handler")
+        self.context._registration_open = False
         self.started = True
 
     @property
@@ -167,7 +176,7 @@ class ModuleNode:
                     stream_id = message.get("stream_id")
                     if not isinstance(stream_id, str) or len(stream_id) != 32:
                         raise ProtocolError("Invalid stream ID")
-                    self.context.reserve_stream()
+                    self.context._reserve_stream()
                     reserved = True
                     options = decode(message["options"])
                     if not isinstance(options, StreamOptions):
@@ -248,6 +257,7 @@ class ModuleNode:
         if self.stopped:
             return
         self.stopped = True
+        self.context._registration_open = False
         if self.server is not None:
             self.server.close()
         tasks = self.tasks - {asyncio.current_task()}

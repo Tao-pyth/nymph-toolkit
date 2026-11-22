@@ -34,12 +34,13 @@ def main() -> None:
         for path in ("core/connections.py", "core/storage.py", "core/_storage_io.py", "contracts/connections.py",
                      "core/task_manager.py", "core/_activity_history.py", "contracts/activities.py",
                      "core/_activity_commands.py", "core/_activity_slots.py", "core/hybrid.py",
-                     "core/hybrid_tasks.py", "core/_child.py", "core/_streams.py", "contracts/hybrid.py"):
+                     "core/hybrid_tasks.py", "core/_child.py", "core/_streams.py", "contracts/hybrid.py",
+                     "contracts/modules.py", "core/_module_contract.py"):
             assert "nymph_toolkit/" + path in names
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
-        assert metadata["Version"] == "0.9.0"
+        assert metadata["Version"] == "1.0.0"
         assert metadata["Requires-Python"] == ">=3.12"
         assert metadata["License-Expression"] == "Apache-2.0"
         assert metadata.get_all("Requires-Dist", []) == []
@@ -60,7 +61,7 @@ def main() -> None:
             "from pathlib import Path; import nymph_toolkit.core as core; from nymph_toolkit.core import Runtime, Registry, ModuleGroup, Connections, FileStore, TaskManager; "
             "from nymph_toolkit.contracts import RuntimeService, RuntimeState, ModuleSpec, ModuleKind, BindingKey, ContractKey, StorageFailure, ActivityRequest, ActivityHistory, ActivityChange, ActivityCommandStatus, ActivityControlKind, UNCHANGED; "
             "from importlib.metadata import version; import sys; "
-            "assert version('nymph-toolkit') == '0.9.0'; "
+            "assert version('nymph-toolkit') == '1.0.0'; "
             "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "assert RuntimeState.NEW.value == 'new'; print('installed imports: PASS')"
         )
@@ -87,8 +88,11 @@ def main() -> None:
         shutil.copytree(root / "tools", work / "tools", ignore=shutil.ignore_patterns("__pycache__"))
         (work / "docs").mkdir()
         shutil.copyfile(root / "docs/api-reference.md", work / "docs/api-reference.md")
+        shutil.copyfile(root / "docs/contracts-v1.json", work / "docs/contracts-v1.json")
         subprocess.run([str(python), "-I", str(work / "tools/check_api.py")], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "tools/check_contracts.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/hybrid_demo.py")], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "examples/module_contract_demo.py")], cwd=work, env=env, check=True)
         subprocess.run(
             [str(python), "-I", "-W", "error", "-m", "unittest", "discover",
              "-s", str(work / "tests"), "-t", str(work), "-v"],

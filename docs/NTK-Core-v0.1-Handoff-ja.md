@@ -40,6 +40,8 @@ R27で導入担当者・開発担当者の両方に向けた契約・利用の�
 
 R28で既知課題#94のWindows終了時エラーの調査・修正・回帰検証が指示された。親#10・v1.0.0配下で範囲・完了条件・内部修正判断をコード変更前に記録し、NTK所有TCPの解放を妨げる終了時resetへ対処する。制御再現と自然発生の確認範囲は検証記録へ分け、公開API・採用64項目・版と公開済み配布物は維持する。
 
+R29でv1.0のCore接続契約整備と必要な破壊的API整理が指示された。親#10・子#98〜#102をコード変更前に登録し、ADR 0026で6契約・公開Protocol・登録前検証・安定API基準・B00を具体化した。移行資料と契約資料を全文収録し、実装・受入・公開を区別する。新規Releaseや過去の公開物の差替えは行わない。
+
 ## 収録文書
 
 1. [Nymph Toolkit（NTK）](#section-1)
@@ -60,51 +62,55 @@ R28で既知課題#94のWindows終了時エラーの調査・修正・回帰検�
 16. [v0.7 ハイブリッド実行と通信](#section-16)
 17. [Core APIと利用上の契約](#section-17)
 18. [公開APIの実装一覧](#section-18)
-19. [ADR索引と更新方法](#section-19)
-20. [ADR 0001 Coreと統合リポジトリ](#section-20)
-21. [ADR 0002 実行モデル](#section-21)
-22. [ADR 0003 通信経路](#section-22)
-23. [ADR 0004 活動の決定権](#section-23)
-24. [ADR 0005 初期実装の範囲](#section-24)
-25. [ADR 0006 v1.0.0のCore接続契約](#section-25)
-26. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-26)
-27. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-27)
-28. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-28)
-29. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-29)
-30. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-30)
-31. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-31)
-32. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-32)
-33. [ADR 0014 v0.2の開発環境と最小Runtime](#section-33)
-34. [ADR 0015 Coreが許可する直接通信の採用](#section-34)
-35. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-35)
-36. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-36)
-37. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-37)
-38. [ADR 0019 v0.4のConnections実装判断](#section-38)
-39. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-39)
-40. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-40)
-41. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-41)
-42. [ADR 0023 v0.7の実装契約](#section-42)
-43. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-43)
-44. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-44)
-45. [NTK開発ロードマップ](#section-45)
-46. [受入基準・検討案と検証記録](#section-46)
-47. [Core採用事項と検証証拠の対応](#section-47)
-48. [顧客向け契約・利用ガイドの検証記録](#section-48)
-49. [v0.9.0利用者向けDocsの検証記録](#section-49)
-50. [v0.2 Runtime受入記録](#section-50)
-51. [v0.3受入記録](#section-51)
-52. [v0.4の受入記録](#section-52)
-53. [v0.5の受入確認と検証経過](#section-53)
-54. [v0.6の受入確認と検証経過](#section-54)
-55. [v0.7の受入確認と検証経過](#section-55)
-56. [v0.8 統合・障害・負荷検証記録](#section-56)
-57. [v0.9 Core機能完成の検証記録](#section-57)
-58. [WindowsのTCP終了処理の修正・検証（#94）](#section-58)
-59. [開発準備とGit運用](#section-59)
-60. [マイルストーンと親子Issueの運用](#section-60)
-61. [公開準備とリリース手順](#section-61)
-62. [変更履歴](#section-62)
-63. [Apache License 2.0（原文）](#section-63)
+19. [v1.0 Core接続契約](#section-19)
+20. [v0.9からv1.0候補への移行](#section-20)
+21. [ADR索引と更新方法](#section-21)
+22. [ADR 0001 Coreと統合リポジトリ](#section-22)
+23. [ADR 0002 実行モデル](#section-23)
+24. [ADR 0003 通信経路](#section-24)
+25. [ADR 0004 活動の決定権](#section-25)
+26. [ADR 0005 初期実装の範囲](#section-26)
+27. [ADR 0006 v1.0.0のCore接続契約](#section-27)
+28. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-28)
+29. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-29)
+30. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-30)
+31. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-31)
+32. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-32)
+33. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-33)
+34. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-34)
+35. [ADR 0014 v0.2の開発環境と最小Runtime](#section-35)
+36. [ADR 0015 Coreが許可する直接通信の採用](#section-36)
+37. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-37)
+38. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-38)
+39. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-39)
+40. [ADR 0019 v0.4のConnections実装判断](#section-40)
+41. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-41)
+42. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-42)
+43. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-43)
+44. [ADR 0023 v0.7の実装契約](#section-44)
+45. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-45)
+46. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-46)
+47. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-47)
+48. [NTK開発ロードマップ](#section-48)
+49. [受入基準・検討案と検証記録](#section-49)
+50. [Core採用事項と検証証拠の対応](#section-50)
+51. [顧客向け契約・利用ガイドの検証記録](#section-51)
+52. [v0.9.0利用者向けDocsの検証記録](#section-52)
+53. [v0.2 Runtime受入記録](#section-53)
+54. [v0.3受入記録](#section-54)
+55. [v0.4の受入記録](#section-55)
+56. [v0.5の受入確認と検証経過](#section-56)
+57. [v0.6の受入確認と検証経過](#section-57)
+58. [v0.7の受入確認と検証経過](#section-58)
+59. [v0.8 統合・障害・負荷検証記録](#section-59)
+60. [v0.9 Core機能完成の検証記録](#section-60)
+61. [v1.0 Core接続契約の検証](#section-61)
+62. [WindowsのTCP終了処理の修正・検証（#94）](#section-62)
+63. [開発準備とGit運用](#section-63)
+64. [マイルストーンと親子Issueの運用](#section-64)
+65. [公開準備とリリース手順](#section-65)
+66. [変更履歴](#section-66)
+67. [Apache License 2.0（原文）](#section-67)
 
 ---
 
@@ -124,7 +130,11 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterを必要に応じて分割するものです。個別の分割は依存関係・独立更新・単独配布の必要性に基づいて判断します。採用した配布方針（`docs/adr/0009-package-distribution.md`）
 
-### 現在の段階
+### 開発中のv1.0.0候補
+
+R29・親#10の子#98〜#102で、6区分のCore接続契約（`docs/module-contracts.md`）を整備しています。必要な破壊的API整理を含め、変更理由と移行手順（`docs/migration-v1.md`）、ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）、B00の結果（`docs/validation/v1.0.md`）を記録します。この作業ツリーの配布版は1.0.0候補で、公開済みの最新版とは区別します。7番目の例は`python examples/module_contract_demo.py`です。
+
+### 現在の公開版
 
 **v0.9.0を公開済みです。合意したCore機能の完成を、ダミーで検証しました。** [v0.9.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.9.0)からwheel・sdist・引継ぎ書・SHA256SUMSを取得できます。CPython 3.12以上、実行時の外部Python依存はありません。公開時の検証範囲はWindows／Linux × CPython 3.12〜3.15です。
 
@@ -277,6 +287,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 |---|---|
 | 導入担当者・開発担当者へ説明する | 顧客向け契約・利用ガイド（`docs/customer-guide.md`） → 配布用PDFの作成（`docs/customer-guide-authoring.md`） |
 | まず試す | 通常導入（`docs/getting-started.md`） → 6つの実行例（`docs/tutorials.md`） |
+| v1.0候補へ機能を接続する | 6契約（`docs/module-contracts.md`） → 移行手順（`docs/migration-v1.md`） → B00結果（`docs/validation/v1.0.md`） |
 | 機能を接続する | Architecture（`docs/architecture.md`） → Core API（`docs/core-api.md`） → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
 | 開発する | 参加方針（`CONTRIBUTING.md`） → Issue運用（`docs/issue-workflow.md`） → 開発手順（`docs/development.md`） |
 | 問題を調べる | トラブルシューティング（`docs/troubleshooting.md`） → 対象機能のDocs・検証記録 |
@@ -310,7 +321,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | validation/v0.7.md（`docs/validation/v0.7.md`） | A07・回帰・配布・CIの検証記録 |
 | validation/v0.8.md（`docs/validation/v0.8.md`） | A08・統合障害・競合・保存・負荷・配布の検証記録 |
 | core-api.md（`docs/core-api.md`） | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
-| api-reference.md（`docs/api-reference.md`） | Core 14件・Contracts 92件の生成API一覧 |
+| api-reference.md（`docs/api-reference.md`） | 開発中1.0.0候補のCore 15件・Contracts 98件の生成API一覧 |
 | validation/core-coverage.md（`docs/validation/core-coverage.md`） | 採用64項目と製品テストへの証拠参照。Windows専用回帰の実行／skipは結果記録を参照 |
 | validation/v0.9.md（`docs/validation/v0.9.md`） | A09の完成監査・通常配布・公開前後の判定 |
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
@@ -451,13 +462,17 @@ R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7�
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、customer-guide、customer-guide-authoring、getting-started、tutorials、troubleshooting、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、customer-guide、customer-guide-authoring、getting-started、tutorials、troubleshooting、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、module-contracts、migration-v1、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。再生成ツール（`tools/build_handoff.py`）と文書確認ツール（`tools/check_docs.py`）はCIでも使用する。
 
 新しいトップレベルDocsを追加する場合は、`sources()`の収録一覧も更新する。そのツール変更には着手前の親子Issue登録が必要である。APIの説明は`python tools/check_api.py`、採用64項目と証拠参照は`python tools/check_completion.py`でも照合する。コマンド・期待出力を変える場合は実行例と照らし合わせ、使用版・OS・結果・未検証範囲を記録する。外部URLの到達性とMarkdownの画面表示は`check_docs.py`の検査対象には含まれない。
 
 リポジトリ内の引継ぎ書は最新の資料へ同期し、公開済みReleaseの添付とタグはその時点のスナップショットとして保持する。v0.1.0以降の更新内容はCHANGELOGの未リリース欄で区別する。
+
+### R29のv1.0 Core接続契約
+
+親#10と既存ADRを確認し未決・受入を整理して設計・実装・検証・資料整備を行う指示、および「必要な破壊的API整理も今回に含める」という回答を根拠とする。子#98〜#102をコード変更前に登録し、同じv1.0.0マイルストーンと実親子関係を確認した。公開型・補助・安定対象・B00はADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）のCodex実装判断。過去会話で個別採用された仕様とは区別する。6契約（`docs/module-contracts.md`）・移行（`docs/migration-v1.md`）・結果（`docs/validation/v1.0.md`）を全文収録する。
 
 ---
 
@@ -1975,11 +1990,13 @@ v0.7で基本機能、v0.8で統合・障害・負荷・配布、v0.9で全採�
 
 R24では構成と責務を維持したまま、公開APIの入力・結果・失敗・所有（`docs/core-api.md`）と採用64項目の証拠（`docs/validation/core-coverage.md`）を整理する。生成API一覧は現在の実装との照合に用い、v1.0の安定契約体系や本番機能を新たに採用しない。
 
-### v1.0.0以降の構成案
+### v1.0.0の接続契約と後続構成案
 
-R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。具体的な契約はADR 0006（`docs/adr/0006-core-connection-contracts.md`）で判断対象を管理する。
+R29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）でv1.0目標を具体化した。接続契約（`docs/module-contracts.md`）に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、移行資料（`docs/migration-v1.md`）に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。後段の本番機能の名称・配分は引き続き提案。
 
-以下はv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。実装順序、各バージョンへの機能配分、契約の型やAPIは未確定。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象はADR 0006（`docs/adr/0006-core-connection-contracts.md`）、R29の採用詳細はADR 0026で管理する。
+
+以下はv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
 
 | 構成案 | 役割と境界 |
 |---|---|
@@ -1999,7 +2016,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 配布パッケージはインストール・配布の単位を指す。ルートの `pyproject.toml` でCoreとContractsを同梱し、ソース上では `src/nymph_toolkit/core/` と `src/nymph_toolkit/contracts/` に分ける。ADR 0014で配布名を `nymph-toolkit`、import名を `nymph_toolkit` として採用した。
 
-ContractsにはCoreと接続側が共有する契約を、v0.xの実装で必要なものから配置する。v1.0.0で公開接続契約として体系化する。依存方向の設計案として、Core・Subsystem・Adapterが公開Contractsを参照し、Contractsを具体的な実装から独立させる。契約の型やAPIはADR 0006で具体化する。
+ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
 #### 初期の配置
 
@@ -2024,9 +2041,12 @@ nymph-toolkit/
 ├─ examples/activity_changes_demo.py
 ├─ examples/hybrid_demo.py
 ├─ examples/hybrid_dummy.py
+├─ examples/module_contract_demo.py  # v1接続契約の起動例
+├─ examples/contract_dummy.py        # 公開Contractsだけを使う機能
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
 ├─ tools/check_api.py              # 公開export・署名・型の一致
+├─ tools/check_contracts.py        # v1安定API基準の照合
 ├─ tools/check_completion.py       # 64項目・既存受入の証拠参照
 ├─ tools/validate_hybrid_load.py
 ├─ tools/check_docs.py
@@ -2054,6 +2074,10 @@ nymph-toolkit/
 │  ├─ hybrid.md                      # v0.7の操作・配置・制約
 │  ├─ core-api.md                    # 公開入口の意味と制限
 │  ├─ api-reference.md               # 実装から生成する型・署名
+│  ├─ module-contracts.md            # 6契約と接続開発
+│  ├─ migration-v1.md                # v0.9からの移行
+│  ├─ contracts-v1.json              # レビュー済み安定API基準
+│  ├─ validation/v1.0.md             # B00受入結果
 │  ├─ validation/core-coverage.json  # 証拠対応の編集元
 │  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
 │  ├─ validation/v0.9.md             # A09の公開前判定・公開後結果の参照先
@@ -2145,7 +2169,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.xでは、各Contractの公開範囲・互換性、Subsystemの正式名称と学習・意思決定方式、Adapterの対応形式と権限、Personaへの修正値、Sleepの処理範囲、音声受信・ASRの実現方法を追加の判断対象とする。具体化はroadmapとADR 0006〜0008に従う。
+v1.0の共通Contract公開範囲・互換性はADR 0026で具体化した。後続の業務契約、Subsystemの正式名称と学習・意思決定方式、Adapterの形式・権限、Personaへの修正値、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ---
 
@@ -2671,7 +2695,7 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 ## Core APIと利用上の契約
 
-本書はv0.9の完成確認で整理した、実装済みCore・Contractsの入口である。仕様の根拠はADR 0014〜0025。公開名は `nymph_toolkit.core` の14件、`nymph_toolkit.contracts` の92件で、実装一覧（`docs/api-reference.md`）に構築引数・メソッド・型・列挙値を収録する。v1.0の接続契約体系化・互換性保証の範囲は別目標であり、本書だけで採用しない。
+本書は実装済みCore・Contractsの入口である。v0.9の整理をR29・ADR 0026で更新した。開発中の1.0.0候補の公開名はCore 15件・Contracts 98件。実装一覧（`docs/api-reference.md`）と6契約・安定対象（`docs/module-contracts.md`）、移行手順（`docs/migration-v1.md`）を併読する。仕様の根拠はADR 0014〜0026で、公開済みv0.9.0の14件・92件とは区別する。
 
 ### 入口と返却値
 
@@ -2686,6 +2710,7 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 | PreparedConnection | prepareが返す窓口。callはSYNC、acallはASYNCの宣言と引数→提供側の値 | 直接構築しない。許可済み接続を使用し、ローカルの無効状態を確認。毎回の候補選定・許可再審査は行わない |
 | FileStore | 主・予備ディレクトリ、retention、batch_size、flush_interval。`append(kind, data)`→None、`flush()`→None | Group/Connectionsが所有。appendはメモリ受付、flushはその時点までの保存。主保存先はCore間で共用しない |
 | TaskManager | Connections、時計監視間隔、任意のmax_running。`submit(request, execute, supports_pause=...)`→ActivitySnapshot | Groupが所有する。状態と結果は起動内で保持。実行関数はActivityContextを受け取る |
+| validate_module_registration | spec・advertisement・factory・config・placement→独立したJSON設定コピー | import/起動/登録/保存を伴わない入力検証。実体の契約試験を別途行う |
 | HybridGroup | settingsとstore。`register_module(spec, advertisement, factory, config, placement)`→RegistryUpdate | factoryはimport可能なmodule:attribute。既存Groupと同じライフサイクル、稼働中構成は固定 |
 | HybridTaskManager | `enable_activities(...)`で取り付け。`submit_remote(request, module_id, executor_id, arguments)`→ActivitySnapshot | 登録済み実行処理IDを使用。関数・継続状態の転送や再起動後の自動復元なし |
 | ModuleContext | factoryに渡される機能用コンテキスト。provide / provide_stream / provide_executor→None | 直接構築しない。初期化中に宣言と一致するハンドラーを登録。coreから管理へ操作を届ける |
@@ -2775,11 +2800,11 @@ ActivityStateはPENDING、STARTING（遠隔の実開始待ち）、RUNNING、PAU
 
 この一覧は明示された公開import（core / contractsの__all__）を実装から生成する。
 引数、列挙値、データ型、継承したメソッド・プロパティの存在を照合するための資料であり、入力検証・返却値・所有期間・失敗時動作はCore API（`docs/core-api.md`）と各操作資料を併読する。
-型注釈がない入口から新しい型保証を推測しない。内部補助メソッドを含む実体の一覧は、全メソッドの安定保証やv1.0の接続契約採用を意味しない。直接構築しない窓口もCore APIで区別する。
+型注釈がない入口から新しい型保証を推測しない。内部補助メソッドを含む実体の一覧は、全メソッドの安定保証を意味しない。安定対象は接続契約（`docs/module-contracts.md`）とcontracts-v1.json、移行はmigration-v1（`docs/migration-v1.md`）を参照する。
 
 再生成：python tools/check_api.py --write。照合：python tools/check_api.py。
 
-### nymph_toolkit.core（14件）
+### nymph_toolkit.core（15件）
 
 <a id="core-Connections"></a>
 
@@ -2828,7 +2853,6 @@ CoreClient(context, dispatch)
   async prepare(self, contract, *, timeout)
   async publish_usage(self, usage, *, contracts=None, timeout=None)
   def release(self, request_id)
-  async request(self, operation, payload=None, *, timeout=None)
   def result(self, request_id)
   async submit_remote(self, request, module_id, executor_id, arguments=None, *, timeout=None)
 ```
@@ -2936,13 +2960,9 @@ HybridTaskManager(group, *, clock_check_interval, max_running=None)
 
 ```text
 ModuleContext(module_id, generation, settings, dispatch, local_hub=None)
-  def check_stream_capacity(self)
-  async own_sender(self, sender, route, stream_id)
   def provide(self, contract, handlers)
   def provide_executor(self, executor_id, handler, *, supports_pause=False)
   def provide_stream(self, contract, operation, handler)
-  async reject(self, operation, payload)
-  def reserve_stream(self)
 ```
 
 <a id="core-ModuleGroup"></a>
@@ -3065,7 +3085,15 @@ TaskManager(connections: nymph_toolkit.core.connections.Connections, *, clock_ch
   async wait(self, key)
 ```
 
-### nymph_toolkit.contracts（92件）
+<a id="core-validate_module_registration"></a>
+
+#### validate_module_registration
+
+```text
+validate_module_registration(spec, advertisement, factory, config, placement)
+```
+
+### nymph_toolkit.contracts（98件）
 
 <a id="contracts-ActivityAdmissionError"></a>
 
@@ -3566,6 +3594,29 @@ ContractSpec(key: nymph_toolkit.contracts.connections.ContractKey, operations: t
   operations: tuple[nymph_toolkit.contracts.connections.OperationSpec, ...]
 ```
 
+<a id="contracts-CoreClientProtocol"></a>
+
+#### CoreClientProtocol
+
+基底：Protocol。
+
+```text
+CoreClientProtocol(*args, **kwargs)
+  async acknowledge_interruption(self, notice_id, *, timeout=None)
+  async activity(self, operation, key=None, *, timeout=None, **arguments)
+  async bind(self, contract: 'ContractKey', provider_id: 'str', *, timeout)
+  async candidates(self, contract: 'ContractKey', *, timeout=None)
+  async health_check(self, *, module_ids=None, bindings=None, timeout=None)
+  async invoke(self, contract: 'ContractKey', operation, *args, timeout, **kwargs)
+  async next_notice(self, *, timeout)
+  property pending_requests(self) -> 'tuple[str, ...]'
+  async prepare(self, contract: 'ContractKey', *, timeout) -> 'DirectLinkProtocol'
+  async publish_usage(self, usage: 'Usage', *, contracts=None, timeout=None)
+  def release(self, request_id) -> 'None'
+  def result(self, request_id)
+  async submit_remote(self, request: 'ActivityRequest', module_id, executor_id, arguments=None, *, timeout=None)
+```
+
 <a id="contracts-DependencyCycleError"></a>
 
 #### DependencyCycleError
@@ -3584,6 +3635,22 @@ DependencyCycleError（構築署名はPython標準の基底例外に従う）
 
 ```text
 DependencyUnavailableError(missing_dependencies: frozenset[str]) -> None
+```
+
+<a id="contracts-DirectLinkProtocol"></a>
+
+#### DirectLinkProtocol
+
+基底：Protocol。
+
+```text
+DirectLinkProtocol(*args, **kwargs)
+  async acall(self, operation, *args, timeout, **kwargs)
+  async close(self) -> 'None'
+  async open_stream(self, operation, options: 'StreamOptions', metadata=None, *, timeout) -> 'StreamSenderProtocol'
+  property pending_requests(self) -> 'tuple[str, ...]'
+  def release(self, request_id) -> 'None'
+  def result(self, request_id)
 ```
 
 <a id="contracts-DuplicateActivityError"></a>
@@ -3697,6 +3764,23 @@ ModuleAdvertisement(module_id: str, implementation_version: str, contracts: tupl
   attributes: collections.abc.Mapping[str, str | bool | int | float | None]
 ```
 
+<a id="contracts-ModuleContextProtocol"></a>
+
+#### ModuleContextProtocol
+
+基底：Protocol。
+
+```text
+ModuleContextProtocol(*args, **kwargs)
+  property core(self) -> 'CoreClientProtocol'
+  property generation(self) -> 'str'
+  property module_id(self) -> 'str'
+  def provide(self, contract: 'ContractKey', handlers: 'Mapping[str, Callable[..., Awaitable[object]]]') -> 'None'
+  def provide_executor(self, executor_id: 'str', handler: 'Callable[[ActivityContext, object], Awaitable[object]]', *, supports_pause=False) -> 'None'
+  def provide_stream(self, contract: 'ContractKey', operation: 'str', handler: 'Callable[[StreamReceiverProtocol, object], Awaitable[None]]') -> 'None'
+  property settings(self) -> 'HybridSettings'
+```
+
 <a id="contracts-ModuleExecutionState"></a>
 
 #### ModuleExecutionState
@@ -3707,6 +3791,17 @@ ModuleAdvertisement(module_id: str, implementation_version: str, contracts: tupl
 RUNNING = 'running'
 INTERRUPTING = 'interrupting'
 SUSPENDED = 'suspended'
+```
+
+<a id="contracts-ModuleFactory"></a>
+
+#### ModuleFactory
+
+基底：Protocol。
+
+```text
+ModuleFactory(*args, **kwargs)
+  def __call__(self, context: 'ModuleContextProtocol', config: 'object') -> 'RuntimeService[object] | Awaitable[RuntimeService[object]]'
 ```
 
 <a id="contracts-ModuleFailure"></a>
@@ -4099,6 +4194,46 @@ StreamOptions(send_bytes: int, send_chunks: int, receive_bytes: int, receive_chu
   overflow: nymph_toolkit.contracts.hybrid.OverflowPolicy
 ```
 
+<a id="contracts-StreamReceiverProtocol"></a>
+
+#### StreamReceiverProtocol
+
+基底：Protocol。
+
+```text
+StreamReceiverProtocol(*args, **kwargs)
+  async abort(self, reason='Explicit stream abort') -> 'None'
+  async aclose(self) -> 'None'
+  property buffered_bytes(self) -> 'int'
+  property buffered_chunks(self) -> 'int'
+  async fail(self, reason) -> 'None'
+  property options(self) -> 'StreamOptions'
+  property reason(self) -> 'str | None'
+  async receive(self, *, timeout) -> 'StreamEvent'
+  property state(self) -> 'StreamState'
+```
+
+<a id="contracts-StreamSenderProtocol"></a>
+
+#### StreamSenderProtocol
+
+基底：Protocol。
+
+```text
+StreamSenderProtocol(*args, **kwargs)
+  async abort(self, reason='Explicit stream abort') -> 'None'
+  async aclose(self) -> 'None'
+  property buffered_bytes(self) -> 'int'
+  property buffered_chunks(self) -> 'int'
+  async close(self, *, timeout) -> 'None'
+  property dropped_chunks(self) -> 'int'
+  async fail(self, reason) -> 'None'
+  property options(self) -> 'StreamOptions'
+  property reason(self) -> 'str | None'
+  async send(self, data: 'bytes | bytearray | memoryview', *, timeout) -> 'int'
+  property state(self) -> 'StreamState'
+```
+
 <a id="contracts-StreamState"></a>
 
 #### StreamState
@@ -4189,11 +4324,128 @@ Usage(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingStat
 
 <a id="section-19"></a>
 
+収録元 `docs/module-contracts.md`
+
+## v1.0 Core接続契約
+
+対象は開発中の1.0.0配布候補。公開済みv0.9.0の説明は導入ガイド（`docs/getting-started.md`）、移行差分は移行手順（`docs/migration-v1.md`）を参照する。本資料はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で具体化した契約であり、将来のMemory等の本実装を含まない。
+
+### 接続までの流れ
+
+```mermaid
+sequenceDiagram
+    participant Host as 起動するアプリ
+    participant Core
+    participant Function as Subsystem / Adapter
+    Host->>Core: 登録前検証（import・起動・保存なし）
+    Host->>Core: spec / advertisement / factory / config / placementを登録
+    Core->>Function: factory(context, config)
+    Function->>Core: provide / provide_stream / provide_executor
+    Core->>Function: start
+    Function->>Core: 稼働情報を通知
+    Core->>Core: 宣言を照合・提供登録を封じる
+    Core->>Function: run
+    Function->>Core: 候補照会・要求側が選定してbind
+    Core-->>Function: 許可済み接続をprepare
+    Function->>Function: 直接通信、またはCore経由通信
+    Core->>Function: stop（部分初期化時も後処理）
+```
+
+候補は契約ID・版に一致する登録・属性・稼働情報である。候補一覧への掲載と現在利用できること、bindの保存と呼出し準備完了は別である。要求側が選定し、要求元＋契約ID/版ごとに接続先を固定する。毎回Coreへ許可再審査を依頼しない。稼働中に機能構成や確定先を交換せず、初回接続追加だけを認める。
+
+### 6契約と所有境界
+
+| 契約 | 機能実装者・起動アプリが用意するもの | Coreが行うこと・制約 |
+|---|---|---|
+| Module | ModuleSpec、ModuleAdvertisement、import可能なfactory、JSON設定、Placement | ID一致と明示配置を検査。Subsystem/Adapterで同じ規則。requiresはモジュールID依存であり契約依存ではない |
+| Lifecycle | RuntimeServiceのasync start/run/stop。factoryはサービスまたはAwaitableを返す | 依存順start、run管理、逆順stop。部分初期化でもstopを呼ぶので未作成資源を考慮する |
+| Capability | ContractKey、ContractSpec、OperationSpec、属性・タグ、変更時のUsage通知 | 同じID/版の操作集合とmodeを照合。Coreは最適候補を選ばない。契約版の範囲指定・自動交渉はしない |
+| Communication | context.core、prepareした窓口、RPC/streamハンドラー | 許可済み直接通信とCore経由を提供。準備の期限と実行期限、送信受付と受信確認を分ける |
+| Task | ActivityRequest、ActivityChange、ActivityContextを使うexecutor、Nymphからの指示 | 登録・開始・状態追跡・通知・変更適用。予定終了通知後も継続し、終了指示後は安全な区切りと後処理を待つ |
+| Error | 業務失敗値、協調的な中断・後処理・報告 | 容量不足と障害、結果不明と失敗、受付と完了を区別。自動再送・切替・活動復元をしない |
+
+### 公開型と登録規則
+
+機能コードは`nymph_toolkit.contracts`からModuleFactory、ModuleContextProtocol、CoreClientProtocol、DirectLinkProtocol、StreamSenderProtocol、StreamReceiverProtocolを参照できる。RuntimeServiceとActivityContextを再利用し、Coreへのimportは不要。Protocolは構造的な型の説明であり、runtimeのisinstanceは署名・型・動作の完全な検証やセキュリティ境界ではない。契約試験を併用する。
+
+ModuleContextの利用対象はmodule_id、generation、settings、coreとprovide系3メソッド。Core所有の参照・設定を機能側から書き換えない。provideは契約キーと操作名→Awaitableを返すCallableのMapping、provide_streamは契約キー・操作名・async handler(receiver, metadata)、provide_executorはID・async handler(ActivityContext, arguments)・supports_pauseを受け取る。
+
+登録可能なのはfactory作成からstart完了まで。RPCとstreamで同じ操作を二重提供せず、宣言の全操作をちょうど一つのハンドラーで満たす。実行中・停止後の登録はProtocolError。executorは操作宣言とは別のIDを持ち、実行側が対応する中断機能だけを宣言する。サービスが独自に作るタスク・外部資源はサービス自身のstopで回収する。
+
+`validate_module_registration(spec, advertisement, factory, config, placement)`はCoreの公開関数。検証済みの独立したJSON設定コピーを返す。ModuleSpec/Placementの型違反はTypeError、ID不一致・factory表記・ASYNC宣言の違反はValueError、JSON違反はProtocolErrorとなる。実登録も同じ検証を使うが、重複登録・依存・契約宣言の競合などはRegistry/Connectionsの登録時検査で扱う。事前検証だけではimport可否・ハンドラーの正しさ・稼働可否を保証しない。
+
+### 配置・通信・活動の使い分け
+
+| 場面 | 窓口・値 | 注意 |
+|---|---|---|
+| 従来の同一プロセス接続 | Connections / PreparedConnection、宣言したSYNC/ASYNC | SYNCのPython値や同一性を維持する。Hybridへの透過移行とはしない |
+| Hybrid LOCAL / PROCESS | CoreClient / DirectLink、ASYNC、JSON互換の引数・結果 | 4配置で同じ機能契約。Core所有子・同じPC/Python環境。CoreClientはfactory contextから得る |
+| バイト転送 | DirectLink.open_stream→StreamSender、受信handlerにStreamReceiver | バイト列とJSON metadata。optionsの上下限とoverflowを指定。send/receive/closeには期限が必要 |
+| 活動 | CoreClient.submit_remote、activity、ActivityContext | 決定はNymph、実行管理はCore。調査内容や睡眠時刻・優先度をCoreが作らない |
+
+CoreClientの活動操作名と引数は次のとおり。すべて現在の要求元が所有する活動を対象にする。
+
+| activityのoperation | keyと追加引数 | 返却 |
+|---|---|---|
+| snapshot | ActivityKey | ActivitySnapshot |
+| change | ActivityKey、change=ActivityChange、command_id、expected_revision | ActivityCommandResult |
+| pause / resume | ActivityKey、command_id、expected_revision | ActivityCommandResult。受付と適用完了を区別 |
+| finish | ActivityKey、任意のreason | ActivitySnapshot。後処理完了とは別 |
+| wait | ActivityKey | 最終ActivitySnapshotまで待つ |
+| command | ActivityKey、command_id | ActivityCommandResultの完了を待つ |
+| notice | key省略 | 要求元向け次のActivityNoticeを待つ |
+| history | key省略 | ActivityHistory |
+
+引数の正確な署名はAPI一覧（`docs/api-reference.md`）のHybridTaskManager/TaskManager、振る舞いは活動管理（`docs/task-manager.md`）とHybrid（`docs/hybrid.md`）を参照する。RPCのtimeoutで待機をやめても処理中止を意味しない。OutcomeUnknownのrequest_idはpending_requests/resultで照会し、不要になった一時結果をreleaseする。実行中の再送は行わない。
+
+OperationFailure/TemporaryUnavailableは通常結果、LinkFailureは接続障害を伴う中断通知、RemoteErrorは遠隔例外情報、OutcomeUnknownは結果不明として扱う。子の予期しない終了はRuntime停止となる。通常活動終了に子強制終了期限を流用しない。エラー・所有の詳細（`docs/core-api.md`）を参照する。
+
+### 安定APIと検証
+
+安定基準はcontracts-v1.json（`docs/contracts-v1.json`）。Core/Contractsの明示export、利用者向けメソッド・プロパティ・値/列挙・データフィールドを固定する。Coreが生成するModuleContext/CoreClient/DirectLink/StreamSender/StreamReceiver/PreparedConnectionのコンストラクタ、内部module・下線名・資源管理フィールド・wire/保存形式は独立した安定APIではない。Protocolで示す窓口の属性は読み取り用として扱う。
+
+配布版1.xの互換性判断と、契約IDに付けた版、モジュール実装版、内部IPC版は別である。API照合は保守的に署名差分も止める。互換な任意引数追加を含め、基準を更新する前に互換性をレビューする。振る舞いの互換性はB00・既存64項目の回帰で確認する。
+
+```powershell
+python examples/module_contract_demo.py
+python -W error -m unittest tests.core.test_module_contracts -v
+python tools/check_contracts.py
+```
+
+7番目の例はContractsだけに依存する機能（`examples/contract_dummy.py`）と起動側（`examples/module_contract_demo.py`）を分ける。正常時に直接/Core呼出し、stream、Nymphの終了指示、子の後処理を確認してPASSを表示する。設定・履歴は一時ディレクトリで後処理後に削除され、外部サービスへ接続しない。通常wheelからの再現も配布検証で確認する。
+
+---
+
+<a id="section-20"></a>
+
+収録元 `docs/migration-v1.md`
+
+## v0.9からv1.0候補への移行
+
+R29で「必要な破壊的API整理も今回に含める」と明示されたため、ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で以下を具体化した。既存の通信・活動動作を変える変更ではない。公開v0.9.0のタグ・添付は維持し、本書は開発中の1.0.0候補に対応する。
+
+| v0.9で利用していたもの | v1.0での扱い・移行先 | 理由 |
+|---|---|---|
+| CoreClient.request | 公開APIから除外。candidates/bind/prepare/invoke/publish_usage/health_check/next_notice/acknowledge_interruption/submit_remote/activityを使う | 内部メッセージの任意送信を安定APIにしない |
+| ModuleContext.check_stream_capacity / reserve_stream / own_sender / reject | 公開APIから除外。DirectLink.open_streamと返されたstreamの公開操作を使う | 予約・所有・内部要求の拒否はCore管理。機能側で資源台帳を操作しない |
+| start完了後のprovide / provide_stream / provide_executor | ProtocolError。factoryまたはasync start内へ移す | 宣言と実体の対応を起動時に確定し、稼働中の構成固定を守る |
+| Core側の具象型を機能の型注釈としてimport | ContractsのModuleContextProtocol等に置き換え可能 | Coreと独立して機能の接続窓口を記述できる。具象型の公開export自体は保持 |
+
+内部名への呼び替えは移行方法ではない。管理目的の要求は名付きAPIに移し、独自の業務メッセージはContractSpecの操作として宣言する。具象窓口を直接構築せず、factoryのcontext、prepare、open_streamから取得する。
+
+事前検証関数は追加機能。従来の有効なregister_module入力を変更する必要はない。非ModuleSpecのような不正入力は明確なTypeErrorとなる。ModuleFactoryはサービスまたはAwaitableを許容する。ローカルSYNC契約をHybridへ移す場合はASYNC/JSON制約に合わせた機能設計が必要であり、暗黙には変換しない。
+
+移行時は6契約（`docs/module-contracts.md`）、API一覧（`docs/api-reference.md`）、B00結果（`docs/validation/v1.0.md`）を照合し、通常wheelを用いた契約テストを実行する。採用64項目、要求側による選定、確定先の固定、ヘルス・保存・活動の責務分離は維持する。1.x公開後の破壊的変更はmajorを含む互換性判断が必要であり、奇数/偶数minorの開発案で上書きしない。
+
+---
+
+<a id="section-21"></a>
+
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R25の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R29の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -4202,7 +4454,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0003 通信経路（`docs/adr/0003-communication-routing.md`） | 当初判断の履歴。Core経由のみという制約と緩和の未採用状態は0015で置換 | R2・R4・R5・R12 |
 | 0004 活動の決定権（`docs/adr/0004-activity-authority.md`） | 決定権の境界は確定。時間・優先度・変更操作の具体策は要決定 | R2・R4・R5 |
 | 0005 初期実装の範囲（`docs/adr/0005-initial-scope.md`） | 確定。R5で適用段階と伝播機構の除外を補足 | R2・R3・R5 |
-| 0006 v1.0.0のCore接続契約（`docs/adr/0006-core-connection-contracts.md`） | 目標は確定。契約詳細・公開API・補助機能・契約テストは提案・要決定。初期配布は0009で採用 | R5・R6 |
+| 0006 v1.0.0のCore接続契約（`docs/adr/0006-core-connection-contracts.md`） | 目標は確定。詳細はR29・0026で具体化。初期配布は0009で採用 | R5・R6 |
 | 0007 v1.x以降のリリース運用と開発順序（`docs/adr/0007-v1-release-roadmap.md`） | 提案・未採用。名称・順序・機能配分は暫定。配布方針の後続判断を0009へ参照 | R5・R6 |
 | 0008 v1.xのSubsystem・Adapter責務案（`docs/adr/0008-subsystem-adapter-boundaries.md`） | 設計提案。R5の研究方針・責務境界を前提とし、R7の長期構想を補足 | R5・R7 |
 | 0009 単一リポジトリと段階的な配布パッケージ分割（`docs/adr/0009-package-distribution.md`） | 採用。CoreとContractsを同梱して開始し、Subsystem・Adapterを必要に応じて分割。ライセンスは0011で採用 | R6・R8 |
@@ -4222,6 +4474,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0023 v0.7の実装契約（`docs/adr/0023-v0.7-implementation-contracts.md`） | R20の実施に伴う実装判断として採用。公開入口・通信・ストリーム・子管理・遠隔活動を具体化。実装とA07は各子Issueで追跡 | R20・#61〜#68、R21・#70のレビュー補足 |
 | 0024 v0.8の統合・障害・負荷検証条件（`docs/adr/0024-v0.8-integration-validation.md`） | R22の実施に伴う検証条件として採用。A08の4配置・障害・保存・計測・30分負荷・通常配布を具体化。受入結果は別記 | R22・#72〜#78・#80 |
 | 0025 v0.9のCore完成監査と配布前判定（`docs/adr/0025-v0.9-core-completion.md`） | R24の実施に伴う具体化として採用。64項目・既存受入・公開API・新規環境を照合。A09-04の公開後判定を分離。R25で停止競合#89・公開#88を追跡 | R24〜R25・#82〜#85・#87〜#89 |
+| 0026 v1.0 Core接続契約・互換性境界（`docs/adr/0026-v1.0-core-connection-contracts.md`） | R29に基づく実装判断として採用。6契約・公開型・登録検証・必要なAPI整理・B00・移行 | R29・親#10・子#98〜#102 |
 
 ### 記録方法
 
@@ -4239,7 +4492,7 @@ ADR 0017のR14時点の未決事項は履歴として保持し、R15で解消し
 
 ---
 
-<a id="section-20"></a>
+<a id="section-22"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -4293,7 +4546,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-21"></a>
+<a id="section-23"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -4331,7 +4584,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-22"></a>
+<a id="section-24"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -4394,7 +4647,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-23"></a>
+<a id="section-25"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -4457,7 +4710,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-24"></a>
+<a id="section-26"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -4493,13 +4746,15 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-25"></a>
+<a id="section-27"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
 ## ADR 0006 v1.0.0のCore接続契約
 
 ### 状態
+
+R29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で契約詳細・公開API・補助・B00を具体化して採用。以下は当時の検討記録であり、未決の現在一覧ではない。
 
 R5で明示されたv1.0.0の目標は確定。契約の詳細、公開API、開発補助機能、契約テストの構成は提案・要決定。既存ADRの置換なし。ADR 0001・0002・0003・0004・0005を前提として追加する。
 
@@ -4542,7 +4797,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-26"></a>
+<a id="section-28"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -4589,7 +4844,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-27"></a>
+<a id="section-29"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -4645,7 +4900,7 @@ R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンに
 
 ---
 
-<a id="section-28"></a>
+<a id="section-30"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -4700,7 +4955,7 @@ R6の「単一リポジトリでCoreとContractsを一つの配布パッケー�
 
 ---
 
-<a id="section-29"></a>
+<a id="section-31"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -4753,7 +5008,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-30"></a>
+<a id="section-32"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -4807,7 +5062,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-31"></a>
+<a id="section-33"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -4847,7 +5102,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-32"></a>
+<a id="section-34"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -4890,7 +5145,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-33"></a>
+<a id="section-35"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -4959,7 +5214,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-34"></a>
+<a id="section-36"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -5030,7 +5285,7 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-35"></a>
+<a id="section-37"></a>
 
 収録元 `docs/adr/0016-v0.3-registry.md`
 
@@ -5108,7 +5363,7 @@ Runtimeの開始待機・停止待機が取消された場合もADR 0014の後�
 
 ---
 
-<a id="section-36"></a>
+<a id="section-38"></a>
 
 収録元 `docs/adr/0017-connection-binding-and-health.md`
 
@@ -5181,7 +5436,7 @@ ADR 0015の直接通信採用とADR 0016のRegistry・ModuleGroupを前提とす
 
 ---
 
-<a id="section-37"></a>
+<a id="section-39"></a>
 
 収録元 `docs/adr/0018-connection-selection-health-and-recovery.md`
 
@@ -5305,7 +5560,7 @@ R15：Docsの根拠一覧（`docs/README.md`）に記録した、本チャット
 
 ---
 
-<a id="section-38"></a>
+<a id="section-40"></a>
 
 収録元 `docs/adr/0019-v0.4-connections.md`
 
@@ -5430,7 +5685,7 @@ R16は本チャットのv0.4着手指示。R15の採用方針はADR 0018、既�
 
 ---
 
-<a id="section-39"></a>
+<a id="section-41"></a>
 
 収録元 `docs/adr/0020-v0.5-task-manager.md`
 
@@ -5599,7 +5854,7 @@ Docsの根拠表（`docs/README.md`）のR2・R4・R10・R16・R17。R17はv0.5�
 
 ---
 
-<a id="section-40"></a>
+<a id="section-42"></a>
 
 収録元 `docs/adr/0021-v0.6-activity-changes.md`
 
@@ -5781,7 +6036,7 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 ---
 
-<a id="section-41"></a>
+<a id="section-43"></a>
 
 収録元 `docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`
 
@@ -5952,7 +6207,7 @@ R19：v0.9までの一問一答、確認事項1〜64の一覧、ユーザーに�
 
 ---
 
-<a id="section-42"></a>
+<a id="section-44"></a>
 
 収録元 `docs/adr/0023-v0.7-implementation-contracts.md`
 
@@ -6046,7 +6301,7 @@ A07-01〜14に対応する実TCP・実子プロセスの検証を行う。ロー
 
 ---
 
-<a id="section-43"></a>
+<a id="section-45"></a>
 
 収録元 `docs/adr/0024-v0.8-integration-validation.md`
 
@@ -6119,7 +6374,7 @@ Windows/Linux × CPython 3.12〜3.15で、ソース、通常wheelインストー
 
 ---
 
-<a id="section-44"></a>
+<a id="section-46"></a>
 
 収録元 `docs/adr/0025-v0.9-core-completion.md`
 
@@ -6177,7 +6432,89 @@ R25でユーザーがPR #86のレビュー、問題解消後のマージとv0.9.
 
 ---
 
-<a id="section-45"></a>
+<a id="section-47"></a>
+
+収録元 `docs/adr/0026-v1.0-core-connection-contracts.md`
+
+## ADR 0026 v1.0のCore接続契約と互換性境界
+
+### 状態・背景・根拠
+
+2026年11月23日、R29のv1.0.0設計・実装・検証指示と「必要な破壊的API整理も今回に含める」という回答に基づく実装判断として採用。親#10・マイルストーンv1.0.0の子#98〜#102をコード変更前に登録し、GitHubの親子関係を確認した。基点は#97マージ後の`3050acc`。
+
+ユーザーが確定したのは段階の実施と必要なAPI整理を認めること。以下の名称、公開範囲、検証方法はその指示を具体化したCodexの設計判断であり、過去会話で個別採用された仕様とは区別する。ADR 0006の未決を具体化する。ADR 0019〜0025と採用64項目の通信・保存・活動動作は維持する。
+
+### D1：6契約の範囲
+
+| 区分 | 必須事項と公開入口 | 配置・失敗・責任 |
+|---|---|---|
+| Module | ModuleSpecのID/kind/requires、ModuleAdvertisementの実装版/提供契約、HybridGroupのfactory/config/placement | SubsystemとAdapterを同じ接続規則で扱う。requiresは必須モジュールIDであり、契約依存や通信許可とは別 |
+| Lifecycle | RuntimeServiceのstart/run/stop、ModuleGroup/HybridGroupの依存順起動・逆順停止 | 部分初期化でもstopを行う。稼働中構成固定、実体着脱は起動前・停止後。子の終了/後処理未確認は既存規則 |
+| Capability | ContractKey、OperationSpec、ContractSpec、ModuleAdvertisement、Usage、Candidate | 契約ID/版と操作集合・modeの完全一致。候補は予約/最適選定結果ではなく、属性・稼働を見て要求側が選ぶ |
+| Communication | CoreClient、PreparedConnection、DirectLink、StreamSender/Receiverと各Protocol | Coreが許可した直接通信とCore経由。従来のローカルSYNC/Python値とHybridのASYNC/JSONを区別。streamはバイト列 |
+| Task | ActivityRequest/Change/Context、TaskManager/HybridTaskManager、CoreClientの活動操作 | Nymphが内容・時刻・期間・優先度・変更を決定。通知後継続、協調的終了/中断、再起動後は履歴返却 |
+| Error | 既存例外・OperationFailure/TemporaryUnavailable/LinkFailure・ActivitySnapshot・OutcomeUnknown | 業務失敗/容量不足と連携障害、結果不明と確定失敗、終了受付と後処理を分ける。自動再送/切替/活動復元なし |
+
+6区分ごとに新しい実行基盤や例外階層を作るのではなく、実装済みの契約を整理する。契約版の範囲指定・自動交渉、外部のJSON schema、機能名による自動選定は追加しない。
+
+### D2：機能実装から参照するContracts
+
+`nymph_toolkit.contracts`へModuleFactory、ModuleContextProtocol、CoreClientProtocol、DirectLinkProtocol、StreamSenderProtocol、StreamReceiverProtocolを追加する。RuntimeService・ActivityContextと既存の値/例外型を再利用する。ContractsはCoreをimportしない。
+
+factoryはcontextとJSON互換設定を受け取り、サービスまたはそのAwaitableを返す。操作ハンドラーはAwaitableを返すCallable、ストリーム受信先はreceiverとmetadata、活動実行先はActivityContextとJSON引数を受け取る。Protocolは静的な構造的型と窓口の説明であり、isinstanceの成功で署名・挙動・権限を保証しない。
+
+提供ハンドラー・stream・executorの登録はfactory作成からstartの完了まで。ModuleNodeは宣言との一致を確認して受付を封じ、起動後・停止後のprovide系呼出しをProtocolErrorで拒否する。宣言・接続・実行構成が稼働中にすり替わることを防ぐための境界具体化である。
+
+### D3：必要なAPI整理と移行
+
+`CoreClient.request`を`_request`へ、ModuleContextのcheck_stream_capacity/reserve_stream/own_sender/rejectをそれぞれ内部名へ移す。これらは資源所有や内部メッセージを操作する補助であり、外部機能の安定窓口にしない。v0.9で直接呼んでいた実装は、candidates/bind/prepare/invoke/publish_usage/health_check/notice/活動操作、DirectLink/streamの公開操作へ移行する。内部名への呼び替えを移行方法として推奨しない。
+
+一般利用の登録・候補選定・通信・活動メソッドと既存データ型は保持する。CoreClient.activityの採用済み操作名と引数は明記して維持する。provide系の起動後呼出しは初期化中へ移す。具体的移行表をmigration-v1に置く。上記以外の破壊的変更が必要になった場合は、対象子Issueと本ADRへ実装前に追記する。
+
+### D4：接続前検証の補助
+
+Coreへ`validate_module_registration(spec, advertisement, factory, config, placement)`を追加し、HybridGroup.register_moduleの入力検証を共有する。ID一致、型、明示配置、factory表記、HybridのASYNC宣言、JSON互換設定を確認し、独立した設定コピーを返す。
+
+この検証はfactoryをimport/実行せず、Registry・保存・ソケット・子を作らない。import可否、ハンドラーの実在/署名/返却、実行中の可用性は起動・呼出し・契約試験で確認する。未知ModuleSpecはTypeError、不一致/表記/ASYNC違反はValueError、JSON違反はProtocolError。既存の不正入力を成功扱いしない。
+
+### D5：公開API・互換性
+
+Core/Contractsの明示exportと、module-contractsに記す利用者向けメソッド・プロパティ・値/列挙を安定対象にする。Coreが生成する窓口のコンストラクタ、内部module・下線名・資源管理フィールド・内部wire/保存形式は独立した安定APIではない。Pythonオブジェクトの同一性をプロセス越しに保証しない。
+
+`docs/contracts-v1.json`へ安定対象と署名・値・フィールドを固定し、check_contractsで実装との違いを検知する。機械検査は既存対象の欠落・署名/値/型変更を拒否する保守的な検査であり、意味的互換性の証明ではない。API追加や任意引数追加を含む差分はレビューし、基準を無条件に再生成して通さない。振る舞いはB00と既存64項目の回帰で確認する。
+
+1.x公開後の互換性を壊す変更はmajor、互換機能追加はminor、互換修正はpatchとして判断する。[Semantic Versioning 2.0.0](https://semver.org/)に従う。奇数/偶数minorによる開発順序案はこの判断を上書きしない。NTKの配布版、機能の実装版、ContractKeyの版、内部IPC版を区別する。
+
+### D6：B00受入基準
+
+| ID | 対応区分 | 合格条件 |
+|---|---|---|
+| B00-01 | Module/Lifecycle | 両ModuleKindのfactory、事前検証と実登録、初期化中の登録、起動後/停止後の拒否、依存・停止・部分失敗を確認 |
+| B00-02 | Capability | ID/契約版/操作集合/mode、属性・稼働・候補と通信許可の区別を検証。不正登録で副作用を残さない |
+| B00-03 | Communication | 要求元/提供先4配置でCore経由・許可済み直接RPC・streamと終了を確認。ローカル既存SYNCの回帰を維持 |
+| B00-04 | Task | 公開ContractsのActivityContextを使い、開始・予定時間通知・Nymph指示による終了・後処理を4配置で確認。変更/中断再開は既存受入も照合 |
+| B00-05 | Error | 業務失敗/容量、連携エラー/通知、結果不明、初期化/停止/子障害の区別と資源回収を確認。#94回帰を含む |
+| B00-06 | 開発補助 | 機能ダミーは公開Contractsだけをimportし、Core内部へ依存せず両kindで接続できる。サンプルを通常導入でも実行 |
+| B00-07 | 互換性・資料 | 安定対象manifest、公開一覧、移行表、6契約の説明が一致。意図的な欠落・署名/値変更を検査が拒否 |
+| B00-08 | 配布・回帰 | 全既存/新規テスト、7例、短い4配置負荷、通常wheel、sdist同一wheel、Windows/Linux×3.12〜3.15、Docs/引継ぎ書が合格 |
+
+### D7：子Issue・未採用/延期・完了の区別
+
+| 子 | 対応単位 |
+|---|---|
+| #98 | 本ADR、未決/判断表、B00、Architecture・roadmap・根拠 |
+| #99 | Protocol・登録検証・内部API整理・初期化境界と単体試験 |
+| #100 | 安定API照合と拒否試験・接続開発用サンプル |
+| #101 | 外部機能ダミー・両kind/4配置・B00統合 |
+| #102 | 1.0.0配布候補・8環境CI・操作/移行/結果資料・引継ぎ書・PR |
+
+本番Subsystem/Adapter、外部SDK自動生成、分散、稼働中実体着脱、複製/移植/伝播、契約の自動互換交渉・接続先選定、PyPI、独立配布版管理は採用しない。新規ライセンス・依存は追加しない。
+
+実装・受入・公開を区別する。本作業は配布前のB00結果とレビュー可能なPRまで。v1.0.0タグ/Release、公開後取得照合、親/マイルストーンの最終終了は後続の公開指示で扱う。v0.9公開物を差し替えない。未解消のB00項目は未達として残し、仕様判断が必要なら先にIssue/ADRへ記録する。
+
+---
+
+<a id="section-48"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -6364,6 +6701,10 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 
 #### v1.0.0 — Core接続契約
 
+**R29で実施・具体化。** 親#10・子#98〜#102、ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で6契約・Protocol・登録前検証・必要な破壊的API整理と移行・安定API基準を採用した。着手条件はv0.9完成と#94修正完了、成果物は契約資料（`docs/module-contracts.md`）、移行表（`docs/migration-v1.md`）、公開型・補助・7番目の例・契約試験。検証は受入基準（`docs/acceptance.md`）のB00-01〜08と結果（`docs/validation/v1.0.md`）に従う。通常wheel・8環境CI・Docs同期までを実装完了条件とし、タグ/Releaseと公開後確認は後続の公開指示で扱う。
+
+以下は当初の検討範囲であり、未決のまま実装する指示ではない。
+
 - **着手時に確認すること** — v0.9.0のCore受入結果、既存API、ADR 0015と後続の通信経路判断を確認する。
 - **検討・成果物の案** — Module Contract、Lifecycle Contract、Capability Contract、Communication Contract、Task Contract、Error Contractを具体化する。Coreと同じ配布物のContractsを公開接続契約として体系化し、公開API資料、接続用の開発補助機能、ダミーを用いた契約テストを整備する。本番Subsystemの完成は必須条件としない。
 - **判断と検証** — 必須の契約項目、実行配置ごとの適用範囲、互換性境界、補助機能を決める。Subsystem・Adapterの接続、ライフサイクル、能力、通信、活動、失敗通知を採用範囲で検証する。ADR 0006・B00へ記録する。
@@ -6415,13 +6756,13 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-46"></a>
+<a id="section-49"></a>
 
 収録元 `docs/acceptance.md`
 
 ## 受入基準・検討案と検証記録
 
-以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。v1.xのB00〜B10は引き続き検討案とし、設計採用・文書検査・製品の受入合格を区別する。
+以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。B00はR29・ADR 0026で具体化し、B01〜B10は引き続き検討案とする。設計採用・文書検査・製品の受入合格を区別する。
 
 ### バージョン別シナリオ
 
@@ -6611,13 +6952,28 @@ v0.2から `docs/validation/` に結果を記録する。v0.xの結果は `v0.x.
 | 結果 | 期待結果、観測結果、合格・不合格・未検証 |
 | 残課題 | 原因、対応方針、次の検証対象 |
 
-### v1.0.0以降の受入検討案
+### v1.0.0のB00受入基準（R29採用）
+
+ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）の設計判断を採用する。検証結果と残条件はvalidation/v1.0（`docs/validation/v1.0.md`）で管理し、実装・受入・公開を区別する。
+
+| ID | 完了条件 |
+|---|---|
+| B00-01 | 両kindのfactory・Lifecycle・事前検証・実登録・初期化後の登録拒否・部分失敗後処理 |
+| B00-02 | ID/版/操作/modeと属性・稼働の照合。候補と許可を区別し不正登録に副作用なし |
+| B00-03 | 要求元/提供先4配置の直接/Core RPC・stream・終了。既存SYNC回帰 |
+| B00-04 | 公開ActivityContextによる4配置の開始・予定時間通知後継続・Nymph終了・後処理。既存変更/中断再開回帰 |
+| B00-05 | 業務失敗/容量/連携障害/結果不明/初期化/停止/子障害の区別、#94回帰と資源回収 |
+| B00-06 | 公開Contractsだけに依存する外部ダミー・両kindの接続・通常配布の例 |
+| B00-07 | 安定API基準・一覧・6契約・移行資料一致。欠落/署名/値変更の拒否試験 |
+| B00-08 | 全テスト・7例・短い4配置負荷・通常wheel・sdist同一wheel・8環境CI・Docs/引継ぎ書一致 |
+
+### 後続v1.xの受入検討案
 
 以下はR5のロードマップを具体化するための検証案で、正式な受入基準は各段階の設計・ADRで決める。Subsystem名・Adapter名は暫定名称、順序とバージョンへの機能配分は未確定である。共通の根拠はADR 0006〜0008。通信経路はADR 0015と後続判断、意思決定と実行管理の境界はADR 0004に従う。
 
 | ID・想定段階 | 検証する能力の案 | 操作と観察結果の案 |
 |---|---|---|
-| B00 v1.0.0 | Core接続契約 | ダミーSubsystem・AdapterでModule、Lifecycle、Capability、Communication、Task、Errorの採用契約を試し、公開API資料と観察結果を照合する。各実行配置の対応範囲を記録する。本番Subsystemの完成は必須条件にしない |
+| B00 v1.0.0（上記で具体化済み） | Core接続契約 | ダミーSubsystem・AdapterでModule、Lifecycle、Capability、Communication、Task、Errorの採用契約を試し、公開API資料と観察結果を照合する。各実行配置の対応範囲を記録する。本番Subsystemの完成は必須条件にしない |
 | B01 v1.1.0 | Memoryの最小保存・取得 | 少量の経験・知識を保存し、採用した取得契約で結果を照合する。複雑な知識グラフや高度な統合を受入の前提にしない |
 | B02 v1.2.0 | Document入力とMemory連携 | 対応する文書を取得・取り込みし、保存・取得結果までを追う。未対応形式と取得失敗の扱いは採用契約に沿って確認する |
 | B03 v1.3.0 | Cognitionの初期学習 | 語彙・構文・概念の検証用入力を用い、採用した学習方式の変化を観察する。既存LLMを言語理解・文章生成の中核としない研究方針との整合を確認する |
@@ -6659,7 +7015,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 
 ---
 
-<a id="section-47"></a>
+<a id="section-50"></a>
 
 収録元 `docs/validation/core-coverage.md`
 
@@ -6754,7 +7110,7 @@ v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播�
 
 ---
 
-<a id="section-48"></a>
+<a id="section-51"></a>
 
 収録元 `docs/validation/customer-guide.md`
 
@@ -6799,7 +7155,7 @@ Windows／Python 3.15の終了時通信切断・後処理未確認は[#94](https
 
 ---
 
-<a id="section-49"></a>
+<a id="section-52"></a>
 
 収録元 `docs/validation/docs-onboarding.md`
 
@@ -6878,7 +7234,7 @@ git diff --check
 
 ---
 
-<a id="section-50"></a>
+<a id="section-53"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -6948,7 +7304,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-51"></a>
+<a id="section-54"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -7019,7 +7375,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-52"></a>
+<a id="section-55"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -7098,7 +7454,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-53"></a>
+<a id="section-56"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -7150,7 +7506,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-54"></a>
+<a id="section-57"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -7211,7 +7567,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-55"></a>
+<a id="section-58"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -7272,7 +7628,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-56"></a>
+<a id="section-59"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -7401,7 +7757,7 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-57"></a>
+<a id="section-60"></a>
 
 収録元 `docs/validation/v0.9.md`
 
@@ -7489,7 +7845,57 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 ---
 
-<a id="section-58"></a>
+<a id="section-61"></a>
+
+収録元 `docs/validation/v1.0.md`
+
+## v1.0 Core接続契約の検証
+
+R29・親#10・子#98〜#102。ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）で採用した6契約とB00を対象とする。基点は#97マージ後の3050acc。公開版v0.9.0の記録と区別し、開発中1.0.0候補の実装・受入を検証する。
+
+### 検証状況
+
+Windows・CPython 3.15.2で全316テスト成功（2026年11月23日、88.461秒）。既存306件と今回の製品5件・検査5件を含む。新しい統合テスト1件は両ModuleKind×要求元/提供先の4配置、計8シナリオを実行する。通常wheelと8環境CIは実施中であり、完了前にB00-08合格とはしない。
+
+| 受入 | 証拠 | 確認内容 |
+|---|---|---|
+| B00-01 | test_module_contracts（`tests/core/test_module_contracts.py`）、A08統合（`tests/core/test_v08_integration.py`） | 登録検証と実登録、factory/start登録・起動後/停止後拒否、依存順・部分失敗後処理 |
+| B00-02 | test_module_contracts、64項目の証拠（`docs/validation/core-coverage.md`）のConnections・契約照合 | 型/ID/配置/factory/JSON不正拒否、登録・保存副作用なし、候補と許可・属性・稼働 |
+| B00-03 | test_module_contracts、既存Hybrid/RPC/stream・SYNC回帰 | 両kind/4配置の直接とCore経由RPC、byte stream、後処理 |
+| B00-04 | test_module_contractsと既存TaskManager/HybridTaskManager・A08 | 公開ActivityContext、開始・通知後継続・Nymph終了と後処理、既存変更/中断再開 |
+| B00-05 | test_module_contracts、A08障害・競合、Windows終了回帰（`docs/validation/windows-shutdown.md`） | 業務失敗/容量と連携障害・結果不明・子/管理切断・停止失敗を区別 |
+| B00-06 | 機能ダミー（`examples/contract_dummy.py`）、起動例（`examples/module_contract_demo.py`）、import依存検査 | 機能は公開Contractsだけをimport。Runtime側との構造的Protocol一致と動作を検証 |
+| B00-07 | 安定基準（`docs/contracts-v1.json`）、拒否試験（`tests/test_contract_checks.py`）、check_api/check_contracts | export欠落・署名/列挙/フィールド変更の検出。Core所有窓口の構築署名は安定対象外 |
+| B00-08 | check_dist・全8環境CI・check_docs/check_completion | 通常導入・7例・全テスト・短い4配置負荷・sdist同一wheel・API/Docs/引継ぎ書の結果を追記 |
+
+### 再現手順
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python -m pip install -e .
+python -W error -m unittest discover -s tests -t . -v
+python examples/module_contract_demo.py
+python tools/check_api.py
+python tools/check_contracts.py
+python tools/check_completion.py
+python tools/check_docs.py
+python -m build --outdir dist-v1
+python tools/check_dist.py --dist-dir dist-v1
+```
+
+配布検査はソースツリー外の隔離venvへwheelを通常導入し、コピーしたテスト・7例とAPI/安定基準・短い4配置負荷を再実行する。sdist再構築と元wheelのバイト一致も確認する。CIはWindows/Linux×CPython 3.12〜3.15を対象とし、Windows専用回帰のLinuxでのskipを失敗と混同しない。
+
+### 未決・延期・公開との区別
+
+v1.0実装に必要な6契約・必須入力・安定対象・初期化境界はADR 0026で具体化した。将来の業務契約、独立配布と版管理、自動互換交渉、SDK生成、分散・稼働中実体交換は採用しない。v1.1以降の名称・順序・配分は提案のまま。新たな仕様判断が必要な場合は先に子Issue/ADRへ記録する。
+
+本検証はAPIの機械的差分と採用シナリオの確認であり、任意の外部実装の正しさ、悪意ある機能への遮断、全環境の性能を保証しない。今回の負荷は短いCI条件で、過去の30分測定を本版の実測として流用しない。
+
+実装・受入・公開は別の完了条件。今回の作業はレビュー可能なPRまで。v1.0.0タグ/Releaseと公開後取得照合、親#10・マイルストーンの終了は後続の公開指示で扱う。
+
+---
+
+<a id="section-62"></a>
 
 収録元 `docs/validation/windows-shutdown.md`
 
@@ -7564,7 +7970,7 @@ PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル�
 
 ---
 
-<a id="section-59"></a>
+<a id="section-63"></a>
 
 収録元 `docs/development.md`
 
@@ -7734,9 +8140,13 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 契約・利用ガイド（`docs/customer-guide.md`）のPDF・HTML生成は、Pythonの開発環境とは分離した任意の文書作成作業である。生成と表示確認の手順（`docs/customer-guide-authoring.md`）に従い、本文・図・APIの照合、全ページの表示、引継ぎ書同期を確認する。Node依存をNTK実行時や通常のwheel検証へ追加しない。結果は顧客資料の検証記録（`docs/validation/customer-guide.md`）へ記録する。
 
+### v1.0候補の契約変更
+
+親#10・子#98〜#102とADR 0026に基づく。`python tools/check_contracts.py`で安定対象を照合する。差分が出たら互換性・移行・Issue/ADRを先に確認し、基準JSONだけを書き換えて通さない。`python examples/module_contract_demo.py`は7番目の実行例。6契約（`docs/module-contracts.md`）・移行（`docs/migration-v1.md`）・B00検証（`docs/validation/v1.0.md`）を参照する。
+
 ---
 
-<a id="section-60"></a>
+<a id="section-64"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -7995,9 +8405,13 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親[#10](https://github.com/Tao-pyth/nymph-toolkit/issues/10)・v1.0.0配下の既存子[#94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)について、コード変更前に対応範囲・完了条件・検証方法を更新し、原因を確認した段階で内部修正判断を追記した。NTK所有TCPの終了処理、関連回帰試験・ダミー、検証記録と引継ぎ書同期を扱う。公開API・採用64項目は変更せず、新規ADR・Releaseを作らない。修正前後の制御再現と自然発生の確認範囲を検証記録（`docs/validation/windows-shutdown.md`）で区別し、PR・確認結果を#94へ紐付ける。
 
+### R29のv1.0 Core接続契約
+
+親#10・マイルストーンv1.0.0。コード変更前に子#98（設計/B00）、#99（Contracts/登録検証/API整理）、#100（安定API/例）、#101（統合）、#102（配布/CI/資料）を登録し、GitHubの親子関係を設定した。必要な破壊的整理も含める回答を範囲へ反映済み。判断はADR 0026、結果はvalidation/v1.0、レビュー用PRへ紐付ける。親・マイルストーンの公開完了は今回の実装完了とは区別する。
+
 ---
 
-<a id="section-61"></a>
+<a id="section-65"></a>
 
 収録元 `docs/release.md`
 
@@ -8212,15 +8626,23 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 実際のリリース時には、その段階で採用した契約と受入結果、互換性判断、既知の制約をREADME・CHANGELOG・リリース記録へ反映する。
 
+### v1.0.0候補と公開前の残確認
+
+R29の開発指示では新規Releaseを作成しない。1.0.0候補はADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）とB00結果（`docs/validation/v1.0.md`）に従い、移行資料・全テスト・7例・通常配布・8環境CI・引継ぎ書を照合する。レビュー後の公開指示で、対象コミットとCIを再確認し、タグ/Release・添付checksum・匿名取得による公開後確認を行う。その結果を親#10へ記録して親とマイルストーンの終了を判断する。公開済みv0.9.0は差し替えない。
+
 ---
 
-<a id="section-62"></a>
+<a id="section-66"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
 
-### 未リリース
+### 未リリース（1.0.0候補）
+
+- R29・親#10、子#98〜#102で6区分の接続契約・B00をADR 0026に具体化。公開Contractsに6つの機能側Protocol、Coreに登録前検証を追加。
+- 必要な破壊的API整理としてCoreClientの内部要求とModuleContextの資源補助を非公開化し、起動後/停止後のprovide系を拒否。移行手順（`docs/migration-v1.md`）を参照。
+- 安定API基準と照合・拒否試験、Contractsのみを使う両kind/4配置の統合試験、7番目の実行例、通常配布・CI検証を追加。採用64項目とNymph/Core境界を維持する。
 
 - R28・親#10の子#94でWindows Proactorの終了時resetによるソケット解放・server登録解除漏れを修正。NTK所有のTCP接続だけに互換処理を限定し、通信失敗・停止失敗の通知は維持する。制御されたエラー注入、通常4配置、既存の障害・強制終了を検証し、原因と確認範囲（`docs/validation/windows-shutdown.md`）へ記録する。
 
@@ -8357,7 +8779,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-63"></a>
+<a id="section-67"></a>
 
 収録元 `LICENSE`
 

@@ -33,46 +33,46 @@ class CoreClient:
             raise KeyError(request_id)
         self._result_peer.release(request_id)
 
-    async def request(self, operation, payload=None, *, timeout=None):
+    async def _request(self, operation, payload=None, *, timeout=None):
         timeout = self.context.settings.call_timeout if timeout is None else timeout
         seconds(timeout)
         return await self._dispatch(operation, payload, timeout)
 
     async def candidates(self, contract, *, timeout=None):
-        return await self.request("candidates", contract, timeout=timeout)
+        return await self._request("candidates", contract, timeout=timeout)
 
     async def bind(self, contract, provider_id, *, timeout):
-        return await self.request("bind", {"contract": contract, "provider_id": provider_id, "timeout": timeout}, timeout=timeout)
+        return await self._request("bind", {"contract": contract, "provider_id": provider_id, "timeout": timeout}, timeout=timeout)
 
     async def prepare(self, contract, *, timeout):
-        route = await self.request("prepare", {"contract": contract, "timeout": timeout}, timeout=timeout)
+        route = await self._request("prepare", {"contract": contract, "timeout": timeout}, timeout=timeout)
         current = self.context.routes.setdefault(route["token"], route)
         current.update(route)
         return DirectLink(self, current)
 
     async def invoke(self, contract, operation, *args, timeout, **kwargs):
-        return await self.request("invoke", {"contract": contract, "operation": operation,
+        return await self._request("invoke", {"contract": contract, "operation": operation,
                                              "args": json_value(args), "kwargs": json_value(kwargs), "timeout": timeout}, timeout=timeout)
 
     async def publish_usage(self, usage, *, contracts=None, timeout=None):
-        return await self.request("usage", {"usage": usage, "contracts": contracts}, timeout=timeout)
+        return await self._request("usage", {"usage": usage, "contracts": contracts}, timeout=timeout)
 
     async def health_check(self, *, module_ids=None, bindings=None, timeout=None):
-        return await self.request("health", {"module_ids": module_ids, "bindings": bindings}, timeout=timeout)
+        return await self._request("health", {"module_ids": module_ids, "bindings": bindings}, timeout=timeout)
 
     async def next_notice(self, *, timeout):
-        return await self.request("notice", timeout=timeout)
+        return await self._request("notice", timeout=timeout)
 
     async def acknowledge_interruption(self, notice_id, *, timeout=None):
-        return await self.request("acknowledge", notice_id, timeout=timeout)
+        return await self._request("acknowledge", notice_id, timeout=timeout)
 
     async def submit_remote(self, request, module_id, executor_id, arguments=None, *, timeout=None):
-        return await self.request("activity_submit", {"request": request, "module_id": module_id,
+        return await self._request("activity_submit", {"request": request, "module_id": module_id,
                                    "executor_id": executor_id, "arguments": json_value(arguments)}, timeout=timeout)
 
     async def activity(self, operation, key=None, *, timeout=None, **arguments):
         """snapshot/change/pause/resume/finish/wait/command/notice/history; no decisions."""
-        return await self.request("activity_" + operation, {"key": key, **arguments}, timeout=timeout)
+        return await self._request("activity_" + operation, {"key": key, **arguments}, timeout=timeout)
 
 
 class DirectLink:
@@ -120,7 +120,7 @@ class DirectLink:
                     if self._peer is None:
                         reader, writer = await self._connect("rpc", timeout=timeout)
                         self._peer = RpcPeer(reader, writer, generation=self.route["generation"], module_id=context.module_id,
-                                             settings=context.settings, handler=context.reject)
+                                             settings=context.settings, handler=context._reject)
                         context.peers.add(self._peer)
                     elif self._peer.closed.is_set():
                         raise PeerClosed("Direct channel closed; explicitly prepare after health recovery")
@@ -135,21 +135,21 @@ class DirectLink:
         except Exception as exc:
             if isinstance(exc, CapacityExceeded) or isinstance(exc, RemoteError) and exc.remote_type == "CapacityExceeded":
                 return TemporaryUnavailable(str(exc))
-            notice = await self.client.request("link_error", {"contract": self.route["contract"], "error": exc})
+            notice = await self.client._request("link_error", {"contract": self.route["contract"], "error": exc})
             return LinkFailure(BindingKey(context.module_id, self.route["contract"]), exc, notice)
 
     async def open_stream(self, operation, options, metadata=None, *, timeout):
         seconds(timeout)
         self._check(operation)
         context = self.client.context
-        context.reserve_stream()
+        context._reserve_stream()
         sender = None
         try:
             stream_id = uuid4().hex
             reader, writer = await self._connect("stream", timeout=timeout, operation=operation,
                                                  options=encode(options), metadata=json_value(metadata), stream_id=stream_id)
             sender = StreamSender(reader, writer, options)
-            await context.own_sender(sender, self.route, stream_id)
+            await context._own_sender(sender, self.route, stream_id)
             return sender
         except BaseException:
             if sender is not None:

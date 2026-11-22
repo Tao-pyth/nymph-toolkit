@@ -163,3 +163,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 ## 顧客向け資料の配布版
 
 [契約・利用ガイド](customer-guide.md)のPDF・HTML生成は、Pythonの開発環境とは分離した任意の文書作成作業である。[生成と表示確認の手順](customer-guide-authoring.md)に従い、本文・図・APIの照合、全ページの表示、引継ぎ書同期を確認する。Node依存をNTK実行時や通常のwheel検証へ追加しない。結果は[顧客資料の検証記録](validation/customer-guide.md)へ記録する。
+
+## v1.0候補の契約変更
+
+親#10・子#98〜#102とADR 0026に基づく。`python tools/check_contracts.py`で安定対象を照合する。差分が出たら互換性・移行・Issue/ADRを先に確認し、基準JSONだけを書き換えて通さない。`python examples/module_contract_demo.py`は7番目の実行例。[6契約](module-contracts.md)・[移行](migration-v1.md)・[B00検証](validation/v1.0.md)を参照する。
