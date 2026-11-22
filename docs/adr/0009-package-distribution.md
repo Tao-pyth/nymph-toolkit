@@ -46,3 +46,7 @@ R8・[ADR 0011](0011-apache-2.0-license.md)で、自作コード・Contracts・�
 ## 根拠
 
 R6の「単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する」採用指示。[Docsの根拠表](../README.md)
+
+## R31のMemory配置
+
+[ADR 0027](0027-v1.1-memory.md)により、追加外部依存のないMemoryを`src/nymph_toolkit/subsystems/memory/`へ同梱する。共通宣言は`contracts/memory.py`。個別の独立配布は採用せず、必要時の分割方針を維持する。

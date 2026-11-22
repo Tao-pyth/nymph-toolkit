@@ -167,3 +167,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 ## v1.0候補の契約変更
 
 親#10・子#98〜#102とADR 0026に基づく。`python tools/check_contracts.py`で安定対象を照合する。差分が出たら互換性・移行・Issue/ADRを先に確認し、基準JSONだけを書き換えて通さない。`python examples/module_contract_demo.py`は7番目の実行例。[6契約](module-contracts.md)・[移行](migration-v1.md)・[B00検証](validation/v1.0.md)を参照する。
+
+## v1.1 Memory開発候補
+
+[Memory](memory.md)と[ADR 0027](adr/0027-v1.1-memory.md)を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。全体検証は既存手順に加えてMemoryの8番目の例を実行する。公開済み版の導入ガイドと、開発候補1.1.0の版を区別する。配布試験は`python -m build --outdir .git/v11-dist`、`python tools/check_dist.py --dist-dir .git/v11-dist`を使う（対象ディレクトリには候補wheel/sdist各1個だけを置く）。

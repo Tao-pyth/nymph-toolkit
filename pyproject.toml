@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nymph-toolkit"
-version = "1.0.0"
+version = "1.1.0"
 description = "A lightweight runtime foundation for the Nymph artificial personality project."
 readme = "README.md"
 requires-python = ">=3.12"
