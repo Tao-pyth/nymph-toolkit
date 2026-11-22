@@ -1,6 +1,6 @@
 # NTKへの参加
 
-NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェクトです。現在はCoreのRuntime・Registry・ModuleGroup・Connections・TaskManagerと必要なContractsを実装し、ダミーで検証する初期段階です。実装状況は[README](README.md)を参照してください。
+NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェクトです。Core接続契約をv1.0.0で公開し、v1.1ではMemoryの最小保存・取得を追加しています。各段階の採用範囲に沿って実機能とダミーを使い分けて検証します。実装状況は[README](README.md)を参照してください。
 
 ## 提案・報告
 

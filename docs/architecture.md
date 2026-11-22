@@ -10,9 +10,9 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ## 採用された構成
 
-v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[Connections](connections.md)とADR 0019、活動管理は[TaskManager](task-manager.md)とADR 0020を参照する。本番Subsystem・Adapterは後続段階で扱う。
+v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[Connections](connections.md)とADR 0019、活動管理は[TaskManager](task-manager.md)とADR 0020を参照する。当時の本番Subsystem・Adapterは後続段階とした。v1.1ではMemoryを追加する。
 
-Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
+Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。v0.xの初期実装はCoreを対象とし、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現した。R31でv1.1 Memoryを最初の実Subsystemとして追加する。根拠はR2、判断記録はADR 0001・0005。
 
 | 構成要素 | 責務の整理 | 採用状況・今後具体化する点 |
 |---|---|---|
@@ -106,11 +106,11 @@ R24では構成と責務を維持したまま、[公開APIの入力・結果・�
 
 ## v1.0.0の接続契約と後続構成案
 
-R29・[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)でv1.0目標を具体化した。[接続契約](module-contracts.md)に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、[移行資料](migration-v1.md)に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。後段の本番機能の名称・配分は引き続き提案。
+R29・[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)でv1.0目標を具体化した。[接続契約](module-contracts.md)に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、[移行資料](migration-v1.md)に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。v1.1 MemoryはR31・ADR 0027で最小範囲を具体化し、その他の本番機能の名称・配分は引き続き提案。
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象は[ADR 0006](adr/0006-core-connection-contracts.md)、R29の採用詳細はADR 0026で管理する。
 
-以下はv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+Memoryの採用部分は[ADR 0027](adr/0027-v1.1-memory.md)・[利用ガイド](memory.md)に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
 
 | 構成案 | 役割と境界 |
 |---|---|
@@ -176,8 +176,8 @@ nymph-toolkit/
 │  ├─ customer-guide.md             # 顧客向け契約・利用・図解・API付録
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
-│  ├─ getting-started.md            # v0.9.0通常導入・初回実行
-│  ├─ tutorials.md                  # 6実行例・期待結果・保存物
+│  ├─ getting-started.md            # v1.1.0通常導入・初回実行
+│  ├─ tutorials.md                  # 公開v1.1の8実行例・期待結果・保存物
 │  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md
@@ -191,6 +191,8 @@ nymph-toolkit/
 │  ├─ module-contracts.md            # 6契約と接続開発
 │  ├─ migration-v1.md                # v0.9からの移行
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
+│  ├─ memory.md                      # v1.1保存・取得と運用
+│  ├─ validation/v1.1.md              # B01受入結果
 │  ├─ validation/v1.0.md             # B00受入結果
 │  ├─ validation/core-coverage.json  # 証拠対応の編集元
 │  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
@@ -235,13 +237,16 @@ nymph-toolkit/
 │     ├─ 0023-v0.7-implementation-contracts.md
 │     ├─ 0024-v0.8-integration-validation.md
 │     ├─ 0025-v0.9-core-completion.md
-│     └─ 0026-v1.0-core-connection-contracts.md
+│     ├─ 0026-v1.0-core-connection-contracts.md
+│     └─ 0027-v1.1-memory.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     └─ contracts/
-└─ tests/
+│     ├─ contracts/                  # memory.pyにMemory契約宣言
+│     └─ subsystems/memory/           # 同梱する最小Memory
+└─ tests/                            # subsystems/にMemory単体・統合試験
    ├─ core/
+   ├─ subsystems/
    └─ doubles/
 ```
 
@@ -249,7 +254,7 @@ R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `
 
 ### Subsystem・Adapterを追加する際の配置案
 
-同梱する場合と、別配布にする場合の例を以下に示す。将来の配置・名称は提案であり、個別の分割を決定したものではない。
+R31でMemoryは`src/nymph_toolkit/subsystems/memory/`へ同梱した。公開factoryは公開Contractsだけを参照し、CoreとMemoryの保存先・判断責務を分ける。`docs/memory.md`、`docs/adr/0027-v1.1-memory.md`、`docs/validation/v1.1.md`、`examples/memory_demo.py`を配置する。その他の同梱と別配布の例を以下に示す。将来の配置・名称は提案であり、個別の分割を決定したものではない。
 
 | 扱い | ソースの配置例 | 配布設定・検証の配置例 |
 |---|---|---|

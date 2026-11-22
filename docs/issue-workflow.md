@@ -260,3 +260,22 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 ## R30のv1.0.0レビュー・公開
 
 親#10・マイルストーンv1.0.0配下に、[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)を公開用文書/生成ヘッダー変更前に登録し、実親子関係を確認した。PR #103のレビューと最終CI、マージ、タグ/Release、4添付の匿名取得・通常導入を記録する。#98〜#102の採用範囲の完了と、#104の公開後確認を分けて追跡し、その後に親#10とマイルストーンを閉じる。
+
+## R31のv1.1 Memory
+
+親[#11](https://github.com/Tao-pyth/nymph-toolkit/issues/11)・マイルストーンv1.1.0を確認し、コード変更前に以下を実親子関係付きで登録した。各Issueへ目的・範囲・完了条件・検証・先行課題と実装判断を記録した。
+
+| 子Issue | 対応単位 |
+|---|---|
+| [#105](https://github.com/Tao-pyth/nymph-toolkit/issues/105) | 初期スコープ・未決/延期・ADR 0027・B01 |
+| [#106](https://github.com/Tao-pyth/nymph-toolkit/issues/106) | Memory契約・SQLite保存/取得・単体/障害検証 |
+| [#107](https://github.com/Tao-pyth/nymph-toolkit/issues/107) | 公開契約での接続・4配置・実行例 |
+| [#108](https://github.com/Tao-pyth/nymph-toolkit/issues/108) | v1.1候補・配布・CI・Docs/引継ぎ書・PR |
+
+今回の到達点はレビュー用PR。タグ/Release、公開後確認、親/マイルストーン終了は後続指示で扱う。
+
+## R32のv1.1レビュー・公開
+
+親#11・マイルストーンv1.1.0配下に[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を公開用文書・生成ヘッダー変更前に登録した。PR #109のレビュー・最終CI・マージ・公開・匿名取得と通常導入の結果を記録し、完了後に実装子#105〜#108と親・マイルストーンを閉じる。
+
+公開前CIのMemory統合失敗は子[#111](https://github.com/Tao-pyth/nymph-toolkit/issues/111)をテスト/例の変更前に登録し、全体期限・診断・制御再現を扱った。Core/Memoryの製品仕様は維持する。

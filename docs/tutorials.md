@@ -1,20 +1,20 @@
-# v1.0.0の7つの実行例ガイド
+# v1.1.0の8つの実行例ガイド
 
-対象は、[インストール手順](getting-started.md)を終え、NTK Coreの動きを確認したい人。使うのは公開v1.0.0と同版sdistの`examples/`で、すべてダミーである。本番Memory・AgencyなどのSubsystemを実装した例ではない。
+対象は、[インストール手順](getting-started.md)を終え、NTK Coreの動きを確認したい人。使うのは公開v1.1.0と同版sdistの`examples/`で、Core用のダミー例に加え、8番目では実装した最小Memoryを要求側ダミーと接続する。Agencyなどの本番機能や会話相手としてのNymphは含まない。
 
 ## 共通の前提と実行方法
 
-作業場所は導入手順で作った`ntk-v1.0.0`。`.venv`へwheelを通常インストール済みで、`nymph_toolkit-1.0.0/examples/`を展開していることを前提とする。外部サービスの認証やデータは不要。ハイブリッド例は同じPCのループバックTCPとCore所有の子プロセスを使う。
+作業場所は導入手順で作った`ntk-v1.1.0`。`.venv`へwheelを通常インストール済みで、`nymph_toolkit-1.1.0/examples/`を展開していることを前提とする。外部サービスの認証やデータは不要。ハイブリッド例は同じPCのループバックTCPとCore所有の子プロセスを使う。
 
-順に7例を実行し、標準出力と標準エラーを`logs/`へ保存する。失敗した例で止まり、原因を確認してから再実行する。既存の同名ログは上書きされるので、過去の結果を残す場合は先に別名で保管する。
+順に8例を実行し、標準出力と標準エラーを`logs/`へ保存する。失敗した例で止まり、原因を確認してから再実行する。既存の同名ログは上書きされるので、過去の結果を残す場合は先に別名で保管する。
 
 PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Path logs -Force | Out-Null
-$demos = @('runtime', 'registry', 'connections', 'task_manager', 'activity_changes', 'hybrid', 'module_contract')
+$demos = @('runtime', 'registry', 'connections', 'task_manager', 'activity_changes', 'hybrid', 'module_contract', 'memory')
 foreach ($demo in $demos) {
-    & .\.venv\Scripts\python.exe -I -W error ".\nymph_toolkit-1.0.0\examples\${demo}_demo.py" 2>&1 |
+    & .\.venv\Scripts\python.exe -I -W error ".\nymph_toolkit-1.1.0\examples\${demo}_demo.py" 2>&1 |
         Tee-Object -FilePath ".\logs\${demo}.log"
     if ($LASTEXITCODE -ne 0) { throw "Demo failed: $demo" }
 }
@@ -26,8 +26,8 @@ Bash:
 set -e
 set -o pipefail
 mkdir -p logs
-for demo in runtime registry connections task_manager activity_changes hybrid module_contract; do
-    .venv/bin/python -I -W error "nymph_toolkit-1.0.0/examples/${demo}_demo.py" 2>&1 |
+for demo in runtime registry connections task_manager activity_changes hybrid module_contract memory; do
+    .venv/bin/python -I -W error "nymph_toolkit-1.1.0/examples/${demo}_demo.py" 2>&1 |
         tee "logs/${demo}.log"
 done
 ```
@@ -127,6 +127,18 @@ PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activi
 
 前の行にrpc/stream/activity/registrationの結果を表示する。初期化後のprovide拒否も確認する。恒久保存や本番機能の実装例ではない。[6契約](module-contracts.md)と[移行手順](migration-v1.md)を参照する。
 
+## 8. Memory：出典付き記録と再起動後の取得
+
+ソース：[memory_demo.py](../examples/memory_demo.py)と[memory_requester.py](../examples/memory_requester.py)。MemoryをPROCESS、要求側ダミーをLOCALへ配置し、Coreが許可した直接通信とCore経由でput/get/queryを実行する。経験/知識・出典の保存、同一IDの冪等・競合・未発見/不正入力、8件ページを確認する。同じ保存先で2回起動し、同じID・sequence・保存時刻が返ることを照合する。
+
+```text
+{'restored': False, 'routes': 'direct+core', 'page_count': 8}
+{'restored': True, 'routes': 'direct+core', 'page_count': 8}
+PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
+```
+
+例の個別RPC期限は5秒、複数操作をまとめる全体RPC期限は30秒として分ける。Core履歴とMemoryのSQLiteを別の場所へ保存し、子の後処理と終了を確認する。例は一時ディレクトリを削除して終了するため、次のスクリプト実行へ記憶を保持する例ではない。保持する実利用では専用の絶対パスを指定する。[Memoryの契約・設定](memory.md)を参照する。記憶統合・忘却・学習は実装していない。
+
 ## 保存物と確認の限界
 
 | 対象 | この例での扱い |
@@ -134,9 +146,10 @@ PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activi
 | Runtime・Registry | FileStoreの履歴を作らない |
 | Connections・TaskManager・活動変更・Hybrid・接続契約 | OSの一時フォルダにFileStoreを作る。通常終了時に例がフォルダを削除する |
 | Connections等の2回起動 | 1回のスクリプト実行内で同じ一時保存先を使う。次回スクリプト実行は新しい一時保存先になる |
+| Memory | 同じ一時保存先で2回起動。専用SQLiteとCore履歴を別保存し、通常終了時に削除 |
 | `logs/*.log` | 上のコマンドで保存した出力。例の終了後も作業フォルダに残る |
 | 恒久保存先 | ライブラリ利用者がFileStore構築時に指定する。主・予備を分け、同じ主保存先を複数Coreで同時使用しない |
 
 保持日数、バッチ件数、通知間隔、通信期限、実行枠、転送量などの例中の値はデモ用であり、ライブラリの既定値や性能保証ではない。ファイル保存の詳細は[Connectionsの保存契約](connections.md)を参照する。
 
-全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せず[トラブルシューティング](troubleshooting.md)へ進む。7例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲は[B00検証記録](validation/v1.0.md)、本版の公開後再現は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡する。過去のv0.9版ガイドの確認範囲は[文書整備の検証記録](validation/docs-onboarding.md)に残す。
+全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せず[トラブルシューティング](troubleshooting.md)へ進む。8例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲は[B01検証記録](validation/v1.1.md)と既存[B00](validation/v1.0.md)、本版の公開後再現は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。過去のv0.9版ガイドの確認範囲は[文書整備の検証記録](validation/docs-onboarding.md)に残す。

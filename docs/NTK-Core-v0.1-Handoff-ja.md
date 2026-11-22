@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R30を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R32を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -15,6 +15,10 @@ R10により、コード変更はマイルストーン、親Issue、対応単位
 R16でv0.4を実装し、ADR 0019で公開契約・状態・保存等の判断を記録した。要求元＋契約ID・版につき1接続とする固定単位、通常バッファの上限なし・新規受付継続はユーザー回答で採用した。保存エラー時の受付停止・救命は維持する。実装・A04・性能・配布の証拠と、最終公開の状態は個別資料で確認する。
 
 R17でv0.5に着手し、ADR 0020へ判断を記録した。予定時間到達は通知して継続し、終了は安全な区切りを待つ。過去の開始時刻は返却し、再起動時の再登録・再開はNymphが判断する。D1〜D4のユーザー回答とD5〜D8の実装判断、実装・A05・公開の進捗を分けて記録する。
+
+R31でv1.1 Memoryの最小保存・取得を具体化し、親#11・子#105〜#108をコード変更前に登録した。ADR 0027は今回の実装判断で、Coreの安定API・採用64項目を維持する。出典区分・SQLite・3操作とB01を扱い、後続の学習・統合・忘却と公開段階は分離する。
+
+R32でPR #109のレビュー・マージ・v1.1.0公開・公開後確認と課題終了が指示された。公開子#110をヘッダー変更前に登録し、最終CI・マージ・タグ・4添付・匿名取得と通常導入を追跡する。最終証拠は#110とReleaseへ記録する。
 
 本書にもApache-2.0を適用し、末尾にLICENSEの公式本文を収録する。第三者成果物と個体データの条件は別途扱う。ファイル名のv0.1は初稿の識別子であり、リポジトリ内の本文は更新する。公開済みRelease添付は各公開時点のスナップショットとして保持する。
 
@@ -52,9 +56,9 @@ R30でPR #103レビュー・マージ・v1.0.0公開と公開後確認・課題�
 4. [Docsの読み方と根拠](#section-4)
 5. [NTK Core 契約・利用ガイド](#section-5)
 6. [顧客向け契約・利用ガイドの更新と配布](#section-6)
-7. [v1.0.0のインストールと最初の実行](#section-7)
-8. [v1.0.0の7つの実行例ガイド](#section-8)
-9. [v0.9.0のトラブルシューティング](#section-9)
+7. [v1.1.0のインストールと最初の実行](#section-7)
+8. [v1.1.0の8つの実行例ガイド](#section-8)
+9. [v1.1.0のトラブルシューティング](#section-9)
 10. [Project Vision — 人工人格Nymphの最終到達目標](#section-10)
 11. [Architecture](#section-11)
 12. [v0.2 Runtimeの使い方](#section-12)
@@ -62,57 +66,60 @@ R30でPR #103レビュー・マージ・v1.0.0公開と公開後確認・課題�
 14. [Connectionsの操作契約（v0.4）](#section-14)
 15. [TaskManagerの操作契約と活動履歴](#section-15)
 16. [v0.7 ハイブリッド実行と通信](#section-16)
-17. [Core APIと利用上の契約](#section-17)
-18. [公開APIの実装一覧](#section-18)
-19. [v1.0 Core接続契約](#section-19)
-20. [v0.9からv1.0への移行](#section-20)
-21. [ADR索引と更新方法](#section-21)
-22. [ADR 0001 Coreと統合リポジトリ](#section-22)
-23. [ADR 0002 実行モデル](#section-23)
-24. [ADR 0003 通信経路](#section-24)
-25. [ADR 0004 活動の決定権](#section-25)
-26. [ADR 0005 初期実装の範囲](#section-26)
-27. [ADR 0006 v1.0.0のCore接続契約](#section-27)
-28. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-28)
-29. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-29)
-30. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-30)
-31. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-31)
-32. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-32)
-33. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-33)
-34. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-34)
-35. [ADR 0014 v0.2の開発環境と最小Runtime](#section-35)
-36. [ADR 0015 Coreが許可する直接通信の採用](#section-36)
-37. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-37)
-38. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-38)
-39. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-39)
-40. [ADR 0019 v0.4のConnections実装判断](#section-40)
-41. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-41)
-42. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-42)
-43. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-43)
-44. [ADR 0023 v0.7の実装契約](#section-44)
-45. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-45)
-46. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-46)
-47. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-47)
-48. [NTK開発ロードマップ](#section-48)
-49. [受入基準・検討案と検証記録](#section-49)
-50. [Core採用事項と検証証拠の対応](#section-50)
-51. [顧客向け契約・利用ガイドの検証記録](#section-51)
-52. [v0.9.0利用者向けDocsの検証記録](#section-52)
-53. [v0.2 Runtime受入記録](#section-53)
-54. [v0.3受入記録](#section-54)
-55. [v0.4の受入記録](#section-55)
-56. [v0.5の受入確認と検証経過](#section-56)
-57. [v0.6の受入確認と検証経過](#section-57)
-58. [v0.7の受入確認と検証経過](#section-58)
-59. [v0.8 統合・障害・負荷検証記録](#section-59)
-60. [v0.9 Core機能完成の検証記録](#section-60)
-61. [v1.0 Core接続契約の検証](#section-61)
-62. [WindowsのTCP終了処理の修正・検証（#94）](#section-62)
-63. [開発準備とGit運用](#section-63)
-64. [マイルストーンと親子Issueの運用](#section-64)
-65. [公開準備とリリース手順](#section-65)
-66. [変更履歴](#section-66)
-67. [Apache License 2.0（原文）](#section-67)
+17. [Memory Subsystem v1.1](#section-17)
+18. [Core APIと利用上の契約](#section-18)
+19. [公開APIの実装一覧](#section-19)
+20. [v1.0 Core接続契約](#section-20)
+21. [v0.9からv1.0への移行](#section-21)
+22. [ADR索引と更新方法](#section-22)
+23. [ADR 0001 Coreと統合リポジトリ](#section-23)
+24. [ADR 0002 実行モデル](#section-24)
+25. [ADR 0003 通信経路](#section-25)
+26. [ADR 0004 活動の決定権](#section-26)
+27. [ADR 0005 初期実装の範囲](#section-27)
+28. [ADR 0006 v1.0.0のCore接続契約](#section-28)
+29. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-29)
+30. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-30)
+31. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-31)
+32. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-32)
+33. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-33)
+34. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-34)
+35. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-35)
+36. [ADR 0014 v0.2の開発環境と最小Runtime](#section-36)
+37. [ADR 0015 Coreが許可する直接通信の採用](#section-37)
+38. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-38)
+39. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-39)
+40. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-40)
+41. [ADR 0019 v0.4のConnections実装判断](#section-41)
+42. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-42)
+43. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-43)
+44. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-44)
+45. [ADR 0023 v0.7の実装契約](#section-45)
+46. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-46)
+47. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-47)
+48. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-48)
+49. [ADR 0027 v1.1 Memoryの最小保存・取得](#section-49)
+50. [NTK開発ロードマップ](#section-50)
+51. [受入基準・検討案と検証記録](#section-51)
+52. [Core採用事項と検証証拠の対応](#section-52)
+53. [顧客向け契約・利用ガイドの検証記録](#section-53)
+54. [v0.9.0利用者向けDocsの検証記録](#section-54)
+55. [v0.2 Runtime受入記録](#section-55)
+56. [v0.3受入記録](#section-56)
+57. [v0.4の受入記録](#section-57)
+58. [v0.5の受入確認と検証経過](#section-58)
+59. [v0.6の受入確認と検証経過](#section-59)
+60. [v0.7の受入確認と検証経過](#section-60)
+61. [v0.8 統合・障害・負荷検証記録](#section-61)
+62. [v0.9 Core機能完成の検証記録](#section-62)
+63. [v1.0 Core接続契約の検証](#section-63)
+64. [v1.1 Memoryの受入記録](#section-64)
+65. [WindowsのTCP終了処理の修正・検証（#94）](#section-65)
+66. [開発準備とGit運用](#section-66)
+67. [マイルストーンと親子Issueの運用](#section-67)
+68. [公開準備とリリース手順](#section-68)
+69. [変更履歴](#section-69)
+70. [Apache License 2.0（原文）](#section-70)
 
 ---
 
@@ -132,13 +139,19 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterを必要に応じて分割するものです。個別の分割は依存関係・独立更新・単独配布の必要性に基づいて判断します。採用した配布方針（`docs/adr/0009-package-distribution.md`）
 
-### v1.0.0 — Core接続契約
+### v1.1.0 — Memory Subsystem
+
+R31により経験・知識と出典の最小保存/取得を実装しました。Memory利用ガイド（`docs/memory.md`）に3操作・設定・障害時の扱い、ADR 0027（`docs/adr/0027-v1.1-memory.md`）に今回の設計判断、B01記録（`docs/validation/v1.1.md`）に検証結果をまとめています。親[#11](https://github.com/Tao-pyth/nymph-toolkit/issues/11)、コード変更前に登録した子#105〜#108で追跡します。
+
+全334テスト、8例、Windows/Linux × Python 3.12〜3.15のCI、通常wheel/sdistを確認しました（LinuxはWindows専用6件skip）。Memoryは同じ配布物に同梱し、専用SQLiteへ保存します。v1のCore APIは維持します。学習・記憶統合・忘却・Document Adapterは含めません。8番目の実行例`python examples/memory_demo.py`で保存・再起動取得を試せます。公開先は[v1.1.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.1.0)、公開後確認の記録は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)です。
+
+### Core接続契約と動作基盤
 
 CoreとSubsystem・Adapterをつなぐ6区分の接続契約（`docs/module-contracts.md`）を整備しました。公開ContractsのProtocol、登録前検証、安定API基準、両種別・4配置の契約試験を提供します。v0.9から必要なAPI整理を含むため、移行手順（`docs/migration-v1.md`）を確認してください。ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）に判断を記録しています。
 
-配布先は[v1.0.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.0.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開対象とします。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)に記録します。
+配布先は[v1.1.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.1.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開対象とします。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)に記録します。
 
-成果物はCoreとContractsのライブラリです。7つの実行例で起動・接続・活動・別プロセス実行を試せます。各例は後処理を終えると終了します。本番の会話・学習Subsystem、常駐アプリ、GUIは含まれません。
+成果物はCore・Contractsと最小Memoryのライブラリです。8つの実行例で起動・接続・活動・別プロセス実行を試せます。各例は後処理を終えると終了します。本番の会話・学習Subsystem、常駐アプリ、GUIは含まれません。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -158,7 +171,7 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 | やりたいこと | 最初に読む資料 | 確認できること |
 |---|---|---|
 | 導入・接続の全体像を説明する | 顧客向け契約・利用ガイド（v0.9版）（`docs/customer-guide.md`） | 図解付きの現行契約・設定・運用と開発者向けAPI付録 |
-| 公開版を試す | インストールと最初の実行（`docs/getting-started.md`） → 7つの実行例（`docs/tutorials.md`） | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
+| 公開版を試す | インストールと最初の実行（`docs/getting-started.md`） → 8つの実行例（`docs/tutorials.md`） | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
 | 機能を接続する | Architecture（`docs/architecture.md`） → Core API（`docs/core-api.md`） | 責務と配置、現在の契約、各機能Docsへの入口 |
 | 開発に参加する | 参加方針（`CONTRIBUTING.md`） → Issue運用（`docs/issue-workflow.md`） → 開発手順（`docs/development.md`） | 着手前の課題管理、editable環境、テストと配布検証 |
 | 問題を調べる | トラブルシューティング（`docs/troubleshooting.md`） | 症状からの確認・対処・回復確認、報告に必要な情報 |
@@ -173,7 +186,7 @@ v1.0.0は316テスト（製品304件＋検査12件）、7実行例、全8環境C
 
 30分の負荷測定はv0.8の特定コミットに対する結果です。後続修正の検証範囲とともにv0.8検証記録（`docs/validation/v0.8.md`）へ記録しており、現在の全環境で同じ長時間性能を保証するものではありません。
 
-v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
+v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1 MemoryはR31・ADR 0027で初期範囲を具体化しました。v1.2.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
 
 将来のPC全体の状況取得はAdapterが担当します。Desktop Adapterはv1.10.0までの配分に含めず将来課題とし、複製・移植・伝播機構は初期スコープ外です。
 
@@ -193,7 +206,7 @@ NTKの自作コード、Contracts、設計文書には **Apache License 2.0（SP
 
 ## NTKへの参加
 
-NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェクトです。現在はCoreのRuntime・Registry・ModuleGroup・Connections・TaskManagerと必要なContractsを実装し、ダミーで検証する初期段階です。実装状況はREADME（`README.md`）を参照してください。
+NTKは、人工人格Nymphの成長を支える基盤を開発するプロジェクトです。Core接続契約をv1.0.0で公開し、v1.1ではMemoryの最小保存・取得を追加しています。各段階の採用範囲に沿って実機能とダミーを使い分けて検証します。実装状況はREADME（`README.md`）を参照してください。
 
 ### 提案・報告
 
@@ -271,6 +284,8 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 
 v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）に従う。必要な破壊的API整理は許可され、理由と移行手順を記録する。採用64項目の動作やNymph/Core境界を暗黙に変えない。公開型・登録前検証・初期化中の提供登録、安定APIの基準はdocs/module-contracts.mdとdocs/contracts-v1.jsonを参照する。tools/check_contracts.pyの差分を基準の無条件再生成で解消せず、互換性とIssue/ADRを先に確認する。B00の実装・受入とタグ/Release・公開後確認は区別する。
 
+v1.1 MemoryはR31・ADR 0027（`docs/adr/0027-v1.1-memory.md`）の初期範囲に従う。Coreの履歴とMemory記録を混同しない。Core安定APIを維持し、出典付き記録の保存/取得を公開Contractsで接続する。編集・忘却・意味検索・学習・Document Adapter・複製/移植/伝播は暗黙に追加しない。B01実装受入と公開後確認を分ける。
+
 ---
 
 <a id="section-4"></a>
@@ -281,6 +296,8 @@ v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contr
 
 初稿の文書整備日は2026年11月19日。対象はNymph Toolkit（NTK）の最終ビジョン、Core初期開発、公開準備からV0.9までの計画、およびv1.0.0以降のロードマップ案である。
 
+R31のv1.1 Memoryは利用ガイド（`docs/memory.md`）・ADR 0027（`docs/adr/0027-v1.1-memory.md`）・B01結果（`docs/validation/v1.1.md`）を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
+
 ### 目的別の読み順
 
 **v1.0.0の接続契約と導入資料を整備した。** 実装・受入はB00記録（`docs/validation/v1.0.md`）、公開後の取得確認と完了は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡する。v0.9.0のCore完成・公開後確認は[#88](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)の記録を保持する。
@@ -288,14 +305,14 @@ v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contr
 | 目的 | 読み順 |
 |---|---|
 | 導入担当者・開発担当者へ説明する | 顧客向け契約・利用ガイド（`docs/customer-guide.md`） → 配布用PDFの作成（`docs/customer-guide-authoring.md`） |
-| まず試す | 通常導入（`docs/getting-started.md`） → 7つの実行例（`docs/tutorials.md`） |
+| まず試す | 通常導入（`docs/getting-started.md`） → 8つの実行例（`docs/tutorials.md`） |
 | v1.0へ機能を接続する | 6契約（`docs/module-contracts.md`） → 移行手順（`docs/migration-v1.md`） → B00結果（`docs/validation/v1.0.md`） |
 | 機能を接続する | Architecture（`docs/architecture.md`） → Core API（`docs/core-api.md`） → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
 | 開発する | 参加方針（`CONTRIBUTING.md`） → Issue運用（`docs/issue-workflow.md`） → 開発手順（`docs/development.md`） |
 | 問題を調べる | トラブルシューティング（`docs/troubleshooting.md`） → 対象機能のDocs・検証記録 |
 | 判断を追う | ADR索引（`docs/adr/README.md`） → 採用64項目（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`） → 証拠対応表（`docs/validation/core-coverage.md`） |
 
-導入・実行例・接続契約はv1.0、顧客向け図解/PDFはv0.9版を説明する。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。Vision（`docs/vision.md`）は長期目標、v1.xの名称・配分はロードマップ（`docs/roadmap.md`）の採用状態に従う。
+導入・実行例とMemoryはv1.1、Core接続契約はv1.0から維持し、顧客向け図解/PDFはv0.9版を説明する。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。Vision（`docs/vision.md`）は長期目標、v1.xの名称・配分はロードマップ（`docs/roadmap.md`）の採用状態に従う。
 
 ### 文書一覧と格納場所
 
@@ -309,10 +326,12 @@ v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contr
 | customer-guide-authoring.md（`docs/customer-guide-authoring.md`） | 同じ原稿からPDF・HTMLを再生成し、表示と同期を確認する手順 |
 | validation/customer-guide.md（`docs/validation/customer-guide.md`） | 顧客資料の契約照合・PDF表示・実行例・同期の検証範囲 |
 | validation/windows-shutdown.md（`docs/validation/windows-shutdown.md`） | #94のWindows終了時エラーの原因・内部修正・制御再現・回帰 |
-| getting-started.md（`docs/getting-started.md`） | v1.0.0の通常導入・checksum・版とimport元・最初の実行 |
-| tutorials.md（`docs/tutorials.md`） | 7実行例の目的・コマンド・期待結果・終了・保存物 |
+| getting-started.md（`docs/getting-started.md`） | v1.1.0の通常導入・checksum・版とimport元・最初の実行 |
+| tutorials.md（`docs/tutorials.md`） | 8実行例の目的・コマンド・期待結果・終了・保存物 |
 | troubleshooting.md（`docs/troubleshooting.md`） | 症状別の確認・対処・回復確認と報告方法 |
 | validation/docs-onboarding.md（`docs/validation/docs-onboarding.md`） | D01〜D04・D09の検証結果、対象版、確認範囲 |
+| memory.md（`docs/memory.md`） | v1.1の保存/取得・出典・運用・実行例 |
+| validation/v1.1.md（`docs/validation/v1.1.md`） | B01の実装・回帰・配布・CI結果 |
 | vision.md（`docs/vision.md`） | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | architecture.md（`docs/architecture.md`） | Coreの責務、境界、フォルダ構成、未決事項 |
 | runtime.md（`docs/runtime.md`） | v0.2の実装済みRuntime・Contractsの使い方と制約 |
@@ -374,6 +393,8 @@ v1.0の接続契約はR29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contr
 | R28 | 既知課題#94のWindows／Python 3.15終了時エラーの原因調査・修正・再現・回帰指示 | 親#10・v1.0.0配下の#94へ範囲・完了条件・内部修正判断をコード変更前に記録。公開API・採用64項目・版・公開物を維持し、未リリースの修正と検証を記録する |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
+
+R31の根拠は本書末尾のv1.1実施記録に記す。
 
 R5は今回の明示的な編集根拠として扱う。v1.0.0で接続契約を大きく形作る目標は確定事項として追加する。契約詳細、Subsystem・Adapterの正式名称・実装順序・機能配分、奇数・偶数マイナーとパッチの運用は提案・要決定として記録する。R5が指定した研究方針と責務境界を各提案の前提にする。
 
@@ -479,6 +500,14 @@ Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し
 ### R30のv1.0レビュー・公開
 
 ユーザーのPR #103レビュー、問題解消後のマージ・v1.0.0公開、公開後確認と対応済み子/親#10/マイルストーン終了の指示を根拠とする。公開子#104を同じマイルストーン・実親子関係へ登録し、引継ぎ書ヘッダー更新前に範囲・完了条件を記録した。R29の「PRまで」という範囲を今回の公開まで拡張する。採用64項目とADR 0026の契約は変更しない。公開後の最終証拠は#104・Releaseへ記録し、公開済みタグ/添付は差し替えない。
+
+### R31のv1.1 Memory開発
+
+ユーザーの「v1.1.0のMemory Subsystem開発、親Issue・ADR確認、初期スコープ/未決/受入整理、コード変更前の子Issue登録、設計・実装・検証・資料整備」という明示指示を根拠とする。子#105〜#108を親#11・マイルストーン11へ実親子関係付きで先行登録した。ADR 0027の具体的API・SQLite・上限等は今回のCodex実装判断であり、過去の会話で個別採用された仕様とは区別する。未決だったMemoryの最小範囲を具体化し、残りのSubsystem/Adapter案・長期ビジョンとCoreの安定契約は維持する。レビュー用PRまでを今回の範囲とし、タグ/Release・公開後確認は別段階とする。
+
+### R32のv1.1レビュー・公開
+
+PR #109のレビュー、問題がなければマージ・v1.1.0公開、公開後確認、対応済み子#105〜#108と親#11・マイルストーン終了という明示指示を根拠とする。子[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を同じマイルストーン・実親子関係へ先に登録し、公開用資料・生成ヘッダー・最終CI・公開後取得を追跡する。R31のPRまでという範囲を公開まで拡張する。契約や延期事項の新たな採用はなく、最終SHA・公開後結果は#110・Releaseへ記録する。
 
 ---
 
@@ -1156,19 +1185,19 @@ git diff --check
 
 収録元 `docs/getting-started.md`
 
-## v1.0.0のインストールと最初の実行
+## v1.1.0のインストールと最初の実行
 
-対象は、公開済みのNTK Coreを初めて試す人。ここでは **v1.0.0のwheelを通常インストール**し、同じ版のsdistに含まれるダミー例を実行する。NTKはCoreとContractsのライブラリであり、この版に常駐アプリ・GUI・会話相手としてのNymphは含まれない。例は処理と後処理を終えると終了する。
+対象は、公開済みのNTK Coreを初めて試す人。ここでは **v1.1.0のwheelを通常インストール**し、同じ版のsdistに含まれるダミー例を実行する。NTKはCore・Contractsと最小Memoryのライブラリであり、この版に常駐アプリ・GUI・会話相手としてのNymphは含まれない。例は処理と後処理を終えると終了する。
 
 ### 用意するもの
 
-- CPython 3.12以上。v1.0.0で検証済みの範囲はWindows／Linux × CPython 3.12〜3.15。下限の指定は、将来の全Python版を検証済みという意味ではない。
+- CPython 3.12以上。v1.1.0で検証済みの範囲はWindows／Linux × CPython 3.12〜3.15。下限の指定は、将来の全Python版を検証済みという意味ではない。
 - `venv`と`pip`を使えるPython、インターネット接続、書き込める作業フォルダ。Linuxではこの手順に`curl`・`sha256sum`・`tar`も使う。
 - Pythonが未導入なら[Python公式のダウンロード](https://www.python.org/downloads/)または利用OSの配布元から用意する。既存の古いPythonを上書きする必要はない。
 
-実行時の外部Python依存はない。Git、開発用ビルドツール、GitHub認証はこの導入には不要。Windowsで`python --version`が3.8などを示す場合は、用意した3.12以上の実行ファイルを指定するか、インストール済みなら`py -3.12`を使う。以下の最初の`python`を、そのコマンドへ置き換える。
+実行時の外部Python依存はない。MemoryにはCPythonのsqlite3モジュールが必要。Git、開発用ビルドツール、GitHub認証はこの導入には不要。Windowsで`python --version`が3.8などを示す場合は、用意した3.12以上の実行ファイルを指定するか、インストール済みなら`py -3.12`を使う。以下の最初の`python`を、そのコマンドへ置き換える。
 
-作業場所は任意。以下では現在のフォルダに新しい`ntk-v1.0.0`を作る。同名フォルダが既にある場合は別名を使い、既存環境へ混在させない。各段階で失敗したらトラブルシューティング（`docs/troubleshooting.md`）へ進む。
+作業場所は任意。以下では現在のフォルダに新しい`ntk-v1.1.0`を作る。同名フォルダが既にある場合は別名を使い、既存環境へ混在させない。各段階で失敗したらトラブルシューティング（`docs/troubleshooting.md`）へ進む。
 
 ### Windows / PowerShell
 
@@ -1176,8 +1205,8 @@ git diff --check
 
 ```powershell
 python --version
-New-Item -ItemType Directory -Path ntk-v1.0.0
-Set-Location -LiteralPath ntk-v1.0.0
+New-Item -ItemType Directory -Path ntk-v1.1.0
+Set-Location -LiteralPath ntk-v1.1.0
 python -m venv .venv
 if ($LASTEXITCODE -ne 0) { throw 'venv creation failed' }
 .\.venv\Scripts\python.exe --version
@@ -1188,12 +1217,12 @@ if ($LASTEXITCODE -ne 0) { throw 'venv creation failed' }
 
 #### 2. 公開ファイルを取得して照合
 
-[v1.0.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.0.0)の添付から、wheel、sdist、`SHA256SUMS`を取得する。wheelに実行例は入っていないため、同版のsdistも用意する。GitHubが自動生成する「Source code」アーカイブと、ここで使う添付sdistは別のファイルである。
+[v1.1.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.1.0)の添付から、wheel、sdist、`SHA256SUMS`を取得する。wheelに実行例は入っていないため、同版のsdistも用意する。GitHubが自動生成する「Source code」アーカイブと、ここで使う添付sdistは別のファイルである。
 
 ```powershell
 $ErrorActionPreference = 'Stop'
-$releaseUrl = 'https://github.com/Tao-pyth/nymph-toolkit/releases/download/v1.0.0'
-$packages = @('nymph_toolkit-1.0.0-py3-none-any.whl', 'nymph_toolkit-1.0.0.tar.gz')
+$releaseUrl = 'https://github.com/Tao-pyth/nymph-toolkit/releases/download/v1.1.0'
+$packages = @('nymph_toolkit-1.1.0-py3-none-any.whl', 'nymph_toolkit-1.1.0.tar.gz')
 foreach ($file in ($packages + @('SHA256SUMS'))) {
     Invoke-WebRequest -UseBasicParsing -Uri "$releaseUrl/$file" -OutFile $file
 }
@@ -1213,19 +1242,19 @@ foreach ($file in $packages) {
 #### 3. wheelを導入し、版とimport元を確認
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install --no-index --no-deps .\nymph_toolkit-1.0.0-py3-none-any.whl
+.\.venv\Scripts\python.exe -m pip install --no-index --no-deps .\nymph_toolkit-1.1.0-py3-none-any.whl
 if ($LASTEXITCODE -ne 0) { throw 'wheel installation failed' }
 .\.venv\Scripts\python.exe -I -c "import sys, importlib.metadata as m, nymph_toolkit.core as c; print(sys.executable); print(m.version('nymph-toolkit')); print(c.__file__)"
-.\.venv\Scripts\python.exe -m tarfile -e .\nymph_toolkit-1.0.0.tar.gz .
+.\.venv\Scripts\python.exe -m tarfile -e .\nymph_toolkit-1.1.0.tar.gz .
 if ($LASTEXITCODE -ne 0) { throw 'sdist extraction failed' }
 ```
 
-表示される版は`1.0.0`、import元はこの環境の`.venv\Lib\site-packages\nymph_toolkit\core\__init__.py`となる。展開先は`nymph_toolkit-1.0.0`。sdistは例の取得に使い、その中の`src`をPythonの検索パスに加えない。
+表示される版は`1.1.0`、import元はこの環境の`.venv\Lib\site-packages\nymph_toolkit\core\__init__.py`となる。展開先は`nymph_toolkit-1.1.0`。sdistは例の取得に使い、その中の`src`をPythonの検索パスに加えない。
 
 #### 4. 最初の例を実行
 
 ```powershell
-.\.venv\Scripts\python.exe -I -W error .\nymph_toolkit-1.0.0\examples\runtime_demo.py
+.\.venv\Scripts\python.exe -I -W error .\nymph_toolkit-1.1.0\examples\runtime_demo.py
 if ($LASTEXITCODE -ne 0) { throw 'runtime demo failed' }
 ```
 
@@ -1236,25 +1265,25 @@ if ($LASTEXITCODE -ne 0) { throw 'runtime demo failed' }
 ```bash
 set -e
 python3 --version
-mkdir ntk-v1.0.0
-cd ntk-v1.0.0
+mkdir ntk-v1.1.0
+cd ntk-v1.1.0
 python3 -m venv .venv
 .venv/bin/python --version
 .venv/bin/python -m pip --version
 
-release_url='https://github.com/Tao-pyth/nymph-toolkit/releases/download/v1.0.0'
-for file in nymph_toolkit-1.0.0-py3-none-any.whl nymph_toolkit-1.0.0.tar.gz SHA256SUMS; do
+release_url='https://github.com/Tao-pyth/nymph-toolkit/releases/download/v1.1.0'
+for file in nymph_toolkit-1.1.0-py3-none-any.whl nymph_toolkit-1.1.0.tar.gz SHA256SUMS; do
     curl --fail --location "$release_url/$file" --output "$file"
 done
 sha256sum --check --ignore-missing SHA256SUMS
 
-.venv/bin/python -m pip install --no-index --no-deps ./nymph_toolkit-1.0.0-py3-none-any.whl
+.venv/bin/python -m pip install --no-index --no-deps ./nymph_toolkit-1.1.0-py3-none-any.whl
 .venv/bin/python -I -c "import sys, importlib.metadata as m, nymph_toolkit.core as c; print(sys.executable); print(m.version('nymph-toolkit')); print(c.__file__)"
-tar -xzf nymph_toolkit-1.0.0.tar.gz
-.venv/bin/python -I -W error nymph_toolkit-1.0.0/examples/runtime_demo.py
+tar -xzf nymph_toolkit-1.1.0.tar.gz
+.venv/bin/python -I -W error nymph_toolkit-1.1.0/examples/runtime_demo.py
 ```
 
-チェックサムでwheelとsdistの2件が`OK`になり、版が`1.0.0`、import元がこの`.venv/lib/python3.x/site-packages`配下になることを確認する。`--ignore-missing`は取得していない引継ぎ書を照合対象から外すために使う。2件のどちらかが表示されなければ取得を確認する。
+チェックサムでwheelとsdistの2件が`OK`になり、版が`1.1.0`、import元がこの`.venv/lib/python3.x/site-packages`配下になることを確認する。`--ignore-missing`は取得していない引継ぎ書を照合対象から外すために使う。2件のどちらかが表示されなければ取得を確認する。
 
 ### 正常終了の確認と次の手順
 
@@ -1266,9 +1295,9 @@ tar -xzf nymph_toolkit-1.0.0.tar.gz
 
 これはダミーの起動・実行・停止を確認した結果。プロセスが終了しているため、バックグラウンドでNymphが活動し続けている状態ではない。`-I`は呼出時の`PYTHONPATH`やユーザーサイト等の影響を避け、`-W error`は警告も失敗として見つける検証用指定である。
 
-続いて7つの実行例ガイド（`docs/tutorials.md`）で登録、接続、活動変更、別プロセス実行を確認する。コードを修正する場合は開発手順（`docs/development.md`）で別の開発環境を用意する。`pip install -e .`は作業ツリーを読む開発用導入であり、この手順の通常導入とは区別する。
+続いて8つの実行例ガイド（`docs/tutorials.md`）で登録、接続、活動変更、別プロセス実行を確認する。コードを修正する場合は開発手順（`docs/development.md`）で別の開発環境を用意する。`pip install -e .`は作業ツリーを読む開発用導入であり、この手順の通常導入とは区別する。
 
-R30・[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)でv1.0.0向けに更新した。v0.9版の手順検証は過去の記録（`docs/validation/docs-onboarding.md`）、本版の受入はB00記録（`docs/validation/v1.0.md`）、公開後取得の結果は#104で追跡する。公開済みv0.9.0のタグ・添付は更新しない。
+R32・[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)でv1.1.0向けに更新した。本版の受入はB01記録（`docs/validation/v1.1.md`）、公開後取得の結果は#110で追跡する。過去の文書整備（`docs/validation/docs-onboarding.md`）・v1.0契約受入（`docs/validation/v1.0.md`）は当時の記録として保持し、公開済みタグ・添付は更新しない。
 
 ---
 
@@ -1276,23 +1305,23 @@ R30・[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)でv1.0.0向�
 
 収録元 `docs/tutorials.md`
 
-## v1.0.0の7つの実行例ガイド
+## v1.1.0の8つの実行例ガイド
 
-対象は、インストール手順（`docs/getting-started.md`）を終え、NTK Coreの動きを確認したい人。使うのは公開v1.0.0と同版sdistの`examples/`で、すべてダミーである。本番Memory・AgencyなどのSubsystemを実装した例ではない。
+対象は、インストール手順（`docs/getting-started.md`）を終え、NTK Coreの動きを確認したい人。使うのは公開v1.1.0と同版sdistの`examples/`で、Core用のダミー例に加え、8番目では実装した最小Memoryを要求側ダミーと接続する。Agencyなどの本番機能や会話相手としてのNymphは含まない。
 
 ### 共通の前提と実行方法
 
-作業場所は導入手順で作った`ntk-v1.0.0`。`.venv`へwheelを通常インストール済みで、`nymph_toolkit-1.0.0/examples/`を展開していることを前提とする。外部サービスの認証やデータは不要。ハイブリッド例は同じPCのループバックTCPとCore所有の子プロセスを使う。
+作業場所は導入手順で作った`ntk-v1.1.0`。`.venv`へwheelを通常インストール済みで、`nymph_toolkit-1.1.0/examples/`を展開していることを前提とする。外部サービスの認証やデータは不要。ハイブリッド例は同じPCのループバックTCPとCore所有の子プロセスを使う。
 
-順に7例を実行し、標準出力と標準エラーを`logs/`へ保存する。失敗した例で止まり、原因を確認してから再実行する。既存の同名ログは上書きされるので、過去の結果を残す場合は先に別名で保管する。
+順に8例を実行し、標準出力と標準エラーを`logs/`へ保存する。失敗した例で止まり、原因を確認してから再実行する。既存の同名ログは上書きされるので、過去の結果を残す場合は先に別名で保管する。
 
 PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Path logs -Force | Out-Null
-$demos = @('runtime', 'registry', 'connections', 'task_manager', 'activity_changes', 'hybrid', 'module_contract')
+$demos = @('runtime', 'registry', 'connections', 'task_manager', 'activity_changes', 'hybrid', 'module_contract', 'memory')
 foreach ($demo in $demos) {
-    & .\.venv\Scripts\python.exe -I -W error ".\nymph_toolkit-1.0.0\examples\${demo}_demo.py" 2>&1 |
+    & .\.venv\Scripts\python.exe -I -W error ".\nymph_toolkit-1.1.0\examples\${demo}_demo.py" 2>&1 |
         Tee-Object -FilePath ".\logs\${demo}.log"
     if ($LASTEXITCODE -ne 0) { throw "Demo failed: $demo" }
 }
@@ -1304,8 +1333,8 @@ Bash:
 set -e
 set -o pipefail
 mkdir -p logs
-for demo in runtime registry connections task_manager activity_changes hybrid module_contract; do
-    .venv/bin/python -I -W error "nymph_toolkit-1.0.0/examples/${demo}_demo.py" 2>&1 |
+for demo in runtime registry connections task_manager activity_changes hybrid module_contract memory; do
+    .venv/bin/python -I -W error "nymph_toolkit-1.1.0/examples/${demo}_demo.py" 2>&1 |
         tee "logs/${demo}.log"
 done
 ```
@@ -1405,6 +1434,18 @@ PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activi
 
 前の行にrpc/stream/activity/registrationの結果を表示する。初期化後のprovide拒否も確認する。恒久保存や本番機能の実装例ではない。6契約（`docs/module-contracts.md`）と移行手順（`docs/migration-v1.md`）を参照する。
 
+### 8. Memory：出典付き記録と再起動後の取得
+
+ソース：memory_demo.py（`examples/memory_demo.py`）とmemory_requester.py（`examples/memory_requester.py`）。MemoryをPROCESS、要求側ダミーをLOCALへ配置し、Coreが許可した直接通信とCore経由でput/get/queryを実行する。経験/知識・出典の保存、同一IDの冪等・競合・未発見/不正入力、8件ページを確認する。同じ保存先で2回起動し、同じID・sequence・保存時刻が返ることを照合する。
+
+```text
+{'restored': False, 'routes': 'direct+core', 'page_count': 8}
+{'restored': True, 'routes': 'direct+core', 'page_count': 8}
+PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
+```
+
+例の個別RPC期限は5秒、複数操作をまとめる全体RPC期限は30秒として分ける。Core履歴とMemoryのSQLiteを別の場所へ保存し、子の後処理と終了を確認する。例は一時ディレクトリを削除して終了するため、次のスクリプト実行へ記憶を保持する例ではない。保持する実利用では専用の絶対パスを指定する。Memoryの契約・設定（`docs/memory.md`）を参照する。記憶統合・忘却・学習は実装していない。
+
 ### 保存物と確認の限界
 
 | 対象 | この例での扱い |
@@ -1412,12 +1453,13 @@ PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activi
 | Runtime・Registry | FileStoreの履歴を作らない |
 | Connections・TaskManager・活動変更・Hybrid・接続契約 | OSの一時フォルダにFileStoreを作る。通常終了時に例がフォルダを削除する |
 | Connections等の2回起動 | 1回のスクリプト実行内で同じ一時保存先を使う。次回スクリプト実行は新しい一時保存先になる |
+| Memory | 同じ一時保存先で2回起動。専用SQLiteとCore履歴を別保存し、通常終了時に削除 |
 | `logs/*.log` | 上のコマンドで保存した出力。例の終了後も作業フォルダに残る |
 | 恒久保存先 | ライブラリ利用者がFileStore構築時に指定する。主・予備を分け、同じ主保存先を複数Coreで同時使用しない |
 
 保持日数、バッチ件数、通知間隔、通信期限、実行枠、転送量などの例中の値はデモ用であり、ライブラリの既定値や性能保証ではない。ファイル保存の詳細はConnectionsの保存契約（`docs/connections.md`）を参照する。
 
-全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せずトラブルシューティング（`docs/troubleshooting.md`）へ進む。7例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲はB00検証記録（`docs/validation/v1.0.md`）、本版の公開後再現は[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で追跡する。過去のv0.9版ガイドの確認範囲は文書整備の検証記録（`docs/validation/docs-onboarding.md`）に残す。
+全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せずトラブルシューティング（`docs/troubleshooting.md`）へ進む。8例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲はB01検証記録（`docs/validation/v1.1.md`）と既存B00（`docs/validation/v1.0.md`）、本版の公開後再現は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。過去のv0.9版ガイドの確認範囲は文書整備の検証記録（`docs/validation/docs-onboarding.md`）に残す。
 
 ---
 
@@ -1425,7 +1467,7 @@ PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activi
 
 収録元 `docs/troubleshooting.md`
 
-## v0.9.0のトラブルシューティング
+## v1.1.0のトラブルシューティング
 
 対象は、通常導入（`docs/getting-started.md`）・実行例（`docs/tutorials.md`）で問題が起きた人と、同版のCoreを呼び出す開発者。ここでは既存の契約に沿って原因を切り分ける。変更を伴う修正へ進む場合はIssue運用（`docs/issue-workflow.md`）に従う。
 
@@ -1448,7 +1490,7 @@ PowerShellでは導入時の作業フォルダで次を実行する。Linuxで�
 | `venv` / `ensurepip` / `pip`がない | そのPythonの導入元とvenv構成 | 同じ版のPythonに対応するvenv/pipを公式・OSの手順で用意する | 仮想環境の`-m pip --version`が通る |
 | ダウンロード失敗、SHA256不一致 | HTTPエラー、途中取得、ファイル名とRelease版、checksum一覧の2件 | 同じReleaseから対象と一覧を再取得し、一致を確認してから使う | wheelとsdistの両方が一致 |
 | `No module named nymph_toolkit` | pipを実行したPythonと、例を実行したPythonのパス | 同じvenvの`python -m pip`でwheelを導入し、同じ実行ファイルで例を動かす | import元がvenvのsite-packagesになる |
-| 版が0.9.0と違う、`src`からimportされる | `pip show`の版・Location・Editable project location、`sys.executable` | 通常導入の確認なら新しいvenvに公開wheelを入れる。開発環境ならメタデータ変更後に`pip install -e .`をやり直す | 版とimport元が選んだ導入方法に一致 |
+| 版が1.1.0と違う、`src`からimportされる | `pip show`の版・Location・Editable project location、`sys.executable` | 通常導入の確認なら新しいvenvに公開wheelを入れる。開発環境ならメタデータ変更後に`pip install -e .`をやり直す | 版とimport元が選んだ導入方法に一致 |
 | `examples/...`が見つからない | wheelだけを取得していないか、現在の作業フォルダ | 同版sdistを展開し、導入ガイドのパスで実行する | まずRuntime例が終了コード0 |
 | `No module named hybrid_dummy` | `hybrid_demo.py`だけをコピーしていないか | 同版の`examples/`を一式使う。独自機能のfactoryは共有venvからimport可能にする | Hybrid例のPASSと子の終了確認 |
 | `NotImplementedError`等で子が起動しない | Windowsのイベントループが子プロセスに対応するか、Notebook等で別ループを使っていないか | まず端末から同梱例の`asyncio.run`で実行する。独自ホストは対応ループを使う | Hybrid例が起動・通信・停止まで通る |
@@ -1486,9 +1528,11 @@ PowerShellでは導入時の作業フォルダで次を実行する。Linuxで�
 
 保存失敗では新規受付停止→古い履歴の予備先への退避→保存再試行→回復または未保存報告と終了という既存の手順を使う。独自の履歴破棄・自動修復を追加しない。急なプロセス終了では未保存分が失われ得るため、正常停止の確認と区別する。詳細はConnectionsの保存契約（`docs/connections.md`）。
 
+Memoryの`memory.invalid`・`memory.conflict`・`memory.storage`や容量不足はMemoryの失敗一覧（`docs/memory.md`）で確認する。SQLiteはCore履歴の救命手順の対象ではなく、保存先・権限・ロックと要求IDを分けて調べる。
+
 ### 解消しない場合の報告
 
-Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`がWinError 10054になり、終了時の後処理が未確認になる事象は[#94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)で追跡する。原因と未リリース修正の検証（`docs/validation/windows-shutdown.md`）では、ソケット解放が抜ける条件を制御再現している。公開v0.9.0の配布物は変更していない。コールバックの警告を抑止するだけで終了成功とせず、子の終了コード・後処理確認・残存接続を確認する。
+Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`がWinError 10054になり、終了時の後処理が未確認になる事象は[#94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)で追跡する。原因と修正の検証（`docs/validation/windows-shutdown.md`）では、ソケット解放が抜ける条件を制御再現した。修正はv1.0.0から含む。公開v0.9.0の配布物は変更していない。コールバックの警告を抑止するだけで終了成功とせず、子の終了コード・後処理確認・残存接続を確認する。
 
 [GitHub Issues](https://github.com/Tao-pyth/nymph-toolkit/issues)に、次を記載する。新規実装や修正の着手は参加方針（`CONTRIBUTING.md`）に従う。
 
@@ -1912,9 +1956,9 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ### 採用された構成
 
-v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。Runtimeの使い方（`docs/runtime.md`）とRegistryの使い方（`docs/registry.md`）、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存はConnections（`docs/connections.md`）とADR 0019、活動管理はTaskManager（`docs/task-manager.md`）とADR 0020を参照する。本番Subsystem・Adapterは後続段階で扱う。
+v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。Runtimeの使い方（`docs/runtime.md`）とRegistryの使い方（`docs/registry.md`）、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存はConnections（`docs/connections.md`）とADR 0019、活動管理はTaskManager（`docs/task-manager.md`）とADR 0020を参照する。当時の本番Subsystem・Adapterは後続段階とした。v1.1ではMemoryを追加する。
 
-Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。初期実装の対象はCoreで、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現する。根拠はR2、判断記録はADR 0001・0005。
+Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。v0.xの初期実装はCoreを対象とし、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現した。R31でv1.1 Memoryを最初の実Subsystemとして追加する。根拠はR2、判断記録はADR 0001・0005。
 
 | 構成要素 | 責務の整理 | 採用状況・今後具体化する点 |
 |---|---|---|
@@ -2008,11 +2052,11 @@ R24では構成と責務を維持したまま、公開APIの入力・結果・�
 
 ### v1.0.0の接続契約と後続構成案
 
-R29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）でv1.0目標を具体化した。接続契約（`docs/module-contracts.md`）に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、移行資料（`docs/migration-v1.md`）に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。後段の本番機能の名称・配分は引き続き提案。
+R29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）でv1.0目標を具体化した。接続契約（`docs/module-contracts.md`）に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、移行資料（`docs/migration-v1.md`）に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。v1.1 MemoryはR31・ADR 0027で最小範囲を具体化し、その他の本番機能の名称・配分は引き続き提案。
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象はADR 0006（`docs/adr/0006-core-connection-contracts.md`）、R29の採用詳細はADR 0026で管理する。
 
-以下はv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+Memoryの採用部分はADR 0027（`docs/adr/0027-v1.1-memory.md`）・利用ガイド（`docs/memory.md`）に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
 
 | 構成案 | 役割と境界 |
 |---|---|
@@ -2078,8 +2122,8 @@ nymph-toolkit/
 │  ├─ customer-guide.md             # 顧客向け契約・利用・図解・API付録
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
-│  ├─ getting-started.md            # v0.9.0通常導入・初回実行
-│  ├─ tutorials.md                  # 6実行例・期待結果・保存物
+│  ├─ getting-started.md            # v1.1.0通常導入・初回実行
+│  ├─ tutorials.md                  # 公開v1.1の8実行例・期待結果・保存物
 │  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md
@@ -2093,6 +2137,8 @@ nymph-toolkit/
 │  ├─ module-contracts.md            # 6契約と接続開発
 │  ├─ migration-v1.md                # v0.9からの移行
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
+│  ├─ memory.md                      # v1.1保存・取得と運用
+│  ├─ validation/v1.1.md              # B01受入結果
 │  ├─ validation/v1.0.md             # B00受入結果
 │  ├─ validation/core-coverage.json  # 証拠対応の編集元
 │  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
@@ -2137,13 +2183,16 @@ nymph-toolkit/
 │     ├─ 0023-v0.7-implementation-contracts.md
 │     ├─ 0024-v0.8-integration-validation.md
 │     ├─ 0025-v0.9-core-completion.md
-│     └─ 0026-v1.0-core-connection-contracts.md
+│     ├─ 0026-v1.0-core-connection-contracts.md
+│     └─ 0027-v1.1-memory.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     └─ contracts/
-└─ tests/
+│     ├─ contracts/                  # memory.pyにMemory契約宣言
+│     └─ subsystems/memory/           # 同梱する最小Memory
+└─ tests/                            # subsystems/にMemory単体・統合試験
    ├─ core/
+   ├─ subsystems/
    └─ doubles/
 ```
 
@@ -2151,7 +2200,7 @@ R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `
 
 #### Subsystem・Adapterを追加する際の配置案
 
-同梱する場合と、別配布にする場合の例を以下に示す。将来の配置・名称は提案であり、個別の分割を決定したものではない。
+R31でMemoryは`src/nymph_toolkit/subsystems/memory/`へ同梱した。公開factoryは公開Contractsだけを参照し、CoreとMemoryの保存先・判断責務を分ける。`docs/memory.md`、`docs/adr/0027-v1.1-memory.md`、`docs/validation/v1.1.md`、`examples/memory_demo.py`を配置する。その他の同梱と別配布の例を以下に示す。将来の配置・名称は提案であり、個別の分割を決定したものではない。
 
 | 扱い | ソースの配置例 | 配布設定・検証の配置例 |
 |---|---|---|
@@ -2710,6 +2759,143 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 <a id="section-17"></a>
 
+収録元 `docs/memory.md`
+
+## Memory Subsystem v1.1
+
+R31・ADR 0027（`docs/adr/0027-v1.1-memory.md`）に基づく最小の経験・知識の保存/取得。v1.1.0で追加した機能の説明。公開先は[v1.1.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.1.0)。結果はB01検証記録（`docs/validation/v1.1.md`）を参照する。
+
+### 役割と構成
+
+Memoryは、要求側が指定した本文・種別・根拠を保持する。真偽の判定、言語学習、活動選択は担当しない。Coreは登録・接続・実行を管理する。MemoryのファイルはCoreのFileStore履歴・退避・保存期間の対象外である。
+
+```mermaid
+flowchart LR
+    N[要求側機能・検証用Nymph] -->|候補照会・選定結果の登録| C[Core Connections]
+    C -->|管理・接続許可| M[Memory Subsystem]
+    N -->|許可済み直接通信 put / get / query| M
+    N -->|Core経由の操作も利用可| C
+    M --> W[専用worker]
+    W --> D[(Memory専用SQLite)]
+    C --> H[(Core履歴)]
+```
+
+同じ`nymph-toolkit`配布物に同梱する。ModuleKindはSUBSYSTEM、factoryは`nymph_toolkit.subsystems.memory:factory`。公開宣言は`nymph_toolkit.contracts.memory`の`MEMORY_KEY`・`MEMORY_CONTRACT`。Core内部や他のSubsystemへ依存しない。
+
+### 登録・設定
+
+既存の接続契約（`docs/module-contracts.md`）に従い、起動前にHybridGroupへ登録する。
+
+```python
+from pathlib import Path
+from nymph_toolkit.contracts import ModuleSpec, ModuleKind, ModuleAdvertisement, Placement
+from nymph_toolkit.contracts.memory import MEMORY_KEY, MEMORY_CONTRACT
+
+# groupは設定済みのHybridGroup。保存先の親ディレクトリは先に用意する。
+group.register_module(
+    ModuleSpec("memory", ModuleKind.SUBSYSTEM),
+    ModuleAdvertisement("memory", "1.1.0", (MEMORY_CONTRACT,)),
+    "nymph_toolkit.subsystems.memory:factory",
+    {"path": str(Path("memory.sqlite3").resolve())},
+    Placement.PROCESS,  # LOCALも同じ契約
+)
+```
+
+設定は絶対ファイルパスの`path`だけ。起動時に新規/空のSQLiteを初期化し、既存DBは識別・版・構造・quick_checkを確認する。未知形式や破損を自動上書きしない。SQLiteを含むCPython 3.12〜3.15、HybridSettings.max_frame_bytes >= 65536が必要。1ファイルは1つのMemory実体が所有する。
+
+### 3つの操作
+
+契約は`ContractKey("ntk.memory.records", "1")`、全操作ASYNC。機能実装版1.1.0、契約版1、内部保存版1は別の版である。
+
+| 操作 | 引数 | 成功結果 |
+|---|---|---|
+| put | `record`：下表の6項目のみのdict | 保存した記録。commit後に返す |
+| get | `record_id`：文字列 | 対象の記録 |
+| query | keywordのみ：`kind=None, source_kind=None, after=0, limit=8` | `records`一覧、次に渡す`after`、`has_more` |
+
+| putの項目 | 意味・制約 |
+|---|---|
+| record_id | 要求側が決めるID。非空・前後空白なし、UTF-8で128 bytes以下 |
+| kind | `experience`（経験）/ `knowledge`（知識）。Memoryが自動推定しない |
+| content | 非空の本文 |
+| source_kind | `observed`（観測）、`reported`（伝聞）、`inferred`（推論）、`imagined`（想像）、`dream`（夢） |
+| source | 非空の出典/根拠の参照文字列。参照先を取得・検証する機能は含まない |
+| occurred_at | タイムゾーン付きRFC 3339。秒必須、小数秒は最大6桁、UTCへ正規化 |
+
+保存結果に`sequence`（保存順）・`stored_at`（Memory側のUTC保存時刻）を追加する。出来事時刻から順序・価値を推定しない。正規化6項目のコンパクトJSONはASCII escapeで4096 bytes以下。未知フィールドは拒否する。
+
+```python
+core = context.core
+candidates = await core.candidates(MEMORY_KEY)
+# 実際には属性・稼働情報を確認し、要求側の方針で選ぶ。
+await core.bind(MEMORY_KEY, "memory", timeout=5)
+link = await core.prepare(MEMORY_KEY, timeout=5)
+try:
+    result = await link.acall("put", {
+        "record_id": "observation-001", "kind": "experience",
+        "content": "雨を観測した。", "source_kind": "observed",
+        "source": "dummy:weather", "occurred_at": "2026-11-23T09:30:00+09:00",
+    }, timeout=5)
+    page = await core.invoke(MEMORY_KEY, "query", kind="experience", limit=8, timeout=5)
+finally:
+    await link.close()
+```
+
+上の変数`result`・`page`は成功値のほかに業務失敗や容量不足を取り得る。利用側は下記の結果型を確認してからdictの項目を読む。処理結果不明時の照会・解放は既存DirectLink/CoreClientの契約に従う。
+
+queryは指定フィルタのAND完全一致で、`sequence > after`を昇順に返す。afterは0〜2^63-1、limitは1〜8の整数（bool不可）。次ページには同じフィルタと返却afterを渡す。空結果は入力afterを返す。ページ間の追記は後続ページに現れる場合があり、検索全体の時点固定・関連度順・類似検索は保証しない。
+
+### 重複・失敗・停止
+
+```mermaid
+sequenceDiagram
+    participant R as 要求側
+    participant M as Memory
+    participant D as SQLite worker
+    R->>M: put(IDと本文・出典)
+    M->>D: 検証・BEGIN・既存ID照合
+    alt 新規または同じ正規化内容
+        D->>D: 保存または既存結果取得・COMMIT
+        D-->>M: 記録
+        M-->>R: 成功結果
+    else IDが同じで内容が異なる
+        M-->>R: OperationFailure(memory.conflict)
+    end
+```
+
+同じID・同じ正規化内容は同じsequence/stored_atを返す。異なる本文や出典で既存記録を上書きしない。自動再送は行わず、応答消失時は要求側が同じIDで照会する。
+
+| 結果 | 意味・対応 |
+|---|---|
+| OperationFailure `memory.invalid` | 入力/フィルタ/上限違反。要求内容を確認する |
+| OperationFailure `memory.not_found` | IDが存在しない。空のqueryは正常な空一覧 |
+| OperationFailure `memory.conflict` | IDの内容不一致。元記録は維持される |
+| OperationFailure `memory.storage` | SQL/保存/読込の失敗。保存先・権限・容量・別writerを調べる |
+| TemporaryUnavailable | 処理中または停止中。待機列へ入らず容量不足として返る |
+| 既存の通信例外・結果不明 | 接続障害・期限超過。成功/未実行と決めつけない |
+
+受付は同時1件、SQLiteロック待ちは1秒。稼働情報は処理開始/終了時に通知する。保存I/Oは専用thread、取消はworker完了まで待ち、停止は進行処理後にファイルとworkerを閉じる。取消や通信期限切れはrollback保証ではない。停止期限とCore所有子の扱いはADR 0022に従う。
+
+保存形式は内部形式。手編集・並行writer・自動形式移行を提供しない。ロック解放後の再要求は要求側が判断する。通常のエラーを理由にCoreへ自動ヘルス申請・周期再試行・接続切替を追加しない。
+
+### 試す・検証する
+
+公開wheelと同版sdistでの実行は通常導入（`docs/getting-started.md`）と8つの例（`docs/tutorials.md`）に従う。以下はリポジトリ直下からの開発用手順。
+
+```text
+python -m pip install -e .
+python examples/memory_demo.py
+python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v
+```
+
+例は一時ディレクトリ内でMemoryを別プロセス、要求側ダミーをLOCALに置き、直接/Core通信・最大ページ・失敗・再起動取得を確認して終了する。`PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup`が最後の出力。例のデータは終了時に削除される。実利用では保持する絶対パスを指定する。
+
+Document Adapter、編集・訂正/削除・忘却、Working/Procedural Memory、意味検索、統合、学習は未実装。夢区分は保存上の区別で、生成や次の睡眠時の失効を実装したものではない。複製・移植・伝播を追加していない。
+
+---
+
+<a id="section-18"></a>
+
 収録元 `docs/core-api.md`
 
 ## Core APIと利用上の契約
@@ -2811,7 +2997,7 @@ ActivityStateはPENDING、STARTING（遠隔の実開始待ち）、RUNNING、PAU
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/api-reference.md`
 
@@ -4341,7 +4527,7 @@ Usage(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingStat
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/module-contracts.md`
 
@@ -4435,7 +4621,7 @@ python tools/check_contracts.py
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `docs/migration-v1.md`
 
@@ -4458,7 +4644,7 @@ R29で「必要な破壊的API整理も今回に含める」と明示された�
 
 ---
 
-<a id="section-21"></a>
+<a id="section-22"></a>
 
 収録元 `docs/adr/README.md`
 
@@ -4495,6 +4681,8 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0025 v0.9のCore完成監査と配布前判定（`docs/adr/0025-v0.9-core-completion.md`） | R24の実施に伴う具体化として採用。64項目・既存受入・公開API・新規環境を照合。A09-04の公開後判定を分離。R25で停止競合#89・公開#88を追跡 | R24〜R25・#82〜#85・#87〜#89 |
 | 0026 v1.0 Core接続契約・互換性境界（`docs/adr/0026-v1.0-core-connection-contracts.md`） | R29に基づく実装判断として採用。6契約・公開型・登録検証・必要なAPI整理・B00・移行 | R29・親#10・子#98〜#102 |
 
+| 0027 v1.1 Memoryの最小保存・取得（`docs/adr/0027-v1.1-memory.md`） | R31の実装判断。出典付き記録・3操作・SQLite・停止/失敗・B01。Coreの安定API維持 | R31・親#11・子#105〜#108 |
+
 ### 記録方法
 
 ADR 0022はR19に基づく64項目の採用記録である。0002の未決を具体化し、0016の構成固定と致命的障害時の停止を維持しつつ、Core停止時の期限超過に限る所有子の強制終了を追加採用する。0019〜0021の同一プロセス契約を維持する。19〜64を個別回答や未採用案と扱わず、設計採用を製品実装・受入・公開の完了と扱わない。
@@ -4511,7 +4699,7 @@ ADR 0017のR14時点の未決事項は履歴として保持し、R15で解消し
 
 ---
 
-<a id="section-22"></a>
+<a id="section-23"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -4565,7 +4753,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-23"></a>
+<a id="section-24"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -4603,7 +4791,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-24"></a>
+<a id="section-25"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -4666,7 +4854,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-25"></a>
+<a id="section-26"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -4729,7 +4917,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-26"></a>
+<a id="section-27"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -4765,7 +4953,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-27"></a>
+<a id="section-28"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -4816,7 +5004,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-28"></a>
+<a id="section-29"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -4863,7 +5051,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-29"></a>
+<a id="section-30"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -4917,9 +5105,13 @@ Memoryの保存形式、Cognitionの学習方式と評価方法、Agencyの意�
 
 R5の各段階の設計意図とAdapter開発方針、R7の最終ビジョンによる長期構想の補足。Docsの根拠表（`docs/README.md`）
 
+### R31の後続判断
+
+Memoryの最小保存/取得・形式・B01はADR 0027（`docs/adr/0027-v1.1-memory.md`）で具体化した。本ADRの他の機能案と長期構想は維持する。
+
 ---
 
-<a id="section-30"></a>
+<a id="section-31"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -4972,9 +5164,13 @@ R8・ADR 0011（`docs/adr/0011-apache-2.0-license.md`）で、自作コード・
 
 R6の「単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterは必要に応じて分割する」採用指示。Docsの根拠表（`docs/README.md`）
 
+### R31のMemory配置
+
+ADR 0027（`docs/adr/0027-v1.1-memory.md`）により、追加外部依存のないMemoryを`src/nymph_toolkit/subsystems/memory/`へ同梱する。共通宣言は`contracts/memory.py`。個別の独立配布は採用せず、必要時の分割方針を維持する。
+
 ---
 
-<a id="section-31"></a>
+<a id="section-32"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -5027,7 +5223,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-32"></a>
+<a id="section-33"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -5081,7 +5277,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-33"></a>
+<a id="section-34"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -5121,7 +5317,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-34"></a>
+<a id="section-35"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -5164,7 +5360,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-35"></a>
+<a id="section-36"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -5233,7 +5429,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-36"></a>
+<a id="section-37"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -5304,7 +5500,7 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-37"></a>
+<a id="section-38"></a>
 
 収録元 `docs/adr/0016-v0.3-registry.md`
 
@@ -5382,7 +5578,7 @@ Runtimeの開始待機・停止待機が取消された場合もADR 0014の後�
 
 ---
 
-<a id="section-38"></a>
+<a id="section-39"></a>
 
 収録元 `docs/adr/0017-connection-binding-and-health.md`
 
@@ -5455,7 +5651,7 @@ ADR 0015の直接通信採用とADR 0016のRegistry・ModuleGroupを前提とす
 
 ---
 
-<a id="section-39"></a>
+<a id="section-40"></a>
 
 収録元 `docs/adr/0018-connection-selection-health-and-recovery.md`
 
@@ -5579,7 +5775,7 @@ R15：Docsの根拠一覧（`docs/README.md`）に記録した、本チャット
 
 ---
 
-<a id="section-40"></a>
+<a id="section-41"></a>
 
 収録元 `docs/adr/0019-v0.4-connections.md`
 
@@ -5704,7 +5900,7 @@ R16は本チャットのv0.4着手指示。R15の採用方針はADR 0018、既�
 
 ---
 
-<a id="section-41"></a>
+<a id="section-42"></a>
 
 収録元 `docs/adr/0020-v0.5-task-manager.md`
 
@@ -5873,7 +6069,7 @@ Docsの根拠表（`docs/README.md`）のR2・R4・R10・R16・R17。R17はv0.5�
 
 ---
 
-<a id="section-42"></a>
+<a id="section-43"></a>
 
 収録元 `docs/adr/0021-v0.6-activity-changes.md`
 
@@ -6055,7 +6251,7 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 ---
 
-<a id="section-43"></a>
+<a id="section-44"></a>
 
 収録元 `docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`
 
@@ -6226,7 +6422,7 @@ R19：v0.9までの一問一答、確認事項1〜64の一覧、ユーザーに�
 
 ---
 
-<a id="section-44"></a>
+<a id="section-45"></a>
 
 収録元 `docs/adr/0023-v0.7-implementation-contracts.md`
 
@@ -6320,7 +6516,7 @@ A07-01〜14に対応する実TCP・実子プロセスの検証を行う。ロー
 
 ---
 
-<a id="section-45"></a>
+<a id="section-46"></a>
 
 収録元 `docs/adr/0024-v0.8-integration-validation.md`
 
@@ -6393,7 +6589,7 @@ Windows/Linux × CPython 3.12〜3.15で、ソース、通常wheelインストー
 
 ---
 
-<a id="section-46"></a>
+<a id="section-47"></a>
 
 収録元 `docs/adr/0025-v0.9-core-completion.md`
 
@@ -6451,7 +6647,7 @@ R25でユーザーがPR #86のレビュー、問題解消後のマージとv0.9.
 
 ---
 
-<a id="section-47"></a>
+<a id="section-48"></a>
 
 収録元 `docs/adr/0026-v1.0-core-connection-contracts.md`
 
@@ -6537,7 +6733,85 @@ Core/Contractsの明示exportと、module-contractsに記す利用者向けメ�
 
 ---
 
-<a id="section-48"></a>
+<a id="section-49"></a>
+
+収録元 `docs/adr/0027-v1.1-memory.md`
+
+## ADR 0027 v1.1 Memoryの最小保存・取得
+
+### 状態・根拠
+
+2026年11月23日、R31のv1.1.0開発指示を具体化するCodexの実装判断として採用。ユーザーが指定した段階の実施と、以下のAPI・方式・具体値の設計判断を区別する。親#11・マイルストーン11に子#105（設計）、#106（保存）、#107（接続）、#108（配布・資料）をコード変更前に登録し、GitHubの親子関係を確認した。基点はv1.0.0の`9a48ef0`。
+
+ADR 0008のMemory部分と0009の配置を具体化する。0022の64項目、0026のCore接続契約と安定APIは変更しない。他のSubsystem・Adapterの案を一括採用しない。
+
+### 背景・初期スコープ
+
+最終ビジョンの経験・知識と根拠の区別を、小さな永続記録として検証する。Memoryは内容の真偽・重要性・活動を判断せず、要求側から受け取った区分と出典を保持する。Coreの接続・活動履歴とは別の所有者・保存先である。
+
+### D1：配置と接続
+
+追加の外部依存が不要なため、同じ配布物に`nymph_toolkit.subsystems.memory`を同梱する。公開入口は`factory(context, config)`、設定は絶対ファイルパスの`{"path": ...}`だけ。親ディレクトリは利用者が用意する。将来の独立配布は必要性を再評価する。
+
+契約定義はCoreをimportしない`nymph_toolkit.contracts.memory`の`MEMORY_KEY`・`MEMORY_CONTRACT`。既存Contractsのトップレベルexportとv1 manifestは維持する。契約ID/版は`ntk.memory.records` / `1`、ASYNCの`put`・`get`・`query`。Coreが許可した直接通信とCore経由を既存ルールで使用する。同一/別プロセスともJSON値を返す。
+
+### D2：記録と取得
+
+`put(record)`は以下の6項目を持つdictだけを受け取る。未知フィールドを無視しない。
+
+| フィールド | 契約 |
+|---|---|
+| record_id | 要求側が決める空白で囲まれない非空文字列、UTF-8で128 bytes以下 |
+| kind | `experience` / `knowledge` |
+| content | 非空の本文文字列。自動分類・変換・学習を行わない |
+| source_kind | `observed` / `reported` / `inferred` / `imagined` / `dream` |
+| source | 非空の出典・根拠参照文字列。実在性・正しさの保証ではない |
+| occurred_at | タイムゾーン付きRFC 3339、秒必須・小数秒は最大6桁。UTC ISO文字列へ正規化 |
+
+保存結果は上記に`sequence`（正の保存順整数）・`stored_at`（保存側のUTC時刻）を追加する。内容上の出来事時刻と保存時刻・取得順は別物。同一ID・同じ正規化内容なら保存済みの同じ結果を返し、異なる内容なら`memory.conflict`。保存済み内容の上書き・削除は提供しない。
+
+`get(record_id)`は保存結果を返す。`query(*, kind=None, source_kind=None, after=0, limit=8)`は指定フィルタのAND完全一致、`sequence > after`の昇順。返却は`{"records": [...], "after": 最終sequenceまたは入力after, "has_more": bool}`。追記中もカーソルより後を辿れるが、複数ページの時点固定スナップショットではない。関連度・意味検索や自動選定は行わない。
+
+正規化した6項目のJSONはASCII escape・コンパクト表現で4096 bytes以下。limitは1〜8、afterは0〜2^63-1の整数（bool不可）。Memory起動には65536 bytes以上のHybridフレーム設定が必要。返却も同じ上限内の記録を最大8件に制限する。
+
+### D3：永続化・実行・障害
+
+SQLiteの内部形式1を採用し、application_id・user_versionで識別する。新しい/空のDBだけを初期化する。未知形式・他用途DB・破損は起動失敗とし、自動修復・空DBへの置換を行わない。1ファイルを1つのMemory実体が所有する運用。複数writerの運用保証・移行機構は提供しない。
+
+接続の作成・SQL・commit・closeは同じ専用worker threadで行い、asyncioループを塞がない。SQLは値をバインドし、明示トランザクションを使う。成功応答はcommit後。SQLiteロック待ちは1秒。プロセス/ストレージ障害で応答が失われた場合の結果不明は既存通信契約に従い、Core・Memoryは自動再送しない。要求側が同じIDで照合できる。
+
+同時受付枠は1。稼働情報は変化時にCoreへ通知し、処理中/停止中の新規要求は`TemporaryUnavailable`。無制限の内部待機列を追加しない。入力違反`memory.invalid`、未発見`memory.not_found`、内容競合`memory.conflict`、保存/読込失敗`memory.storage`は`OperationFailure`として返す。誤った操作名・呼出し署名等は既存の接続契約に従う。
+
+取消でworker処理を途中破棄せず完了を待つ。停止は受付を止め、進行処理が終わってからDBとworkerを閉じる。これは保存が取消された保証ではなく、既存の結果不明・照会の区別を維持する。初期化失敗・部分起動でも回収する。Coreの履歴救命手順をMemoryへ流用しない。
+
+実装上の根拠はPython公式の[sqlite3](https://docs.python.org/3/library/sqlite3.html)と[asyncioの取消保護](https://docs.python.org/3/library/asyncio-task.html#shielding-from-cancellation)。専用workerの終了を別途待ち、shieldだけで取消が完了したと扱わない。
+
+### D4：B01と完了の区別
+
+| ID | 合格条件 |
+|---|---|
+| B01-01 | 経験/知識、5出典区分、時刻正規化、上限・未知/不正入力を照合 |
+| B01-02 | commit後の保存、再起動取得、同一要求・競合、独立した返却値を確認 |
+| B01-03 | ID取得、完全一致フィルタ、保存順ページ、空結果・未知IDを確認 |
+| B01-04 | 不正DB、ロック・保存失敗、取消中/停止中の完了待ち、ループ応答・資源回収を確認 |
+| B01-05 | 要求元/提供先4配置でCore経由/直接通信・永続化・業務失敗・容量不足・停止を確認 |
+| B01-06 | 既存回帰/v1互換、8例、8環境CI、通常wheel/sdist、Docs/引継ぎ書が一致 |
+
+実装・検証はレビュー用PRまで。タグ/Release・公開後取得・親/マイルストーン終了は後続公開段階。結果は検証記録（`docs/validation/v1.1.md`）に記録し、未達を完了扱いしない。
+
+### 影響・残る未決/延期
+
+初期形式と上限は小規模検証のための選択。一般的な記憶モデルの完成や性能保証ではない。全文/類似検索、編集・訂正・忘却/削除契約、知識グラフ、Working/Procedural Memory、統合・圧縮、Document Adapterの形式/取込失敗、Cognition/Sleepとの連携は後続ADRで判断する。夢区分の保存は夢生成・失効の実装ではない。長期ビジョンの訂正可能性を否定しない。
+
+複製・移植・伝播、稼働中構成交換、分散、外部writer、PyPI、独立配布は対象外。Coreに認知・価値判断・自動選定を追加しない。
+
+### R32の公開段階
+
+2026年11月23日、PR #109レビュー・問題解消後のマージ・v1.1.0公開と公開後確認・課題終了が明示指示された。D1〜D4の契約を維持し、実施範囲を公開まで拡張する。公開子#110の最終結果を参照する。
+
+---
+
+<a id="section-50"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -6545,7 +6819,7 @@ Core/Contractsの明示exportと、module-contractsに記す利用者向けメ�
 
 最終目標は、経験を通じて知識・言語・行動能力・人格を発達させ、自ら考え、学び、活動できる人工人格Nymphである。R7のProject Vision（`docs/vision.md`）を到達像とし、完成を特定のバージョンへ固定しない。以下の各段階は、その基盤と能力を検証する開発計画である。
 
-**GitHub公開＝V0.1、Core機能完成＝V0.9は確定目標。R19・ADR 0022でv0.9までの64項目とv0.7〜v0.9の配分・受入条件を設計採用した。** v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で採用範囲を具体化した。予定日や所要期間は設定せず、完了条件と判断記録に基づいて進める。根拠はR3・R19。v0.1〜v0.9のCore検証では本番Subsystem・Adapterの代わりにダミーを使う。R20でv0.7を実装し検証記録を追加した。v0.8はR22・R23で統合・障害・負荷・配布検証と公開を行い、証拠は検証記録（`docs/validation/v0.8.md`）へ集約する。v0.9はR24で完成確認を行い、配布前・公開後の判定を検証記録（`docs/validation/v0.9.md`）へ分ける。v1.xの配分案は引き続き提案である。
+**GitHub公開＝V0.1、Core機能完成＝V0.9は確定目標。R19・ADR 0022でv0.9までの64項目とv0.7〜v0.9の配分・受入条件を設計採用した。** v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で採用範囲を具体化した。予定日や所要期間は設定せず、完了条件と判断記録に基づいて進める。根拠はR3・R19。v0.1〜v0.9のCore検証では本番Subsystem・Adapterの代わりにダミーを使う。R20でv0.7を実装し検証記録を追加した。v0.8はR22・R23で統合・障害・負荷・配布検証と公開を行い、証拠は検証記録（`docs/validation/v0.8.md`）へ集約する。v0.9はR24で完成確認を行い、配布前・公開後の判定を検証記録（`docs/validation/v0.9.md`）へ分ける。v1.xは各段階で具体化し、v1.0はADR 0026、v1.1はADR 0027の採用範囲に従う。その他の配分案は引き続き提案である。
 
 既存のV0.1・V0.9はv0.1.0・v0.9.0の節目を表す。R5で示されたv1.0.0の接続契約整備という目標と、v1.1.0〜v1.10.0の未確定の開発計画案を後半に追記する。v1.xのSubsystem名・Adapter名は暫定名称であり、名称・順序・機能配分は今後変更される可能性がある。
 
@@ -6691,7 +6965,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 
 ### v1.0.0以降のロードマップ案
 
-**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1以降のSubsystem・Adapterの名称、順序、配分、業務契約と受入は未確定である。日付・開発期間・工数の見積もりは設定しない。
+**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1 Memoryの最小範囲・業務契約・B01はR31・ADR 0027で具体化した。他のSubsystem・Adapterの名称、順序、配分、業務契約と受入は未確定である。日付・開発期間・工数の見積もりは設定しない。
 
 #### リリース運用案
 
@@ -6709,7 +6983,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 | バージョン | 主な開発対象（暫定名称） | 開発目標の案 | 検証案 |
 |---|---|---|---|
 | v1.0.0 | Core接続契約 | Subsystem・Adapter向け共通接続基盤 | B00 |
-| v1.1.0 | Memory Subsystem | 経験・知識の最小保存と取得 | B01 |
+| v1.1.0 | Memory Subsystem（R31で具体化） | 出典付き記録の最小保存/取得、ADR 0027 | B01-01〜06 |
 | v1.2.0 | Document Adapter | 文書取得とMemory連携 | B02 |
 | v1.3.0 | Cognition Subsystem | 初期の言語・概念学習 | B03 |
 | v1.4.0 | Text Interaction / Web Adapter | 学習・訂正・文章観測の統合 | B04 |
@@ -6732,7 +7006,13 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 - **検討・成果物の案** — Module Contract、Lifecycle Contract、Capability Contract、Communication Contract、Task Contract、Error Contractを具体化する。Coreと同じ配布物のContractsを公開接続契約として体系化し、公開API資料、接続用の開発補助機能、ダミーを用いた契約テストを整備する。本番Subsystemの完成は必須条件としない。
 - **判断と検証** — 必須の契約項目、実行配置ごとの適用範囲、互換性境界、補助機能を決める。Subsystem・Adapterの接続、ライフサイクル、能力、通信、活動、失敗通知を採用範囲で検証する。ADR 0006・B00へ記録する。
 
-#### v1.1.0〜v1.2.0 — Memoryと文書入力
+#### v1.1.0 — Memory（R31で実施）
+
+着手条件はv1.0接続契約の公開・親#11と関連ADRの確認。子#105〜#108を先行登録し、ADR 0027（`docs/adr/0027-v1.1-memory.md`）で保存形式・API・初期範囲・異常系・上限を実装判断として採用した。成果物は同梱Memory、出典付き記録のput/get/query、SQLite、4配置統合・再起動・8番目の実行例と利用資料（`docs/memory.md`）。B01-01〜06の検証・通常配布・8環境CI・引継ぎ書同期を完了条件とし、結果（`docs/validation/v1.1.md`）に記録する。公開後確認と親/マイルストーン終了は後続の公開段階。
+
+編集・訂正/忘却、意味検索、記憶統合・学習は未採用。Document Adapterはv1.2の判断対象として残す。v1.1の具体化は他段階の順序・名称・配分案を一括採用しない。
+
+#### v1.1.0〜v1.2.0 — 当初のMemoryと文書入力の案
 
 - **着手時に確認すること** — 保存・取得に必要な接続契約と検証可能なCore機能を確認する。
 - **検討・成果物の案** — v1.1.0では経験・知識の最小保存・取得を実装する。v1.2.0ではDocument Adapterから文書を取得し、Memoryとの連携を検証する。複雑な知識グラフや高度な記憶統合は初期の必須条件にしない。
@@ -6779,13 +7059,13 @@ R7で示す自然な日本語での継続的な交流、Self-Model、内部状�
 
 ---
 
-<a id="section-49"></a>
+<a id="section-51"></a>
 
 収録元 `docs/acceptance.md`
 
 ## 受入基準・検討案と検証記録
 
-以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。B00はR29・ADR 0026で具体化し、B01〜B10は引き続き検討案とする。設計採用・文書検査・製品の受入合格を区別する。
+以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。B00はR29・ADR 0026で具体化し、B01はR31・ADR 0027で具体化し、B02〜B10は引き続き検討案とする。設計採用・文書検査・製品の受入合格を区別する。
 
 ### バージョン別シナリオ
 
@@ -6992,12 +7272,12 @@ ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）の設計判断�
 
 ### 後続v1.xの受入検討案
 
-以下はR5のロードマップを具体化するための検証案で、正式な受入基準は各段階の設計・ADRで決める。Subsystem名・Adapter名は暫定名称、順序とバージョンへの機能配分は未確定である。共通の根拠はADR 0006〜0008。通信経路はADR 0015と後続判断、意思決定と実行管理の境界はADR 0004に従う。
+以下はR5当初の検証案で、B00はADR 0026、B01はADR 0027により具体化済み。他の正式な受入基準は各段階の設計・ADRで決める。Subsystem名・Adapter名は暫定名称、順序とバージョンへの機能配分は未確定である。共通の根拠はADR 0006〜0008。通信経路はADR 0015と後続判断、意思決定と実行管理の境界はADR 0004に従う。
 
 | ID・想定段階 | 検証する能力の案 | 操作と観察結果の案 |
 |---|---|---|
 | B00 v1.0.0（上記で具体化済み） | Core接続契約 | ダミーSubsystem・AdapterでModule、Lifecycle、Capability、Communication、Task、Errorの採用契約を試し、公開API資料と観察結果を照合する。各実行配置の対応範囲を記録する。本番Subsystemの完成は必須条件にしない |
-| B01 v1.1.0 | Memoryの最小保存・取得 | 少量の経験・知識を保存し、採用した取得契約で結果を照合する。複雑な知識グラフや高度な統合を受入の前提にしない |
+| B01 v1.1.0（R31で下記に具体化） | Memoryの最小保存・取得 | 少量の経験・知識を保存し、採用した取得契約で結果を照合する。複雑な知識グラフや高度な統合を受入の前提にしない |
 | B02 v1.2.0 | Document入力とMemory連携 | 対応する文書を取得・取り込みし、保存・取得結果までを追う。未対応形式と取得失敗の扱いは採用契約に沿って確認する |
 | B03 v1.3.0 | Cognitionの初期学習 | 語彙・構文・概念の検証用入力を用い、採用した学習方式の変化を観察する。既存LLMを言語理解・文章生成の中核としない研究方針との整合を確認する |
 | B04 v1.4.0 | Text Interaction / Web連携 | 対応する文章の観測・学習・出力とユーザー訂正を試し、訂正の反映を採用した方法で観察する。対応能力の範囲を記録する |
@@ -7036,9 +7316,24 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 - R6の初期配布方針がREADME・architecture・ADR 0009で一致し、将来の配置例と個別の分割判断を提案・未決として区別していることを確認する。
 - R7の最終ビジョンと研究方針をREADME・vision・ADR 0010で照合し、長期構想を現行Coreの確定要件へ一括追加していないことを確認する。
 
+### v1.1.0のB01受入基準（R31採用）
+
+初期範囲の判断はADR 0027（`docs/adr/0027-v1.1-memory.md`）、操作仕様はMemory（`docs/memory.md`）、試験と結果は検証記録（`docs/validation/v1.1.md`）を参照する。
+
+| ID | 完了条件 |
+|---|---|
+| B01-01 | 経験/知識・5つの出典区分・時刻を保存でき、不正入力・未知項目・上限違反を拒否する |
+| B01-02 | commit後の成功、再起動取得、同一IDの冪等と競合、入力/返却の独立を確認する |
+| B01-03 | IDと完全一致フィルタ、保存順のページ、空結果・未知IDを照合する |
+| B01-04 | 不正DBを上書きせず拒否し、ロック・保存失敗・取消/停止・ループ応答・資源回収を検証する |
+| B01-05 | 要求元/提供先4配置・両経路・再起動・業務失敗/容量不足・終了を確認する |
+| B01-06 | 既存回帰、安定API、8例、8環境CI、通常wheel/sdist、Docs/引継ぎ書同期が通る |
+
+長期の記憶統合・忘却・学習を必須条件にせず、公開・公開後確認をこの実装受入と区別する。
+
 ---
 
-<a id="section-50"></a>
+<a id="section-52"></a>
 
 収録元 `docs/validation/core-coverage.md`
 
@@ -7133,7 +7428,7 @@ v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播�
 
 ---
 
-<a id="section-51"></a>
+<a id="section-53"></a>
 
 収録元 `docs/validation/customer-guide.md`
 
@@ -7178,7 +7473,7 @@ Windows／Python 3.15の終了時通信切断・後処理未確認は[#94](https
 
 ---
 
-<a id="section-52"></a>
+<a id="section-54"></a>
 
 収録元 `docs/validation/docs-onboarding.md`
 
@@ -7257,7 +7552,7 @@ git diff --check
 
 ---
 
-<a id="section-53"></a>
+<a id="section-55"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -7327,7 +7622,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-54"></a>
+<a id="section-56"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -7398,7 +7693,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-55"></a>
+<a id="section-57"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -7477,7 +7772,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-56"></a>
+<a id="section-58"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -7529,7 +7824,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-57"></a>
+<a id="section-59"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -7590,7 +7885,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-58"></a>
+<a id="section-60"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -7651,7 +7946,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-59"></a>
+<a id="section-61"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -7780,7 +8075,7 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-60"></a>
+<a id="section-62"></a>
 
 収録元 `docs/validation/v0.9.md`
 
@@ -7868,7 +8163,7 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 ---
 
-<a id="section-61"></a>
+<a id="section-63"></a>
 
 収録元 `docs/validation/v1.0.md`
 
@@ -7939,7 +8234,79 @@ PR #103のhead cc445daをレビューし、契約型と実体、検証の副作�
 
 ---
 
-<a id="section-62"></a>
+<a id="section-64"></a>
+
+収録元 `docs/validation/v1.1.md`
+
+## v1.1 Memoryの受入記録
+
+対象はR31・ADR 0027（`docs/adr/0027-v1.1-memory.md`）、親#11・子#105〜#108。v1.0.0の`9a48ef0`を基点とする開発候補。タグ/Releaseと公開後確認は今回の範囲外であり、親・マイルストーンの公開完了とは区別する。
+
+### B01の証拠対応
+
+| ID | 自動検証・確認対象 | 状態 |
+|---|---|---|
+| B01-01 | tests/subsystems/test_memory.py：入力種別/出典・時刻・上限・SQL値・不正入力 | 合格 |
+| B01-02 | 同ファイル：roundtrip_restart、同一IDと競合、返却値の独立 | 合格 |
+| B01-03 | 同ファイル：kinds_sources_filters、query_and_id_bounds | 合格 |
+| B01-04 | 同ファイル：DB識別/破損、ロック、挿入後障害、取消・停止・worker終了 | 合格 |
+| B01-05 | tests/subsystems/test_memory_integration.py：4配置×再起動、両経路、最大ページ・容量・業務失敗 | 合格 |
+| B01-06 | 全unittest、8例、API/64項目照合、wheel/sdist、8環境CI、Docs同期 | 合格 |
+
+### 再現
+
+```text
+python -W error -m unittest discover -s tests -t . -v
+python examples/memory_demo.py
+python tools/check_api.py
+python tools/check_contracts.py
+python tools/check_completion.py
+python tools/build_handoff.py
+python tools/check_docs.py
+python -m build --outdir .git/v11-dist
+python tools/check_dist.py --dist-dir .git/v11-dist
+```
+
+本番入力は使わずダミーの記録を一時DBへ保存する。ロックは別接続のトランザクション、保存失敗は挿入後の例外注入、取消はworkerのゲートで制御する。長期性能・物理ディスク故障/電源断・複数writer運用は未検証。SQLiteのトランザクション保証を超えた永続性保証は行わない。
+
+具体的なOS/Python、件数、実行時間、配布とCIの結果を以下に記録する。Windows終了時の#94、採用64項目の回帰も維持する。公開済みv1.0.0以前の成果物は差し替えない。
+
+### ローカル結果（2026年11月23日）
+
+Windows 11 build 26300 / CPython 3.15.2。全333テスト（既存316＋Memory17）が109.646秒で成功した。Memoryの4配置×2起動を含む。8番目の実行例で直接/Core通信・8件ページ・再起動照合・終了を確認した。Core 15 / Contracts 98の公開一覧とv1 manifestは変更なし、64項目/299参照の検査も成功。
+
+通常wheelをソースツリー外の新規venvへ導入し、全333テスト（103.839秒）、8例、短い4配置負荷（約1.1秒）、版/依存/ライセンス、sdistから同一wheel再構築を確認した。先行ローカル配布候補での結果であり、確定コミットの配布確認は次のCIを証拠とする。
+
+### 確定した実装コミットのCI
+
+対象`f1fdbdba513fd2d50c06154bc02753f34d2dfdde`、[PR #109](https://github.com/Tao-pyth/nymph-toolkit/pull/109)、[PR CI実行](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45053156119)。全8ジョブ成功。各環境でソースと通常wheelの両方に全テスト、8例、短い4配置負荷を実施し、sdistから同一wheelを確認した。
+
+| OS | CPython | 結果 |
+|---|---|---|
+| Windows | 3.12 / 3.13 / 3.14 / 3.15 | 各333テスト、skipなし、配布検証成功 |
+| Ubuntu Linux | 3.12 / 3.13 / 3.14 / 3.15 | 各333テスト、既存Windows専用6件skip、配布検証成功 |
+
+70文書・1236ローカルリンク・引継ぎ書の完全同期、Core 15 / Contracts 98の公開API・v1 manifest、採用64項目の証拠参照を照合した。Memory本体・契約・例・テスト以外の既存製品コードと安定API基準は変更していない。
+
+この結果を収録する文書だけの後続コミットも同じCIを実行し、最終SHAと結果を子[#108](https://github.com/Tao-pyth/nymph-toolkit/issues/108)とPRへ記録する。B01-01〜06の実装受入は合格。マージ・v1.1.0タグ/Release・公開後確認は未実施で、親#11・マイルストーンは継続する。
+
+### R32：レビュー・公開後確認
+
+R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を親#11配下へ先行登録した。PR #109の差分、ADR 0027/B01、保存の原子性・取消/停止・失敗分類、4配置と既存Core APIの維持をレビューし、マージを妨げる製品コードの問題は見つからなかった。Memoryとv1接続契約の関連22テストをWindows/CPython 3.15.2で再実行し、17.357秒で成功した。
+
+公開用README・導入・8例・トラブルシューティングとR32根拠を整え、引継ぎ書を同期する。最終head/マージ後CI、タグ、同一コミットのwheel/sdist/引継ぎ書/SHA256SUMS、匿名取得・通常導入・8例/Memory再起動・公開タグ資料の照合を#110へ記録する。公開後結果を確認してから子#105〜#108/#110、親#11、マイルストーンを閉じる。公開済みスナップショットを後から差し替えない。
+
+#### #111：公開前CIの失敗と検証条件の修正
+
+公開資料更新後のCI [45056240694](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45056240694)で、Windows/Python 3.14の4配置×再起動試験が1件失敗した。PROCESS/PROCESSのシナリオ結果がLinkFailureで、テストがdictとして扱ってTypeErrorを出したため、最初の内部例外はこのログから特定できない。マージ前に子[#111](https://github.com/Tao-pyth/nymph-toolkit/issues/111)を登録して調査・修正した。
+
+シナリオは多数のMemory RPCをまとめているが、外側の管理RPCも5秒、テスト全体の待機は30秒だった。LOCAL Memoryの保存ごとに0.6秒を注入してPROCESS要求側のシナリオを実行すると、個々のRPCは5秒以内でも全体が旧5秒期限を超えてLinkFailure(OutcomeUnknown)になることを再現した。全体RPCを30秒、テスト全体を45秒とすると同じ条件で成功した。この再現は期限不整合の証拠であり、初回CIの内部例外が同じだったと断定するものではない。
+
+統合fixtureと例の全体期限を30秒に揃え、失敗値の詳細をdict参照前に確認する。個別Memory RPCの5秒、Core/Memoryの製品コード・公開契約は変更しない。5統合テストがWindows/CPython 3.15.2で23.815秒で成功。追加1件により受入対象は全334テスト（Memory18）。最終CI・マージ後・公開物の結果は#110へ追記し、未解消失敗があれば公開しない。
+
+---
+
+<a id="section-65"></a>
 
 収録元 `docs/validation/windows-shutdown.md`
 
@@ -8014,7 +8381,7 @@ PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル�
 
 ---
 
-<a id="section-63"></a>
+<a id="section-66"></a>
 
 収録元 `docs/development.md`
 
@@ -8188,9 +8555,13 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 親#10・子#98〜#102とADR 0026に基づく。`python tools/check_contracts.py`で安定対象を照合する。差分が出たら互換性・移行・Issue/ADRを先に確認し、基準JSONだけを書き換えて通さない。`python examples/module_contract_demo.py`は7番目の実行例。6契約（`docs/module-contracts.md`）・移行（`docs/migration-v1.md`）・B00検証（`docs/validation/v1.0.md`）を参照する。
 
+### v1.1 Memoryの開発・配布確認
+
+Memory（`docs/memory.md`）とADR 0027（`docs/adr/0027-v1.1-memory.md`）を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。全体検証は既存手順に加えてMemoryの8番目の例を実行する。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。配布試験は`python -m build --outdir .git/v11-dist`、`python tools/check_dist.py --dist-dir .git/v11-dist`を使う（対象ディレクトリには候補wheel/sdist各1個だけを置く）。
+
 ---
 
-<a id="section-64"></a>
+<a id="section-67"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -8457,9 +8828,28 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親#10・マイルストーンv1.0.0配下に、[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)を公開用文書/生成ヘッダー変更前に登録し、実親子関係を確認した。PR #103のレビューと最終CI、マージ、タグ/Release、4添付の匿名取得・通常導入を記録する。#98〜#102の採用範囲の完了と、#104の公開後確認を分けて追跡し、その後に親#10とマイルストーンを閉じる。
 
+### R31のv1.1 Memory
+
+親[#11](https://github.com/Tao-pyth/nymph-toolkit/issues/11)・マイルストーンv1.1.0を確認し、コード変更前に以下を実親子関係付きで登録した。各Issueへ目的・範囲・完了条件・検証・先行課題と実装判断を記録した。
+
+| 子Issue | 対応単位 |
+|---|---|
+| [#105](https://github.com/Tao-pyth/nymph-toolkit/issues/105) | 初期スコープ・未決/延期・ADR 0027・B01 |
+| [#106](https://github.com/Tao-pyth/nymph-toolkit/issues/106) | Memory契約・SQLite保存/取得・単体/障害検証 |
+| [#107](https://github.com/Tao-pyth/nymph-toolkit/issues/107) | 公開契約での接続・4配置・実行例 |
+| [#108](https://github.com/Tao-pyth/nymph-toolkit/issues/108) | v1.1候補・配布・CI・Docs/引継ぎ書・PR |
+
+今回の到達点はレビュー用PR。タグ/Release、公開後確認、親/マイルストーン終了は後続指示で扱う。
+
+### R32のv1.1レビュー・公開
+
+親#11・マイルストーンv1.1.0配下に[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を公開用文書・生成ヘッダー変更前に登録した。PR #109のレビュー・最終CI・マージ・公開・匿名取得と通常導入の結果を記録し、完了後に実装子#105〜#108と親・マイルストーンを閉じる。
+
+公開前CIのMemory統合失敗は子[#111](https://github.com/Tao-pyth/nymph-toolkit/issues/111)をテスト/例の変更前に登録し、全体期限・診断・制御再現を扱った。Core/Memoryの製品仕様は維持する。
+
 ---
 
-<a id="section-65"></a>
+<a id="section-68"></a>
 
 収録元 `docs/release.md`
 
@@ -8682,13 +9072,30 @@ R29の開発指示では新規Releaseを作成しない。1.0.0候補はADR 0026
 
 R30でレビュー後のマージ・v1.0.0公開・公開後確認・課題終了が明示指示された。公開子[#104](https://github.com/Tao-pyth/nymph-toolkit/issues/104)で、最終head・マージ後8環境CI・タグ・wheel/sdist/引継ぎ書/SHA256SUMSを追跡する。匿名取得でchecksumを照合し、公開wheelを新規venvへ通常導入して版・import元・7例・契約基準を確認する。完了結果を#104とReleaseへ記録してから親#10とマイルストーンを閉じる。
 
+### v1.1 Memoryの公開前条件
+
+R31は実装・B01・配布候補・PRまでを扱う。公開時はB01記録（`docs/validation/v1.1.md`）の全6項目、最終SHAの8環境CI、Memoryを含む通常wheel/sdistと8例、同期済み引継ぎ書を確認する。公開用の子Issueを先行登録し、READMEの開発候補表記・導入手順を公開対象版に合わせ、タグ/Release・4添付・匿名取得・再起動例を照合してから親#11とマイルストーンを閉じる。公開済みv1.0以前のタグ/添付は差し替えない。
+
+### R32：v1.1.0の公開実施
+
+R32で公開までの進行が指示された。公開子[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)でレビュー、最終head・マージ後・タグの8環境CI、4添付のchecksum、匿名取得・通常導入・8例とMemory再起動確認を記録する。最終結果を確認してから親#11とマイルストーンを閉じる。公開済みv1.0.0以前のタグ・Release添付を差し替えない。
+
 ---
 
-<a id="section-66"></a>
+<a id="section-69"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
+
+### v1.1.0 — 2026年11月23日
+
+- #111でMemory統合試験の全体RPC期限を個別操作の期限と分離し、遅延注入による再現・回帰と失敗値の診断を追加。Core/Memoryの製品コード・契約は変更しない。
+- R32・#110でPR #109のレビュー、公開用資料・導入ガイド整備、マージ・タグ/Release・公開後取得確認を追跡。最終SHA・CI・公開添付の結果は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を参照。
+
+- R31・親#11、子#105〜#108でMemoryの初期範囲・保存/取得・B01をADR 0027へ記録。
+- 同梱Memory、公開契約`ntk.memory.records/1`、出典・時刻付き記録、SQLite永続化、IDとフィルタ/カーソル取得を追加。既存Core/Contractsの安定APIを維持。
+- 重複/競合、保存失敗、取消・停止、4配置×再起動と両通信経路、8番目の実行例、配布・CI・Docs/引継ぎ書同期を追加。公開は別段階。
 
 ### v1.0.0 — 2026年11月23日
 
@@ -8833,7 +9240,7 @@ R30でレビュー後のマージ・v1.0.0公開・公開後確認・課題終�
 
 ---
 
-<a id="section-67"></a>
+<a id="section-70"></a>
 
 収録元 `LICENSE`
 
