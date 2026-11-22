@@ -242,3 +242,9 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 | [#44](https://github.com/Tao-pyth/nymph-toolkit/issues/44) | 受入後のv0.4.0公開準備・取得確認 |
 
 登録だけで未決の仕様を採用したものとせず、各範囲の実装前に必要な判断を記録する。既存の#35・#36は資料更新の完了記録として保持する。
+
+## R27：顧客向けの契約・利用説明
+
+親[#90](https://github.com/Tao-pyth/nymph-toolkit/issues/90)をv0.9.0の利用ガイドと顧客向け契約説明へ拡張した。文書・図解は[#95](https://github.com/Tao-pyth/nymph-toolkit/issues/95)、任意のPDF/HTML生成と引継ぎ書同期・検証は[#96](https://github.com/Tao-pyth/nymph-toolkit/issues/96)に分け、コード変更前にGitHubのsub-issue関係と同じv1.0.0マイルストーンへの所属を確認した。
+
+導入担当者と開発担当者の両方を読者とし、公開済みv0.9.0の契約と利用を説明する。R26のD01〜D04に追加する範囲として、既存[PR #93](https://github.com/Tao-pyth/nymph-toolkit/pull/93)でまとめてレビューする。製品ソース・API・実行例・版は変更せず、新しい契約採用やReleaseを含めない。本文・図・生成条件・表示検証の結果を子Issueへ記録し、関連する#94の終了時調査は完了扱いにしない。

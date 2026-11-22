@@ -159,3 +159,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 ローカルリンク先の存在、ADRの状態と根拠、ロードマップと受入IDの対応、READMEの実装状況を確認する。単一配布用引継ぎ書はDocs索引に示した順序・変換方法で再作成し、収録元の本文と照合する。将来の配置予定はarchitectureのツリーに記載し、リンクは実在するファイルへ向ける。
 
 公開準備と公開後の状態は[release.md](release.md)で確認する。
+
+## 顧客向け資料の配布版
+
+[契約・利用ガイド](customer-guide.md)のPDF・HTML生成は、Pythonの開発環境とは分離した任意の文書作成作業である。[生成と表示確認の手順](customer-guide-authoring.md)に従い、本文・図・APIの照合、全ページの表示、引継ぎ書同期を確認する。Node依存をNTK実行時や通常のwheel検証へ追加しない。結果は[顧客資料の検証記録](validation/customer-guide.md)へ記録する。

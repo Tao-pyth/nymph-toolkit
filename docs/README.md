@@ -8,6 +8,7 @@
 
 | 目的 | 読み順 |
 |---|---|
+| 導入担当者・開発担当者へ説明する | [顧客向け契約・利用ガイド](customer-guide.md) → [配布用PDFの作成](customer-guide-authoring.md) |
 | まず試す | [通常導入](getting-started.md) → [6つの実行例](tutorials.md) |
 | 機能を接続する | [Architecture](architecture.md) → [Core API](core-api.md) → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
 | 開発する | [参加方針](../CONTRIBUTING.md) → [Issue運用](issue-workflow.md) → [開発手順](development.md) |
@@ -24,6 +25,9 @@
 | [CONTRIBUTING](../CONTRIBUTING.md) | Issue・Pull Requestによる参加と設計判断の扱い |
 | [AGENTS.md](../AGENTS.md) | Codexなどの開発エージェントが守る着手前・完了時のルール |
 | [単一配布用の引継ぎ書](NTK-Core-v0.1-Handoff-ja.md) | 以下のDocs・ADRを一つに収録したスナップショット |
+| [customer-guide.md](customer-guide.md) | 顧客向けの現行契約・利用・運用を図解。開発者向け付録を併設 |
+| [customer-guide-authoring.md](customer-guide-authoring.md) | 同じ原稿からPDF・HTMLを再生成し、表示と同期を確認する手順 |
+| [validation/customer-guide.md](validation/customer-guide.md) | 顧客資料の契約照合・PDF表示・実行例・同期の検証範囲 |
 | [getting-started.md](getting-started.md) | v0.9.0の通常導入・checksum・版とimport元・最初の実行 |
 | [tutorials.md](tutorials.md) | 6実行例の目的・コマンド・期待結果・終了・保存物 |
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
@@ -85,6 +89,7 @@
 | R24 | 本チャットのv0.9実装・検証・資料整備の指示 | 親#9配下へ子#82〜#85をコード変更前に登録。ADR 0022とA09を根拠に64項目・公開API・通常配布を照合。実施の具体化はADR 0025。公開後判定は別工程 |
 | R25 | 本チャットのPR #86レビュー・マージ・v0.9.0公開・親#9とマイルストーン完了の指示 | 公開#88を先に登録し、レビューで再現した停止競合の修正#89も変更前に登録。最終CI・マージ・タグ・Release・4添付の匿名取得でA09-04を確認後、親#9とマイルストーンを完了する |
 | R26 | Docs充実の要件整理と「まずD01〜D04を整備し、D09に従って引継ぎ書の同期と検証まで」の実施指示 | v0.9.0の利用導線・通常導入・6実行例・トラブルシューティングを整える。生成ツール変更前にv1.0.0準備の親#90・子#91/#92を同じマイルストーンへ登録。製品仕様・API・版は維持し、D05〜D08の全面整備と新規公開は含めない |
+| R27 | 顧客向けに現時点の契約・利用を図示する依頼と、読者は導入担当者・開発担当者の両方という回答 | 現行v0.9.0の本文・API付録、PDF/HTML、生成手順と検証・同期を追加。生成変更前に親#90・子#95/#96を同じマイルストーンへ登録。新しい製品仕様の採用は行わない |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -135,6 +140,12 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 既存のV0.1〜V0.9という表記はv0.1.0〜v0.9.0の節目を指す。v1.xの名称・配分の変更時には、roadmap、architecture、関連ADR、acceptance、releaseと単一配布用引継ぎ書を照合する。
 
+## R27による顧客向け契約・利用ガイド
+
+顧客向けに現時点の契約・利用を図示した資料を作成する依頼と、主な読者を「導入担当者と開発担当者の両方」とする回答をR27として記録する。本文・設定・運用の説明と開発者向け付録を一つにまとめ、Markdown原稿から配布用PDF・HTMLを作成する。対象は公開v0.9.0で、v1.0以降の提案や製品仕様の採用状態を変更しない。
+
+親#90の範囲を拡張し、本文・図解を[#95](https://github.com/Tao-pyth/nymph-toolkit/issues/95)、任意の生成ツール・引継ぎ書同期・検証を[#96](https://github.com/Tao-pyth/nymph-toolkit/issues/96)で管理する。コード変更前にGitHubの親子関係とv1.0.0マイルストーンへの所属を確認した。R26で先送りした契約・運用説明のうち、今回求められた顧客資料の範囲を追加する。新規ADRや新規Releaseは作らず、結果は[顧客資料の検証記録](validation/customer-guide.md)へ記載する。
+
 ## R26による利用者向けDocs整備
 
 2026年11月22日の指示により、D01は現状と目的別の入口、D02は公開wheelの通常導入、D03は既存6例の解説、D04は問題切り分け、D09は同期・検証として実施する。親[#90](https://github.com/Tao-pyth/nymph-toolkit/issues/90)、文書子[#91](https://github.com/Tao-pyth/nymph-toolkit/issues/91)、生成・検証子[#92](https://github.com/Tao-pyth/nymph-toolkit/issues/92)を既存v1.0.0マイルストーンに置く。これは次段階の準備作業の管理先であり、ガイド対象は公開済みv0.9.0である。製品仕様の新たな採用はなく、新規ADRは作らない。
@@ -171,7 +182,7 @@ R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7�
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、getting-started、tutorials、troubleshooting、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、customer-guide、customer-guide-authoring、getting-started、tutorials、troubleshooting、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。[再生成ツール](../tools/build_handoff.py)と[文書確認ツール](../tools/check_docs.py)はCIでも使用する。
 

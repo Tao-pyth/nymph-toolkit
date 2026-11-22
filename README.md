@@ -33,6 +33,7 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 
 | やりたいこと | 最初に読む資料 | 確認できること |
 |---|---|---|
+| 導入・接続の全体像を説明する | [顧客向け契約・利用ガイド](docs/customer-guide.md) | 図解付きの現行契約・設定・運用と開発者向けAPI付録 |
 | 公開版を試す | [インストールと最初の実行](docs/getting-started.md) → [6つの実行例](docs/tutorials.md) | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
 | 機能を接続する | [Architecture](docs/architecture.md) → [Core API](docs/core-api.md) | 責務と配置、現在の契約、各機能Docsへの入口 |
 | 開発に参加する | [参加方針](CONTRIBUTING.md) → [Issue運用](docs/issue-workflow.md) → [開発手順](docs/development.md) | 着手前の課題管理、editable環境、テストと配布検証 |
@@ -52,7 +53,7 @@ v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。�
 
 将来のPC全体の状況取得はAdapterが担当します。Desktop Adapterはv1.10.0までの配分に含めず将来課題とし、複製・移植・伝播機構は初期スコープ外です。
 
-このREADMEと新しい利用ガイドはv0.9.0公開後も更新します。公開済みタグ・Release添付は公開時点の記録として保持します。今回のDocs整備は[検証記録](docs/validation/docs-onboarding.md)、過去の変更は[CHANGELOG](CHANGELOG.md)を参照してください。
+このREADMEと新しい利用ガイドはv0.9.0公開後も更新します。公開済みタグ・Release添付は公開時点の記録として保持します。今回のDocs整備は[導入資料の検証](docs/validation/docs-onboarding.md)・[顧客資料の検証](docs/validation/customer-guide.md)、過去の変更は[CHANGELOG](CHANGELOG.md)を参照してください。顧客資料は[配布用PDF・HTMLの再生成手順](docs/customer-guide-authoring.md)も用意しています。
 
 ## ライセンス
 

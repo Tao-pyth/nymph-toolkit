@@ -1,0 +1,49 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #dfe6eb; color: #172c3f;
+  font-family: "Yu Gothic", Meiryo, "Noto Sans CJK JP", sans-serif; font-size: 10pt; line-height: 1.65; }
+.sheet { position: relative; width: 210mm; height: 297mm; padding: 18mm 17mm 17mm;
+  margin: 8mm auto; background: white; break-after: page; }
+.sheet:last-of-type { break-after: auto; }
+header { display: flex; justify-content: space-between; border-bottom: 1px solid #bdd2d6;
+  padding-bottom: 3mm; margin-bottom: 7mm; font-size: 8pt; color: #466875; }
+header b { letter-spacing: .12em; color: #116c72; }
+footer { position: absolute; left: 17mm; right: 17mm; bottom: 10mm; display: flex;
+  justify-content: space-between; color: #56717b; border-top: 1px solid #d8e3e6; padding-top: 3mm; font-size: 8pt; }
+h1 { font-size: 27pt; line-height: 1.45; letter-spacing: .02em; margin: 12mm 0 8mm; color: #104b60; }
+h2 { font-size: 17pt; line-height: 1.5; color: #104b60; margin: 0 0 5mm; border-left: 4px solid #16858a; padding-left: 3mm; }
+p { margin: 0 0 3.5mm; }
+strong { color: #104b60; font-weight: 700; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 3.5mm 0 5mm; font-size: 8.8pt; line-height: 1.6; }
+th { background: #eaf3f5; color: #104b60; text-align: left; }
+th, td { padding: 2.1mm 2.5mm; border-bottom: 1px solid #dae3e7; vertical-align: top; overflow-wrap: anywhere; }
+th:first-child, td:first-child { width: 30%; }
+tr { break-inside: avoid; }
+td p { margin: 0; }
+ul, ol { padding-left: 6mm; margin: 2mm 0 4mm; }
+li { margin-bottom: 1.5mm; }
+a { color: #096c84; text-decoration: underline; text-underline-offset: 2px; }
+code { font-family: Consolas, "Yu Gothic", monospace; font-size: .91em; overflow-wrap: anywhere; }
+pre.code { background: #f2f5f8; border-left: 3px solid #83a8b5; padding: 3mm 4mm; margin: 3mm 0 4mm;
+  white-space: pre-wrap; font-size: 8.8pt; line-height: 1.42; }
+.diagram { margin: 3mm 0 4mm; padding: 2mm; background: #fbfcfd; border: 1px solid #e4ecef; }
+.mermaid { text-align: center; margin: 0; }
+.diagram svg { display: block; width: 100%; height: auto; max-height: 85mm; margin: auto; }
+/* Page-specific space for sequence/state diagrams; retain legible labels. */
+.sheet:nth-of-type(2) .diagram svg { max-height: 110mm; }
+.sheet:nth-of-type(4) .diagram svg { max-height: 85mm; }
+.sheet:nth-of-type(6) .diagram svg { max-height: 125mm; }
+.sheet:nth-of-type(9) .diagram svg, .sheet:nth-of-type(11) .diagram svg { max-height: 90mm; }
+.sheet:nth-of-type(10) .diagram svg { max-height: 80mm; }
+.sheet:nth-of-type(14) th:first-child, .sheet:nth-of-type(14) td:first-child { width: 36%; }
+.sheet:nth-of-type(14) table { line-height: 1.5; }
+.sheet:nth-of-type(14) th, .sheet:nth-of-type(14) td { padding-top: 1.8mm; padding-bottom: 1.8mm; }
+.cover { border-top: 4mm solid #14797f; padding-top: 14mm; }
+.cover h2 { font-size: 15pt; margin-top: 8mm; }
+.cover table { margin: 6mm 0; }
+@media print {
+  body { background: white; }
+  .sheet { margin: 0; }
+  a { color: #096c84; }
+}
