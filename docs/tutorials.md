@@ -137,7 +137,7 @@ PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activi
 PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ```
 
-Core履歴とMemoryのSQLiteを別の場所へ保存し、子の後処理と終了を確認する。例は一時ディレクトリを削除して終了するため、次のスクリプト実行へ記憶を保持する例ではない。保持する実利用では専用の絶対パスを指定する。[Memoryの契約・設定](memory.md)を参照する。記憶統合・忘却・学習は実装していない。
+例の個別RPC期限は5秒、複数操作をまとめる全体RPC期限は30秒として分ける。Core履歴とMemoryのSQLiteを別の場所へ保存し、子の後処理と終了を確認する。例は一時ディレクトリを削除して終了するため、次のスクリプト実行へ記憶を保持する例ではない。保持する実利用では専用の絶対パスを指定する。[Memoryの契約・設定](memory.md)を参照する。記憶統合・忘却・学習は実装していない。
 
 ## 保存物と確認の限界
 

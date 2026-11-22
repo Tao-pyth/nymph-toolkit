@@ -143,7 +143,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 R31により経験・知識と出典の最小保存/取得を実装しました。Memory利用ガイド（`docs/memory.md`）に3操作・設定・障害時の扱い、ADR 0027（`docs/adr/0027-v1.1-memory.md`）に今回の設計判断、B01記録（`docs/validation/v1.1.md`）に検証結果をまとめています。親[#11](https://github.com/Tao-pyth/nymph-toolkit/issues/11)、コード変更前に登録した子#105〜#108で追跡します。
 
-全333テスト、8例、Windows/Linux × Python 3.12〜3.15のCI、通常wheel/sdistを確認しました（LinuxはWindows専用6件skip）。Memoryは同じ配布物に同梱し、専用SQLiteへ保存します。v1のCore APIは維持します。学習・記憶統合・忘却・Document Adapterは含めません。8番目の実行例`python examples/memory_demo.py`で保存・再起動取得を試せます。公開先は[v1.1.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.1.0)、公開後確認の記録は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)です。
+全334テスト、8例、Windows/Linux × Python 3.12〜3.15のCI、通常wheel/sdistを確認しました（LinuxはWindows専用6件skip）。Memoryは同じ配布物に同梱し、専用SQLiteへ保存します。v1のCore APIは維持します。学習・記憶統合・忘却・Document Adapterは含めません。8番目の実行例`python examples/memory_demo.py`で保存・再起動取得を試せます。公開先は[v1.1.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.1.0)、公開後確認の記録は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)です。
 
 ### Core接続契約と動作基盤
 
@@ -1444,7 +1444,7 @@ PASS: public Contracts, Subsystem/Adapter, direct/Core RPC, stream, Nymph activi
 PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ```
 
-Core履歴とMemoryのSQLiteを別の場所へ保存し、子の後処理と終了を確認する。例は一時ディレクトリを削除して終了するため、次のスクリプト実行へ記憶を保持する例ではない。保持する実利用では専用の絶対パスを指定する。Memoryの契約・設定（`docs/memory.md`）を参照する。記憶統合・忘却・学習は実装していない。
+例の個別RPC期限は5秒、複数操作をまとめる全体RPC期限は30秒として分ける。Core履歴とMemoryのSQLiteを別の場所へ保存し、子の後処理と終了を確認する。例は一時ディレクトリを削除して終了するため、次のスクリプト実行へ記憶を保持する例ではない。保持する実利用では専用の絶対パスを指定する。Memoryの契約・設定（`docs/memory.md`）を参照する。記憶統合・忘却・学習は実装していない。
 
 ### 保存物と確認の限界
 
@@ -8296,6 +8296,14 @@ R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/i
 
 公開用README・導入・8例・トラブルシューティングとR32根拠を整え、引継ぎ書を同期する。最終head/マージ後CI、タグ、同一コミットのwheel/sdist/引継ぎ書/SHA256SUMS、匿名取得・通常導入・8例/Memory再起動・公開タグ資料の照合を#110へ記録する。公開後結果を確認してから子#105〜#108/#110、親#11、マイルストーンを閉じる。公開済みスナップショットを後から差し替えない。
 
+#### #111：公開前CIの失敗と検証条件の修正
+
+公開資料更新後のCI [45056240694](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45056240694)で、Windows/Python 3.14の4配置×再起動試験が1件失敗した。PROCESS/PROCESSのシナリオ結果がLinkFailureで、テストがdictとして扱ってTypeErrorを出したため、最初の内部例外はこのログから特定できない。マージ前に子[#111](https://github.com/Tao-pyth/nymph-toolkit/issues/111)を登録して調査・修正した。
+
+シナリオは多数のMemory RPCをまとめているが、外側の管理RPCも5秒、テスト全体の待機は30秒だった。LOCAL Memoryの保存ごとに0.6秒を注入してPROCESS要求側のシナリオを実行すると、個々のRPCは5秒以内でも全体が旧5秒期限を超えてLinkFailure(OutcomeUnknown)になることを再現した。全体RPCを30秒、テスト全体を45秒とすると同じ条件で成功した。この再現は期限不整合の証拠であり、初回CIの内部例外が同じだったと断定するものではない。
+
+統合fixtureと例の全体期限を30秒に揃え、失敗値の詳細をdict参照前に確認する。個別Memory RPCの5秒、Core/Memoryの製品コード・公開契約は変更しない。5統合テストがWindows/CPython 3.15.2で23.815秒で成功。追加1件により受入対象は全334テスト（Memory18）。最終CI・マージ後・公開物の結果は#110へ追記し、未解消失敗があれば公開しない。
+
 ---
 
 <a id="section-65"></a>
@@ -8837,6 +8845,8 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親#11・マイルストーンv1.1.0配下に[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を公開用文書・生成ヘッダー変更前に登録した。PR #109のレビュー・最終CI・マージ・公開・匿名取得と通常導入の結果を記録し、完了後に実装子#105〜#108と親・マイルストーンを閉じる。
 
+公開前CIのMemory統合失敗は子[#111](https://github.com/Tao-pyth/nymph-toolkit/issues/111)をテスト/例の変更前に登録し、全体期限・診断・制御再現を扱った。Core/Memoryの製品仕様は維持する。
+
 ---
 
 <a id="section-68"></a>
@@ -9080,6 +9090,7 @@ R32で公開までの進行が指示された。公開子[#110](https://github.c
 
 ### v1.1.0 — 2026年11月23日
 
+- #111でMemory統合試験の全体RPC期限を個別操作の期限と分離し、遅延注入による再現・回帰と失敗値の診断を追加。Core/Memoryの製品コード・契約は変更しない。
 - R32・#110でPR #109のレビュー、公開用資料・導入ガイド整備、マージ・タグ/Release・公開後取得確認を追跡。最終SHA・CI・公開添付の結果は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)を参照。
 
 - R31・親#11、子#105〜#108でMemoryの初期範囲・保存/取得・B01をADR 0027へ記録。

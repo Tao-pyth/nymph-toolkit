@@ -6,10 +6,13 @@ import asyncio
 from datetime import timedelta
 from pathlib import Path
 import tempfile
+import time
 import unittest
+from unittest.mock import patch
 
 from nymph_toolkit.contracts import (
-    BindingKey, HybridSettings, ModuleAdvertisement, ModuleKind, ModuleSpec, Placement, RuntimeFailure, TemporaryUnavailable,
+    BindingKey, HybridSettings, LinkFailure, ModuleAdvertisement, ModuleKind, ModuleSpec,
+    OutcomeUnknown, Placement, RuntimeFailure, TemporaryUnavailable,
 )
 from nymph_toolkit.contracts.memory import MEMORY_CONTRACT, MEMORY_KEY
 from nymph_toolkit.core import FileStore, HybridGroup, Runtime
@@ -17,9 +20,10 @@ from nymph_toolkit.subsystems import memory
 from examples.memory_requester import CONTROL_CONTRACT, CONTROL_KEY
 
 
-def group_at(root, requester, provider, config=None):
+def group_at(root, requester, provider, config=None, *, scenario_timeout=30):
     store = FileStore(root / "core", root / "archive", retention=timedelta(days=1), batch_size=16, flush_interval=.05)
-    group = HybridGroup(HybridSettings(10, 3, 5, 65536, 32, 4), store)
+    # The host's exercise RPC includes many individual Memory RPCs (each 5s).
+    group = HybridGroup(HybridSettings(10, 3, scenario_timeout, 65536, 32, 4), store)
     group.register_module(ModuleSpec("memory", ModuleKind.SUBSYSTEM),
                           ModuleAdvertisement("memory", "1.1.0", (MEMORY_CONTRACT,)),
                           "nymph_toolkit.subsystems.memory:factory",
@@ -44,7 +48,8 @@ class MemoryIntegrationTests(unittest.IsolatedAsyncioTestCase):
                         try:
                             await group.connections.bind("memory", CONTROL_KEY, "nymph", wait_timeout=5)
                             call = await group.connections.prepare(BindingKey("memory", CONTROL_KEY), wait_timeout=5)
-                            result = await asyncio.wait_for(call.acall("exercise", "memory", restored), 30)
+                            result = await asyncio.wait_for(call.acall("exercise", "memory", restored), 45)
+                            self.assertIsInstance(result, dict, repr(result))
                             self.assertEqual(result["page_count"], 8)
                             self.assertEqual(result["restored"], restored)
                             if restored:
@@ -83,6 +88,33 @@ class MemoryIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 finally:
                     connection.close()
                     await runtime.stop()
+
+    async def test_scenario_budget_covers_multiple_individually_timely_writes(self):
+        from nymph_toolkit.subsystems.memory._store import Store
+        original = Store._put
+        def slow_write(store, value):
+            # Each operation is below its 5s RPC budget; the aggregate is not.
+            time.sleep(.6)
+            return original(store, value)
+        for timeout in (5, 30):
+            with self.subTest(timeout=timeout), tempfile.TemporaryDirectory() as directory:
+                group = group_at(Path(directory), Placement.PROCESS, Placement.LOCAL, scenario_timeout=timeout)
+                runtime = Runtime(group)
+                with patch.object(Store, "_put", slow_write):
+                    await runtime.start()
+                    try:
+                        await group.connections.bind("memory", CONTROL_KEY, "nymph", wait_timeout=5)
+                        call = await group.connections.prepare(BindingKey("memory", CONTROL_KEY), wait_timeout=5)
+                        result = await asyncio.wait_for(call.acall("exercise", "memory"), 45)
+                        if timeout == 5:
+                            self.assertIsInstance(result, LinkFailure, repr(result))
+                            self.assertIsInstance(result.exception, OutcomeUnknown, repr(result))
+                        else:
+                            self.assertIsInstance(result, dict, repr(result))
+                            self.assertEqual(result["page_count"], 8)
+                    finally:
+                        await runtime.stop()
+                self.assertTrue(group.process("nymph").cleanup_confirmed)
 
     async def test_invalid_factory_config_fails_without_creating_database(self):
         for config in ({"path": "relative"}, {}, {"path": "/unused", "unknown": True}):

@@ -20,7 +20,8 @@ async def main():
         first = None
         for restored in (False, True):
             store = FileStore(root / "core", root / "archive", retention=timedelta(days=1), batch_size=16, flush_interval=.05)
-            group = HybridGroup(HybridSettings(10, 3, 5, 65536, 32, 4), store)
+            # Budget the aggregate exercise separately from its individual 5s RPCs.
+            group = HybridGroup(HybridSettings(10, 3, 30, 65536, 32, 4), store)
             group.register_module(ModuleSpec("memory", ModuleKind.SUBSYSTEM),
                                   ModuleAdvertisement("memory", "1.1.0", (MEMORY_CONTRACT,)),
                                   "nymph_toolkit.subsystems.memory:factory", {"path": str(root / "memory.sqlite3")}, Placement.PROCESS)
@@ -33,6 +34,7 @@ async def main():
                 await group.connections.bind("memory", CONTROL_KEY, "nymph", wait_timeout=5)
                 call = await group.connections.prepare(BindingKey("memory", CONTROL_KEY), wait_timeout=5)
                 result = await call.acall("exercise", "memory", restored)
+                assert isinstance(result, dict), result
                 if restored:
                     assert result["saved"] == first
                 else:
