@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R27を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R28を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -37,6 +37,8 @@ R25でPR #86のレビュー・問題解消後のマージ・v0.9.0公開・A09-0
 R26でv0.9.0利用者向けの入口・導入・6実行例・トラブルシューティングと引継ぎ書同期が指示された。親#90・子#91/#92を生成ツール変更前に登録し、3つの利用ガイドを全文収録する。v0.9.0の公開は完了済みであり、公開後の文書改善を未リリースの変更として記録する。製品仕様・API・版と過去の公開物は維持する。
 
 R27で導入担当者・開発担当者の両方に向けた契約・利用の図解資料が指示された。親#90を拡張し、本文#95と任意のPDF/HTML生成・同期#96を変更前に登録した。現行v0.9.0の説明と開発者向け付録、作成手順・検証記録を全文収録する。製品設計の新たな採用はなく、公開済みタグ・添付を維持する。
+
+R28で既知課題#94のWindows終了時エラーの調査・修正・回帰検証が指示された。親#10・v1.0.0配下で範囲・完了条件・内部修正判断をコード変更前に記録し、NTK所有TCPの解放を妨げる終了時resetへ対処する。制御再現と自然発生の確認範囲は検証記録へ分け、公開API・採用64項目・版と公開済み配布物は維持する。
 
 ## 収録文書
 
@@ -97,11 +99,12 @@ R27で導入担当者・開発担当者の両方に向けた契約・利用の�
 55. [v0.7の受入確認と検証経過](#section-55)
 56. [v0.8 統合・障害・負荷検証記録](#section-56)
 57. [v0.9 Core機能完成の検証記録](#section-57)
-58. [開発準備とGit運用](#section-58)
-59. [マイルストーンと親子Issueの運用](#section-59)
-60. [公開準備とリリース手順](#section-60)
-61. [変更履歴](#section-61)
-62. [Apache License 2.0（原文）](#section-62)
+58. [WindowsのTCP終了処理の修正・検証（#94）](#section-58)
+59. [開発準備とGit運用](#section-59)
+60. [マイルストーンと親子Issueの運用](#section-60)
+61. [公開準備とリリース手順](#section-61)
+62. [変更履歴](#section-62)
+63. [Apache License 2.0（原文）](#section-63)
 
 ---
 
@@ -292,6 +295,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | customer-guide.md（`docs/customer-guide.md`） | 顧客向けの現行契約・利用・運用を図解。開発者向け付録を併設 |
 | customer-guide-authoring.md（`docs/customer-guide-authoring.md`） | 同じ原稿からPDF・HTMLを再生成し、表示と同期を確認する手順 |
 | validation/customer-guide.md（`docs/validation/customer-guide.md`） | 顧客資料の契約照合・PDF表示・実行例・同期の検証範囲 |
+| validation/windows-shutdown.md（`docs/validation/windows-shutdown.md`） | #94のWindows終了時エラーの原因・内部修正・制御再現・回帰 |
 | getting-started.md（`docs/getting-started.md`） | v0.9.0の通常導入・checksum・版とimport元・最初の実行 |
 | tutorials.md（`docs/tutorials.md`） | 6実行例の目的・コマンド・期待結果・終了・保存物 |
 | troubleshooting.md（`docs/troubleshooting.md`） | 症状別の確認・対処・回復確認と報告方法 |
@@ -307,7 +311,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | validation/v0.8.md（`docs/validation/v0.8.md`） | A08・統合障害・競合・保存・負荷・配布の検証記録 |
 | core-api.md（`docs/core-api.md`） | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
 | api-reference.md（`docs/api-reference.md`） | Core 14件・Contracts 92件の生成API一覧 |
-| validation/core-coverage.md（`docs/validation/core-coverage.md`） | 採用64項目と製品293テストへの証拠参照 |
+| validation/core-coverage.md（`docs/validation/core-coverage.md`） | 採用64項目と製品テストへの証拠参照。Windows専用回帰の実行／skipは結果記録を参照 |
 | validation/v0.9.md（`docs/validation/v0.9.md`） | A09の完成監査・通常配布・公開前後の判定 |
 | ADR索引（`docs/adr/README.md`） | 判断履歴と採用状態 |
 | ADR 0022（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`） | v0.9までの64項目の採用記録と受入ID対応。v0.7の具体化は0023 |
@@ -354,6 +358,7 @@ Docs更新時は文書の更新方法（`docs/README.md`）に従って単一配
 | R25 | 本チャットのPR #86レビュー・マージ・v0.9.0公開・親#9とマイルストーン完了の指示 | 公開#88を先に登録し、レビューで再現した停止競合の修正#89も変更前に登録。最終CI・マージ・タグ・Release・4添付の匿名取得でA09-04を確認後、親#9とマイルストーンを完了する |
 | R26 | Docs充実の要件整理と「まずD01〜D04を整備し、D09に従って引継ぎ書の同期と検証まで」の実施指示 | v0.9.0の利用導線・通常導入・6実行例・トラブルシューティングを整える。生成ツール変更前にv1.0.0準備の親#90・子#91/#92を同じマイルストーンへ登録。製品仕様・API・版は維持し、D05〜D08の全面整備と新規公開は含めない |
 | R27 | 顧客向けに現時点の契約・利用を図示する依頼と、読者は導入担当者・開発担当者の両方という回答 | 現行v0.9.0の本文・API付録、PDF/HTML、生成手順と検証・同期を追加。生成変更前に親#90・子#95/#96を同じマイルストーンへ登録。新しい製品仕様の採用は行わない |
+| R28 | 既知課題#94のWindows／Python 3.15終了時エラーの原因調査・修正・再現・回帰指示 | 親#10・v1.0.0配下の#94へ範囲・完了条件・内部修正判断をコード変更前に記録。公開API・採用64項目・版・公開物を維持し、未リリースの修正と検証を記録する |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -1451,6 +1456,8 @@ PowerShellでは導入時の作業フォルダで次を実行する。Linuxで�
 保存失敗では新規受付停止→古い履歴の予備先への退避→保存再試行→回復または未保存報告と終了という既存の手順を使う。独自の履歴破棄・自動修復を追加しない。急なプロセス終了では未保存分が失われ得るため、正常停止の確認と区別する。詳細はConnectionsの保存契約（`docs/connections.md`）。
 
 ### 解消しない場合の報告
+
+Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`がWinError 10054になり、終了時の後処理が未確認になる事象は[#94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)で追跡する。原因と未リリース修正の検証（`docs/validation/windows-shutdown.md`）では、ソケット解放が抜ける条件を制御再現している。公開v0.9.0の配布物は変更していない。コールバックの警告を抑止するだけで終了成功とせず、子の終了コード・後処理確認・残存接続を確認する。
 
 [GitHub Issues](https://github.com/Tao-pyth/nymph-toolkit/issues)に、次を記載する。新規実装や修正の着手は参加方針（`CONTRIBUTING.md`）に従う。
 
@@ -6671,7 +6678,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 | A04 | tests.core.test_connection_contracts（`tests/core/test_connection_contracts.py`）<br>tests.core.test_connections（`tests/core/test_connections.py`）<br>tests.core.test_connections_storage（`tests/core/test_connections_storage.py`）<br>tests.core.test_connected_group（`tests/core/test_connected_group.py`）<br>tests.core.test_storage（`tests/core/test_storage.py`）<br>tests.core.test_storage_io（`tests/core/test_storage_io.py`） | docs/validation/v0.4.md（`docs/validation/v0.4.md`） |
 | A05 | tests.core.test_activity_contracts（`tests/core/test_activity_contracts.py`）<br>tests.core.test_task_manager（`tests/core/test_task_manager.py`）<br>tests.core.test_activity_faults（`tests/core/test_activity_faults.py`）<br>tests.core.test_activity_group（`tests/core/test_activity_group.py`）<br>tests.core.test_activity_history（`tests/core/test_activity_history.py`） | docs/validation/v0.5.md（`docs/validation/v0.5.md`） |
 | A06 | tests.core.test_activity_change_contracts（`tests/core/test_activity_change_contracts.py`）<br>tests.core.test_activity_changes（`tests/core/test_activity_changes.py`）<br>tests.core.test_activity_controls（`tests/core/test_activity_controls.py`）<br>tests.core.test_activity_slots（`tests/core/test_activity_slots.py`）<br>tests.core.test_activity_v06_faults（`tests/core/test_activity_v06_faults.py`）<br>tests.core.test_activity_v06_history（`tests/core/test_activity_v06_history.py`） | docs/validation/v0.6.md（`docs/validation/v0.6.md`） |
-| A07 | tests.core.test_hybrid_transport（`tests/core/test_hybrid_transport.py`）<br>tests.core.test_hybrid_group（`tests/core/test_hybrid_group.py`）<br>tests.core.test_hybrid_activities（`tests/core/test_hybrid_activities.py`） | docs/validation/v0.7.md（`docs/validation/v0.7.md`） |
+| A07 | tests.core.test_hybrid_transport（`tests/core/test_hybrid_transport.py`）<br>tests.core.test_hybrid_group（`tests/core/test_hybrid_group.py`）<br>tests.core.test_hybrid_activities（`tests/core/test_hybrid_activities.py`）<br>tests.core.test_windows_shutdown（`tests/core/test_windows_shutdown.py`） | docs/validation/v0.7.md（`docs/validation/v0.7.md`） |
 | A08 | tests.core.test_v08_contention（`tests/core/test_v08_contention.py`）<br>tests.core.test_v08_integration（`tests/core/test_v08_integration.py`）<br>tests.core.test_v08_result_ownership（`tests/core/test_v08_result_ownership.py`）<br>tests.core.test_v08_storage（`tests/core/test_v08_storage.py`） | docs/validation/v0.8.md（`docs/validation/v0.8.md`） |
 
 ### ADR 0022の64項目
@@ -6702,7 +6709,7 @@ R7のProject Vision（`docs/vision.md`）にある、言語・学習・記憶・
 | 22 起動順序 | A07-02 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>IntegrationTests.test_partial_initialization_in_all_placements_reverses_cleanup（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
 | 23 子の予期しない終了 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>IntegrationTests.test_data_disconnect_during_activity_is_local_interruption_without_replay（`tests/core/test_v08_integration.py`）<br>IntegrationTests.test_child_exit_or_parent_channel_loss_during_activity_and_stream（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
 | 24 障害検出 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_start_timeout_and_lost_parent_channel_reap_owned_children（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
-| 25 起動・停止の無応答 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>HybridGroupTests.test_initialization_failure_and_deadline_owned_child_cleanup（`tests/core/test_hybrid_group.py`）<br>HybridGroupTests.test_stop_deadline_forces_only_owned_child_and_marks_unknown_cleanup（`tests/core/test_hybrid_group.py`）<br>IntegrationTests.test_shutdown_deadline_does_not_apply_to_nymph_finish（`tests/core/test_v08_integration.py`）<br>ShutdownRaceTests.test_stop_reaps_exit_racing_kill_before_store_closes（`tests/core/test_v09_shutdown_race.py`）<br>ShutdownRaceTests.test_guardian_accepts_already_exited_child_and_stop_saves_final_state（`tests/core/test_v09_shutdown_race.py`）<br>ShutdownRaceTests.test_other_termination_error_is_not_hidden（`tests/core/test_v09_shutdown_race.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 R25/#89で子の終了とkillの競合後も監視・最終履歴を回収することを追加検証。 |
+| 25 起動・停止の無応答 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>src/nymph_toolkit/core/_net.py（`src/nymph_toolkit/core/_net.py`）<br>HybridGroupTests.test_initialization_failure_and_deadline_owned_child_cleanup（`tests/core/test_hybrid_group.py`）<br>HybridGroupTests.test_stop_deadline_forces_only_owned_child_and_marks_unknown_cleanup（`tests/core/test_hybrid_group.py`）<br>IntegrationTests.test_shutdown_deadline_does_not_apply_to_nymph_finish（`tests/core/test_v08_integration.py`）<br>ShutdownRaceTests.test_stop_reaps_exit_racing_kill_before_store_closes（`tests/core/test_v09_shutdown_race.py`）<br>ShutdownRaceTests.test_guardian_accepts_already_exited_child_and_stop_saves_final_state（`tests/core/test_v09_shutdown_race.py`）<br>ShutdownRaceTests.test_other_termination_error_is_not_hidden（`tests/core/test_v09_shutdown_race.py`）<br>HybridGroupTests.test_shutdown_reset_in_children_still_reaps_sockets_and_processes（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>docs/validation/windows-shutdown.md（`docs/validation/windows-shutdown.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 R25/#89で子の終了とkillの競合後も監視・最終履歴を回収することを追加検証。 |
 | 26 子だけの再起動 | A07-03 | src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>src/nymph_toolkit/core/_child.py（`src/nymph_toolkit/core/_child.py`）<br>src/nymph_toolkit/core/module_group.py（`src/nymph_toolkit/core/module_group.py`）<br>StorageIntegrationTests.test_new_runtime_preserves_history_and_requires_nymph_reregistration（`tests/core/test_v08_storage.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
 | 27 通信方式 | A07-04 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>RpcTests.test_concurrent_requests_results_and_remote_exception（`tests/core/test_hybrid_transport.py`）<br>IntegrationTests.test_four_placements_complete_sequence_state_history_cleanup_and_detach（`tests/core/test_v08_integration.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
 | 28 管理とデータの経路 | A07-04 | src/nymph_toolkit/core/_wire.py（`src/nymph_toolkit/core/_wire.py`）<br>src/nymph_toolkit/core/_rpc.py（`src/nymph_toolkit/core/_rpc.py`）<br>src/nymph_toolkit/core/_hybrid_client.py（`src/nymph_toolkit/core/_hybrid_client.py`）<br>src/nymph_toolkit/core/hybrid.py（`src/nymph_toolkit/core/hybrid.py`）<br>HybridGroupTests.test_four_placements_direct_calls_and_streams（`tests/core/test_hybrid_group.py`）<br>HybridGroupTests.test_core_mediated_call_and_failure_updates_cached_route（`tests/core/test_hybrid_group.py`） | docs/hybrid.md（`docs/hybrid.md`）<br>docs/validation/v0.9.md（`docs/validation/v0.9.md`）<br>試験と実装を併読し、全回帰の結果で判定する。 |
@@ -7484,6 +7491,81 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 <a id="section-58"></a>
 
+収録元 `docs/validation/windows-shutdown.md`
+
+## WindowsのTCP終了処理の修正・検証（#94）
+
+対象は[R28の修正課題 #94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)。親#10・v1.0.0マイルストーンへの所属とGitHubの親子関係を確認し、コード変更前に範囲・完了条件・検証方法を追記した。起点は`bf57b3251d4afb562dac481cc79beb747d33187a`。未リリースの内部修正であり、公開v0.9.0のタグ・Release添付・版番号を変更しない。
+
+### 観測と原因の確認範囲
+
+初回はPR #93の`d84bb303feb1620a08517595eff827ac2a018f36`、[Windows／Python 3.15のCIログ](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/44977471181/job/137070475736)で観測した。製品コードは公開v0.9.0と同じだった。`test_four_placements_direct_calls_and_streams`のPROCESS/PROCESSで次の順に発生した。
+
+1. `02:45:04.869 UTC`：`_ProactorBasePipeTransport._call_connection_lost()`内の`socket.shutdown(SHUT_RDWR)`がWinError 10054を送出。
+2. 約3秒後：providerの`cleanup_confirmed=False`、終了コード1、`Cleanup not confirmed: [WinError 64] ...`で失敗。
+
+手元のWindows／CPython 3.15.2でも、同じ終了コールバックに`shutdown`のConnectionErrorを扱う処理がないことを確認した。この例外が起きると後続のsocket.close、serverからのtransport登録解除、終了済みフラグ更新へ到達せず、`Server.wait_closed()`が残る。上流の[CPython #160429](https://github.com/python/cpython/issues/160429)と[修正 #160909](https://github.com/python/cpython/pull/160909)にも同じ欠陥と解放処理の修正が記録されている。
+
+**確定したのは、観測された終了エラーによって解放が抜ける原因と、その条件への対処である。** 初回NTK CIでTCPリセットが発生したパケット順・タイミングは未確定。初回ログだけでは対象ソケットも特定できない。修正前の通常4配置試験50回はすべて成功し、標準エラーも空だった。自然発生を再現したとは扱わず、以下の制御されたエラー注入と区別する。Python 3.15だけの不具合とも断定しない。
+
+### 内部修正の判断
+
+[コード変更前の判断記録](https://github.com/Tao-pyth/nymph-toolkit/issues/94#issuecomment-7080713996)に沿い、内部TCP窓口（`src/nymph_toolkit/core/_net.py`）へ互換処理を隔離した。管理接続の親・子と、直接RPC・ストリームの接続側・受信側をすべてこの窓口へ通す。接続確立時に設定するため、初期ハンドシェイク失敗時も対象になる。
+
+- Windows ProactorのNTK所有TCP transportだけに適用する。asyncioのクラス、アプリケーションの例外ハンドラ、イベントループ方針は変更しない。
+- 同期的な終了コールバックの間だけソケットを委譲オブジェクトで包み、`shutdown`のConnectionErrorだけを扱う。socket.close、protocol通知、server登録解除などは元のCPythonコールバックへ委譲する。
+- 読書き中の切断、停止フックの失敗、想定外のOSError、プロトコル例外を成功へ読み替えない。期限・強制終了・後処理未確認の判定は変更しない。
+- 通常のデータ転送経路、公開API、通信契約、採用64項目、NymphとCoreの責務境界は維持する。新しい仕様採用のADRは作成しない。
+
+`_ProactorSocketTransport`、`_sock`、`_call_connection_lost`というCPython内部への依存は残る。対応Python更新時は本回帰試験で確認する。上流修正を含む実装でも元の後処理に委譲できる構成とし、将来すべての対応環境で不要になった際は互換処理の削除を検討する。
+
+### 再現と回帰
+
+| 検証 | 修正前 | 修正後の条件 |
+|---|---|---|
+| 実TCPの接続側・受信側でshutdownに10054を注入 | コールバック例外、実ソケットが開いたまま、終了フラグ未設定、server終了待ちが期限切れ | コールバック例外なし、実ソケットfileno=-1、transport解放、server終了待ち完了 |
+| protocol例外とshutdownのresetを同時注入 | resetがprotocol例外を覆い、解放も抜ける | 元のprotocol例外を通知し、ソケットを解放 |
+| shutdownの想定外OSError | 例外を通知 | 通知を維持。試験側で残ったソケットを回収 |
+| 読込み中のConnectionResetError | 通信失敗 | readerとwait_closedへ失敗を伝播。成功扱いしない |
+| 所有子2つで直接RPC・ストリームを双方向実行し終了時resetを注入 | 子のコールバック例外・回帰試験失敗 | 子のstderrが空、両子の終了コード0、後処理確認済み、管理タスク回収 |
+| NTKと同じループの通常asyncio接続 | 標準の処理 | クラス・通常接続のコールバック・ループ例外ハンドラが変更されない |
+
+再現用ダミーのsocket差替えは試験用の所有子プロセスだけで行う。製品コードがグローバルなsocket/asyncio差替えを行うわけではない。単体回帰の修正前試験では、失敗を記録した後に試験自身が残ったソケットを回収する。回収によって合格にはしない。
+
+```powershell
+python -W error -m unittest tests.core.test_windows_shutdown tests.core.test_hybrid_group -v
+python -W error -m unittest discover -s tests -t . -v
+python tools/check_completion.py
+python tools/build_handoff.py
+python tools/check_docs.py
+python tools/check_api.py
+python -m build
+python tools/check_dist.py
+```
+
+試験の実体はWindows終了回帰（`tests/core/test_windows_shutdown.py`）、ハイブリッド統合（`tests/core/test_hybrid_group.py`）、子プロセス用注入ダミー（`tests/doubles/windows_shutdown.py`）。Windows専用6件はLinuxでskipとし、実行成功数と区別する。既存の異常切断、stop例外、所有子の強制終了・後処理未確認も全回帰で確認する。
+
+### 結果と残る範囲
+
+製品修正は`3e196160f5e9bc51e6385e06f27d5bf3141c78ee`、引継ぎ書同期を含む検証対象は`a37c861aa5493187d65f1bacc0d05c3739dd4df3`。[PR #97](https://github.com/Tao-pyth/nymph-toolkit/pull/97)でレビューする。後続の結果追記では製品コード・試験を変更していない。
+
+| 確認 | 結果 |
+|---|---|
+| 手元Windows／CPython 3.15.2の全回帰 | 306件成功、81.450秒。新規6件を含む |
+| 修正後の反復 | 新しいPythonプロセスで7件を50回、計350件成功。通常4配置200シナリオ、reset注入の子統合50回、Windows単体250件を含む。各ログの異常出力なし |
+| 通常配布 | 作業ツリー外の新規venvへwheelを非editable導入し、306件・6例・短い4配置負荷が成功。sdistから同一wheelを再ビルド |
+| [8環境CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45034725519) | Windows/Linux × CPython 3.12〜3.15が全8ジョブ成功。各環境でソース・通常wheelの306件、6例、短い4配置負荷、sdist再ビルドを確認。LinuxはWindows専用6件をskipし、300件実行成功 |
+| ログ確認 | 上記8ジョブと手元全回帰・通常配布・50反復で、未処理のコールバック例外、未回収例外、ResourceWarning、Tracebackなし |
+| 資料 | API一覧14＋92件、採用64項目・7群・299件の証拠参照、63文書・1,142ローカルリンク、引継ぎ書同期が成功 |
+
+PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル書込みエラーとなり、同期前のコミットが作成された。再生成・検査後の`a37c861`で解消し、上記CIは同期済みの内容を検証した。製品試験の失敗を再実行で合格扱いしたものではない。最終コミットのCI・差分・残課題は#94とPRへ記録する。
+
+公開済みv0.9.0に本修正が含まれるとは扱わない。自然発生の初回TCPリセットの詳細、他のCPython内部実装・独自イベントループすべての保証、30分負荷の再測定は今回の確認結果に含めない。
+
+---
+
+<a id="section-59"></a>
+
 収録元 `docs/development.md`
 
 ## 開発準備とGit運用
@@ -7654,7 +7736,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ---
 
-<a id="section-59"></a>
+<a id="section-60"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -7909,9 +7991,13 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 導入担当者と開発担当者の両方を読者とし、公開済みv0.9.0の契約と利用を説明する。R26のD01〜D04に追加する範囲として、既存[PR #93](https://github.com/Tao-pyth/nymph-toolkit/pull/93)でまとめてレビューする。製品ソース・API・実行例・版は変更せず、新しい契約採用やReleaseを含めない。本文・図・生成条件・表示検証の結果を子Issueへ記録し、関連する#94の終了時調査は完了扱いにしない。
 
+### R28：Windows終了時エラーの修正
+
+親[#10](https://github.com/Tao-pyth/nymph-toolkit/issues/10)・v1.0.0配下の既存子[#94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)について、コード変更前に対応範囲・完了条件・検証方法を更新し、原因を確認した段階で内部修正判断を追記した。NTK所有TCPの終了処理、関連回帰試験・ダミー、検証記録と引継ぎ書同期を扱う。公開API・採用64項目は変更せず、新規ADR・Releaseを作らない。修正前後の制御再現と自然発生の確認範囲を検証記録（`docs/validation/windows-shutdown.md`）で区別し、PR・確認結果を#94へ紐付ける。
+
 ---
 
-<a id="section-60"></a>
+<a id="section-61"></a>
 
 収録元 `docs/release.md`
 
@@ -8128,13 +8214,15 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-61"></a>
+<a id="section-62"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
 
 ### 未リリース
+
+- R28・親#10の子#94でWindows Proactorの終了時resetによるソケット解放・server登録解除漏れを修正。NTK所有のTCP接続だけに互換処理を限定し、通信失敗・停止失敗の通知は維持する。制御されたエラー注入、通常4配置、既存の障害・強制終了を検証し、原因と確認範囲（`docs/validation/windows-shutdown.md`）へ記録する。
 
 - R27・親#90、子#95/#96で導入担当者・開発担当者向けの契約・利用ガイドを追加。現行v0.9.0の責務、登録・接続、呼出し・ストリーム、活動、障害・保存・再起動を図解し、設定とAPI付録を収録する。
 - 任意のPDF/HTML生成をtools/customer-docsへ分離し、同じ原稿から20ページ・図10点の資料を作成。作成手順・表示と契約の検証記録を追加し、引継ぎ書へ同期した。
@@ -8269,7 +8357,7 @@ R5に基づく未確定の運用案をADR 0007に記録する。v1.0.0の接続�
 
 ---
 
-<a id="section-62"></a>
+<a id="section-63"></a>
 
 収録元 `LICENSE`
 

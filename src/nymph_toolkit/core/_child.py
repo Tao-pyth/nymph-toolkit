@@ -6,12 +6,13 @@ import sys
 
 from nymph_toolkit.contracts import RemoteError
 from ._module_node import ModuleNode
+from ._net import open_connection
 from ._rpc import RpcPeer
 from ._wire import VERSION, decode, read_frame, write_frame
 
 
 async def main(port, module_id, generation):
-    reader, writer = await asyncio.open_connection("127.0.0.1", port)
+    reader, writer = await open_connection("127.0.0.1", port)
     # Bootstrap has a fixed ceiling; negotiated RPC limit follows immediately.
     await write_frame(writer, {"version": VERSION, "module_id": module_id, "generation": generation}, 1048576)
     bootstrap = decode(await read_frame(reader, 1048576))

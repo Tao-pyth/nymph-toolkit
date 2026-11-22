@@ -28,6 +28,7 @@
 | [customer-guide.md](customer-guide.md) | 顧客向けの現行契約・利用・運用を図解。開発者向け付録を併設 |
 | [customer-guide-authoring.md](customer-guide-authoring.md) | 同じ原稿からPDF・HTMLを再生成し、表示と同期を確認する手順 |
 | [validation/customer-guide.md](validation/customer-guide.md) | 顧客資料の契約照合・PDF表示・実行例・同期の検証範囲 |
+| [validation/windows-shutdown.md](validation/windows-shutdown.md) | #94のWindows終了時エラーの原因・内部修正・制御再現・回帰 |
 | [getting-started.md](getting-started.md) | v0.9.0の通常導入・checksum・版とimport元・最初の実行 |
 | [tutorials.md](tutorials.md) | 6実行例の目的・コマンド・期待結果・終了・保存物 |
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
@@ -43,7 +44,7 @@
 | [validation/v0.8.md](validation/v0.8.md) | A08・統合障害・競合・保存・負荷・配布の検証記録 |
 | [core-api.md](core-api.md) | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
 | [api-reference.md](api-reference.md) | Core 14件・Contracts 92件の生成API一覧 |
-| [validation/core-coverage.md](validation/core-coverage.md) | 採用64項目と製品293テストへの証拠参照 |
+| [validation/core-coverage.md](validation/core-coverage.md) | 採用64項目と製品テストへの証拠参照。Windows専用回帰の実行／skipは結果記録を参照 |
 | [validation/v0.9.md](validation/v0.9.md) | A09の完成監査・通常配布・公開前後の判定 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |
 | [ADR 0022](adr/0022-v0.7-v0.9-hybrid-and-completion.md) | v0.9までの64項目の採用記録と受入ID対応。v0.7の具体化は0023 |
@@ -90,6 +91,7 @@
 | R25 | 本チャットのPR #86レビュー・マージ・v0.9.0公開・親#9とマイルストーン完了の指示 | 公開#88を先に登録し、レビューで再現した停止競合の修正#89も変更前に登録。最終CI・マージ・タグ・Release・4添付の匿名取得でA09-04を確認後、親#9とマイルストーンを完了する |
 | R26 | Docs充実の要件整理と「まずD01〜D04を整備し、D09に従って引継ぎ書の同期と検証まで」の実施指示 | v0.9.0の利用導線・通常導入・6実行例・トラブルシューティングを整える。生成ツール変更前にv1.0.0準備の親#90・子#91/#92を同じマイルストーンへ登録。製品仕様・API・版は維持し、D05〜D08の全面整備と新規公開は含めない |
 | R27 | 顧客向けに現時点の契約・利用を図示する依頼と、読者は導入担当者・開発担当者の両方という回答 | 現行v0.9.0の本文・API付録、PDF/HTML、生成手順と検証・同期を追加。生成変更前に親#90・子#95/#96を同じマイルストーンへ登録。新しい製品仕様の採用は行わない |
+| R28 | 既知課題#94のWindows／Python 3.15終了時エラーの原因調査・修正・再現・回帰指示 | 親#10・v1.0.0配下の#94へ範囲・完了条件・内部修正判断をコード変更前に記録。公開API・採用64項目・版・公開物を維持し、未リリースの修正と検証を記録する |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 

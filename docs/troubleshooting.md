@@ -61,6 +61,8 @@ PowerShellでは導入時の作業フォルダで次を実行する。Linuxで�
 
 ## 解消しない場合の報告
 
+Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`がWinError 10054になり、終了時の後処理が未確認になる事象は[#94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)で追跡する。[原因と未リリース修正の検証](validation/windows-shutdown.md)では、ソケット解放が抜ける条件を制御再現している。公開v0.9.0の配布物は変更していない。コールバックの警告を抑止するだけで終了成功とせず、子の終了コード・後処理確認・残存接続を確認する。
+
 [GitHub Issues](https://github.com/Tao-pyth/nymph-toolkit/issues)に、次を記載する。新規実装や修正の着手は[参加方針](../CONTRIBUTING.md)に従う。
 
 - NTKの版・取得したRelease、OS・Python版、実行ファイルとimport元、通常導入かeditableか。

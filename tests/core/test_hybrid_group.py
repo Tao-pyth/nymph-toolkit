@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from nymph_toolkit.contracts import (
     ContractSpec, HybridSettings, ModuleAdvertisement, ModuleKind, ModuleSpec, OperationMode,
@@ -74,7 +75,33 @@ class HybridGroupTests(unittest.IsolatedAsyncioTestCase):
                     for service in group.modules.values():
                         self.assertTrue(service.snapshot.cleanup_confirmed, service.snapshot)
                         if service.process:
-                            self.assertIsNotNone(service.process.returncode)
+                            self.assertEqual(service.process.returncode, 0, service.snapshot)
+
+    @unittest.skipUnless(os.name == "nt", "Windows Proactor shutdown regression")
+    async def test_shutdown_reset_in_children_still_reaps_sockets_and_processes(self):
+        group = self.group()
+        group.settings = replace(group.settings, shutdown_timeout=3)
+        for module_id in ("requester", "provider"):
+            group.register_module(ModuleSpec(module_id, ModuleKind.SUBSYSTEM),
+                                  ModuleAdvertisement(module_id, "dummy-v1", (CONTRACT,)),
+                                  "tests.doubles.windows_shutdown:factory", {"provider": True}, Placement.PROCESS)
+        create_process = asyncio.create_subprocess_exec
+        async def capture_stderr(*args, **kwargs):
+            return await create_process(*args, stderr=asyncio.subprocess.PIPE, **kwargs)
+        with patch.object(asyncio, "create_subprocess_exec", capture_stderr):
+            runtime = await self.start(group)
+        for requester, provider in (("requester", "provider"), ("provider", "requester")):
+            result = await group.modules[requester].invoke("invoke", {
+                "contract": KEY, "operation": "request", "args": [provider, True], "kwargs": {}})
+            self.assertEqual(result["value"], "from requester")
+        await runtime.stop()
+        for service in group.modules.values():
+            stderr = (await service.process.stderr.read()).decode("utf-8", errors="replace")
+            self.assertEqual(stderr, "")
+            self.assertTrue(service.snapshot.cleanup_confirmed, service.snapshot)
+            self.assertEqual(service.process.returncode, 0, service.snapshot)
+        self.assertFalse(group._control_tasks)
+        self.assertFalse(group.server.is_serving())
 
     async def test_business_and_capacity_results_are_not_link_failures(self):
         group = self.group()

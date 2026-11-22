@@ -7,6 +7,7 @@ import inspect
 
 from nymph_toolkit.contracts import CapacityExceeded, ProtocolError, RemoteError, StreamOptions, StreamState
 from ._hybrid_client import CoreClient
+from ._net import start_server
 from ._rpc import RpcPeer
 from ._streams import StreamReceiver
 from ._wire import VERSION, decode, read_frame, write_frame
@@ -117,7 +118,7 @@ class ModuleNode:
             self.service = await self.service
         if not all(callable(getattr(self.service, key, None)) for key in ("start", "run", "stop")):
             raise TypeError("Factory must return a lifecycle service")
-        self.server = await asyncio.start_server(lambda r, w: self.spawn(self._accept(r, w)), "127.0.0.1", 0)
+        self.server = await start_server(lambda r, w: self.spawn(self._accept(r, w)), "127.0.0.1", 0)
         await self.service.start()
         declared = {(spec.key, operation.name) for spec in self.advertisement.contracts for operation in spec.operations}
         actual = set(self.context.handlers) | set(self.context.stream_handlers)
