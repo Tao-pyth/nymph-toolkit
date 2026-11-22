@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "docs/NTK-Core-v0.1-Handoff-ja.md"
 HEADER = """# Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R25を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R26を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -44,12 +44,15 @@ R24でv0.9のCore機能完成に向けた実装・検証・資料整備が指示
 
 R25でPR #86のレビュー・問題解消後のマージ・v0.9.0公開・A09-04完了後の親#9とマイルストーン終了が指示された。公開#88、停止競合の修正#89を各変更前に登録し、最終CI・マージ・タグ・4添付の匿名取得を追跡する。公開後結果は#88とReleaseへ記録し、公開済みスナップショットを差し替えない。
 
+R26でv0.9.0利用者向けの入口・導入・6実行例・トラブルシューティングと引継ぎ書同期が指示された。親#90・子#91/#92を生成ツール変更前に登録し、3つの利用ガイドを全文収録する。v0.9.0の公開は完了済みであり、公開後の文書改善を未リリースの変更として記録する。製品仕様・API・版と過去の公開物は維持する。
+
 """
 
 
 def sources():
     result = [
         "README.md", "CONTRIBUTING.md", "AGENTS.md", "docs/README.md",
+        "docs/getting-started.md", "docs/tutorials.md", "docs/troubleshooting.md",
         "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md",
         "docs/connections.md", "docs/task-manager.md", "docs/hybrid.md",
         "docs/core-api.md", "docs/api-reference.md", "docs/adr/README.md",

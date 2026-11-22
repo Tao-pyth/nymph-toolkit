@@ -1,5 +1,7 @@
 # 開発準備とGit運用
 
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v0.9.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+
 ## 公開準備時の環境
 
 2026年11月19日の公開準備環境にはGit 2.56.0.windows.4とPython 3.8が存在した。v0.2ではADR 0014によりCPython 3.12以上を採用した。既存のPython 3.8は変更せず、開発用のPythonと仮想環境を別に用意する。
@@ -36,7 +38,7 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・
 
 ## v0.9の完成監査
 
-開発中の配布候補は0.9.0。[Core API](core-api.md)と[証拠対応表](validation/core-coverage.md)を読み、次を実行する。
+v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下は同版を基点にした開発・変更時の再検証手順であり、新しいリリースの作成指示ではない。[Core API](core-api.md)と[証拠対応表](validation/core-coverage.md)を読み、次を実行する。
 
 ```powershell
 .venv/Scripts/python.exe tools/check_api.py
@@ -49,7 +51,7 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・
 
 check_apiは公開14＋92件の一覧と実装を照合する。API変更時は--writeで一覧を更新する。core-coverage.jsonは64項目の採用文・実在テストID・実装・資料の対応を保持し、check_completion.py --writeで表示表を再生成する。両検査は全動作試験の代わりにはならない。変更後はbuild_handoff.pyで単一引継ぎ書を同期する。
 
-配布検査は新規環境へ通常wheelを導入し、作業ツリーのsrcを含めず全試験・6実行例・API照合・4配置短負荷を実行して、sdist同一wheel再ビルドを確認する。--dist-dirは旧版のビルド成果物と混在させないための任意引数。CIは従来どおり空のdistを使う。A09の証拠と残る公開後確認は[検証記録](validation/v0.9.md)に記録する。
+配布検査は新規環境へ通常wheelを導入し、作業ツリーのsrcを含めず全試験・6実行例・API照合・4配置短負荷を実行して、sdist同一wheel再ビルドを確認する。--dist-dirは旧版のビルド成果物と混在させないための任意引数。CIは従来どおり空のdistを使う。A09の公開前の証拠と公開後結果の参照先は[検証記録](validation/v0.9.md)に記録する。
 
 ## v0.8の再現・負荷検証
 
@@ -152,7 +154,7 @@ git diff --cached
 
 ## 文書更新時の確認
 
-Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し、`python tools/check_docs.py` で収録元との一致・ローカルリンクを確認する。CIは再生成を自動保存せず、一致していない場合に失敗する。検証結果は[validation/v0.2.md](validation/v0.2.md)と[validation/v0.3.md](validation/v0.3.md)に記録する。
+Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し、`python tools/check_docs.py` で収録元との一致・ローカルリンクを確認する。CIは再生成を自動保存せず、一致していない場合に失敗する。API・採用範囲は `python tools/check_api.py` と `python tools/check_completion.py` で照合する。新規Docsの収録一覧更新は生成ツールのコード変更に当たるため、先に親子Issueを整える。今回の結果は[Docs整備の検証記録](validation/docs-onboarding.md)へ記録し、過去の各版の受入結果と区別する。
 
 ローカルリンク先の存在、ADRの状態と根拠、ロードマップと受入IDの対応、READMEの実装状況を確認する。単一配布用引継ぎ書はDocs索引に示した順序・変換方法で再作成し、収録元の本文と照合する。将来の配置予定はarchitectureのツリーに記載し、リンクは実在するファイルへ向ける。
 

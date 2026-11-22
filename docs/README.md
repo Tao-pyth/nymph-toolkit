@@ -2,7 +2,21 @@
 
 初稿の文書整備日は2026年11月19日。対象はNymph Toolkit（NTK）の最終ビジョン、Core初期開発、公開準備からV0.9までの計画、およびv1.0.0以降のロードマップ案である。
 
-## 読み順と格納場所
+## 目的別の読み順
+
+**現在の公開版はv0.9.0。合意したCore機能をダミーで検証し、A09-04の公開後照合まで完了している。** 実装状況は[ルートREADME](../README.md)、公開後の結果は[#88](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)を参照する。
+
+| 目的 | 読み順 |
+|---|---|
+| まず試す | [通常導入](getting-started.md) → [6つの実行例](tutorials.md) |
+| 機能を接続する | [Architecture](architecture.md) → [Core API](core-api.md) → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
+| 開発する | [参加方針](../CONTRIBUTING.md) → [Issue運用](issue-workflow.md) → [開発手順](development.md) |
+| 問題を調べる | [トラブルシューティング](troubleshooting.md) → 対象機能のDocs・検証記録 |
+| 判断を追う | [ADR索引](adr/README.md) → [採用64項目](adr/0022-v0.7-v0.9-hybrid-and-completion.md) → [証拠対応表](validation/core-coverage.md) |
+
+利用ガイドはv0.9.0の現行機能を説明する。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
+
+## 文書一覧と格納場所
 
 | 文書 | 用途 |
 |---|---|
@@ -10,6 +24,10 @@
 | [CONTRIBUTING](../CONTRIBUTING.md) | Issue・Pull Requestによる参加と設計判断の扱い |
 | [AGENTS.md](../AGENTS.md) | Codexなどの開発エージェントが守る着手前・完了時のルール |
 | [単一配布用の引継ぎ書](NTK-Core-v0.1-Handoff-ja.md) | 以下のDocs・ADRを一つに収録したスナップショット |
+| [getting-started.md](getting-started.md) | v0.9.0の通常導入・checksum・版とimport元・最初の実行 |
+| [tutorials.md](tutorials.md) | 6実行例の目的・コマンド・期待結果・終了・保存物 |
+| [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
+| [validation/docs-onboarding.md](validation/docs-onboarding.md) | D01〜D04・D09の検証結果、対象版、確認範囲 |
 | [vision.md](vision.md) | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
 | [architecture.md](architecture.md) | Coreの責務、境界、フォルダ構成、未決事項 |
 | [runtime.md](runtime.md) | v0.2の実装済みRuntime・Contractsの使い方と制約 |
@@ -66,6 +84,7 @@
 | R23 | 本チャットのPR #79レビュー・マージ・v0.8.0公開指示 | 問題がなければマージと公開まで進める明示指示。公開#81を親#8・v0.8.0配下へ先に登録し、公開状態の文書・生成ヘッダー、最終検証・タグ・Release・匿名取得を追跡。R22の非公開範囲は当時の履歴として維持 |
 | R24 | 本チャットのv0.9実装・検証・資料整備の指示 | 親#9配下へ子#82〜#85をコード変更前に登録。ADR 0022とA09を根拠に64項目・公開API・通常配布を照合。実施の具体化はADR 0025。公開後判定は別工程 |
 | R25 | 本チャットのPR #86レビュー・マージ・v0.9.0公開・親#9とマイルストーン完了の指示 | 公開#88を先に登録し、レビューで再現した停止競合の修正#89も変更前に登録。最終CI・マージ・タグ・Release・4添付の匿名取得でA09-04を確認後、親#9とマイルストーンを完了する |
+| R26 | Docs充実の要件整理と「まずD01〜D04を整備し、D09に従って引継ぎ書の同期と検証まで」の実施指示 | v0.9.0の利用導線・通常導入・6実行例・トラブルシューティングを整える。生成ツール変更前にv1.0.0準備の親#90・子#91/#92を同じマイルストーンへ登録。製品仕様・API・版は維持し、D05〜D08の全面整備と新規公開は含めない |
 
 初稿作成時の環境では `read_thread` が利用できず、元会話全文との照合は未実施である。確定事項の記述はR2・R3の明示指示を根拠にし、R4で責務境界の説明と判断対象を補う。R4のレビュー本文が述べる過去の経緯と、元会話の直接確認は確認範囲を区別する。既存稿だけにある断定は根拠として採用しない。原文確認後に追加する場合は、発言と採用状況を照合してからADRへ記録する。
 
@@ -116,6 +135,12 @@ R4で列挙された時間・優先度の変更、中断・再開、取消・終
 
 既存のV0.1〜V0.9という表記はv0.1.0〜v0.9.0の節目を指す。v1.xの名称・配分の変更時には、roadmap、architecture、関連ADR、acceptance、releaseと単一配布用引継ぎ書を照合する。
 
+## R26による利用者向けDocs整備
+
+2026年11月22日の指示により、D01は現状と目的別の入口、D02は公開wheelの通常導入、D03は既存6例の解説、D04は問題切り分け、D09は同期・検証として実施する。親[#90](https://github.com/Tao-pyth/nymph-toolkit/issues/90)、文書子[#91](https://github.com/Tao-pyth/nymph-toolkit/issues/91)、生成・検証子[#92](https://github.com/Tao-pyth/nymph-toolkit/issues/92)を既存v1.0.0マイルストーンに置く。これは次段階の準備作業の管理先であり、ガイド対象は公開済みv0.9.0である。製品仕様の新たな採用はなく、新規ADRは作らない。
+
+実行例は公開版のまま使い、ガイドとソースの一致を確認する。結果と未実施範囲は[文書整備の検証記録](validation/docs-onboarding.md)へ分離する。v0.9.0の公開は完了しており、以下のR24・R25の経過を現在の公開待ちという意味に読み替えない。
+
 ## R24によるv0.9の完成確認
 
 2026年11月22日の実施指示をR24として記録する。#82〜#85を親#9・v0.9.0のsub-issueとして先に登録した。[ADR 0025](adr/0025-v0.9-core-completion.md)で完成監査と配布前判定を具体化し、64項目と既存受入の証拠、APIの意味と生成一覧、通常配布物の再現を整える。v0.8.0は公開済み。v0.9の実装・受入結果は[検証記録](validation/v0.9.md)へ分離し、A09-04の公開後照合を完了前に合格としない。
@@ -146,8 +171,10 @@ R20は2026年11月21日の「今回の資料変更をGitHubへ反映し、v0.7�
 
 判断履歴は個別ADR、実装状況はルートREADME、実装手順と検証条件は各Docsで管理する。矛盾を見つけた場合は根拠表と後続の採用記録を確認し、関係する文書を同じ変更で整合させる。
 
-単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
+単一配布用の引継ぎ書は、ルートREADME、CONTRIBUTING、AGENTS、本書、getting-started、tutorials、troubleshooting、vision、architecture、runtime、registry、connections、task-manager、hybrid、core-api、api-reference、ADR索引と各ADR、roadmap、acceptance、validation配下の記録、development、issue-workflow、release、CHANGELOG、LICENSEの順に全文を収録する。再作成時はMarkdown文書の見出しを一段下げ、ローカルリンクを表示名とリポジトリ直下からのパス表記へ展開する。LICENSEは原文を変更せずtextコードブロックに収録する。収録元のファイル名を各章に付ける。
 
 Python 3.12以上で `python tools/build_handoff.py` を実行して再生成し、`python tools/check_docs.py` で本文一致・ローカルリンク・文字コード・改行・LICENSEを確認する。[再生成ツール](../tools/build_handoff.py)と[文書確認ツール](../tools/check_docs.py)はCIでも使用する。
+
+新しいトップレベルDocsを追加する場合は、`sources()`の収録一覧も更新する。そのツール変更には着手前の親子Issue登録が必要である。APIの説明は`python tools/check_api.py`、採用64項目と証拠参照は`python tools/check_completion.py`でも照合する。コマンド・期待出力を変える場合は実行例と照らし合わせ、使用版・OS・結果・未検証範囲を記録する。外部URLの到達性とMarkdownの画面表示は`check_docs.py`の検査対象には含まれない。
 
 リポジトリ内の引継ぎ書は最新の資料へ同期し、公開済みReleaseの添付とタグはその時点のスナップショットとして保持する。v0.1.0以降の更新内容はCHANGELOGの未リリース欄で区別する。
