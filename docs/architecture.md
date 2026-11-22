@@ -160,9 +160,20 @@ nymph-toolkit/
 ├─ tools/validate_hybrid_load.py
 ├─ tools/check_docs.py
 ├─ tools/build_handoff.py
+├─ tools/customer-docs/             # 任意のPDF/HTML生成。Python実行時とは分離
+│  ├─ package.json
+│  ├─ pnpm-lock.yaml
+│  ├─ build.mjs
+│  └─ print.css
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
+│  ├─ customer-guide.md             # 顧客向け契約・利用・図解・API付録
+│  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
+│  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
+│  ├─ getting-started.md            # v0.9.0通常導入・初回実行
+│  ├─ tutorials.md                  # 6実行例・期待結果・保存物
+│  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md
 │  ├─ runtime.md
@@ -174,7 +185,8 @@ nymph-toolkit/
 │  ├─ api-reference.md               # 実装から生成する型・署名
 │  ├─ validation/core-coverage.json  # 証拠対応の編集元
 │  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
-│  ├─ validation/v0.9.md             # A09判定と未実施の公開工程
+│  ├─ validation/v0.9.md             # A09の公開前判定・公開後結果の参照先
+│  ├─ validation/docs-onboarding.md  # D01〜D04・D09の検証
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md

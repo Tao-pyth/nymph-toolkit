@@ -1,6 +1,6 @@
 # v0.2 Runtimeの使い方
 
-Runtimeは、一つの実行入口を同一プロセスで起動・実行・停止する。v0.2の仕様判断は[ADR 0014](adr/0014-v0.2-runtime.md)、環境構築と検証は[development](development.md)にある。v0.3ではこのAPIを維持し、[ModuleGroup](registry.md)を実行入口にして複数対象を動かせる。Connections・TaskManager、別プロセス実行はまだ含まない。
+Runtimeは、一つの実行入口を同一プロセスで起動・実行・停止する。本書はv0.2で導入しv0.9.0でも利用するRuntimeの契約を説明する。仕様判断は[ADR 0014](adr/0014-v0.2-runtime.md)、初めて試す場合は[通常導入](getting-started.md)を参照する。v0.3から[ModuleGroup](registry.md)を実行入口にして複数対象を動かせる。後続で実装したConnections・TaskManagerはGroupに取り付け、別プロセス実行は[HybridGroup](hybrid.md)が担当する。
 
 ## 実行例
 

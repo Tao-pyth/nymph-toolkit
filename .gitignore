@@ -20,6 +20,10 @@ htmlcov/
 .vscode/
 .idea/
 
+# Optional customer-document tools and local deliverables
+tools/customer-docs/node_modules/
+output/pdf/
+
 # OS files
 .DS_Store
 Thumbs.db

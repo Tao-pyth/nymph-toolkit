@@ -1,0 +1,12 @@
+{
+  "name": "ntk-customer-docs",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {"build": "node build.mjs"},
+  "dependencies": {
+    "marked": "17.0.5",
+    "mermaid": "11.12.1",
+    "playwright": "1.62.1"
+  }
+}
