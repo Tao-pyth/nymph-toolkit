@@ -146,7 +146,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### v1.2.0開発候補 — Document Adapter
 
-R33により、ローカルUTF-8テキスト/Markdownの取込とMemory連携を実装しています。Document利用ガイド（`docs/document.md`）、ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）、B02検証記録（`docs/validation/v1.2.md`）に契約・範囲・結果をまとめています。親[#12](https://github.com/Tao-pyth/nymph-toolkit/issues/12)・子#112〜#115をコード変更前に登録しました。
+R33により、ローカルUTF-8テキスト/Markdownの取込とMemory連携を実装しました。Document利用ガイド（`docs/document.md`）、ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）、B02検証記録（`docs/validation/v1.2.md`）に契約・範囲・結果をまとめています。親[#12](https://github.com/Tao-pyth/nymph-toolkit/issues/12)・子#112〜#115をコード変更前に登録しました。全356テスト・9例・8環境CI・通常wheel/sdistを確認し、[PR #116](https://github.com/Tao-pyth/nymph-toolkit/pull/116)でレビューします。
 
 このcheckoutの配布候補は1.2.0です。`python examples/document_demo.py`が9番目の開発用実行例です。1ファイルを1記録に保存し、Memory上限超過は保存せず返します。PDF・URL・分割取込・学習は含めません。公開済みの通常導入先は引き続きv1.1.0で、v1.2.0のタグ/Releaseは未作成です。
 
@@ -7039,7 +7039,7 @@ document.invalid/unsupported/read/too_largeはOperationFailure。Memoryの業務
 
 **GitHub公開＝V0.1、Core機能完成＝V0.9は確定目標。R19・ADR 0022でv0.9までの64項目とv0.7〜v0.9の配分・受入条件を設計採用した。** v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で採用範囲を具体化した。予定日や所要期間は設定せず、完了条件と判断記録に基づいて進める。根拠はR3・R19。v0.1〜v0.9のCore検証では本番Subsystem・Adapterの代わりにダミーを使う。R20でv0.7を実装し検証記録を追加した。v0.8はR22・R23で統合・障害・負荷・配布検証と公開を行い、証拠は検証記録（`docs/validation/v0.8.md`）へ集約する。v0.9はR24で完成確認を行い、配布前・公開後の判定を検証記録（`docs/validation/v0.9.md`）へ分ける。v1.xは各段階で具体化し、v1.0はADR 0026、v1.1はADR 0027の採用範囲に従う。その他の配分案は引き続き提案である。
 
-既存のV0.1・V0.9はv0.1.0・v0.9.0の節目を表す。R5で示されたv1.0.0の接続契約整備という目標と、v1.1.0〜v1.10.0の未確定の開発計画案を後半に追記する。v1.xのSubsystem名・Adapter名は暫定名称であり、名称・順序・機能配分は今後変更される可能性がある。
+既存のV0.1・V0.9はv0.1.0・v0.9.0の節目を表す。R5で示されたv1.0.0の接続契約整備という目標と、v1.1.0〜v1.10.0の当初の開発計画案を後半に収録する。v1.1はR31・ADR 0027、v1.2はR33・ADR 0028で初期範囲を具体化した。後続のSubsystem名・Adapter名は暫定名称であり、名称・順序・機能配分は今後変更される可能性がある。
 
 全体原則は、Nymphが活動内容・時刻・期間・変更と活動の価値・優先度を判断し、Coreが実行を管理することである。Coreの実行可否判定、競合検出、採用した優先度規則に基づく機械的な順序処理を、この境界に従って設計する。R4で境界を再確認し、具体的な優先度機能や変更操作は採否の判断対象として追記した。
 
@@ -8591,6 +8591,19 @@ Windows 11 build 26300 / CPython 3.15.2。全356テスト（既存334＋Document
 
 Core/Memoryの既存製品コード、Core 15 / Contracts 98の公開一覧、v1 manifestは変更なし。73文書・1279ローカルリンク・引継ぎ書、採用64項目/7群/299参照の検査が成功した。通常配布・最終CIの結果は別途確認し、先行ローカル結果と区別する。
 
+### 通常配布と確定した実装コミットのCI
+
+通常wheelをソース外の新規venvへ導入し、1.2.0の版、Core/Documentのsite-packagesからのimport、全356テスト（134.814秒）、9例、短い4配置負荷（1.088秒）、sdistからバイト同一wheelの再構築が成功した。先行ローカル候補の結果であり、確定コミットの配布確認は以下のCIを証拠とする。
+
+対象`1cbfbd7118734295fb4217f99b7a5b2e91a11dfa`、[PR #116](https://github.com/Tao-pyth/nymph-toolkit/pull/116)、[PR CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45061215650)。全8環境成功。各環境でソース/通常wheelの全テスト・9例・短い4配置負荷、安定API/契約/64項目、Docs・引継ぎ書、sdist再構築を確認した。
+
+| OS | CPython | 結果 |
+|---|---|---|
+| Windows | 3.12 / 3.13 / 3.14 / 3.15 | 各356テスト、skipなし、通常配布成功 |
+| Ubuntu Linux | 3.12 / 3.13 / 3.14 / 3.15 | 各356テスト、既存Windows専用6件skip、通常配布成功 |
+
+B02-01〜06の初期実装受入は合格。今回の実装判断、公開Core/Memory契約の維持、未採用・未検証範囲を照合した。この結果を記録する文書だけの後続コミットもCIで照合し、最終SHAと結果を[#115](https://github.com/Tao-pyth/nymph-toolkit/issues/115)とPRへ記録する。親#12・マイルストーンは公開後確認まで継続し、実装子はレビュー後のマージ時に完了処理する。
+
 ### 未検証・後続範囲
 
 長期性能・物理ディスク故障/電源断・敵対的ファイル交換・同時外部書込のスナップショットは未検証。大規模文書・分割・PDF等の別形式、学習/忘却、別配布/PyPIは受入対象外。通信取消・期限切れを未保存保証とせず、同じrecord_idでMemoryを照合する。
@@ -8915,9 +8928,9 @@ v0.1.0＝GitHub公開、v0.9.0＝合意したCore機能の完成、v1.0.0＝Core
 | [v0.7.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/7) | [#7 ハイブリッド実行](https://github.com/Tao-pyth/nymph-toolkit/issues/7) | R19・ADR 0022で設計採用。R20・#61〜#68で実装・A07・配布を確認。R21でPR #69レビュー修正#70、マージ・公開#71を追跡 |
 | [v0.8.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/8) | [#8 統合検証](https://github.com/Tao-pyth/nymph-toolkit/issues/8) | R22・ADR 0024で#72〜#78・#80を実施。PR #79・validation/v0.8で追跡。R23の公開#81を追加 |
 | [v0.9.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/9) | [#9 Core機能完成](https://github.com/Tao-pyth/nymph-toolkit/issues/9) | R24・ADR 0025で完成監査、R25・#88/#89でレビュー修正・公開後照合まで完了。親#9・マイルストーンは終了済み |
-| [v1.0.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/10) | [#10 Core接続契約](https://github.com/Tao-pyth/nymph-toolkit/issues/10)、[#90 利用者向けDocs整備](https://github.com/Tao-pyth/nymph-toolkit/issues/90) | 確定目標・契約詳細は提案。#90はv0.9.0の利用ガイドを整える準備作業 |
-| [v1.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/11) | [#11 Memory Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/11) | 名称・機能配分・実装順序は提案 |
-| [v1.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/12) | [#12 Document Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/12) | 名称・機能配分・実装順序は提案 |
+| [v1.0.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/10) | [#10 Core接続契約](https://github.com/Tao-pyth/nymph-toolkit/issues/10)、[#90 利用者向けDocs整備](https://github.com/Tao-pyth/nymph-toolkit/issues/90) | R29・ADR 0026で実装、R30・#104で公開後確認・終了済み。#90はv0.9利用ガイド |
+| [v1.1.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/11) | [#11 Memory Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/11) | R31・ADR 0027で実装、R32・#110で公開後確認・終了済み |
+| [v1.2.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/12) | [#12 Document Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/12) | R33・ADR 0028で初期範囲・B02を具体化。子#112〜#115・PR #116で実装受入を追跡。公開は別工程 |
 | [v1.3.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/13) | [#13 Cognition Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/13) | 名称・機能配分・実装順序は提案 |
 | [v1.4.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/14) | [#14 Text Interaction / Web Adapter](https://github.com/Tao-pyth/nymph-toolkit/issues/14) | 名称・機能配分・実装順序は提案 |
 | [v1.5.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/15) | [#15 Agency Subsystem](https://github.com/Tao-pyth/nymph-toolkit/issues/15) | 名称・機能配分・実装順序は提案 |
