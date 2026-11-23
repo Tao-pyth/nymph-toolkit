@@ -110,7 +110,7 @@ R29・[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)でv1.0目標を具�
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象は[ADR 0006](adr/0006-core-connection-contracts.md)、R29の採用詳細はADR 0026で管理する。
 
-Documentの採用部分は[ADR 0028](adr/0028-v1.2-document-adapter.md)・[利用ガイド](document.md)に従う。Memoryの採用部分は[ADR 0027](adr/0027-v1.1-memory.md)・[利用ガイド](memory.md)に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+Cognitionの初期学習は[ADR 0029](adr/0029-v1.3-cognition-learning.md)・[利用ガイド](cognition.md)に従う。Documentの採用部分は[ADR 0028](adr/0028-v1.2-document-adapter.md)・[利用ガイド](document.md)に従う。Memoryの採用部分は[ADR 0027](adr/0027-v1.1-memory.md)・[利用ガイド](memory.md)に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
 
 | 構成案 | 役割と境界 |
 |---|---|
@@ -191,6 +191,7 @@ nymph-toolkit/
 │  ├─ module-contracts.md            # 6契約と接続開発
 │  ├─ migration-v1.md                # v0.9からの移行
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
+│  ├─ cognition.md                   # v1.3初期学習とMemory根拠
 │  ├─ document.md                    # v1.2文書入力とMemory連携
 │  ├─ memory.md                      # v1.1保存・取得と運用
 │  ├─ validation/v1.1.md              # B01受入結果
@@ -240,14 +241,16 @@ nymph-toolkit/
 │     ├─ 0025-v0.9-core-completion.md
 │     ├─ 0026-v1.0-core-connection-contracts.md
 │     ├─ 0027-v1.1-memory.md
-│     └─ 0028-v1.2-document-adapter.md
+│     ├─ 0028-v1.2-document-adapter.md
+│     └─ 0029-v1.3-cognition-learning.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     ├─ contracts/                  # memory.py / document.pyの業務契約
+│     ├─ contracts/                  # memory.py / document.py / cognition.pyの業務契約
 │     ├─ adapters/document/          # ローカル文書入力とMemory連携
-│     └─ subsystems/memory/           # 同梱する最小Memory
-└─ tests/                            # subsystems/にMemory単体・統合試験
+│     ├─ subsystems/memory/           # 同梱する最小Memory
+│     └─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
+└─ tests/                            # subsystems/にMemory/Cognition単体・統合試験
    ├─ core/
    ├─ adapters/                     # Document単体・4配置・障害試験
    ├─ subsystems/
@@ -300,3 +303,7 @@ v1.0の共通Contract公開範囲・互換性はADR 0026で具体化した。後
 `src/nymph_toolkit/adapters/document/`へ同梱し、`contracts/document.py`に宣言を置く。ModuleKind.ADAPTERでMemoryへの依存を宣言し、公開Contractsだけを参照する。ローカル文書読込と出典/hash作成をAdapter、commitと保存/取得をMemory、接続許可/実行管理をCoreが担当する。区分・ID・時刻・活動の選択は要求側に残す。
 
 `docs/document.md`・ADR 0028・`docs/validation/v1.2.md`・`examples/document_demo.py`・`tests/adapters/`で仕様と証拠を追跡する。v1.2の単一パッケージへの追加であり、将来の独立配布を確定しない。
+
+## R35：CognitionとMemoryの境界
+
+Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contracts/cognition.py`、ガイドは`docs/cognition.md`、判断はADR 0029、結果は`docs/validation/v1.3.md`、実行例は`examples/cognition_demo.py`、検証は`tests/subsystems/test_cognition*.py`に置く。学習の入力と実施を要求側、元記録の保存/取得をMemory、初期統計と根拠/専用保存をCognition、接続許可/実行管理をCoreが担当する。明示された区切り・ラベルの共起を、自律的な概念形成や文法の完成と扱わない。

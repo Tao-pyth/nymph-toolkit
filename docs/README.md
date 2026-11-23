@@ -38,6 +38,8 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | [tutorials.md](tutorials.md) | 9実行例の目的・コマンド・期待結果・終了・保存物 |
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
 | [validation/docs-onboarding.md](validation/docs-onboarding.md) | D01〜D04・D09の検証結果、対象版、確認範囲 |
+| [cognition.md](cognition.md) | 開発候補v1.3の初期学習・根拠・運用・能力の限界 |
+| [validation/v1.3.md](validation/v1.3.md) | B03のモデル/Memory連携・回帰・配布・CI結果 |
 | [memory.md](memory.md) | v1.1の保存/取得・出典・運用・実行例 |
 | [validation/v1.1.md](validation/v1.1.md) | B01の実装・回帰・配布・CI結果 |
 | [vision.md](vision.md) | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
@@ -226,3 +228,9 @@ PR #109のレビュー、問題がなければマージ・v1.1.0公開、公開�
 ## R34：v1.2レビュー・公開
 
 PR #116のレビュー、問題解消後のマージ・v1.2.0公開、公開後確認と子#112〜#115・親#12・マイルストーン終了という明示指示を根拠とする。公開子[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)とレビュー修正子[#118](https://github.com/Tao-pyth/nymph-toolkit/issues/118)をコード/生成ヘッダー変更前に同じマイルストーン・実親子関係へ登録した。R33のPRまでという範囲を公開まで拡張する。結果不明保持の修正はADR 0028へ追記し、最終SHA・CI・公開後結果は#117へ記録する。過去のタグ・Release添付を変更しない。
+
+## R35：v1.3 Cognition開発
+
+Cognition開発・親/ADR確認・未決/初期スコープ/受入整理・子Issue先行登録・Memory連携の設計/実装/検証/資料整備というユーザーの指示を根拠とする。親#13とマイルストーンv1.3.0を確認し、子#119〜#122をコード変更前に実親子関係付きで登録した。[ADR 0029](adr/0029-v1.3-cognition-learning.md)の方式・API・具体値はCodexの初期実装判断で、過去の個別合意と区別する。
+
+入力の区切り/ラベル付き推奨案を提示し、回答がない時点ではその前提で進める旨を明示した。[Cognitionガイド](cognition.md)と[B03検証記録](validation/v1.3.md)で、能力の限界・未採用事項・実装と確認済み結果を追う。開発候補1.3.0・10番目の例と、公開v1.2の導入/9例を区別し、今回の範囲はレビュー用PRまでとする。

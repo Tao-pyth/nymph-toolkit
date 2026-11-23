@@ -117,7 +117,7 @@ sequenceDiagram
 
 ## 試す・検証する
 
-公開wheelと同版sdistでの実行は[通常導入](getting-started.md)と[8つの例](tutorials.md)に従う。以下はリポジトリ直下からの開発用手順。
+公開wheelと同版sdistでの実行は[通常導入](getting-started.md)と[実行例](tutorials.md)に従う。以下はリポジトリ直下からの開発用手順。
 
 ```text
 python -m pip install -e .
@@ -127,4 +127,6 @@ python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_m
 
 例は一時ディレクトリ内でMemoryを別プロセス、要求側ダミーをLOCALに置き、直接/Core通信・最大ページ・失敗・再起動取得を確認して終了する。`PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup`が最後の出力。例のデータは終了時に削除される。実利用では保持する絶対パスを指定する。
 
-Document Adapter、編集・訂正/削除・忘却、Working/Procedural Memory、意味検索、統合、学習は未実装。夢区分は保存上の区別で、生成や次の睡眠時の失効を実装したものではない。複製・移植・伝播を追加していない。
+Memory自体には編集・訂正/削除・忘却、Working/Procedural Memory、意味検索、統合、学習は未実装。夢区分は保存上の区別で、生成や次の睡眠時の失効を実装したものではない。複製・移植・伝播を追加していない。
+
+Document連携はv1.2・ADR 0028、Cognitionによるgetと初期学習は開発候補v1.3・[ADR 0029](adr/0029-v1.3-cognition-learning.md)で具体化した。Memoryの保存/取得契約は変更しない。

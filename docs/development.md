@@ -174,6 +174,12 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ## v1.2 Documentの開発確認
 
-公開v1.1.0の通常導入と区別し、このcheckoutをeditable導入して[Documentガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
+以下はv1.2開発時点の手順。現在の開発候補は末尾のv1.3節を参照する。checkoutをeditable導入して[Documentガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
 
-配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。この検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
+配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。v1.2当時の検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
+
+## v1.3 Cognitionの開発確認
+
+このcheckoutを`python -m pip install -e .`で導入し、版が1.3.0であることを確認する。[Cognitionガイド](cognition.md)・[ADR 0029](adr/0029-v1.3-cognition-learning.md)に従い、`python examples/cognition_demo.py`と`python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v`を実行する。公開v1.2のwheelにはCognitionは含まれない。
+
+現在の通常配布検査は`python -m build --outdir .git/v13-dist`、`python tools/check_dist.py --dist-dir .git/v13-dist`で1.3.0を期待する。全回帰、10例、短い4配置負荷、sdist同一wheel再構築、API/契約/64項目/Docs同期を確認する。公開済みタグ・添付と現行版向け導入ガイドを開発候補へ無断で置き換えない。

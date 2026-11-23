@@ -77,3 +77,7 @@ Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`�
 ## Document取込
 
 Documentはv1.2.0以降のwheelに含まれる。版/import元を確認し、旧版を使用している場合は通常導入手順で新しい環境を作る。`document.too_large`は本文だけでなく出典URI/hash等を含む4096 JSON bytes制限の場合もある。切捨て・部分保存は行わない。kind/source_kind/時刻・IDは要求元が指定し、再取込で変えるとmemory.conflictになる。失敗/取消/結果不明の判断とMemory照合、接続中断後の再prepareは[Document利用ガイド](document.md)を参照する。
+
+## v1.3開発候補のCognition
+
+公開v1.2のwheelではCognitionは使えない。開発checkoutのeditable導入と版/import元を確認する。cognition.invalidは文字/件数制約と、Memory本文の空白除去がtokens連結と一致するかを確認。cognition.conflictは既存IDへの異なる記録/注釈であり、訂正・上書きは実装していない。cognition.fullは256例上限。cognition.storageでは別writer/ロック/容量を調べる。未知DBや異なるMemory提供先のDBを手編集して読み込ませない。停止/取消と結果不明は[Cognitionガイド](cognition.md)に従う。

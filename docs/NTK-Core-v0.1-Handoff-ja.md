@@ -1,6 +1,6 @@
 # Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R34を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R35を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -52,6 +52,8 @@ R30でPR #103レビュー・マージ・v1.0.0公開と公開後確認・課題�
 
 R34でPR #116レビュー・マージ・v1.2.0公開と公開後確認・課題終了が指示された。公開#117・レビュー修正#118を各変更前に登録し、二重障害時の結果不明保持、最終CI・タグ・4添付と通常導入を確認する。最終結果は#117とReleaseへ記録し、既存Core/Memory契約と過去の公開物を維持する。
 
+R35でv1.3 CognitionとMemory連携の開発が指示された。親#13・子#119〜#122をコード変更前に登録し、ADR 0029で区切り/概念ラベル付きの初期学習、根拠・保存・失敗/取消・B03を具体化した。これはCodexの初期実装判断であり、自然言語理解の完成ではない。公開v1.2と開発候補を区別し、利用資料・検証記録・10番目の例を収録する。今回はレビュー用PRまで。
+
 ## 収録文書
 
 1. [Nymph Toolkit（NTK）](#section-1)
@@ -70,63 +72,66 @@ R34でPR #116レビュー・マージ・v1.2.0公開と公開後確認・課題�
 14. [Connectionsの操作契約（v0.4）](#section-14)
 15. [TaskManagerの操作契約と活動履歴](#section-15)
 16. [v0.7 ハイブリッド実行と通信](#section-16)
-17. [Document Adapter — v1.2の文書入力とMemory連携](#section-17)
-18. [Memory Subsystem v1.1](#section-18)
-19. [Core APIと利用上の契約](#section-19)
-20. [公開APIの実装一覧](#section-20)
-21. [v1.0 Core接続契約](#section-21)
-22. [v0.9からv1.0への移行](#section-22)
-23. [ADR索引と更新方法](#section-23)
-24. [ADR 0001 Coreと統合リポジトリ](#section-24)
-25. [ADR 0002 実行モデル](#section-25)
-26. [ADR 0003 通信経路](#section-26)
-27. [ADR 0004 活動の決定権](#section-27)
-28. [ADR 0005 初期実装の範囲](#section-28)
-29. [ADR 0006 v1.0.0のCore接続契約](#section-29)
-30. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-30)
-31. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-31)
-32. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-32)
-33. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-33)
-34. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-34)
-35. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-35)
-36. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-36)
-37. [ADR 0014 v0.2の開発環境と最小Runtime](#section-37)
-38. [ADR 0015 Coreが許可する直接通信の採用](#section-38)
-39. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-39)
-40. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-40)
-41. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-41)
-42. [ADR 0019 v0.4のConnections実装判断](#section-42)
-43. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-43)
-44. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-44)
-45. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-45)
-46. [ADR 0023 v0.7の実装契約](#section-46)
-47. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-47)
-48. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-48)
-49. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-49)
-50. [ADR 0027 v1.1 Memoryの最小保存・取得](#section-50)
-51. [ADR 0028 v1.2 Document AdapterとMemory連携](#section-51)
-52. [NTK開発ロードマップ](#section-52)
-53. [受入基準・検討案と検証記録](#section-53)
-54. [Core採用事項と検証証拠の対応](#section-54)
-55. [顧客向け契約・利用ガイドの検証記録](#section-55)
-56. [v0.9.0利用者向けDocsの検証記録](#section-56)
-57. [v0.2 Runtime受入記録](#section-57)
-58. [v0.3受入記録](#section-58)
-59. [v0.4の受入記録](#section-59)
-60. [v0.5の受入確認と検証経過](#section-60)
-61. [v0.6の受入確認と検証経過](#section-61)
-62. [v0.7の受入確認と検証経過](#section-62)
-63. [v0.8 統合・障害・負荷検証記録](#section-63)
-64. [v0.9 Core機能完成の検証記録](#section-64)
-65. [v1.0 Core接続契約の検証](#section-65)
-66. [v1.1 Memoryの受入記録](#section-66)
-67. [v1.2 Document Adapterの受入・検証記録](#section-67)
-68. [WindowsのTCP終了処理の修正・検証（#94）](#section-68)
-69. [開発準備とGit運用](#section-69)
-70. [マイルストーンと親子Issueの運用](#section-70)
-71. [公開準備とリリース手順](#section-71)
-72. [変更履歴](#section-72)
-73. [Apache License 2.0（原文）](#section-73)
+17. [Cognition Subsystem — v1.3の初期学習](#section-17)
+18. [Document Adapter — v1.2の文書入力とMemory連携](#section-18)
+19. [Memory Subsystem v1.1](#section-19)
+20. [Core APIと利用上の契約](#section-20)
+21. [公開APIの実装一覧](#section-21)
+22. [v1.0 Core接続契約](#section-22)
+23. [v0.9からv1.0への移行](#section-23)
+24. [ADR索引と更新方法](#section-24)
+25. [ADR 0001 Coreと統合リポジトリ](#section-25)
+26. [ADR 0002 実行モデル](#section-26)
+27. [ADR 0003 通信経路](#section-27)
+28. [ADR 0004 活動の決定権](#section-28)
+29. [ADR 0005 初期実装の範囲](#section-29)
+30. [ADR 0006 v1.0.0のCore接続契約](#section-30)
+31. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-31)
+32. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-32)
+33. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-33)
+34. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-34)
+35. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-35)
+36. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-36)
+37. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-37)
+38. [ADR 0014 v0.2の開発環境と最小Runtime](#section-38)
+39. [ADR 0015 Coreが許可する直接通信の採用](#section-39)
+40. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-40)
+41. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-41)
+42. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-42)
+43. [ADR 0019 v0.4のConnections実装判断](#section-43)
+44. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-44)
+45. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-45)
+46. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-46)
+47. [ADR 0023 v0.7の実装契約](#section-47)
+48. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-48)
+49. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-49)
+50. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-50)
+51. [ADR 0027 v1.1 Memoryの最小保存・取得](#section-51)
+52. [ADR 0028 v1.2 Document AdapterとMemory連携](#section-52)
+53. [ADR 0029 v1.3 Cognitionの初期学習とMemory連携](#section-53)
+54. [NTK開発ロードマップ](#section-54)
+55. [受入基準・検討案と検証記録](#section-55)
+56. [Core採用事項と検証証拠の対応](#section-56)
+57. [顧客向け契約・利用ガイドの検証記録](#section-57)
+58. [v0.9.0利用者向けDocsの検証記録](#section-58)
+59. [v0.2 Runtime受入記録](#section-59)
+60. [v0.3受入記録](#section-60)
+61. [v0.4の受入記録](#section-61)
+62. [v0.5の受入確認と検証経過](#section-62)
+63. [v0.6の受入確認と検証経過](#section-63)
+64. [v0.7の受入確認と検証経過](#section-64)
+65. [v0.8 統合・障害・負荷検証記録](#section-65)
+66. [v0.9 Core機能完成の検証記録](#section-66)
+67. [v1.0 Core接続契約の検証](#section-67)
+68. [v1.1 Memoryの受入記録](#section-68)
+69. [v1.2 Document Adapterの受入・検証記録](#section-69)
+70. [v1.3 Cognitionの受入・検証記録](#section-70)
+71. [WindowsのTCP終了処理の修正・検証（#94）](#section-71)
+72. [開発準備とGit運用](#section-72)
+73. [マイルストーンと親子Issueの運用](#section-73)
+74. [公開準備とリリース手順](#section-74)
+75. [変更履歴](#section-75)
+76. [Apache License 2.0（原文）](#section-76)
 
 ---
 
@@ -146,11 +151,17 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterを必要に応じて分割するものです。個別の分割は依存関係・独立更新・単独配布の必要性に基づいて判断します。採用した配布方針（`docs/adr/0009-package-distribution.md`）
 
-### v1.2.0 — Document Adapter
+### v1.3.0開発候補 — Cognition Subsystem
+
+R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。利用ガイド（`docs/cognition.md`）、ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）、B03検証記録（`docs/validation/v1.3.md`）に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。
+
+このcheckoutの配布候補は1.3.0です。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
+
+### 公開済みv1.2.0 — Document Adapter
 
 R33により、ローカルUTF-8テキスト/Markdownの取込とMemory連携を実装しました。Document利用ガイド（`docs/document.md`）、ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）、B02検証記録（`docs/validation/v1.2.md`）に契約・範囲・結果をまとめています。親[#12](https://github.com/Tao-pyth/nymph-toolkit/issues/12)・子#112〜#115をコード変更前に登録しました。R34の[PR #116](https://github.com/Tao-pyth/nymph-toolkit/pull/116)レビューで二重障害時の結果不明保持を修正し、全357テスト・9例・8環境CI・通常wheel/sdistを公開条件とします。最終SHAと公開後確認は[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録します。
 
-配布版は1.2.0です。`python examples/document_demo.py`が9番目の実行例です。1ファイルを1記録に保存し、Memory上限超過は保存せず返します。PDF・URL・分割取込・学習は含めません。[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)から取得できます。
+公開済み配布版は1.2.0です。`python examples/document_demo.py`が9番目の実行例です。1ファイルを1記録に保存し、Memory上限超過は保存せず返します。PDF・URL・分割取込・学習は含めません。[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)から取得できます。
 
 ### v1.1.0で追加したMemory Subsystem
 
@@ -199,7 +210,7 @@ v1.0.0は316テスト（製品304件＋検査12件）、7実行例、全8環境C
 
 30分の負荷測定はv0.8の特定コミットに対する結果です。後続修正の検証範囲とともにv0.8検証記録（`docs/validation/v0.8.md`）へ記録しており、現在の全環境で同じ長時間性能を保証するものではありません。
 
-v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1 MemoryはR31・ADR 0027で初期範囲を具体化しました。v1.2はR33・ADR 0028でDocumentの初期範囲を具体化しました。v1.3.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
+v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1 MemoryはR31・ADR 0027で初期範囲を具体化しました。v1.2はR33・ADR 0028でDocumentの初期範囲を具体化しました。v1.3はR35・ADR 0029で初期学習の範囲を具体化しました。v1.4.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
 
 将来のPC全体の状況取得はAdapterが担当します。Desktop Adapterはv1.10.0までの配分に含めず将来課題とし、複製・移植・伝播機構は初期スコープ外です。
 
@@ -301,6 +312,8 @@ v1.1 MemoryはR31・ADR 0027（`docs/adr/0027-v1.1-memory.md`）の初期範囲�
 
 v1.2 DocumentはR33・ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）に従う。UTF-8 txt/mdの明示取込を1記録としてMemoryへ保存する。区分/時刻/IDは要求側が指定し、出典/hashを保持する。Core/Memory内部をimportせず公開Contractsで接続する。超過を切捨て・自動分割せず、取消/結果不明を未保存保証としない。B02実装受入と公開後確認を分ける。
 
+v1.3 CognitionはR35・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）の初期学習に従う。語の区切りと概念ラベルは要求側の教師情報で、完全な意味理解/文法獲得と表現しない。Memory ID・fingerprint・出典区分を保持し、専用SQLiteへ最大256例を保存する。Core/Memory/Documentの公開契約を維持し、公開Contractsだけで連携する。訂正/忘却・未分割文・会話生成・自律学習計画を暗黙に追加しない。B03実装受入と公開後確認を分ける。
+
 ---
 
 <a id="section-4"></a>
@@ -347,6 +360,8 @@ v1.2のDocument Adapterは利用ガイド（`docs/document.md`）・ADR 0028（`
 | tutorials.md（`docs/tutorials.md`） | 9実行例の目的・コマンド・期待結果・終了・保存物 |
 | troubleshooting.md（`docs/troubleshooting.md`） | 症状別の確認・対処・回復確認と報告方法 |
 | validation/docs-onboarding.md（`docs/validation/docs-onboarding.md`） | D01〜D04・D09の検証結果、対象版、確認範囲 |
+| cognition.md（`docs/cognition.md`） | 開発候補v1.3の初期学習・根拠・運用・能力の限界 |
+| validation/v1.3.md（`docs/validation/v1.3.md`） | B03のモデル/Memory連携・回帰・配布・CI結果 |
 | memory.md（`docs/memory.md`） | v1.1の保存/取得・出典・運用・実行例 |
 | validation/v1.1.md（`docs/validation/v1.1.md`） | B01の実装・回帰・配布・CI結果 |
 | vision.md（`docs/vision.md`） | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
@@ -535,6 +550,12 @@ Document利用ガイド（`docs/document.md`）で設定・取込・失敗/取�
 ### R34：v1.2レビュー・公開
 
 PR #116のレビュー、問題解消後のマージ・v1.2.0公開、公開後確認と子#112〜#115・親#12・マイルストーン終了という明示指示を根拠とする。公開子[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)とレビュー修正子[#118](https://github.com/Tao-pyth/nymph-toolkit/issues/118)をコード/生成ヘッダー変更前に同じマイルストーン・実親子関係へ登録した。R33のPRまでという範囲を公開まで拡張する。結果不明保持の修正はADR 0028へ追記し、最終SHA・CI・公開後結果は#117へ記録する。過去のタグ・Release添付を変更しない。
+
+### R35：v1.3 Cognition開発
+
+Cognition開発・親/ADR確認・未決/初期スコープ/受入整理・子Issue先行登録・Memory連携の設計/実装/検証/資料整備というユーザーの指示を根拠とする。親#13とマイルストーンv1.3.0を確認し、子#119〜#122をコード変更前に実親子関係付きで登録した。ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）の方式・API・具体値はCodexの初期実装判断で、過去の個別合意と区別する。
+
+入力の区切り/ラベル付き推奨案を提示し、回答がない時点ではその前提で進める旨を明示した。Cognitionガイド（`docs/cognition.md`）とB03検証記録（`docs/validation/v1.3.md`）で、能力の限界・未採用事項・実装と確認済み結果を追う。開発候補1.3.0・10番目の例と、公開v1.2の導入/9例を区別し、今回の範囲はレビュー用PRまでとする。
 
 ---
 
@@ -1495,6 +1516,10 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 
 全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せずトラブルシューティング（`docs/troubleshooting.md`）へ進む。9例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲はB02検証記録（`docs/validation/v1.2.md`）、B01検証記録（`docs/validation/v1.1.md`）と既存B00（`docs/validation/v1.0.md`）、本版の公開後再現は[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)で追跡する。過去のv0.9版ガイドの確認範囲は文書整備の検証記録（`docs/validation/docs-onboarding.md`）に残す。
 
+### 開発候補v1.3の10番目の例
+
+公開v1.2.0の9例とは別に、このcheckoutでは`python examples/cognition_demo.py`を実行できる。開発手順（`docs/development.md`）でeditable導入する。Document→Memoryの文書を要求側の区切り/ラベルで学習し、頻度・局所語順・関連・出典区分・根拠、冪等/競合と再起動を照合する。最後に`PASS: Cognition learning, evidence, source separation, Memory/Document, restart, cleanup`と表示し、一時文書・DBを削除する。Cognitionガイド（`docs/cognition.md`）の能力の限界と失敗時動作を参照する。
+
 ---
 
 <a id="section-9"></a>
@@ -1580,6 +1605,10 @@ Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`�
 ### Document取込
 
 Documentはv1.2.0以降のwheelに含まれる。版/import元を確認し、旧版を使用している場合は通常導入手順で新しい環境を作る。`document.too_large`は本文だけでなく出典URI/hash等を含む4096 JSON bytes制限の場合もある。切捨て・部分保存は行わない。kind/source_kind/時刻・IDは要求元が指定し、再取込で変えるとmemory.conflictになる。失敗/取消/結果不明の判断とMemory照合、接続中断後の再prepareはDocument利用ガイド（`docs/document.md`）を参照する。
+
+### v1.3開発候補のCognition
+
+公開v1.2のwheelではCognitionは使えない。開発checkoutのeditable導入と版/import元を確認する。cognition.invalidは文字/件数制約と、Memory本文の空白除去がtokens連結と一致するかを確認。cognition.conflictは既存IDへの異なる記録/注釈であり、訂正・上書きは実装していない。cognition.fullは256例上限。cognition.storageでは別writer/ロック/容量を調べる。未知DBや異なるMemory提供先のDBを手編集して読み込ませない。停止/取消と結果不明はCognitionガイド（`docs/cognition.md`）に従う。
 
 ---
 
@@ -2094,7 +2123,7 @@ R29・ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）でv1.0目�
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象はADR 0006（`docs/adr/0006-core-connection-contracts.md`）、R29の採用詳細はADR 0026で管理する。
 
-Documentの採用部分はADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）・利用ガイド（`docs/document.md`）に従う。Memoryの採用部分はADR 0027（`docs/adr/0027-v1.1-memory.md`）・利用ガイド（`docs/memory.md`）に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
+Cognitionの初期学習はADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）・利用ガイド（`docs/cognition.md`）に従う。Documentの採用部分はADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）・利用ガイド（`docs/document.md`）に従う。Memoryの採用部分はADR 0027（`docs/adr/0027-v1.1-memory.md`）・利用ガイド（`docs/memory.md`）に従う。以下はその基となったv1.xの設計提案で、Subsystem名・Adapter名はすべて暫定名称である。後続の実装順序・機能配分・業務契約の型やAPIは未確定。v1.0の共通接続契約はADR 0026に従う。Subsystem・Adapter向けの共通接続契約を作る目標から、配置間のIPC統一や直接通信の許可を推定しない。
 
 | 構成案 | 役割と境界 |
 |---|---|
@@ -2175,6 +2204,7 @@ nymph-toolkit/
 │  ├─ module-contracts.md            # 6契約と接続開発
 │  ├─ migration-v1.md                # v0.9からの移行
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
+│  ├─ cognition.md                   # v1.3初期学習とMemory根拠
 │  ├─ document.md                    # v1.2文書入力とMemory連携
 │  ├─ memory.md                      # v1.1保存・取得と運用
 │  ├─ validation/v1.1.md              # B01受入結果
@@ -2224,14 +2254,16 @@ nymph-toolkit/
 │     ├─ 0025-v0.9-core-completion.md
 │     ├─ 0026-v1.0-core-connection-contracts.md
 │     ├─ 0027-v1.1-memory.md
-│     └─ 0028-v1.2-document-adapter.md
+│     ├─ 0028-v1.2-document-adapter.md
+│     └─ 0029-v1.3-cognition-learning.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     ├─ contracts/                  # memory.py / document.pyの業務契約
+│     ├─ contracts/                  # memory.py / document.py / cognition.pyの業務契約
 │     ├─ adapters/document/          # ローカル文書入力とMemory連携
-│     └─ subsystems/memory/           # 同梱する最小Memory
-└─ tests/                            # subsystems/にMemory単体・統合試験
+│     ├─ subsystems/memory/           # 同梱する最小Memory
+│     └─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
+└─ tests/                            # subsystems/にMemory/Cognition単体・統合試験
    ├─ core/
    ├─ adapters/                     # Document単体・4配置・障害試験
    ├─ subsystems/
@@ -2284,6 +2316,10 @@ v1.0の共通Contract公開範囲・互換性はADR 0026で具体化した。後
 `src/nymph_toolkit/adapters/document/`へ同梱し、`contracts/document.py`に宣言を置く。ModuleKind.ADAPTERでMemoryへの依存を宣言し、公開Contractsだけを参照する。ローカル文書読込と出典/hash作成をAdapter、commitと保存/取得をMemory、接続許可/実行管理をCoreが担当する。区分・ID・時刻・活動の選択は要求側に残す。
 
 `docs/document.md`・ADR 0028・`docs/validation/v1.2.md`・`examples/document_demo.py`・`tests/adapters/`で仕様と証拠を追跡する。v1.2の単一パッケージへの追加であり、将来の独立配布を確定しない。
+
+### R35：CognitionとMemoryの境界
+
+Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contracts/cognition.py`、ガイドは`docs/cognition.md`、判断はADR 0029、結果は`docs/validation/v1.3.md`、実行例は`examples/cognition_demo.py`、検証は`tests/subsystems/test_cognition*.py`に置く。学習の入力と実施を要求側、元記録の保存/取得をMemory、初期統計と根拠/専用保存をCognition、接続許可/実行管理をCoreが担当する。明示された区切り・ラベルの共起を、自律的な概念形成や文法の完成と扱わない。
 
 ---
 
@@ -2807,6 +2843,140 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 <a id="section-17"></a>
 
+収録元 `docs/cognition.md`
+
+## Cognition Subsystem — v1.3の初期学習
+
+R35・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）で具体化した開発候補。公開済みv1.2.0には含まれない。Memoryの記録に、要求側が語の区切りと概念ラベルを添えて学習する。語彙の出現数、例内の隣接語順、語とラベルの共起を、根拠付きで照会できる。
+
+**この版は小さな学習実験の基盤である。** 語の分節や概念ラベルは教師情報として与える。自然な日本語の理解、完全な文法獲得、自律的な概念形成、会話・文章生成を実現したものではない。初期語彙は空で、LLM・事前学習モデル・外部Python依存は使わない。
+
+### 役割と保存先
+
+```mermaid
+flowchart LR
+    D[Document Adapter] -->|元の文書| M[Memory records/1]
+    N[Nymph役の要求側] -->|記録ID・区切り・ラベル| L[Cognition learn]
+    C[Core] -->|候補・稼働情報・接続許可| L
+    L -->|許可済み接続でget| M
+    L -->|本文と注釈の一致を確認・commit| S[(Cognition専用SQLite)]
+    S --> I[inspect: 頻度・語順・ラベル関連・根拠]
+    I --> N
+```
+
+学習を行うか、どの記録を使うか、区切りとラベルをどう与えるかは要求側が決める。Coreは認知や真偽の判断を代行しない。Memoryは元記録を保持し、CognitionはID・記録fingerprint・区分・tokens/labelsを専用DBへ保持する。元のMemory本文やCoreのFileStore履歴を置き換えない。
+
+### 登録・前提
+
+ModuleKind.SUBSYSTEM。公開入口は`nymph_toolkit.subsystems.cognition:factory`、設定は絶対ファイルパス`path`と、選択済みの提供先ID`memory_module_id`の2項目のみ。DBの親ディレクトリは先に作り、Memory/Coreと異なるファイルを使う。1つのDBは1つのCognition実体が所有する。max_frame_bytesは65536以上。
+
+```python
+from pathlib import Path
+from nymph_toolkit.contracts import ModuleSpec, ModuleKind, ModuleAdvertisement, Placement
+from nymph_toolkit.contracts.cognition import COGNITION_KEY, COGNITION_CONTRACT
+
+group.register_module(
+    ModuleSpec("cognition", ModuleKind.SUBSYSTEM, ("memory",)),
+    ModuleAdvertisement("cognition", "1.3.0", (COGNITION_CONTRACT,)),
+    "nymph_toolkit.subsystems.cognition:factory",
+    {"path": str(Path("cognition.sqlite3").resolve()), "memory_module_id": "memory"},
+    Placement.PROCESS,
+)
+```
+
+LOCALも同じ契約。機能実装版1.3.0、契約版1、内部保存形式1は別の版である。最初のlearnで候補と稼働情報を確認し、設定IDへbindする。同一起動中の接続先は固定し、許可済みDirectLinkを再利用する。requiresによる依存宣言は接続許可そのものではない。
+
+### 2つの操作
+
+`ContractKey("ntk.cognition.learning", "1")`の全操作はASYNC。以下は接続を準備済みの利用例。
+
+```python
+# "cat-sleep" はMemoryに保存済みの、本文が「猫 は 眠る」の記録。
+receipt = await link.acall("learn", "cat-sleep",
+    tokens=["猫", "は", "眠る"], concepts=["animal", "sleep"], timeout=10)
+profile = await link.acall("inspect", "猫", source_kind="observed", after=0, limit=8, timeout=5)
+```
+
+成功値以外に下表の業務失敗・容量不足・通信障害を受ける。dictと確認してから各項目を読む。外側の10秒は利用例の予算で、Cognition内部の個別Memory RPCは5秒。学習をまとめるシナリオの期限とは分ける。
+
+| 入力 | 条件 |
+|---|---|
+| learnのrecord_id | Memoryと同じ非空・前後空白なし・UTF-8 128 bytes以下 |
+| tokens | listで1〜32語。各語は非空・Unicode空白/NULなし・UTF-8 64 bytes以下 |
+| concepts | listで0〜8ラベル。同じ文字制約、重複不可。順序は区別しない |
+| 本文との対応 | Memory本文からUnicode空白を除いた値とtokensの連結が一致すること |
+| inspectのtoken | tokensの1要素と同じ文字制約。大小文字・表記・活用は別の語として扱う |
+| source_kind | None（全区分）またはobserved/reported/inferred/imagined/dream |
+| after / limit | 学習sequenceのカーソル0〜2^63-1 / 根拠ページ1〜8。bool不可 |
+
+`learn`の成功結果はrecord_id・Cognitionの学習sequence・Memory応答のfingerprint。SQLite commit後に返す。同じID/記録/注釈は同じreceiptで二重加算しない。異なる記録や注釈は競合とし、元の学習を維持する。訂正や忘却を暗黙に実装しない。
+
+### 観察できるもの
+
+| inspectの結果 | 意味 |
+|---|---|
+| token / known | 問い合わせ語 / 絞込条件内で学習済みか。未知はfalse |
+| count / documents | 語の出現回数 / 語を含む学習例数 |
+| source_counts | 出典区分ごとの、その語を含む例数。区分を真偽の順位へ変換しない |
+| successors / successor_total | 次語・回数・相対頻度の上位8件 / 全候補数 |
+| end_count / end_probability | 例の終端に現れた回数 / 語の出現数に対する割合 |
+| concepts / concept_total | ラベル・共起例数・support_ratioの上位8件 / 全候補数 |
+| evidence | 学習sequence、Memory record_id、fingerprint、source_kind。最大limit件 |
+| after / has_more | 次の根拠ページへ渡すカーソル / 続きがあるか |
+
+次語/終端の割合は語の出現数で割る。conceptのsupport_ratioは語を含む例数で割り、同じ語が1例に何回出てもそのラベルは1回だけ数える。これは関連の支持率であり、真偽や意味を理解できる確率ではない。複数ラベルの支持率の合計は1に限らない。ランキングは回数降順、同数ならUnicode文字列順。上位だけを表示しても総候補数を返す。
+
+例として「猫 猫 眠る」「猫 遊ぶ」「猫」の3例では、猫の出現は4回、3例、次語は猫/眠る/遊ぶが各1回、終端が1回となる。例をまたぐ語順は作らない。ページ指定は根拠だけへ適用し、count等は絞込条件に一致する全学習例の値を返す。元の記録はMemory getで参照し、fingerprintと照合できる。fingerprintはMemoryの返却8項目をASCII escape・キー昇順・コンパクトJSONにしたSHA-256。
+
+### 失敗・再起動・停止
+
+```mermaid
+sequenceDiagram
+    participant N as 要求側
+    participant L as Cognition
+    participant M as Memory
+    participant S as 学習SQLite worker
+    N->>L: learn(ID, tokens, concepts)
+    L->>M: get(ID)
+    M-->>L: commit済み記録 / 失敗
+    L->>L: 本文・注釈・形式を照合
+    L->>S: BEGIN・同一性/容量確認・保存・COMMIT
+    S-->>L: 保存済みreceipt / 失敗
+    L-->>N: 結果（取消・期限切れは未学習保証ではない）
+```
+
+| 結果 | 扱い |
+|---|---|
+| cognition.invalid | 入力違反・本文とtokensの不一致。新しい学習は行わない |
+| cognition.conflict | 同じIDが異なる記録/注釈と結び付いている。上書きしない |
+| cognition.full | 初期モデルの256例上限。既存例の照会・冪等再要求は可能 |
+| cognition.storage | SQLite操作失敗。保存先・権限・容量・別writerを確認 |
+| MemoryのOperationFailure | not_found等をそのまま返す。学習に成功した扱いにしない |
+| TemporaryUnavailable | 処理中・停止中・Memory容量不足。待機列へ入れない |
+| LinkFailure / 結果不明等 | 元の処理を自動再送しない。close・中断完了報告・個別healthを行う |
+| ProtocolError | Memory記録の形式違反など。通信契約違反として扱う |
+
+全操作で同時受付1件。I/Oと集計は専用workerで処理し、取消/stopも受付済みtaskとworkerの終了を待つ。取消や通信期限切れはrollback保証ではない。結果不明なら、要求側が接続状態を確認して同じID/注釈を明示再要求し、receiptとinspectを照合する。復旧時の再prepareは同じ提供先で行い、別の先への自動切替はない。
+
+SQLiteのロック待ちは1秒。未知保存形式・破損・設定と異なるMemory IDのDBは起動時に拒否し、自動移行・上書きしない。再起動後のinspectは保存された学習例から同じ統計を再現し、Memoryを毎回照会しない。元Memoryが失われた場合、参照不能な根拠を自動修復しない。新しいlearnは再びMemory getで根拠を確認する。
+
+### 試す・確認する
+
+開発手順（`docs/development.md`）でこのcheckoutをeditable導入して実行する。
+
+```text
+python examples/cognition_demo.py
+python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v
+```
+
+10番目の例はDocument→Memory→Cognition、語順/関連と出典区分、直接/Core経由、冪等/競合、再起動を照合し、`PASS: Cognition learning, evidence, source separation, Memory/Document, restart, cleanup`で終わる。一時文書・DBは終了時に削除する。B03検証記録（`docs/validation/v1.3.md`）で初期確認、全回帰、配布、確定コミットのCIを区別する。
+
+未分割日本語の分節、完全な構文/意味理解、自律的な概念形成、文章生成/対話、訂正/削除/忘却、Web/対話Adapter、学習計画、大規模/長期性能・物理故障/電源断は今回の対象外。初期の有限コーパスでの結果を一般的な日本語能力へ外挿しない。
+
+---
+
+<a id="section-18"></a>
+
 収録元 `docs/document.md`
 
 ## Document Adapter — v1.2の文書入力とMemory連携
@@ -2911,7 +3081,7 @@ B02検証記録（`docs/validation/v1.2.md`）に条件と結果を記載する�
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/memory.md`
 
@@ -3034,7 +3204,7 @@ sequenceDiagram
 
 ### 試す・検証する
 
-公開wheelと同版sdistでの実行は通常導入（`docs/getting-started.md`）と8つの例（`docs/tutorials.md`）に従う。以下はリポジトリ直下からの開発用手順。
+公開wheelと同版sdistでの実行は通常導入（`docs/getting-started.md`）と実行例（`docs/tutorials.md`）に従う。以下はリポジトリ直下からの開発用手順。
 
 ```text
 python -m pip install -e .
@@ -3044,11 +3214,13 @@ python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_m
 
 例は一時ディレクトリ内でMemoryを別プロセス、要求側ダミーをLOCALに置き、直接/Core通信・最大ページ・失敗・再起動取得を確認して終了する。`PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup`が最後の出力。例のデータは終了時に削除される。実利用では保持する絶対パスを指定する。
 
-Document Adapter、編集・訂正/削除・忘却、Working/Procedural Memory、意味検索、統合、学習は未実装。夢区分は保存上の区別で、生成や次の睡眠時の失効を実装したものではない。複製・移植・伝播を追加していない。
+Memory自体には編集・訂正/削除・忘却、Working/Procedural Memory、意味検索、統合、学習は未実装。夢区分は保存上の区別で、生成や次の睡眠時の失効を実装したものではない。複製・移植・伝播を追加していない。
+
+Document連携はv1.2・ADR 0028、Cognitionによるgetと初期学習は開発候補v1.3・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）で具体化した。Memoryの保存/取得契約は変更しない。
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/core-api.md`
 
@@ -3151,7 +3323,7 @@ ActivityStateはPENDING、STARTING（遠隔の実開始待ち）、RUNNING、PAU
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `docs/api-reference.md`
 
@@ -4681,7 +4853,7 @@ Usage(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingStat
 
 ---
 
-<a id="section-21"></a>
+<a id="section-22"></a>
 
 収録元 `docs/module-contracts.md`
 
@@ -4775,7 +4947,7 @@ python tools/check_contracts.py
 
 ---
 
-<a id="section-22"></a>
+<a id="section-23"></a>
 
 収録元 `docs/migration-v1.md`
 
@@ -4798,13 +4970,13 @@ R29で「必要な破壊的API整理も今回に含める」と明示された�
 
 ---
 
-<a id="section-23"></a>
+<a id="section-24"></a>
 
 収録元 `docs/adr/README.md`
 
 ## ADR索引と更新方法
 
-ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R29の説明はDocsの根拠表（`docs/README.md`）にある。
+ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026年11月19日。元会話内での決定日は未確認である。R1〜R35の説明はDocsの根拠表（`docs/README.md`）にある。
 
 | ADR | 状態 | 根拠 |
 |---|---|---|
@@ -4836,6 +5008,7 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0026 v1.0 Core接続契約・互換性境界（`docs/adr/0026-v1.0-core-connection-contracts.md`） | R29に基づく実装判断として採用。6契約・公開型・登録検証・必要なAPI整理・B00・移行 | R29・親#10・子#98〜#102 |
 | 0027 v1.1 Memoryの最小保存・取得（`docs/adr/0027-v1.1-memory.md`） | R31の実装判断。出典付き記録・3操作・SQLite・停止/失敗・B01。Coreの安定API維持 | R31・親#11・子#105〜#108 |
 | 0028 v1.2 Document AdapterとMemory連携（`docs/adr/0028-v1.2-document-adapter.md`） | R33の実装判断。UTF-8文書・1記録・出典/hash・接続・失敗/取消・B02。Core/Memory既存契約維持 | R33・親#12・子#112〜#115 |
+| 0029 v1.3 Cognitionの初期学習（`docs/adr/0029-v1.3-cognition-learning.md`） | R35の実装判断。明示区切り/ラベル・語彙/語順/共起・Memory根拠・保存/失敗・B03 | R35・親#13・子#119〜#122 |
 
 ### 記録方法
 
@@ -4853,7 +5026,7 @@ ADR 0017のR14時点の未決事項は履歴として保持し、R15で解消し
 
 ---
 
-<a id="section-24"></a>
+<a id="section-25"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -4907,7 +5080,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-25"></a>
+<a id="section-26"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -4945,7 +5118,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-26"></a>
+<a id="section-27"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -5008,7 +5181,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-27"></a>
+<a id="section-28"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -5071,7 +5244,7 @@ R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理�
 
 ---
 
-<a id="section-28"></a>
+<a id="section-29"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -5107,7 +5280,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-29"></a>
+<a id="section-30"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -5158,7 +5331,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-30"></a>
+<a id="section-31"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -5205,7 +5378,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-31"></a>
+<a id="section-32"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -5267,9 +5440,13 @@ Memoryの最小保存/取得・形式・B01はADR 0027（`docs/adr/0027-v1.1-mem
 
 Documentの小さなUTF-8文書取込とMemory連携、失敗/取消・B02はADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）で具体化した。他形式、分割、意味理解/学習、他Adapterの案は維持し一括採用しない。
 
+### R35の後続判断
+
+Cognitionの明示区切り/ラベル付き学習、Memory根拠と専用保存、B03はADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）で具体化した。完全な構文/意味理解・概念の自律形成や後続の訂正/対話/忘却案を一括採用しない。
+
 ---
 
-<a id="section-32"></a>
+<a id="section-33"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -5328,7 +5505,7 @@ ADR 0027（`docs/adr/0027-v1.1-memory.md`）により、追加外部依存のな
 
 ---
 
-<a id="section-33"></a>
+<a id="section-34"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -5381,7 +5558,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-34"></a>
+<a id="section-35"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -5435,7 +5612,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-35"></a>
+<a id="section-36"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -5475,7 +5652,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-36"></a>
+<a id="section-37"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -5518,7 +5695,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-37"></a>
+<a id="section-38"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -5587,7 +5764,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-38"></a>
+<a id="section-39"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -5658,7 +5835,7 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-39"></a>
+<a id="section-40"></a>
 
 収録元 `docs/adr/0016-v0.3-registry.md`
 
@@ -5736,7 +5913,7 @@ Runtimeの開始待機・停止待機が取消された場合もADR 0014の後�
 
 ---
 
-<a id="section-40"></a>
+<a id="section-41"></a>
 
 収録元 `docs/adr/0017-connection-binding-and-health.md`
 
@@ -5809,7 +5986,7 @@ ADR 0015の直接通信採用とADR 0016のRegistry・ModuleGroupを前提とす
 
 ---
 
-<a id="section-41"></a>
+<a id="section-42"></a>
 
 収録元 `docs/adr/0018-connection-selection-health-and-recovery.md`
 
@@ -5933,7 +6110,7 @@ R15：Docsの根拠一覧（`docs/README.md`）に記録した、本チャット
 
 ---
 
-<a id="section-42"></a>
+<a id="section-43"></a>
 
 収録元 `docs/adr/0019-v0.4-connections.md`
 
@@ -6058,7 +6235,7 @@ R16は本チャットのv0.4着手指示。R15の採用方針はADR 0018、既�
 
 ---
 
-<a id="section-43"></a>
+<a id="section-44"></a>
 
 収録元 `docs/adr/0020-v0.5-task-manager.md`
 
@@ -6227,7 +6404,7 @@ Docsの根拠表（`docs/README.md`）のR2・R4・R10・R16・R17。R17はv0.5�
 
 ---
 
-<a id="section-44"></a>
+<a id="section-45"></a>
 
 収録元 `docs/adr/0021-v0.6-activity-changes.md`
 
@@ -6409,7 +6586,7 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 ---
 
-<a id="section-45"></a>
+<a id="section-46"></a>
 
 収録元 `docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`
 
@@ -6580,7 +6757,7 @@ R19：v0.9までの一問一答、確認事項1〜64の一覧、ユーザーに�
 
 ---
 
-<a id="section-46"></a>
+<a id="section-47"></a>
 
 収録元 `docs/adr/0023-v0.7-implementation-contracts.md`
 
@@ -6674,7 +6851,7 @@ A07-01〜14に対応する実TCP・実子プロセスの検証を行う。ロー
 
 ---
 
-<a id="section-47"></a>
+<a id="section-48"></a>
 
 収録元 `docs/adr/0024-v0.8-integration-validation.md`
 
@@ -6747,7 +6924,7 @@ Windows/Linux × CPython 3.12〜3.15で、ソース、通常wheelインストー
 
 ---
 
-<a id="section-48"></a>
+<a id="section-49"></a>
 
 収録元 `docs/adr/0025-v0.9-core-completion.md`
 
@@ -6805,7 +6982,7 @@ R25でユーザーがPR #86のレビュー、問題解消後のマージとv0.9.
 
 ---
 
-<a id="section-49"></a>
+<a id="section-50"></a>
 
 収録元 `docs/adr/0026-v1.0-core-connection-contracts.md`
 
@@ -6891,7 +7068,7 @@ Core/Contractsの明示exportと、module-contractsに記す利用者向けメ�
 
 ---
 
-<a id="section-50"></a>
+<a id="section-51"></a>
 
 収録元 `docs/adr/0027-v1.1-memory.md`
 
@@ -6971,9 +7148,13 @@ SQLiteの内部形式1を採用し、application_id・user_versionで識別す�
 
 ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）でDocument Adapterの最小入力を具体化した。Memoryのrecords/1・上限・保存・失敗契約は変更しない。文書が上限を超えた場合はAdapterが保存前に拒否する。
 
+### R35のCognition連携
+
+ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）のCognitionがrecords/1のgetで元記録を取得し、語の区切り/ラベルを照合して専用DBへ学習する。Memoryの保存/取得・出典・同一性・上限・失敗契約は変更しない。
+
 ---
 
-<a id="section-51"></a>
+<a id="section-52"></a>
 
 収録元 `docs/adr/0028-v1.2-document-adapter.md`
 
@@ -7040,7 +7221,75 @@ PR #116のレビュー・マージ・v1.2.0公開指示により、公開確認�
 
 ---
 
-<a id="section-52"></a>
+<a id="section-53"></a>
+
+収録元 `docs/adr/0029-v1.3-cognition-learning.md`
+
+## ADR 0029 v1.3 Cognitionの初期学習とMemory連携
+
+### 状態・根拠
+
+2026年11月23日、R35のCognition開発指示を具体化するCodexの初期実装判断として採用。親#13・マイルストーンv1.3.0を確認し、子#119（設計）・#120（モデル/保存）・#121（連携）・#122（配布/資料）をコード変更前に実親子関係付きで登録した。基点は公開v1.2.0 `1bc2173`。
+
+ユーザーが指定したのは段階の開発・Memory連携・設計/実装/検証/資料整備であり、以下のアルゴリズム・API・具体値の個別採用ではない。入力方式は区切り/ラベル付きの推奨案を提示し、回答のない時点で進める前提として明示した。別の方式が指定された場合は適用範囲を見直す。ADR 0008の学習案を小さな検証可能範囲へ具体化し、Visionの完成や後続段階の一括採用とは区別する。
+
+### 背景・初期スコープ
+
+初期学習を観察するには、入力、得られた規則性、根拠、不明な範囲を照合できる必要がある。初期版は語の区切りと概念ラベルを要求側から与え、Memoryの本文と照合して、語彙頻度・例内の隣接語順・語とラベルの関連を蓄積する。事前語彙、文法辞書、LLM、外部モデルは使わない。
+
+これは教師情報を含む小規模な統計学習であり、未分割文からの語彙発見、完全な構文解析、意味理解、世界への自律的な概念接地ではない。初期方式を選ぶ理由は、再現可能な期待値と根拠を先に用意するため。形態素解析などの補助技術を将来も禁止する決定ではない。
+
+### D1：配布・公開契約
+
+同じ配布物の`nymph_toolkit.subsystems.cognition`へ同梱し、公開入口は`factory(context, config)`。設定は`path`（専用SQLiteの絶対ファイルパス）と`memory_module_id`（選択済み提供先ID）。ModuleKind.SUBSYSTEMでMemory IDへのrequiresを宣言する。HybridSettings.max_frame_bytesは65536以上。実行時の外部Python依存は追加しない。
+
+`contracts.cognition`のCOGNITION_KEY/COGNITION_CONTRACTは`ntk.cognition.learning` / `1`。ASYNC操作は次の2つ。既存トップレベルexport・v1 manifest・Core/Memory/Document製品コードは維持する。
+
+- `learn(record_id, *, tokens, concepts)`：Memory getの記録と注釈から学習し、ローカルcommit後にrecord_id/sequence/fingerprintを返す。
+- `inspect(token, *, source_kind=None, after=0, limit=8)`：語の頻度・隣接語・概念関連・根拠ページを返す。
+
+record_idはMemoryと同じ非空・trim済みUTF-8 128 bytes以下。tokensは1〜32要素、conceptsは0〜8要素のlist。各要素は非空・空白/NULなし・UTF-8 64 bytes以下。conceptsの重複は拒否する。大小文字・Unicode正規化・活用を暗黙にまとめない。本文のUnicode空白除去とtokensの連結が一致することを要求する。文書や句読点も分割規則に従って明示する。
+
+### D2：学習と観察
+
+空状態から、語の出現数、各例内の隣接語ペア、終端の出現数、語が登場する例数、語とラベルが同じ例に現れた回数を数える。例をまたぐペアは作らない。次語の相対頻度はペア数/その語の出現数、終端は終端数/その語の出現数。概念support_ratioはラベルとの共起例数/その語を含む例数であり、複数ラベルがあるため合計1とは限らない。意味や真偽の確率ではない。
+
+初歩的なn-gramの出現回数・相対頻度の考え方は[Jurafsky & Martin, N-gram Language Models](https://web.stanford.edu/~jurafsky/slp3/old_jan25/3.pdf)を参照。NTKでは予測文生成・平滑化・文全体の確率を実装せず、観測した局所的な語順の表示に限定する。概念との例単位共起は今回の実装判断で、同資料に基づく意味理解能力を主張しない。
+
+inspectは未知をknown=false、count/documents=0で返す。次語/概念は回数降順・同数ならUnicode文字列順の上位8件と全候補数を返す。出典5区分を保持し、source_kindで絞れる。区分を真偽の順位へ変換しない。根拠は学習sequence昇順で最大8件、afterは0〜2^63-1、limitは1〜8（bool不可）。ページ指定は根拠だけへ適用し、統計をページ内に限定しない。根拠にはMemory ID・応答fingerprint・出典区分を付け、元記録はMemoryへ照会する。
+
+### D3：保存・同一性・失敗
+
+SQLite内部形式1へ学習例のID、Memory応答8項目の正規化JSON SHA-256、出典区分、tokens、conceptsを保存する。集計はこの例から再現する。Memory本体・Core履歴とは別保存で、Memoryの本文/出典を丸ごと複製する仕組みではない。最大256例の研究用範囲とし、超過はcognition.fullで拒否して既存学習を維持する。
+
+同じMemory IDと同じ記録/注釈の再学習は同じreceiptを返し、二重加算しない。異なる記録/区切り/ラベルはcognition.conflict。既存例を上書きして訂正した扱いにはしない。概念ラベルの順序は集合として正規化する。未知形式/構造/破損・異なるMemory提供先IDのDBを起動時に拒否し、自動移行・上書きしない。1ファイルは1実体が所有し、別writerは運用対象外。ロック待ちは1秒。
+
+cognition.invalidは入力/本文不一致、cognition.storageはDB操作失敗。Memory業務失敗・容量不足はそのまま返し、記録形式違反はProtocolErrorとする。保存/通知の結果不明を確定失敗へ変換しない。取消や期限切れは未学習保証ではなく、要求側が同じMemory ID/注釈の明示再要求で確認できる。自動再送は行わない。
+
+### D4：接続と所有
+
+初回learnでMemory候補と稼働情報を照会し、設定IDを要求側で選びbindする。同一起動内で接続先固定・許可済みDirectLink再利用。Core内部や他Subsystemの内部をimportしない。LinkFailureではclose→中断完了報告→個別health。結果不明等でもclose/healthを行い元の例外を保持する。後続要求の同じ先への明示再prepareは可能。Coreの定期health、自動再送/切替、活動の自動選択は追加しない。
+
+learn/inspect共通で同時受付1件。追加要求はTemporaryUnavailable。SQLiteと集計は専用worker。呼出取消/stopでも所有taskとworkerの終了を待ち、停止中の新規受付とCore終了中の追加稼働通知を止める。通常時は変更時に稼働通知。終了通知失敗が先行する結果不明を隠さない。個別Memory RPCは5秒、複数処理を束ねる検証は別予算を設ける。
+
+### D5：B03受入
+
+| ID | 合格条件 |
+|---|---|
+| B03-01 | 未知→語彙・語順・ラベル関連の変化を日本語/英語の独立した期待値で照合。曖昧/終端・根拠・区分を確認 |
+| B03-02 | Memory get・本文整合・出典/hash、冪等/競合と拒否時無変更。Memory本文/既存契約を維持 |
+| B03-03 | 入出力/ページ/容量境界、保存失敗/rollback、未知DB/破損/提供先不一致、再起動を確認 |
+| B03-04 | 容量、取消/停止・worker回収、通信障害/結果不明、後処理/health・再送なし |
+| B03-05 | Memory/Cognitionの4配置、入口の直接/Core経由、公開Contractsのみ、Document由来記録で学習 |
+| B03-06 | 全回帰・安定API・10例・8環境CI・通常wheel/sdist再構築・Docs/引継ぎ書同期 |
+
+### 未採用・後続
+
+未分割日本語の分節、完全な構文/意味理解、概念の自律形成、文章生成/会話、訂正/削除/忘却、Web/対話Adapter、自律学習計画、外部モデル、分散/複製/移植/伝播、PyPI/独立配布は追加しない。大規模/長期性能・物理故障/電源断は今回の受入外。今回の到達点はレビュー用PRとB03検証。公開済みv1.2.0を維持し、タグ/Release・公開後確認・親/マイルストーン終了は後続公開段階。
+
+---
+
+<a id="section-54"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -7048,7 +7297,7 @@ PR #116のレビュー・マージ・v1.2.0公開指示により、公開確認�
 
 最終目標は、経験を通じて知識・言語・行動能力・人格を発達させ、自ら考え、学び、活動できる人工人格Nymphである。R7のProject Vision（`docs/vision.md`）を到達像とし、完成を特定のバージョンへ固定しない。以下の各段階は、その基盤と能力を検証する開発計画である。
 
-**GitHub公開＝V0.1、Core機能完成＝V0.9は確定目標。R19・ADR 0022でv0.9までの64項目とv0.7〜v0.9の配分・受入条件を設計採用した。** v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で採用範囲を具体化した。予定日や所要期間は設定せず、完了条件と判断記録に基づいて進める。根拠はR3・R19。v0.1〜v0.9のCore検証では本番Subsystem・Adapterの代わりにダミーを使う。R20でv0.7を実装し検証記録を追加した。v0.8はR22・R23で統合・障害・負荷・配布検証と公開を行い、証拠は検証記録（`docs/validation/v0.8.md`）へ集約する。v0.9はR24で完成確認を行い、配布前・公開後の判定を検証記録（`docs/validation/v0.9.md`）へ分ける。v1.xは各段階で具体化し、v1.0はADR 0026、v1.1はADR 0027の採用範囲に従う。その他の配分案は引き続き提案である。
+**GitHub公開＝V0.1、Core機能完成＝V0.9は確定目標。R19・ADR 0022でv0.9までの64項目とv0.7〜v0.9の配分・受入条件を設計採用した。** v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で採用範囲を具体化した。予定日や所要期間は設定せず、完了条件と判断記録に基づいて進める。根拠はR3・R19。v0.1〜v0.9のCore検証では本番Subsystem・Adapterの代わりにダミーを使う。R20でv0.7を実装し検証記録を追加した。v0.8はR22・R23で統合・障害・負荷・配布検証と公開を行い、証拠は検証記録（`docs/validation/v0.8.md`）へ集約する。v0.9はR24で完成確認を行い、配布前・公開後の判定を検証記録（`docs/validation/v0.9.md`）へ分ける。v1.xは各段階で具体化し、v1.0はADR 0026、v1.1はADR 0027、v1.2はADR 0028、v1.3はADR 0029の採用範囲に従う。その他の配分案は引き続き提案である。
 
 既存のV0.1・V0.9はv0.1.0・v0.9.0の節目を表す。R5で示されたv1.0.0の接続契約整備という目標と、v1.1.0〜v1.10.0の当初の開発計画案を後半に収録する。v1.1はR31・ADR 0027、v1.2はR33・ADR 0028で初期範囲を具体化した。後続のSubsystem名・Adapter名は暫定名称であり、名称・順序・機能配分は今後変更される可能性がある。
 
@@ -7214,7 +7463,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 | v1.0.0 | Core接続契約 | Subsystem・Adapter向け共通接続基盤 | B00 |
 | v1.1.0 | Memory Subsystem（R31で具体化） | 出典付き記録の最小保存/取得、ADR 0027 | B01-01〜06 |
 | v1.2.0 | Document Adapter（R33で具体化） | 小さなUTF-8文書取込とMemory連携、ADR 0028 | B02-01〜06 |
-| v1.3.0 | Cognition Subsystem | 初期の言語・概念学習 | B03 |
+| v1.3.0 | Cognition Subsystem（R35で具体化） | 明示区切り/ラベルからの語彙・隣接語順・関連学習、ADR 0029 | B03-01〜06 |
 | v1.4.0 | Text Interaction / Web Adapter | 学習・訂正・文章観測の統合 | B04 |
 | v1.5.0 | Agency Subsystem | 自律的な活動計画・意思決定 | B05 |
 | v1.6.0 | TaskManager連携強化 | 自律活動の実行・変更・状態把握 | B06 |
@@ -7253,7 +7502,11 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 - **検討・成果物の案** — v1.1.0では経験・知識の最小保存・取得を実装する。v1.2.0ではDocument Adapterから文書を取得し、Memoryとの連携を検証する。複雑な知識グラフや高度な記憶統合は初期の必須条件にしない。
 - **判断と検証** — 保存対象・形式、取得方法、文書形式、取り込み失敗時の扱いを決める。小さな経験・知識と文書入力から保存結果・取得結果を照合する。ADR 0008・B01・B02を基に後続ADRで具体化する。
 
-#### v1.3.0〜v1.4.0 — Cognitionと言語観測
+#### v1.3.0 — Cognition（R35で実施）
+
+着手条件は公開v1.2.0と親#13・関連ADRの確認。子#119〜#122を先行登録し、ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）で初期方式・入力・根拠/保存・失敗/取消・B03を具体化した。成果物は同梱Cognition、Memory getに基づく明示区切り/概念ラベルの初期統計、専用SQLite、4配置・Document由来記録、10番目の例と利用ガイド（`docs/cognition.md`）。全回帰・通常配布・8環境CI・Docs同期を実装完了条件とし、B03結果（`docs/validation/v1.3.md`）で追跡する。タグ/Release・公開後確認は後続段階。未分割文・完全な文法/意味理解・概念自律形成、訂正/忘却/対話/生成は対象外として残す。
+
+#### v1.3.0〜v1.4.0 — 当初のCognitionと言語観測の案
 
 - **着手時に確認すること** — Memoryの保存・取得と、語彙・構文・概念の初期学習を検証する入力範囲を確認する。
 - **検討・成果物の案** — v1.3.0でCognitionの初期学習機構を検討する。v1.4.0でText InteractionおよびWeb Adapterを通じ、文章観測、学習、出力、ユーザーからの訂正を検証できる構成を目指す。既存LLMを言語理解・文章生成の中核に利用することは現在のNTKの研究方針に含めない。
@@ -7298,13 +7551,13 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 
 ---
 
-<a id="section-53"></a>
+<a id="section-55"></a>
 
 収録元 `docs/acceptance.md`
 
 ## 受入基準・検討案と検証記録
 
-以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。B00はR29・ADR 0026で具体化し、B01はR31・ADR 0027で具体化し、B02はR33・ADR 0028で具体化し、B03〜B10は引き続き検討案とする。設計採用・文書検査・製品の受入合格を区別する。
+以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。B00はR29・ADR 0026で具体化し、B01はR31・ADR 0027で具体化し、B02はR33・ADR 0028で具体化し、B03はR35・ADR 0029で具体化し、B04〜B10は引き続き検討案とする。設計採用・文書検査・製品の受入合格を区別する。
 
 ### バージョン別シナリオ
 
@@ -7518,7 +7771,7 @@ ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）の設計判断�
 | B00 v1.0.0（上記で具体化済み） | Core接続契約 | ダミーSubsystem・AdapterでModule、Lifecycle、Capability、Communication、Task、Errorの採用契約を試し、公開API資料と観察結果を照合する。各実行配置の対応範囲を記録する。本番Subsystemの完成は必須条件にしない |
 | B01 v1.1.0（R31で下記に具体化） | Memoryの最小保存・取得 | 少量の経験・知識を保存し、採用した取得契約で結果を照合する。複雑な知識グラフや高度な統合を受入の前提にしない |
 | B02 v1.2.0（R33で下記に具体化） | Document入力とMemory連携 | 対応する文書を取得・取り込みし、保存・取得結果までを追う。未対応形式と取得失敗の扱いは採用契約に沿って確認する |
-| B03 v1.3.0 | Cognitionの初期学習 | 語彙・構文・概念の検証用入力を用い、採用した学習方式の変化を観察する。既存LLMを言語理解・文章生成の中核としない研究方針との整合を確認する |
+| B03 v1.3.0（R35で下記に具体化） | Cognitionの初期学習 | 語彙・構文・概念の検証用入力を用い、採用した学習方式の変化を観察する。既存LLMを言語理解・文章生成の中核としない研究方針との整合を確認する |
 | B04 v1.4.0 | Text Interaction / Web連携 | 対応する文章の観測・学習・出力とユーザー訂正を試し、訂正の反映を採用した方法で観察する。対応能力の範囲を記録する |
 | B05 v1.5.0 | Agencyの活動決定 | 活動内容、開始時刻、期間、優先度、変更の決定元をAgencyの入力・出力から追跡する。意思決定方式と評価条件は後続ADRで決める |
 | B06 v1.6.0 | AgencyとTaskManager | 決定された活動の登録・実行・状態追跡・変更要求の適用と失敗通知を照合する。Coreが指定値と採用規則に従い、活動の価値判断を代行しないことを確認する |
@@ -7583,9 +7836,22 @@ ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）で初期取込契約を�
 | B02-05 | Adapter/Memoryの4配置、入口の直接/Core経由、公開Contractsのみへの依存 |
 | B02-06 | 全回帰・安定API、9例、8環境CI、通常wheel/sdist、Docs・引継ぎ書同期 |
 
+### B03 Cognition — R35の採用基準
+
+ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）と検証記録（`docs/validation/v1.3.md`）を参照する。教師情報として与えた区切り/ラベルの範囲で初期学習を確認し、一般的な言語能力の完成と区別する。
+
+| ID | 受入条件 |
+|---|---|
+| B03-01 | 未知からの語彙/語順/ラベル関連の変化を独立期待値で確認。根拠・終端・区分・曖昧さを表示 |
+| B03-02 | Memory ID/hash・本文整合・出典、冪等/競合/拒否時無変更。既存契約を維持 |
+| B03-03 | 文字/数/ページ/256例境界、保存失敗/rollback、未知DB/破損/提供先不一致、再起動 |
+| B03-04 | 容量、取消/停止とworker回収、通信障害/結果不明、後処理/health・再送なし |
+| B03-05 | Memory/Cognitionの4配置、入口の直接/Core経由、公開Contracts、Document由来記録 |
+| B03-06 | 全回帰・安定API・10例・8環境CI・通常wheel/sdist・Docs/引継ぎ書同期 |
+
 ---
 
-<a id="section-54"></a>
+<a id="section-56"></a>
 
 収録元 `docs/validation/core-coverage.md`
 
@@ -7680,7 +7946,7 @@ v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播�
 
 ---
 
-<a id="section-55"></a>
+<a id="section-57"></a>
 
 収録元 `docs/validation/customer-guide.md`
 
@@ -7725,7 +7991,7 @@ Windows／Python 3.15の終了時通信切断・後処理未確認は[#94](https
 
 ---
 
-<a id="section-56"></a>
+<a id="section-58"></a>
 
 収録元 `docs/validation/docs-onboarding.md`
 
@@ -7804,7 +8070,7 @@ git diff --check
 
 ---
 
-<a id="section-57"></a>
+<a id="section-59"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -7874,7 +8140,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-58"></a>
+<a id="section-60"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -7945,7 +8211,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-59"></a>
+<a id="section-61"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -8024,7 +8290,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-60"></a>
+<a id="section-62"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -8076,7 +8342,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-61"></a>
+<a id="section-63"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -8137,7 +8403,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-62"></a>
+<a id="section-64"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -8198,7 +8464,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-63"></a>
+<a id="section-65"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -8327,7 +8593,7 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-64"></a>
+<a id="section-66"></a>
 
 収録元 `docs/validation/v0.9.md`
 
@@ -8415,7 +8681,7 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 ---
 
-<a id="section-65"></a>
+<a id="section-67"></a>
 
 収録元 `docs/validation/v1.0.md`
 
@@ -8486,7 +8752,7 @@ PR #103のhead cc445daをレビューし、契約型と実体、検証の副作�
 
 ---
 
-<a id="section-66"></a>
+<a id="section-68"></a>
 
 収録元 `docs/validation/v1.1.md`
 
@@ -8558,7 +8824,7 @@ R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/i
 
 ---
 
-<a id="section-67"></a>
+<a id="section-69"></a>
 
 収録元 `docs/validation/v1.2.md`
 
@@ -8631,7 +8897,59 @@ B02-01〜06の初期実装受入は合格。今回の実装判断、公開Core/M
 
 ---
 
-<a id="section-68"></a>
+<a id="section-70"></a>
+
+収録元 `docs/validation/v1.3.md`
+
+## v1.3 Cognitionの受入・検証記録
+
+R35、親#13、子#119〜#122、ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）の実装受入を記録する。開発候補1.3.0と公開済みv1.2.0を区別し、タグ/Release・公開後確認は今回の範囲に含めない。
+
+### B03と証拠
+
+| ID | 対象・証拠 |
+|---|---|
+| B03-01 | test_cognition.ModelStoreTests：未知からの変化、独立期待値、重複語・終端・曖昧ラベル・夢/観測の分離、根拠とページ |
+| B03-02 | ModelStoreTests/CognitionTests：Memory ID/hash・本文整合・注釈コピー、冪等/競合、Memory失敗時無変更 |
+| B03-03 | ModelStoreTests：文字/数/ページ/256例境界、SQLiteロック・insert後rollback、未知DB・異なる提供先・破損・再起動 |
+| B03-04 | CognitionTests/CognitionIntegrationTests：容量、取消/停止・worker回収、LinkFailureのclose→ack→health、結果不明・二次障害・再送なし |
+| B03-05 | test_cognition_integration：Memory/Cognitionの4配置×再起動、両入口、Document由来記録・出典、公開Contracts依存、初期化失敗 |
+| B03-06 | 全回帰・10例・8環境CI・通常wheel/sdist・v1 manifest/64項目/Docs・引継ぎ書。実施結果は後続欄へ記録 |
+
+### 再現手順
+
+```powershell
+python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v
+python -W error -m unittest discover -s tests -t . -v
+python examples/cognition_demo.py
+python tools/check_api.py
+python tools/check_contracts.py
+python tools/check_completion.py
+python tools/build_handoff.py
+python tools/check_docs.py
+python -m build --outdir .git/v13-dist
+python tools/check_dist.py --dist-dir .git/v13-dist
+```
+
+小さな自作日本語/英語例と一時DBを使う。保存失敗はSQLiteロック・insert後例外、通信失敗はMemory getへの例外注入、停止はDBロックとtest-only worker到達通知で制御する。固定の待ち時間だけでworker到達を推定しない。ユーザーの実データや外部モデル/サービスを使わない。
+
+### 初期確認
+
+Windows / CPython 3.15.2でモデル/サービス単体15テストが3.094秒、最初の統合を含む21テストが24.229秒で成功。10番目の実行例でDocument由来記録から学習し、再起動後に同じreceipt・統計を返すことを確認した。その後、停止試験をworker到達通知で制御するよう補強し、Memory記録の時刻検証を追加した。最終結果と区別する。
+
+### ローカル全回帰
+
+Windows 11 build 26300 / CPython 3.15.2。停止試験と時刻検証を補強した後のCognition21テストが24.629秒、全378テスト（既存357＋Cognition21）が155.940秒で成功した。Core/Memory/Documentの既存製品コード、Core 15 / Contracts 98の公開一覧、v1 manifestに変更なし。76文書・1316ローカルリンク・引継ぎ書、採用64項目/7群/299参照の検査が成功した。
+
+通常配布と確定コミットのCIは後続の結果を証拠とし、このローカル結果だけでB03-06全体を完了としない。
+
+### 未検証・後続範囲
+
+語の区切りと概念ラベルは与えられた教師情報であり、その自律獲得の試験ではない。局所的な語順/共起の一致を完全な文法・意味理解・概念形成の証拠とはしない。未分割文、訂正/忘却/生成/対話、学習の自律計画、長期/大規模性能、物理故障/電源断、分散/複製/移植、PyPIは対象外。取消/期限切れを未学習保証とせず、同じID/注釈の明示再要求で結果を照合する。
+
+---
+
+<a id="section-71"></a>
 
 収録元 `docs/validation/windows-shutdown.md`
 
@@ -8706,7 +9024,7 @@ PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル�
 
 ---
 
-<a id="section-69"></a>
+<a id="section-72"></a>
 
 収録元 `docs/development.md`
 
@@ -8886,13 +9204,19 @@ Memory（`docs/memory.md`）とADR 0027（`docs/adr/0027-v1.1-memory.md`）を�
 
 ### v1.2 Documentの開発確認
 
-公開v1.1.0の通常導入と区別し、このcheckoutをeditable導入してDocumentガイド（`docs/document.md`）・ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
+以下はv1.2開発時点の手順。現在の開発候補は末尾のv1.3節を参照する。checkoutをeditable導入してDocumentガイド（`docs/document.md`）・ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
 
-配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。この検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
+配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。v1.2当時の検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
+
+### v1.3 Cognitionの開発確認
+
+このcheckoutを`python -m pip install -e .`で導入し、版が1.3.0であることを確認する。Cognitionガイド（`docs/cognition.md`）・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）に従い、`python examples/cognition_demo.py`と`python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v`を実行する。公開v1.2のwheelにはCognitionは含まれない。
+
+現在の通常配布検査は`python -m build --outdir .git/v13-dist`、`python tools/check_dist.py --dist-dir .git/v13-dist`で1.3.0を期待する。全回帰、10例、短い4配置負荷、sdist同一wheel再構築、API/契約/64項目/Docs同期を確認する。公開済みタグ・添付と現行版向け導入ガイドを開発候補へ無断で置き換えない。
 
 ---
 
-<a id="section-70"></a>
+<a id="section-73"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -9186,9 +9510,13 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親#12・v1.2.0配下に、公開/生成ヘッダーの[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)と、Documentの二重障害修正/回帰の[#118](https://github.com/Tao-pyth/nymph-toolkit/issues/118)を変更前に登録し、実親子関係を確認した。PR #116の最終CI・レビュー・マージ、タグ/Release、4添付の匿名取得と通常導入を追跡する。公開後確認の結果を記録してから実装子#112〜#115、#117/#118、親/マイルストーンを閉じる。
 
+### R35：v1.3 Cognition
+
+親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)・マイルストーンv1.3.0を確認し、コード変更前に子#119（設計/B03）、#120（学習契約/モデル/保存）、#121（Memory連携/ライフサイクル/4配置/例）、#122（配布/CI/Docs/生成）を実親子関係付きで登録した。初期方式・入力・具体値はADR 0029へ実装判断として記録し、過去の個別合意と区別する。結果とPRを各子へ紐付け、公開後確認と親/マイルストーン終了は後続段階へ残す。
+
 ---
 
-<a id="section-71"></a>
+<a id="section-74"></a>
 
 収録元 `docs/release.md`
 
@@ -9427,13 +9755,23 @@ R33は子#112〜#115による実装・B02・配布候補・PRまで。公開時�
 
 R34でレビュー後のマージ・公開・公開後確認・課題終了が指示された。公開子[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)で最終head、マージ、タグの各8環境CIを確認する。wheel/sdist/引継ぎ書/SHA256SUMSの4添付を匿名取得し、checksum、公開タグとの一致、新規venvへの通常導入、9例、Memory/Document回帰を確認する。B02の結果と残る制約を記録し、完了後に子#112〜#115とレビュー修正#118・公開#117、親#12・マイルストーンを閉じる。公開済みv1.1.0以前のタグ・添付は変更しない。
 
+### v1.3 Cognitionの公開前条件
+
+R35は子#119〜#122の実装・B03・配布候補・PRまで。公開時はB03記録（`docs/validation/v1.3.md`）、確定SHAの8環境CI、Cognition/Memory/Documentを含む通常wheel/sdistと10例、同期済み引継ぎ書を確認する。公開用の子Issueを先行登録して導入/例ガイドを公開版に合わせ、タグ/Release・checksum・匿名取得・学習/再起動を確認する。初期学習の制約をReleaseにも明記し、公開前に親#13/マイルストーンを閉じない。公開済みv1.2.0以前は差し替えない。
+
 ---
 
-<a id="section-72"></a>
+<a id="section-75"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
+
+### 未リリース — v1.3.0候補
+
+- R35・ADR 0029でCognitionの初期学習とB03を具体化。親#13に子#119〜#122を先行登録。
+- Memory記録と区切り/概念ラベルから、語彙頻度・隣接語順・語とラベルの共起を根拠付きで照会。専用SQLite、冪等/競合・入力/容量境界を追加。
+- 公開ContractsでのMemory連携、4配置・再起動・取消/停止・障害の検証、Document由来記録、10番目の例・通常配布・Docs/引継ぎ書を追加。Core/Memory/Document既存契約を維持し、公開は後続段階。
 
 ### v1.2.0 — 2026年11月23日
 
@@ -9597,7 +9935,7 @@ R34でレビュー後のマージ・公開・公開後確認・課題終了が�
 
 ---
 
-<a id="section-73"></a>
+<a id="section-76"></a>
 
 収録元 `LICENSE`
 

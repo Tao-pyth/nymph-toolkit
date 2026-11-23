@@ -160,3 +160,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 保持日数、バッチ件数、通知間隔、通信期限、実行枠、転送量などの例中の値はデモ用であり、ライブラリの既定値や性能保証ではない。ファイル保存の詳細は[Connectionsの保存契約](connections.md)を参照する。
 
 全例が終了コード0で期待結果を示せば、導入と基本経路の確認は完了。未回収例外やTracebackが出た場合は、最後のPASSだけで成功と判断せず[トラブルシューティング](troubleshooting.md)へ進む。9例は障害・負荷を網羅するテストスイートの代替ではない。製品の受入範囲は[B02検証記録](validation/v1.2.md)、[B01検証記録](validation/v1.1.md)と既存[B00](validation/v1.0.md)、本版の公開後再現は[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)で追跡する。過去のv0.9版ガイドの確認範囲は[文書整備の検証記録](validation/docs-onboarding.md)に残す。
+
+## 開発候補v1.3の10番目の例
+
+公開v1.2.0の9例とは別に、このcheckoutでは`python examples/cognition_demo.py`を実行できる。[開発手順](development.md)でeditable導入する。Document→Memoryの文書を要求側の区切り/ラベルで学習し、頻度・局所語順・関連・出典区分・根拠、冪等/競合と再起動を照合する。最後に`PASS: Cognition learning, evidence, source separation, Memory/Document, restart, cleanup`と表示し、一時文書・DBを削除する。[Cognitionガイド](cognition.md)の能力の限界と失敗時動作を参照する。

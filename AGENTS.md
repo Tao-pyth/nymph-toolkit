@@ -42,3 +42,5 @@ v1.0の接続契約はR29・[ADR 0026](docs/adr/0026-v1.0-core-connection-contra
 v1.1 MemoryはR31・[ADR 0027](docs/adr/0027-v1.1-memory.md)の初期範囲に従う。Coreの履歴とMemory記録を混同しない。Core安定APIを維持し、出典付き記録の保存/取得を公開Contractsで接続する。編集・忘却・意味検索・学習・Document Adapter・複製/移植/伝播は暗黙に追加しない。B01実装受入と公開後確認を分ける。
 
 v1.2 DocumentはR33・[ADR 0028](docs/adr/0028-v1.2-document-adapter.md)に従う。UTF-8 txt/mdの明示取込を1記録としてMemoryへ保存する。区分/時刻/IDは要求側が指定し、出典/hashを保持する。Core/Memory内部をimportせず公開Contractsで接続する。超過を切捨て・自動分割せず、取消/結果不明を未保存保証としない。B02実装受入と公開後確認を分ける。
+
+v1.3 CognitionはR35・[ADR 0029](docs/adr/0029-v1.3-cognition-learning.md)の初期学習に従う。語の区切りと概念ラベルは要求側の教師情報で、完全な意味理解/文法獲得と表現しない。Memory ID・fingerprint・出典区分を保持し、専用SQLiteへ最大256例を保存する。Core/Memory/Documentの公開契約を維持し、公開Contractsだけで連携する。訂正/忘却・未分割文・会話生成・自律学習計画を暗黙に追加しない。B03実装受入と公開後確認を分ける。
