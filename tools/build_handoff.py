@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "docs/NTK-Core-v0.1-Handoff-ja.md"
 HEADER = """# Nymph Toolkit（NTK）最終ビジョン・初期設計・開発ロードマップ・Codex引継ぎ書
 
-初稿2026年11月19日 ｜ R1〜R32を収録 ｜ 統合リポジトリ `nymph-toolkit`
+初稿2026年11月19日 ｜ R1〜R34を収録 ｜ 統合リポジトリ `nymph-toolkit`
 
 本書は個別Docs・ADRを全文収録した単一配布用文書である。Nymphは、経験から言葉と世界を学び、記憶を積み重ね、自ら考え、行動し、成長する人工人格を目指す。最終ビジョンは収録したProject Visionに従う。
 
@@ -29,6 +29,8 @@ R17でv0.5に着手し、ADR 0020へ判断を記録した。予定時間到達�
 R31でv1.1 Memoryの最小保存・取得を具体化し、親#11・子#105〜#108をコード変更前に登録した。ADR 0027は今回の実装判断で、Coreの安定API・採用64項目を維持する。出典区分・SQLite・3操作とB01を扱い、後続の学習・統合・忘却と公開段階は分離する。
 
 R32でPR #109のレビュー・マージ・v1.1.0公開・公開後確認と課題終了が指示された。公開子#110をヘッダー変更前に登録し、最終CI・マージ・タグ・4添付・匿名取得と通常導入を追跡する。最終証拠は#110とReleaseへ記録する。
+
+R33でv1.2 Document AdapterとMemory連携の開発が指示された。親#12・子#112〜#115をコード変更前に登録し、ADR 0028でUTF-8文書の1記録取込・出典/hash・失敗/取消・B02を具体化した。利用ガイド・9番目の例・検証記録を収録する。公開v1.1と開発候補を区別し、新規Releaseは作らない。
 
 本書にもApache-2.0を適用し、末尾にLICENSEの公式本文を収録する。第三者成果物と個体データの条件は別途扱う。ファイル名のv0.1は初稿の識別子であり、リポジトリ内の本文は更新する。公開済みRelease添付は各公開時点のスナップショットとして保持する。
 
@@ -58,6 +60,8 @@ R29でv1.0のCore接続契約整備と必要な破壊的API整理が指示され
 
 R30でPR #103レビュー・マージ・v1.0.0公開と公開後確認・課題終了が指示された。公開子#104をヘッダー変更前に登録し、最終CI・マージ・タグ・4添付の匿名取得と通常導入を追跡する。最終証拠は#104とReleaseへ残し、公開済みスナップショットを差し替えない。
 
+R34でPR #116レビュー・マージ・v1.2.0公開と公開後確認・課題終了が指示された。公開#117・レビュー修正#118を各変更前に登録し、二重障害時の結果不明保持、最終CI・タグ・4添付と通常導入を確認する。最終結果は#117とReleaseへ記録し、既存Core/Memory契約と過去の公開物を維持する。
+
 """
 
 
@@ -68,7 +72,7 @@ def sources():
         "docs/getting-started.md", "docs/tutorials.md", "docs/troubleshooting.md",
         "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md",
         "docs/connections.md", "docs/task-manager.md", "docs/hybrid.md",
-        "docs/memory.md", "docs/core-api.md", "docs/api-reference.md", "docs/module-contracts.md", "docs/migration-v1.md", "docs/adr/README.md",
+        "docs/document.md", "docs/memory.md", "docs/core-api.md", "docs/api-reference.md", "docs/module-contracts.md", "docs/migration-v1.md", "docs/adr/README.md",
     ]
     result += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/adr").glob("[0-9]*.md"))]
     result += ["docs/roadmap.md", "docs/acceptance.md"]

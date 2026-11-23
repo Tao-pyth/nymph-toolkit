@@ -171,3 +171,9 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 ## v1.1 Memoryの開発・配布確認
 
 [Memory](memory.md)と[ADR 0027](adr/0027-v1.1-memory.md)を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。全体検証は既存手順に加えてMemoryの8番目の例を実行する。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。配布試験は`python -m build --outdir .git/v11-dist`、`python tools/check_dist.py --dist-dir .git/v11-dist`を使う（対象ディレクトリには候補wheel/sdist各1個だけを置く）。
+
+## v1.2 Documentの開発確認
+
+公開v1.1.0の通常導入と区別し、このcheckoutをeditable導入して[Documentガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
+
+配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。この検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
