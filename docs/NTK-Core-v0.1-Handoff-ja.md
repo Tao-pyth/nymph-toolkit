@@ -153,7 +153,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### v1.3.0開発候補 — Cognition Subsystem
 
-R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。利用ガイド（`docs/cognition.md`）、ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）、B03検証記録（`docs/validation/v1.3.md`）に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。
+R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。利用ガイド（`docs/cognition.md`）、ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）、B03検証記録（`docs/validation/v1.3.md`）に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。 全378テスト・10例・8環境CI・通常wheel/sdistを確認し、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)でレビューします。最終SHAと結果は[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)に記録します。
 
 このcheckoutの配布候補は1.3.0です。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
 
@@ -8942,6 +8942,19 @@ Windows / CPython 3.15.2でモデル/サービス単体15テストが3.094秒、
 Windows 11 build 26300 / CPython 3.15.2。停止試験と時刻検証を補強した後のCognition21テストが24.629秒、全378テスト（既存357＋Cognition21）が155.940秒で成功した。Core/Memory/Documentの既存製品コード、Core 15 / Contracts 98の公開一覧、v1 manifestに変更なし。76文書・1316ローカルリンク・引継ぎ書、採用64項目/7群/299参照の検査が成功した。
 
 通常配布と確定コミットのCIは後続の結果を証拠とし、このローカル結果だけでB03-06全体を完了としない。
+
+### 通常配布と確定した実装コミットのCI
+
+対象`bb60da3a1db68de56e6faf5b73ac8b2d669626d5`、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)、[PR CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45127789989)・[push CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45127731405)。各8環境が成功した。各環境でソース/通常wheelの全テスト・10例・短い4配置負荷、安定API/契約/64項目、Docs・引継ぎ書、sdist同一wheel再構築を確認した。
+
+| OS | CPython | 結果 |
+|---|---|---|
+| Windows | 3.12 / 3.13 / 3.14 / 3.15 | 各378テスト、skipなし、通常配布成功 |
+| Ubuntu Linux | 3.12 / 3.13 / 3.14 / 3.15 | 各378テスト、既存Windows専用6件skip、通常配布成功 |
+
+ローカルでもソース外の新規venvへ通常wheelを導入し、1.3.0の版・Core/Cognition等のsite-packages import、全378テスト（157.830秒）、10例、短い4配置負荷（1.149秒）、sdistからバイト同一wheel再構築が成功した。
+
+B03-01〜06の初期実装受入は合格。今回の実装判断と未採用範囲、既存Core/Memory/Document契約の維持を照合した。この結果を記録する文書だけの後続コミットもCIで照合し、最終SHAと結果を[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)とPRへ記録する。子#119〜#122はレビュー待ちとして追跡し、親#13・マイルストーンと公開後確認は後続の公開段階へ残す。
 
 ### 未検証・後続範囲
 
