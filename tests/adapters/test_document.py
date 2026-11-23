@@ -205,6 +205,33 @@ class DocumentTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(caught.exception.__cause__, RuntimeError)
         self.assertEqual(len(self.core.records), 1)
 
+    async def test_idle_notification_failure_preserves_unknown_outcome(self):
+        original = OutcomeUnknown(42)
+        notification_error = RuntimeError("idle usage transport failed")
+        publish = self.core.publish_usage
+        async def failed_idle(usage, **kwargs):
+            if usage.active == 0:
+                raise notification_error
+            await publish(usage, **kwargs)
+        self.core.publish_usage = failed_idle
+        self.core.failure = original
+        with self.assertRaises(OutcomeUnknown) as caught:
+            await self.doc.ingest(request())
+        self.assertIs(caught.exception, original)
+        self.assertIs(caught.exception.__cause__, notification_error)
+        self.assertEqual(len(self.core.records), 1)
+        self.assertIn(("close",), self.core.events)
+        self.assertIn(("health", ("memory",)), self.core.events)
+        self.assertFalse(self.doc.busy)
+        self.assertIsNone(self.doc.link)
+        # A standalone notification failure remains observable too.
+        self.core.failure = None
+        with self.assertRaises(RuntimeError) as standalone:
+            await self.doc.ingest(request())
+        self.assertIs(standalone.exception, notification_error)
+        self.assertEqual(len(self.core.records), 2)
+        self.assertFalse(self.doc.busy)
+
     async def test_cancel_stop_and_capacity_wait_for_owned_reader(self):
         entered, release = threading.Event(), threading.Event()
         original = read_record

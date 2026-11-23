@@ -109,6 +109,7 @@ class _Document:
             await core.health_check(module_ids=(self.provider,), timeout=5)
 
     async def _ingest(self, request):
+        primary_error = None
         try:
             await self._usage(1)
             record = await _settled(asyncio.get_running_loop().run_in_executor(self.pool, read_record, self.root, request))
@@ -130,10 +131,17 @@ class _Document:
                     # into an apparently definite failure of that put.
                     raise original from recovery_error
                 raise
+        except BaseException as error:
+            primary_error = error
+            raise
         finally:
             try:
                 if not self.closing:
                     await self._usage(0)
+            except Exception as reporting_error:
+                if primary_error is not None:
+                    raise primary_error from reporting_error
+                raise
             finally:
                 self.busy = False
 
