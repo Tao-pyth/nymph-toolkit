@@ -238,3 +238,7 @@ R34でレビュー後のマージ・公開・公開後確認・課題終了が�
 ## v1.3 Cognitionの公開前条件
 
 R35は子#119〜#122の実装・B03・配布候補・PRまで。公開時は[B03記録](validation/v1.3.md)、確定SHAの8環境CI、Cognition/Memory/Documentを含む通常wheel/sdistと10例、同期済み引継ぎ書を確認する。公開用の子Issueを先行登録して導入/例ガイドを公開版に合わせ、タグ/Release・checksum・匿名取得・学習/再起動を確認する。初期学習の制約をReleaseにも明記し、公開前に親#13/マイルストーンを閉じない。公開済みv1.2.0以前は差し替えない。
+
+## R36：顧客向け主要Docsの公開条件
+
+各リリースで顧客Markdown・PDF・HTMLを同じ対象版/タグへ同期する。Customer Docs CI成功、原稿/証跡/生成物・参照SHAの一致、cleanな生成、全ページ表示確認を完了条件に含める。対象版・公開状態を証跡と表紙へ記録し、同じタグから生成・検証したMD/PDF/HTML/JSON一式をReleaseへ保存する。CI artifactだけは期限付きのため正式公開物の代用にしない。過去の公開添付は置換しない。[ADR 0030](adr/0030-customer-docs-as-primary.md)・[手順](customer-guide-authoring.md)を参照する。

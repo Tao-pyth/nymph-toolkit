@@ -25,7 +25,7 @@ Agency・Persona・Sleep、Text Interaction・Web・Discord Voice・Desktop Adap
 
 ## v1.3.0開発候補 — Cognition Subsystem
 
-R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。[利用ガイド](docs/cognition.md)、[ADR 0029](docs/adr/0029-v1.3-cognition-learning.md)、[B03検証記録](docs/validation/v1.3.md)に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。 全378テスト・10例・8環境CI・通常wheel/sdistを確認し、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)でレビューします。最終SHAと結果は[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)に記録します。
+R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。[利用ガイド](docs/cognition.md)、[ADR 0029](docs/adr/0029-v1.3-cognition-learning.md)、[B03検証記録](docs/validation/v1.3.md)に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。 Cognition実装時に全378テスト・10例・8環境CI・通常wheel/sdistを確認し、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)でレビューします。最終SHAと結果は[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)に記録します。
 
 このcheckoutの配布候補は1.3.0です。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
 
@@ -66,7 +66,7 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 
 | やりたいこと | 最初に読む資料 | 確認できること |
 |---|---|---|
-| 導入・接続の全体像を説明する | [Architecture](docs/architecture.md) → [6契約](docs/module-contracts.md)・各機能ガイド | 現在の実装・契約・公開範囲。旧版の図解は[顧客ガイド（v0.9版）](docs/customer-guide.md) |
+| 導入・接続の全体像を説明する | [顧客向け契約・利用ガイド](docs/customer-guide.md) → [PDF/HTMLの取得・同期手順](docs/customer-guide-authoring.md) | Core・6契約・Memory・Document・Cognitionの図解。公開版と開発候補を区別 |
 | 公開版を試す | [インストールと最初の実行](docs/getting-started.md) → [9つの実行例](docs/tutorials.md) | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
 | 機能を接続する | [Architecture](docs/architecture.md) → [Core API](docs/core-api.md) | 責務と配置、現在の契約、各機能Docsへの入口 |
 | 開発に参加する | [参加方針](CONTRIBUTING.md) → [Issue運用](docs/issue-workflow.md) → [開発手順](docs/development.md) | 着手前の課題管理、editable環境、テストと配布検証 |
@@ -86,7 +86,7 @@ v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v
 
 将来のPC全体の状況取得はAdapterが担当します。Desktop Adapterはv1.10.0までの配分に含めず将来課題とし、複製・移植・伝播機構は初期スコープ外です。
 
-公開済みタグ・Release添付は公開時点の記録として保持します。顧客向け図解・PDFはv0.9版の資料です。v1.0では接続契約と移行手順を併読してください。過去の変更は[CHANGELOG](CHANGELOG.md)を参照してください。
+顧客向けMarkdown・PDF・HTMLも主要Docsとして、対象コミットの実装と同時に更新します。[ADR 0030](docs/adr/0030-customer-docs-as-primary.md)に基づき、同期検査・CI生成・表示確認を必須にしました。最新コミットの一式は[Customer Docsの取得手順](docs/customer-guide-authoring.md)を参照してください。公開済みタグ・Release添付は当時の記録として保持します。過去の変更は[CHANGELOG](CHANGELOG.md)にあります。
 
 ## ライセンス
 

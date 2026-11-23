@@ -37,6 +37,8 @@ v0.9の完成確認はR24・[ADR 0025](docs/adr/0025-v0.9-core-completion.md)を
 
 Docs更新時は[文書の更新方法](docs/README.md)に従って単一配布用引継ぎ書を同期する。公開済みのタグやRelease添付を後続の文書修正で差し替えない。
 
+R36・[ADR 0030](docs/adr/0030-customer-docs-as-primary.md)により、顧客向けMarkdown・PDF・HTMLも主要Docsとする。実装・契約・利用・制約・公開状態の変更時は同じPRで本文/図を照合し、check_customer_docs.pyの証跡をレビュー理由付きで更新する。生成とPDF全ページの表示確認、HTML/PDF/Markdown一致、Customer Docs CIの成功を必須とし、古い版のまま後回しにしない。開発候補と公開版を区別し、公開済みスナップショットは保持する。ハッシュだけを更新して内容確認を省略しない。
+
 v1.0の接続契約はR29・[ADR 0026](docs/adr/0026-v1.0-core-connection-contracts.md)に従う。必要な破壊的API整理は許可され、理由と移行手順を記録する。採用64項目の動作やNymph/Core境界を暗黙に変えない。公開型・登録前検証・初期化中の提供登録、安定APIの基準はdocs/module-contracts.mdとdocs/contracts-v1.jsonを参照する。tools/check_contracts.pyの差分を基準の無条件再生成で解消せず、互換性とIssue/ADRを先に確認する。B00の実装・受入とタグ/Release・公開後確認は区別する。
 
 v1.1 MemoryはR31・[ADR 0027](docs/adr/0027-v1.1-memory.md)の初期範囲に従う。Coreの履歴とMemory記録を混同しない。Core安定APIを維持し、出典付き記録の保存/取得を公開Contractsで接続する。編集・忘却・意味検索・学習・Document Adapter・複製/移植/伝播は暗黙に追加しない。B01実装受入と公開後確認を分ける。

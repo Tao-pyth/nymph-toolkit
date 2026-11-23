@@ -290,4 +290,15 @@ R7の[Project Vision](vision.md)にある、言語・学習・記憶・自己認
 | B03-03 | 文字/数/ページ/256例境界、保存失敗/rollback、未知DB/破損/提供先不一致、再起動 |
 | B03-04 | 容量、取消/停止とworker回収、通信障害/結果不明、後処理/health・再送なし |
 | B03-05 | Memory/Cognitionの4配置、入口の直接/Core経由、公開Contracts、Document由来記録 |
-| B03-06 | 全回帰・安定API・10例・8環境CI・通常wheel/sdist・Docs/引継ぎ書同期 |
+| B03-06 | 全回帰・安定API・10例・8環境CI・通常wheel/sdist・Docs/引継ぎ書同期。R36の顧客主要Docs確認も満たす |
+
+## R36 顧客向け主要Docsの継続受入
+
+[ADR 0030](adr/0030-customer-docs-as-primary.md)に基づき、以後の各版・変更で次を確認する。検証結果は[顧客資料の記録](validation/customer-guide.md)と対象Issue/PRへ残す。
+
+- Markdownの説明・表・図が、対象コミットの機能・契約・利用手順・制約と一致する。開発候補と公開版を明示する。
+- 主要Docs・実装の追加/変更/削除を確認し、理由付きの証跡を更新する。ハッシュ一致だけで内容の正しさを認定しない。
+- cleanな同一コミットからMarkdown・PDF・HTML・生成JSONを揃え、版・参照SHA・本文・成果物ハッシュの検査を通す。
+- 全PDFページを画像で目視し、日本語・図・表・コード・フッターを確認する。HTMLの本文・図は外部スクリプトなしで表示できる。
+- 必須のCustomer Docs CIが成功し、同じSHAのartifactを取得できる。既存の製品8環境の検証も維持する。
+- 引継ぎ書を同期し、正式公開時は同タグの一式をReleaseへ保存する。過去のタグ/添付を差し替えない。

@@ -20,7 +20,7 @@ htmlcov/
 .vscode/
 .idea/
 
-# Optional customer-document tools and local deliverables
+# Customer-document build dependencies and generated deliverables
 tools/customer-docs/node_modules/
 output/pdf/
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Optional publication tool: render the Markdown source and Mermaid diagrams once.
+// Required customer-document build: render the reviewed Markdown and diagrams.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import http from 'node:http';
@@ -14,15 +14,25 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
 const source = path.join(root, 'docs/customer-guide.md');
 const out = path.join(root, 'output/pdf');
-const stem = 'NTK-Core-v0.9.0-Customer-Guide-ja';
 const args = process.argv.slice(2);
 let executablePath;
+let python = process.env.NTK_DOCS_PYTHON || 'python';
 let ref = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--browser' && args[i + 1]) executablePath = path.resolve(args[++i]);
   else if (args[i] === '--ref' && args[i + 1]) ref = args[++i];
-  else throw new Error('Usage: node build.mjs [--browser PATH] [--ref COMMIT_OR_BRANCH]');
+  else if (args[i] === '--python' && args[i + 1]) python = args[++i];
+  else throw new Error('Usage: node build.mjs [--browser PATH] [--ref CURRENT_COMMIT] [--python PATH]');
 }
+execFileSync(python, ['tools/check_customer_docs.py'], { cwd: root, stdio: 'inherit' });
+const reviewPath = path.join(root, 'docs/customer-guide.sources.json');
+const review = JSON.parse(await fs.readFile(reviewPath, 'utf8'));
+const stem = `NTK-v${review.version}-Customer-Guide-ja`;
+const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
+ref = execFileSync('git', ['rev-parse', '--verify', '--end-of-options', `${ref}^{commit}`], { cwd: root, encoding: 'utf8' }).trim();
+if (ref !== head) throw new Error('Customer artifacts must reference the checked-out commit');
+const dirty = Boolean(execFileSync('git', ['status', '--porcelain'], { cwd: root, encoding: 'utf8' }).trim());
+const status = review.status === 'development' ? '開発候補' : '公開済み';
 const require = createRequire(import.meta.url);
 const mermaidRoot = path.dirname(require.resolve('mermaid/package.json'));
 const vendor = path.join(mermaidRoot, 'dist');
@@ -41,15 +51,16 @@ renderer.link = ({ href, text }) => {
   return `<a href="${escape(target)}">${text}</a>`;
 };
 const raw = await fs.readFile(source, 'utf8');
+const sourceHash = createHash('sha256').update(raw).digest('hex');
 const sections = raw.split(/\n<!-- pagebreak -->\n/);
 const diagrams = (raw.match(/^```mermaid$/gm) || []).length;
 const style = await fs.readFile(path.join(here, 'print.css'), 'utf8');
 const pages = sections.map((s, i) => `<article class="sheet ${i === 0 ? 'cover' : ''}">
-  <header><b>NYMPH TOOLKIT</b><span>CORE v0.9.0 · 契約・利用ガイド</span></header>
+  <header><b>NYMPH TOOLKIT</b><span>v${escape(review.version)} ${status} · 契約・利用ガイド</span></header>
   <main>${marked.parse(s, { renderer, gfm: true })}</main>
-  <footer><span>NTK / 2026.11.22 / Apache-2.0</span><b>${String(i + 1).padStart(2, '0')} / ${sections.length}</b></footer>
+  <footer><span>NTK / ${escape(review.reviewed_on)} / Apache-2.0</span><b>${String(i + 1).padStart(2, '0')} / ${sections.length}</b></footer>
 </article>`).join('\n');
-const html = `<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>NTK Core 契約・利用ガイド v0.9.0</title><style>${style}</style></head><body>${pages}</body></html>`;
+const html = `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="ntk-source-sha256" content="${sourceHash}"><meta name="ntk-reference" content="${ref}"><title>NTK 契約・利用ガイド v${escape(review.version)}</title><style>${style}</style></head><body>${pages}</body></html>`;
 const server = http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
@@ -115,8 +126,18 @@ try {
     printBackground: true, tagged: true, outline: true });
   // Inline SVGs stay in this saved HTML; no Mermaid runtime or network is needed.
   await fs.writeFile(path.join(out, stem + '.html'), await page.content(), 'utf8');
+  await fs.writeFile(path.join(out, stem + '.md'), raw, 'utf8');
+  const hashFile = async p => createHash('sha256').update(await fs.readFile(p)).digest('hex');
+  const generatorInputs = {};
+  for (const name of ['build.mjs', 'print.css', 'package.json', 'pnpm-lock.yaml']) {
+    generatorInputs['tools/customer-docs/' + name] = await hashFile(path.join(here, name));
+  }
+  const files = {};
+  for (const ext of ['.md', '.pdf', '.html']) files[stem + ext] = await hashFile(path.join(out, stem + ext));
   const manifest = { source: 'docs/customer-guide.md', reference: ref,
-    source_sha256: createHash('sha256').update(raw).digest('hex'),
+    version: review.version, status: review.status, working_tree_dirty: dirty,
+    source_sha256: sourceHash, review_sha256: await hashFile(reviewPath),
+    generator_inputs: generatorInputs, files,
     pages: sections.length, diagrams, inspection, browser: browser.version() };
   await fs.writeFile(path.join(out, stem + '.json'), JSON.stringify(manifest, null, 2) + '\n');
   console.log(JSON.stringify({ pages: sections.length, diagrams, output: out, gaps: inspection.pages.map(p => p.availableGap) }));

@@ -171,15 +171,18 @@ nymph-toolkit/
 ├─ tools/validate_hybrid_load.py
 ├─ tools/check_docs.py
 ├─ tools/build_handoff.py
-├─ tools/customer-docs/             # 任意のPDF/HTML生成。Python実行時とは分離
+├─ tools/check_customer_docs.py     # 顧客資料の同期・PDF/HTML検査
+├─ tools/customer-docs/             # 必須のPDF/HTML生成。製品実行時とは分離
 │  ├─ package.json
 │  ├─ pnpm-lock.yaml
+│  ├─ requirements.txt             # PDF検査・描画専用
 │  ├─ build.mjs
 │  └─ print.css
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
-│  ├─ customer-guide.md             # v0.9版の顧客向け図解・API付録
+│  ├─ customer-guide.md             # 主要Docs：現在の実装と契約の顧客向け図解
+│  ├─ customer-guide.sources.json   # レビュー済み入力・対象版・公開状態
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
 │  ├─ getting-started.md            # 公開v1.2.0通常導入・初回実行
@@ -251,7 +254,8 @@ nymph-toolkit/
 │     ├─ 0026-v1.0-core-connection-contracts.md
 │     ├─ 0027-v1.1-memory.md
 │     ├─ 0028-v1.2-document-adapter.md
-│     └─ 0029-v1.3-cognition-learning.md
+│     ├─ 0029-v1.3-cognition-learning.md
+│     └─ 0030-customer-docs-as-primary.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/

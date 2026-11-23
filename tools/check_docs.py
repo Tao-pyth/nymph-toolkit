@@ -33,6 +33,7 @@ def main():
         "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
     )
     subprocess.run([sys.executable, str(ROOT / "tools/build_handoff.py"), "--check"], check=True)
+    subprocess.run([sys.executable, str(ROOT / "tools/check_customer_docs.py")], check=True)
     print(f"PASS: {len(files)} Markdown files, {links} local links, UTF-8/LF, license")
 
 

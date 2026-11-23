@@ -169,7 +169,7 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ## 顧客向け資料の配布版
 
-[契約・利用ガイド](customer-guide.md)のPDF・HTML生成は、Pythonの開発環境とは分離した任意の文書作成作業である。[生成と表示確認の手順](customer-guide-authoring.md)に従い、本文・図・APIの照合、全ページの表示、引継ぎ書同期を確認する。Node依存をNTK実行時や通常のwheel検証へ追加しない。結果は[顧客資料の検証記録](validation/customer-guide.md)へ記録する。
+[契約・利用ガイド](customer-guide.md)のMarkdown・PDF・HTMLは主要Docsであり、機能・契約・利用・制約変更時の同期・生成・検証を必須とする。生成依存はPython製品の実行環境とは分離する。[生成と表示確認の手順](customer-guide-authoring.md)に従い、本文・図・APIの照合、全ページの表示、引継ぎ書同期を確認する。Node依存をNTK実行時や通常のwheel検証へ追加しない。結果は[顧客資料の検証記録](validation/customer-guide.md)へ記録する。
 
 ## v1.0で確立した接続契約の確認
 
