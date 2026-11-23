@@ -88,7 +88,7 @@ def artifacts(directory, root=ROOT, *, render_dir=None, require_clean=False):
         assert measured["availableGap"] >= 10 and not measured["outside"]
         title = re.search(r"^#{1,2} (.+)$", section, re.M).group(1)
         text = page.extract_text()
-        assert compact_text(title) in compact_text(text), f"PDF page {i} title missing"
+        assert compact_text(title) in compact_text(text), f"PDF page {i} title missing: expected {title!r}, extracted {text[:400]!r}"
         assert len(text.strip()) > 80 and "\ufffd" not in text, f"PDF page {i} text is missing/corrupt"
         assert abs(float(page.mediabox.width) - 595.28) < 2 and abs(float(page.mediabox.height) - 841.89) < 2
     if render_dir is not None:

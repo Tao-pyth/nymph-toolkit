@@ -61,6 +61,13 @@ jobs:
       - run: node tools/customer-docs/build.mjs
       - run: python tools/check_customer_docs.py --artifacts output/pdf --require-clean --render-dir output/pdf/pages
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with:
+          name: customer-docs-diagnostics-${{ github.event.pull_request.head.sha || github.sha }}
+          path: output/pdf/
+          if-no-files-found: ignore
+          retention-days: 7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: customer-docs-${{ github.event.pull_request.head.sha || github.sha }}
           path: output/pdf/
