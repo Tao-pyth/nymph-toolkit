@@ -110,4 +110,4 @@ tar -xzf nymph_toolkit-1.2.0.tar.gz
 
 続いて[9つの実行例ガイド](tutorials.md)で登録、接続、活動変更、別プロセス実行を確認する。コードを修正する場合は[開発手順](development.md)で別の開発環境を用意する。`pip install -e .`は作業ツリーを読む開発用導入であり、この手順の通常導入とは区別する。
 
-R32・[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)でv1.2.0向けに更新した。本版の受入は[B01記録](validation/v1.1.md)、公開後取得の結果は#110で追跡する。過去の[文書整備](validation/docs-onboarding.md)・[v1.0契約受入](validation/v1.0.md)は当時の記録として保持し、公開済みタグ・添付は更新しない。
+R34・[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)でv1.2.0向けに更新した。本版の受入は[B02記録](validation/v1.2.md)、公開後取得の結果は#117で追跡する。過去の[文書整備](validation/docs-onboarding.md)・[v1.0契約受入](validation/v1.0.md)・[v1.1 Memory受入](validation/v1.1.md)は当時の記録として保持し、公開済みタグ・添付は更新しない。

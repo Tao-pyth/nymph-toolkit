@@ -1,6 +1,6 @@
 # Docsの読み方と根拠
 
-初稿の文書整備日は2026年11月19日。対象はNymph Toolkit（NTK）の最終ビジョン、Core初期開発、公開準備からV0.9までの計画、およびv1.0.0以降のロードマップ案である。
+初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.3.0のCognitionと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。[機能・公開状態の一覧](../README.md)と[2026年11月23日の整合点検](validation/docs-current.md)を参照する。
 
 R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memory.md)・[B01結果](validation/v1.1.md)を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
 
@@ -12,7 +12,8 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 
 | 目的 | 読み順 |
 |---|---|
-| 導入担当者・開発担当者へ説明する | [顧客向け契約・利用ガイド](customer-guide.md) → [配布用PDFの作成](customer-guide-authoring.md) |
+| 導入担当者・開発担当者へ説明する | [Architecture](architecture.md) → [共通接続契約](module-contracts.md) → [Memory](memory.md)・[Document](document.md)・[Cognition候補](cognition.md) |
+| v0.9時点の図解・顧客資料を読む | [顧客向け契約・利用ガイド（v0.9版）](customer-guide.md) → [同版PDFの作成](customer-guide-authoring.md) |
 | まず試す | [通常導入](getting-started.md) → [9つの実行例](tutorials.md) |
 | v1.0へ機能を接続する | [6契約](module-contracts.md) → [移行手順](migration-v1.md) → [B00結果](validation/v1.0.md) |
 | 機能を接続する | [Architecture](architecture.md) → [Core API](core-api.md) → 対象のRuntime／Registry／Connections／TaskManager／HybridのDocs |
@@ -30,7 +31,7 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | [CONTRIBUTING](../CONTRIBUTING.md) | Issue・Pull Requestによる参加と設計判断の扱い |
 | [AGENTS.md](../AGENTS.md) | Codexなどの開発エージェントが守る着手前・完了時のルール |
 | [単一配布用の引継ぎ書](NTK-Core-v0.1-Handoff-ja.md) | 以下のDocs・ADRを一つに収録したスナップショット |
-| [customer-guide.md](customer-guide.md) | 顧客向けの現行契約・利用・運用を図解。開発者向け付録を併設 |
+| [customer-guide.md](customer-guide.md) | v0.9時点の契約・利用・運用を図解。現行の全機能を説明する資料とは区別 |
 | [customer-guide-authoring.md](customer-guide-authoring.md) | 同じ原稿からPDF・HTMLを再生成し、表示と同期を確認する手順 |
 | [validation/customer-guide.md](validation/customer-guide.md) | 顧客資料の契約照合・PDF表示・実行例・同期の検証範囲 |
 | [validation/windows-shutdown.md](validation/windows-shutdown.md) | #94のWindows終了時エラーの原因・内部修正・制御再現・回帰 |
@@ -38,8 +39,11 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | [tutorials.md](tutorials.md) | 9実行例の目的・コマンド・期待結果・終了・保存物 |
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
 | [validation/docs-onboarding.md](validation/docs-onboarding.md) | D01〜D04・D09の検証結果、対象版、確認範囲 |
+| [validation/docs-current.md](validation/docs-current.md) | v1.3候補までの実装・資料・公開状態の点検、訂正箇所と確認範囲 |
 | [cognition.md](cognition.md) | 開発候補v1.3の初期学習・根拠・運用・能力の限界 |
 | [validation/v1.3.md](validation/v1.3.md) | B03のモデル/Memory連携・回帰・配布・CI結果 |
+| [document.md](document.md) | v1.2の文書取込・Memory連携・上限と失敗時動作 |
+| [validation/v1.2.md](validation/v1.2.md) | B02の実装・回帰・配布・公開後確認の参照先 |
 | [memory.md](memory.md) | v1.1の保存/取得・出典・運用・実行例 |
 | [validation/v1.1.md](validation/v1.1.md) | B01の実装・回帰・配布・CI結果 |
 | [vision.md](vision.md) | 人工人格Nymphの最終ビジョン・研究方針・長期評価領域 |
@@ -53,6 +57,9 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | [validation/v0.8.md](validation/v0.8.md) | A08・統合障害・競合・保存・負荷・配布の検証記録 |
 | [core-api.md](core-api.md) | 実装済み公開入口の入力・結果・失敗・所有と配置差 |
 | [api-reference.md](api-reference.md) | v1.0のCore 15件・Contracts 98件の生成API一覧 |
+| [module-contracts.md](module-contracts.md) | v1.0で確立し現行でも維持する6区分の共通接続契約 |
+| [migration-v1.md](migration-v1.md) | v0.9からv1.0への移行差分 |
+| [validation/v1.0.md](validation/v1.0.md) | B00の契約・回帰・配布・公開後確認の参照先 |
 | [validation/core-coverage.md](validation/core-coverage.md) | 採用64項目と製品テストへの証拠参照。Windows専用回帰の実行／skipは結果記録を参照 |
 | [validation/v0.9.md](validation/v0.9.md) | A09の完成監査・通常配布・公開前後の判定 |
 | [ADR索引](adr/README.md) | 判断履歴と採用状態 |

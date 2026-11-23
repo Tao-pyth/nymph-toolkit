@@ -106,8 +106,9 @@ sequenceDiagram
 | cognition.storage | SQLite操作失敗。保存先・権限・容量・別writerを確認 |
 | MemoryのOperationFailure | not_found等をそのまま返す。学習に成功した扱いにしない |
 | TemporaryUnavailable | 処理中・停止中・Memory容量不足。待機列へ入れない |
-| LinkFailure / 結果不明等 | 元の処理を自動再送しない。close・中断完了報告・個別healthを行う |
-| ProtocolError | Memory記録の形式違反など。通信契約違反として扱う |
+| LinkFailure | 接続をcloseし、停止中でなければ返されたinterruption_idで中断完了報告を行い、対象Memoryのhealthを個別申請する。元のgetを再送しない |
+| OutcomeUnknown / TimeoutError / ConnectionNotReadyError | 接続をcloseし、停止中でなければ対象Memoryのhealthを個別申請する。中断IDのない経路では中断完了報告を行わず、元の例外を保持する。再送しない |
+| ProtocolError | Memory記録の形式違反など。上記例外経路と同じ後処理を行う。呼出し元への伝達形は配置/呼出し経路の既存契約に従う |
 
 全操作で同時受付1件。I/Oと集計は専用workerで処理し、取消/stopも受付済みtaskとworkerの終了を待つ。取消や通信期限切れはrollback保証ではない。結果不明なら、要求側が接続状態を確認して同じID/注釈を明示再要求し、receiptとinspectを照合する。復旧時の再prepareは同じ提供先で行い、別の先への自動切替はない。
 

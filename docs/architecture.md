@@ -10,9 +10,9 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ## 採用された構成
 
-v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[Connections](connections.md)とADR 0019、活動管理は[TaskManager](task-manager.md)とADR 0020を参照する。当時の本番Subsystem・Adapterは後続段階とした。v1.1ではMemoryを追加する。
+v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[Connections](connections.md)とADR 0019、活動管理は[TaskManager](task-manager.md)とADR 0020・0021を参照する。v1.1でMemory、v1.2でDocumentを公開し、v1.3候補ではCognitionの初期学習を実装した。[機能と公開状態](../README.md)を現在の入口とする。
 
-Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。v0.xの初期実装はCoreを対象とし、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現した。R31でv1.1 Memoryを最初の実Subsystemとして追加する。根拠はR2、判断記録はADR 0001・0005。
+Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。v0.xの初期実装はCoreを対象とし、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現した。R31でv1.1 Memoryを最初の実Subsystemとして追加した。現行の実行例も要求側はダミーで、Nymphの自律的な意思決定は未実装。根拠はR2、判断記録はADR 0001・0005と後続の0027〜0029。
 
 | 構成要素 | 責務の整理 | 採用状況・今後具体化する点 |
 |---|---|---|
@@ -20,8 +20,8 @@ Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Reg
 | Registry | Subsystem・Adapterの登録状態と識別を管理する | ADR 0016でID・必須依存・スナップショット・着脱範囲を採用して実装 |
 | Connections | 採用した経路で接続と通信を管理する | ADR 0015・0017・0018の方針をADR 0019で具体化。候補・接続固定・操作・中断・ヘルス、非同期保存・救命を実装しA04を確認 |
 | TaskManager | Nymphが決めた活動の予定、実行状態、変更を管理する | ADR 0020で予定・実行追跡、到達通知、安全な終了、履歴参照、ADR 0021で時刻・期間・優先度変更と中断再開を実装。別プロセスへの適用は0022・0023で具体化しHybridTaskManagerとして実装 |
-| Subsystem | 着脱する機能単位 | Coreとの接続契約とライフサイクル |
-| Adapter | 外部環境との接点を担う着脱可能な構成要素 | 接続契約。将来のPC状況取得はここに配置 |
+| Subsystem | 着脱する機能単位 | Memoryを公開、Cognitionをv1.3候補に実装。Core共通接続契約と個別業務契約を利用 |
+| Adapter | 外部環境との接点を担う着脱可能な構成要素 | Documentを公開。将来のPC状況取得Adapterは未実装 |
 
 4責務の採用と、上表の詳細なAPI分担は別々に状態を管理する。TaskManagerの活動決定権に関する境界は確定事項である。
 
@@ -106,7 +106,7 @@ R24では構成と責務を維持したまま、[公開APIの入力・結果・�
 
 ## v1.0.0の接続契約と後続構成案
 
-R29・[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)でv1.0目標を具体化した。[接続契約](module-contracts.md)に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、[移行資料](migration-v1.md)に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。v1.1 MemoryはR31・ADR 0027で最小範囲を具体化し、その他の本番機能の名称・配分は引き続き提案。
+R29・[ADR 0026](adr/0026-v1.0-core-connection-contracts.md)でv1.0目標を具体化した。[接続契約](module-contracts.md)に公開Protocol・登録前検証・初期化中の提供登録・安定対象を定義し、[移行資料](migration-v1.md)に必要なAPI整理を記す。4責務、Core+Contracts同梱、既存64項目は維持する。Contractsのmodules.pyはCoreをimportせず、Coreの実体がその構造を満たす。Memory・Document・Cognitionの初期範囲はADR 0027〜0029で具体化した。それ以外の後続機能の名称・配分は引き続き提案。
 
 R5でv1.0.0の目標として、CoreとSubsystem・Adapterの接続契約を大きく形作ることを追加する。v0.9.0のCore完成を踏まえ、Module、Lifecycle、Capability、Communication、Task、Errorの各Contractを検討する。公開API、接続用の開発補助機能、ダミーによる契約テストを整備する案で、本番Subsystemの完成は必須条件としない。当初の判断対象は[ADR 0006](adr/0006-core-connection-contracts.md)、R29の採用詳細はADR 0026で管理する。
 
@@ -132,7 +132,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
-### 初期の配置
+### 現在の配置（公開v1.2と開発候補v1.3）
 
 文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用は[ADR 0011](adr/0011-apache-2.0-license.md)に従う。
 
@@ -157,6 +157,12 @@ nymph-toolkit/
 ├─ examples/hybrid_dummy.py
 ├─ examples/module_contract_demo.py  # v1接続契約の起動例
 ├─ examples/contract_dummy.py        # 公開Contractsだけを使う機能
+├─ examples/memory_demo.py           # 8番目：Memory保存・取得・再起動
+├─ examples/memory_requester.py
+├─ examples/document_demo.py         # 9番目：Document取込・Memory連携
+├─ examples/document_requester.py
+├─ examples/cognition_demo.py        # 10番目：v1.3候補の初期学習
+├─ examples/cognition_requester.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
 ├─ tools/check_api.py              # 公開export・署名・型の一致
@@ -173,11 +179,11 @@ nymph-toolkit/
 ├─ docs/
 │  ├─ README.md
 │  ├─ NTK-Core-v0.1-Handoff-ja.md
-│  ├─ customer-guide.md             # 顧客向け契約・利用・図解・API付録
+│  ├─ customer-guide.md             # v0.9版の顧客向け図解・API付録
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
-│  ├─ getting-started.md            # v1.1.0通常導入・初回実行
-│  ├─ tutorials.md                  # 公開v1.1の8実行例・期待結果・保存物
+│  ├─ getting-started.md            # 公開v1.2.0通常導入・初回実行
+│  ├─ tutorials.md                  # 公開9例と開発候補の10番目
 │  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md
@@ -194,12 +200,15 @@ nymph-toolkit/
 │  ├─ cognition.md                   # v1.3初期学習とMemory根拠
 │  ├─ document.md                    # v1.2文書入力とMemory連携
 │  ├─ memory.md                      # v1.1保存・取得と運用
+│  ├─ validation/v1.3.md             # 開発候補のB03受入結果
+│  ├─ validation/v1.2.md             # B02受入結果
 │  ├─ validation/v1.1.md              # B01受入結果
 │  ├─ validation/v1.0.md             # B00受入結果
 │  ├─ validation/core-coverage.json  # 証拠対応の編集元
 │  ├─ validation/core-coverage.md    # 64項目・既存受入の索引
 │  ├─ validation/v0.9.md             # A09の公開前判定・公開後結果の参照先
 │  ├─ validation/docs-onboarding.md  # D01〜D04・D09の検証
+│  ├─ validation/docs-current.md     # 実装機能と資料の整合点検
 │  ├─ roadmap.md
 │  ├─ acceptance.md
 │  ├─ validation/v0.2.md
@@ -261,7 +270,7 @@ R3の配置案を各段階の実装に合わせて具体化した。Runtimeは `
 
 ### Subsystem・Adapterを追加する際の配置案
 
-R31でMemoryは`src/nymph_toolkit/subsystems/memory/`へ同梱した。公開factoryは公開Contractsだけを参照し、CoreとMemoryの保存先・判断責務を分ける。`docs/memory.md`、`docs/adr/0027-v1.1-memory.md`、`docs/validation/v1.1.md`、`examples/memory_demo.py`を配置する。その他の同梱と別配布の例を以下に示す。将来の配置・名称は提案であり、個別の分割を決定したものではない。
+Memory・Document・Cognitionは上記の場所へ同梱し、各ガイド・ADR 0027〜0029・版別validation・実行例を配置した。公開factoryは公開Contractsを利用し、Coreの履歴、Memoryの元記録、Cognitionの学習DBの所有を分ける。その他の同梱と別配布の例を以下に示す。将来の配置・名称は提案であり、個別の分割を決定したものではない。
 
 | 扱い | ソースの配置例 | 配布設定・検証の配置例 |
 |---|---|---|
@@ -273,7 +282,7 @@ R31でMemoryは`src/nymph_toolkit/subsystems/memory/`へ同梱した。公開fac
 
 依存ライブラリや対応OS、更新頻度、単独導入の必要性を基に分割を判断する。任意依存による同梱も比較対象とし、分割後のバージョンを同期するか独立させるかは後続ADRで決める。配布単位は実行プロセスと通信経路を決定しない。同梱・別配布のいずれも、実行配置はADR 0002、通信経路はADR 0015と後続判断に従う。
 
-## 実装前の判断一覧
+## 設計判断の現在の状態
 
 R16でv0.4へ着手した。後続の公開型・接続制御・保存の実装判断は[ADR 0019](adr/0019-v0.4-connections.md)を参照する。R15時点の未実装という説明を現在の全体状況と混同せず、受入・公開の完了は個別に確認する。
 
@@ -285,10 +294,10 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 | Subsystem・Adapterの同梱・分割対象、任意依存、公開import名、バージョン管理 | 各対象の実装・配布を設計する時点 | ADR 0009に関連付ける後続ADR |
 | 登録ID、重複、必須依存・解除による利用不能の通知、スナップショット、ModuleGroup | v0.3で採用。稼働中実体着脱は延期 | ADR 0016 |
 | Coreが許可する直接通信の採否 | R12で採用済み | ADR 0003の履歴とADR 0015 |
-| 候補選定・保存、初回追加と確定済み接続先の固定、起動時・ヘルスチェック時の検証、連携エラー時の中断・申請 | R14で方針を採用。未実装 | ADR 0017 |
-| 要求側選定、契約互換性、永続化、稼働通知、協調的中断・待機、ヘルス申請、履歴保存・救命措置 | R15で振る舞いを採用。未実装 | ADR 0018 |
-| 公開API・型、接続識別と競合、通知・待機の競合、保存形式・設定値、救命の具体手順 | Connectionsの対象範囲の実装前。前の計画の方式・数値は未採用案 | ADR 0018と後続ADR |
-| 時計、時刻・期間・経過時間・実行時間の意味、状態遷移、期間終了の意味 | V0.5着手時 | ADR 0004に関連付ける後続ADR |
+| 候補選定・保存、初回追加と確定済み接続先の固定、起動時・ヘルスチェック時の検証、連携エラー時の中断・申請 | R14の方針をR15/R16で具体化しv0.4に実装済み | ADR 0017〜0019 |
+| 要求側選定、契約互換性、永続化、稼働通知、協調的中断・待機、ヘルス申請、履歴保存・救命措置 | R15の振る舞いをR16で具体化しv0.4に実装済み | ADR 0018・0019 |
+| 公開API・型、接続識別と競合、通知・待機の競合、保存形式・設定値、救命の具体手順 | v0.4に採用・実装済み。v1.0の共通API基準も採用済み | ADR 0019・0026 |
+| 時計、時刻・期間・経過時間・実行時間の意味、状態遷移、期間終了の意味 | v0.5・v0.6に採用・実装済み。到達通知後の判断はNymph | ADR 0004・0020・0021 |
 | 開始時刻変更・期間変更・優先度・中断再開の詳細、競合・応答 | R18・ADR 0021に従って実装。最終受入・公開はv0.6検証記録を参照 | ADR 0004・0021 |
 | IPC、配置間契約の共通範囲、ストリーム、切断・子終了、活動管理への適用 | R19で設計採用、R20・0023でv0.7を実装。API・制約はhybrid.md | ADR 0022・1〜53 |
 | 保存対象・受付境界・結果保持・運用情報、自動再試行・復旧の範囲 | R19で採用。活動自動復元・子だけの再起動・自動再送・接続先切替は対象外 | ADR 0019〜0022・26・54〜57 |
@@ -296,7 +305,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.0の共通Contract公開範囲・互換性はADR 0026で具体化した。後続の業務契約、Subsystemの正式名称と学習・意思決定方式、Adapterの形式・権限、Personaへの修正値、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。後続の学習・意思決定方式、未実装Adapterの形式・権限、Personaへの修正値、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ## R33：DocumentとMemoryの境界
 

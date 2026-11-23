@@ -1,6 +1,6 @@
 # v1.0 Core接続契約
 
-対象はv1.0.0。[導入ガイド](getting-started.md)から通常導入できる。移行差分は[移行手順](migration-v1.md)を参照する。本資料は[R29・ADR 0026](adr/0026-v1.0-core-connection-contracts.md)で具体化した契約であり、将来のMemory等の本実装を含まない。
+v1.0.0で確立し、公開v1.2.0と開発候補v1.3.0でも維持するCore共通接続契約を説明する。[導入ガイド](getting-started.md)は公開v1.2.0を対象とする。v0.9からの移行差分は[移行手順](migration-v1.md)を参照する。本資料の対象は[R29・ADR 0026](adr/0026-v1.0-core-connection-contracts.md)の共通契約であり、業務契約は[Memory](memory.md)・[Document](document.md)・[Cognition候補](cognition.md)の各ガイドへ分ける。
 
 ## 接続までの流れ
 

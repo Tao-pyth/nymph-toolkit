@@ -10,6 +10,19 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 配布方針は、単一リポジトリでCoreとContractsを一つの配布パッケージから始め、Subsystem・Adapterを必要に応じて分割するものです。個別の分割は依存関係・独立更新・単独配布の必要性に基づいて判断します。[採用した配布方針](docs/adr/0009-package-distribution.md)
 
+## 現在使える機能と公開状態
+
+2026年11月23日の点検時点で、公開版は **v1.2.0**、このブランチの開発候補は **v1.3.0（PR #123・未マージ）** です。機能実装版、接続契約の版、配布パッケージの版を区別します。
+
+| 機能 | 実装した範囲・操作 | 利用できる版・資料 |
+|---|---|---|
+| Core・Contracts | Runtime / Registry / Connections / TaskManager、LOCALと子プロセスの併用、6区分の共通接続契約 | 公開v1.2.0に同梱。[Core API](docs/core-api.md)・[接続契約](docs/module-contracts.md) |
+| Memory Subsystem | 出典付き記録のSQLite保存、`put` / `get` / `query`（`ntk.memory.records/1`） | v1.1.0から同梱。[Memory](docs/memory.md) |
+| Document Adapter | ローカルUTF-8 txt/mdを1記録としてMemoryへ保存、`ingest`（`ntk.document.import/1`） | v1.2.0から同梱。[Document](docs/document.md) |
+| Cognition Subsystem | 区切り・概念ラベル付き例の統計学習と根拠照会、`learn` / `inspect`（`ntk.cognition.learning/1`） | 開発候補v1.3.0のみ。[Cognition](docs/cognition.md) |
+
+Agency・Persona・Sleep、Text Interaction・Web・Discord Voice・Desktop Adapterは未実装です。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)、今回の資料点検は[整合点検記録](docs/validation/docs-current.md)にまとめています。
+
 ## v1.3.0開発候補 — Cognition Subsystem
 
 R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。[利用ガイド](docs/cognition.md)、[ADR 0029](docs/adr/0029-v1.3-cognition-learning.md)、[B03検証記録](docs/validation/v1.3.md)に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。 全378テスト・10例・8環境CI・通常wheel/sdistを確認し、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)でレビューします。最終SHAと結果は[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)に記録します。
@@ -18,7 +31,7 @@ R35により、Memoryの記録へ語の区切りと概念ラベルを添え、�
 
 ## 公開済みv1.2.0 — Document Adapter
 
-R33により、ローカルUTF-8テキスト/Markdownの取込とMemory連携を実装しました。[Document利用ガイド](docs/document.md)、[ADR 0028](docs/adr/0028-v1.2-document-adapter.md)、[B02検証記録](docs/validation/v1.2.md)に契約・範囲・結果をまとめています。親[#12](https://github.com/Tao-pyth/nymph-toolkit/issues/12)・子#112〜#115をコード変更前に登録しました。R34の[PR #116](https://github.com/Tao-pyth/nymph-toolkit/pull/116)レビューで二重障害時の結果不明保持を修正し、全357テスト・9例・8環境CI・通常wheel/sdistを公開条件とします。最終SHAと公開後確認は[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録します。
+R33により、ローカルUTF-8テキスト/Markdownの取込とMemory連携を実装しました。[Document利用ガイド](docs/document.md)、[ADR 0028](docs/adr/0028-v1.2-document-adapter.md)、[B02検証記録](docs/validation/v1.2.md)に契約・範囲・結果をまとめています。親[#12](https://github.com/Tao-pyth/nymph-toolkit/issues/12)・子#112〜#115をコード変更前に登録しました。R34の[PR #116](https://github.com/Tao-pyth/nymph-toolkit/pull/116)レビューで二重障害時の結果不明保持を修正し、全357テスト・9例・8環境CI・通常wheel/sdistを確認して公開しました。最終SHAと公開後確認は[#117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
 公開済み配布版は1.2.0です。`python examples/document_demo.py`が9番目の実行例です。1ファイルを1記録に保存し、Memory上限超過は保存せず返します。PDF・URL・分割取込・学習は含めません。[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)から取得できます。
 
@@ -32,9 +45,9 @@ R31により経験・知識と出典の最小保存/取得を実装しました�
 
 CoreとSubsystem・Adapterをつなぐ6区分の[接続契約](docs/module-contracts.md)を整備しました。公開ContractsのProtocol、登録前検証、安定API基準、両種別・4配置の契約試験を提供します。v0.9から必要なAPI整理を含むため、[移行手順](docs/migration-v1.md)を確認してください。[ADR 0026](docs/adr/0026-v1.0-core-connection-contracts.md)に判断を記録しています。
 
-配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開対象とします。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録します。
+配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。各例は後処理を終えると終了します。本番の会話・学習Subsystem、常駐アプリ、GUIは含まれません。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.3.0はCognitionと10番目の例を追加します。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -53,7 +66,7 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 
 | やりたいこと | 最初に読む資料 | 確認できること |
 |---|---|---|
-| 導入・接続の全体像を説明する | [顧客向け契約・利用ガイド（v0.9版）](docs/customer-guide.md) | 図解付きの現行契約・設定・運用と開発者向けAPI付録 |
+| 導入・接続の全体像を説明する | [Architecture](docs/architecture.md) → [6契約](docs/module-contracts.md)・各機能ガイド | 現在の実装・契約・公開範囲。旧版の図解は[顧客ガイド（v0.9版）](docs/customer-guide.md) |
 | 公開版を試す | [インストールと最初の実行](docs/getting-started.md) → [9つの実行例](docs/tutorials.md) | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
 | 機能を接続する | [Architecture](docs/architecture.md) → [Core API](docs/core-api.md) | 責務と配置、現在の契約、各機能Docsへの入口 |
 | 開発に参加する | [参加方針](CONTRIBUTING.md) → [Issue運用](docs/issue-workflow.md) → [開発手順](docs/development.md) | 着手前の課題管理、editable環境、テストと配布検証 |
