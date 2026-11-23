@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-23",
-  "review_note": "R36: reviewed Core v1 contracts, Memory/Document/Cognition, release status, all 25 PDF pages and update/acceptance policy",
+  "review_note": "R36: reviewed current feature descriptions and all Windows pages; clarified Linux CJK PDF verification and failed-build diagnostics",
   "sources": {
     "AGENTS.md": "6ca437f0ae186fcf280261d446263ed675255bf73d6069c767b614f16d7c6fd0",
     "CHANGELOG.md": "755048091f71db3f0abfd94f1ac078b258a23253d735e342e57448e44478847f",
@@ -47,7 +47,7 @@
     "docs/connections.md": "68d65dae4a21503d07a601bcbe040e444dfddbf8fe26b2c45e1059e023e64e87",
     "docs/contracts-v1.json": "b29b9a7ecb827d3cd5afb9de7e5dac254c19fde88a289686ed2e60decbd3d0ba",
     "docs/core-api.md": "aef7b2b5948ea84ece4c79a8a73754fdf897291db4a0e9d7f3d4124c88ffaf11",
-    "docs/customer-guide-authoring.md": "f231688c093009223ebdf84ee7ac6b28aeb5be5c1f50ec53545622c299a5b9ba",
+    "docs/customer-guide-authoring.md": "c404d1ee82534a2975bfac1bbfcf7caf8988d0c03f104c7b060ab0afd62d5cc8",
     "docs/customer-guide.md": "ec6c203d60cbaebc60789a46052c65bd2e94edd76f3624f6b183a1b6e4d457ca",
     "docs/development.md": "df8d21011a0567b04422904f2f23319466b59c0a9dd1fa20ddea3e961156fcfb",
     "docs/document.md": "95f0a12797e6c058a25719ac34d0d4fbb7b7d8cb94eafa6cde12c95d5c431c19",

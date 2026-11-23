@@ -53,4 +53,6 @@ PDFはA4、HTMLはCSSと描画済みSVGを内包する。本文と図の閲覧�
 
 Git管理対象は原稿・証跡・生成/検査コードで、重複する生成PDF/HTMLとnode_modulesは対象外。引継ぎ書には原稿・本手順・ADR・検証記録を収録する。検証結果は[顧客資料の検証記録](validation/customer-guide.md)へ残す。
 
+失敗したCIの生成物は調査用の`customer-docs-diagnostics-<SHA>`へ7日間だけ保存する。これは配布用の検証合格を意味しない。PDFのページ数/寸法はpypdf、原文タイトル/本文の照合とPNG化はPDFiumを用いる。ブラウザーとCJKフォントによる抽出文字の差を、タイトル検査の省略で回避しない。
+
 CI環境の参考：[PlaywrightのCI手順](https://playwright.dev/docs/ci)、[GitHub artifact保存](https://github.com/actions/upload-artifact)。

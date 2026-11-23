@@ -13,6 +13,8 @@
 
 生成物はcleanな最終コミットで再生成する。最終SHA、Linux ChromiumでのCustomer Docs CIと製品8環境CI、通常wheel/sdistの結果、artifact取得の確認は[#125](https://github.com/Tao-pyth/nymph-toolkit/issues/125)と[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)へ記録する。CIの自動検査は意味・可読性の人手確認を完全には代替しない。旧版の公開済み添付は変更しない。
 
+Linuxの初回CIでは生成/配置は成功したが、pypdfがNotoの中黒U+30FBをU+2027として抽出し、表紙タイトル照合が失敗した。調査用artifactを取得し、表示とPDFiumによる原文どおりの抽出を確認した。ページ数/寸法はpypdf、タイトル/本文はPDFiumで照合するよう修正し、タイトル検査を維持する。失敗artifactは配布用と別名で7日間だけ保存する。
+
 以下はR27の旧v0.9版の記録であり、現在の未実装・未修正の一覧ではない。
 
 ## R27の初版記録（履歴）

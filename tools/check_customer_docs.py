@@ -79,27 +79,39 @@ def artifacts(directory, root=ROOT, *, render_dir=None, require_clean=False):
     assert f'content="{manifest["source_sha256"]}"' in html
     assert f'content="{manifest["reference"]}"' in html
     from pypdf import PdfReader
+    import pypdfium2
     pdf = PdfReader(directory / (stem + ".pdf"))
     assert len(pdf.pages) == manifest["pages"] == len(manifest["inspection"]["pages"])
     assert manifest["inspection"]["diagrams"] == manifest["diagrams"]
     sections = (root / "docs/customer-guide.md").read_text(encoding="utf-8").split("\n<!-- pagebreak -->\n")
     assert len(sections) == len(pdf.pages)
-    for i, (page, section, measured) in enumerate(zip(pdf.pages, sections, manifest["inspection"]["pages"]), 1):
-        assert measured["availableGap"] >= 10 and not measured["outside"]
-        title = re.search(r"^#{1,2} (.+)$", section, re.M).group(1)
-        text = page.extract_text()
-        assert compact_text(title) in compact_text(text), f"PDF page {i} title missing: expected {title!r}, extracted {text[:400]!r}"
-        assert len(text.strip()) > 80 and "\ufffd" not in text, f"PDF page {i} text is missing/corrupt"
-        assert abs(float(page.mediabox.width) - 595.28) < 2 and abs(float(page.mediabox.height) - 841.89) < 2
     if render_dir is not None:
-        import pypdfium2
         render_dir.mkdir(parents=True, exist_ok=True)
-        with pypdfium2.PdfDocument(directory / (stem + ".pdf")) as rendered:
-            for i in range(len(rendered)):
-                page = rendered[i]
-                bitmap = page.render(scale=1.4)
-                bitmap.to_pil().save(render_dir / f"page-{i + 1:02}.png")
-                bitmap.close(); page.close()
+    with pypdfium2.PdfDocument(directory / (stem + ".pdf")) as rendered:
+        assert len(rendered) == len(pdf.pages)
+        for i, (page, section, measured) in enumerate(zip(pdf.pages, sections, manifest["inspection"]["pages"]), 1):
+            assert measured["availableGap"] >= 10 and not measured["outside"]
+            title = re.search(r"^#{1,2} (.+)$", section, re.M).group(1)
+            assert abs(float(page.mediabox.width) - 595.28) < 2 and abs(float(page.mediabox.height) - 841.89) < 2
+            rendered_page = rendered[i - 1]
+            try:
+                # PDFium preserves Chromium/Noto CJK punctuation; pypdf can
+                # substitute U+2027 for U+30FB when decoding these font maps.
+                text_page = rendered_page.get_textpage()
+                try:
+                    text = text_page.get_text_range()
+                finally:
+                    text_page.close()
+                assert compact_text(title) in compact_text(text), f"PDF page {i} title missing: expected {title!r}, extracted {text[:400]!r}"
+                assert len(text.strip()) > 80 and "\ufffd" not in text, f"PDF page {i} text is missing/corrupt"
+                if render_dir is not None:
+                    bitmap = rendered_page.render(scale=1.4)
+                    try:
+                        bitmap.to_pil().save(render_dir / f"page-{i:02}.png")
+                    finally:
+                        bitmap.close()
+            finally:
+                rendered_page.close()
     return manifest
 
 
