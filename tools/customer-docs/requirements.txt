@@ -1,0 +1,4 @@
+# PDF inspection/rendering only; not an NTK runtime dependency.
+pypdf==6.21.4
+pypdfium2==5.13.0
+Pillow==13.0.0

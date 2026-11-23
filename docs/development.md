@@ -1,6 +1,6 @@
 # 開発準備とGit運用
 
-本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v0.9.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.3.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
 
 ## 公開準備時の環境
 
@@ -22,7 +22,14 @@ python -m venv .venv
 .venv/Scripts/python.exe examples/task_manager_demo.py
 .venv/Scripts/python.exe examples/activity_changes_demo.py
 .venv/Scripts/python.exe examples/hybrid_demo.py
+.venv/Scripts/python.exe examples/module_contract_demo.py
+.venv/Scripts/python.exe examples/memory_demo.py
+.venv/Scripts/python.exe examples/document_demo.py
+.venv/Scripts/python.exe examples/cognition_demo.py
 .venv/Scripts/python.exe -W error tools/validate_hybrid_load.py --output .git/v08-short.json
+.venv/Scripts/python.exe tools/check_api.py
+.venv/Scripts/python.exe tools/check_contracts.py
+.venv/Scripts/python.exe tools/check_completion.py
 .venv/Scripts/python.exe tools/check_docs.py
 .venv/Scripts/python.exe -m build
 .venv/Scripts/python.exe tools/check_dist.py
@@ -32,13 +39,13 @@ Linuxでは `.venv/Scripts/python.exe` を `.venv/bin/python` に置き換える
 
 distには対象版のwheelとsdistを一つずつ置く。古い版が残っている場合は対象を確認して作業フォルダ外へ保管する。check_distは新規仮想環境を作り、wheelの通常インストール、公開import・LICENSE・メタデータ、sdistから同一wheelへの再ビルドを確認する。開発用のeditable installだけで配布検証を済ませない。
 
-CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Runtime・Registry・Connections・TaskManagerのダミー実行、ビルドと配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)、登録・依存管理と複数対象の実行は[registry.md](registry.md)、接続・保存は[connections.md](connections.md)、活動管理は[task-manager.md](task-manager.md)に記載する。v0.5は[当時の検証記録](validation/v0.5.md)、v0.6の変更・中断再開は[v0.6の検証記録](validation/v0.6.md)を参照する。
+CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Core/接続契約/Memory/Document/Cognitionの10実行例、短い4配置負荷、API・契約基準・64項目・文書同期、ビルドと通常配布検証を行う。Runtimeの操作・キャンセル・失敗通知は[runtime.md](runtime.md)、登録・依存管理と複数対象の実行は[registry.md](registry.md)、接続・保存は[connections.md](connections.md)、活動管理は[task-manager.md](task-manager.md)に記載する。v0.5は[当時の検証記録](validation/v0.5.md)、v0.6の変更・中断再開は[v0.6の検証記録](validation/v0.6.md)を参照する。
 
 接続の性能測定は `python tools/benchmark_connections.py --iterations 5000 --initial-connections 20 --samples 3` で行う。実行環境・生の各標本・中央値をJSONで表示する。初回確立の設定保存、継続直接呼出し、Core経由、稼働通知と履歴排出、ヘルス申請を分ける。測定値は環境依存で、合否を固定の速度閾値で判定しない。
 
-## v0.9の完成監査
+## v0.9の完成監査（当時の手順）
 
-v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下は同版を基点にした開発・変更時の再検証手順であり、新しいリリースの作成指示ではない。[Core API](core-api.md)と[証拠対応表](validation/core-coverage.md)を読み、次を実行する。
+v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下のコマンド、14＋92件・6例という件数はv0.9.0のcheckoutで使った当時の手順である。現在のcheckoutでは上の環境構築と末尾のv1.3節を使い、Core 15件・Contracts 98件・10例を照合する。現行の意味と証拠は[Core API](core-api.md)・[証拠対応表](validation/core-coverage.md)を参照する。
 
 ```powershell
 .venv/Scripts/python.exe tools/check_api.py
@@ -162,18 +169,24 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ## 顧客向け資料の配布版
 
-[契約・利用ガイド](customer-guide.md)のPDF・HTML生成は、Pythonの開発環境とは分離した任意の文書作成作業である。[生成と表示確認の手順](customer-guide-authoring.md)に従い、本文・図・APIの照合、全ページの表示、引継ぎ書同期を確認する。Node依存をNTK実行時や通常のwheel検証へ追加しない。結果は[顧客資料の検証記録](validation/customer-guide.md)へ記録する。
+[契約・利用ガイド](customer-guide.md)のMarkdown・PDF・HTMLは主要Docsであり、機能・契約・利用・制約変更時の同期・生成・検証を必須とする。生成依存はPython製品の実行環境とは分離する。[生成と表示確認の手順](customer-guide-authoring.md)に従い、本文・図・APIの照合、全ページの表示、引継ぎ書同期を確認する。Node依存をNTK実行時や通常のwheel検証へ追加しない。結果は[顧客資料の検証記録](validation/customer-guide.md)へ記録する。
 
-## v1.0候補の契約変更
+## v1.0で確立した接続契約の確認
 
 親#10・子#98〜#102とADR 0026に基づく。`python tools/check_contracts.py`で安定対象を照合する。差分が出たら互換性・移行・Issue/ADRを先に確認し、基準JSONだけを書き換えて通さない。`python examples/module_contract_demo.py`は7番目の実行例。[6契約](module-contracts.md)・[移行](migration-v1.md)・[B00検証](validation/v1.0.md)を参照する。
 
 ## v1.1 Memoryの開発・配布確認
 
-[Memory](memory.md)と[ADR 0027](adr/0027-v1.1-memory.md)を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。全体検証は既存手順に加えてMemoryの8番目の例を実行する。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。配布試験は`python -m build --outdir .git/v11-dist`、`python tools/check_dist.py --dist-dir .git/v11-dist`を使う（対象ディレクトリには候補wheel/sdist各1個だけを置く）。
+[Memory](memory.md)と[ADR 0027](adr/0027-v1.1-memory.md)を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。Memoryは8番目の例。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。v1.1当時は`.git/v11-dist`を使ったが、現在の配布検査は末尾のv1.3節を使う。
 
 ## v1.2 Documentの開発確認
 
-公開v1.1.0の通常導入と区別し、このcheckoutをeditable導入して[Documentガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
+以下はv1.2開発時点の手順。現在の開発候補は末尾のv1.3節を参照する。checkoutをeditable導入して[Documentガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
 
-配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。この検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
+配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。v1.2当時の検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
+
+## v1.3 Cognitionの開発確認
+
+このcheckoutを`python -m pip install -e .`で導入し、版が1.3.0であることを確認する。[Cognitionガイド](cognition.md)・[ADR 0029](adr/0029-v1.3-cognition-learning.md)に従い、`python examples/cognition_demo.py`と`python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v`を実行する。公開v1.2のwheelにはCognitionは含まれない。
+
+現在の通常配布検査は`python -m build --outdir .git/v13-dist`、`python tools/check_dist.py --dist-dir .git/v13-dist`で1.3.0を期待する。全回帰、10例、短い4配置負荷、sdist同一wheel再構築、API/契約/64項目/Docs同期を確認する。公開済みタグ・添付と現行版向け導入ガイドを開発候補へ無断で置き換えない。

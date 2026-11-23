@@ -1,5 +1,26 @@
 # 顧客向け契約・利用ガイドの検証記録
 
+## R36の主要Docs化（v1.3候補）
+
+2026年11月23日、親#13・子#124/#125、ADR 0030で現在の原稿と必須同期/生成を更新した。25ページ・図14点にCoreの6契約とMemory/Document/Cognitionを収録し、公開v1.2と候補v1.3を区別する。
+
+- Windows / Node 24.22.3 / pnpm 11.25.0 / EdgeでA4 PDF・HTML・原稿コピー・生成JSONを生成。25ページ・SVG図14点、全ページの本文とタイトル、A4寸法、配置、ハッシュの検査が成功した。CJKフォントが等価な部首文字で抽出される場合はNFKCで比較する。
+- PDF全25ページをPNG化して目視し、表・図・コード・日本語・フッターを確認した。密なページ10・15・17・22も拡大して確認。保存HTMLはHTTP/HTTPSを遮断しても25ページ・図14点を表示し、外部要求0・スクリプト0・実行エラー0だった。
+- 同期対象119ファイル。原稿はCore/API/共通接続契約、Memory・Document・Cognitionの各ガイドと実装を照合した。原稿/公開状態と既知課題#94の説明を更新し、採用済みと将来機能を区別した。
+- 同期検査の回帰7件を追加。実装の追加/変更/削除、ADR変更、版/公開状態、古い表紙、改変した生成物・原稿、別コミットの配布物、日本語正規化を確認した。証跡の更新で本文レビューを代替しない。
+- Windows / CPython 3.15.2、警告をエラーとする全385テストが158.276秒で成功。製品src・公開契約・pyprojectは今回変更していない。
+- 78収録元の引継ぎ書、78 Markdown・1,370ローカルリンク・UTF-8/LF・LICENSE、Core 15/Contracts 98、v1契約基準、64項目/7群/299テスト参照を照合した。これらの件数は今回のローカル確認時点。
+
+生成物はcleanな最終コミットで再生成する。最終SHA、Linux ChromiumでのCustomer Docs CIと製品8環境CI、通常wheel/sdistの結果、artifact取得の確認は[#125](https://github.com/Tao-pyth/nymph-toolkit/issues/125)と[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)へ記録する。CIの自動検査は意味・可読性の人手確認を完全には代替しない。旧版の公開済み添付は変更しない。
+
+Linuxの初回CIでは生成/配置は成功したが、pypdfがNotoの中黒U+30FBをU+2027として抽出し、表紙タイトル照合が失敗した。調査用artifactを取得し、表示とPDFiumによる原文どおりの抽出を確認した。ページ数/寸法はpypdf、タイトル/本文はPDFiumで照合するよう修正し、タイトル検査を維持する。失敗artifactは配布用と別名で7日間だけ保存する。
+
+生成入力のmjs/CSSも.gitattributesでLFへ統一した。Windowsの自動CRLF変換によりLinux生成物の入力ハッシュが別環境で不一致になるのを防ぐ。実行内容やレイアウトの変更ではない。
+
+以下はR27の旧v0.9版の記録であり、現在の未実装・未修正の一覧ではない。
+
+## R27の初版記録（履歴）
+
 確認日：2026年11月22日。対象は[customer-guide.md](../customer-guide.md)と任意のPDF生成ツール。親[#90](https://github.com/Tao-pyth/nymph-toolkit/issues/90)、文書子[#95](https://github.com/Tao-pyth/nymph-toolkit/issues/95)、生成・同期子[#96](https://github.com/Tao-pyth/nymph-toolkit/issues/96)で追跡する。成果は[PR #93](https://github.com/Tao-pyth/nymph-toolkit/pull/93)に含める。
 
 ## 対象と根拠

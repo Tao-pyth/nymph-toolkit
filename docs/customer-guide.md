@@ -1,26 +1,25 @@
-# NTK Core 契約・利用ガイド
+# NTK 契約・利用ガイド
 
-**Nymph Toolkit / 公開 v0.9.0 / 2026年11月22日版**
+**Nymph Toolkit / 対象 v1.3.0（開発候補） / 公開版 v1.2.0 / 2026-11-23**
 
 ## この資料で分かること
 
-NTK Coreは、複数の機能を組み合わせて動かすためのPython基盤です。機能の登録、接続、活動の実行管理、状態と履歴の記録を担います。本資料は、導入を検討する方と、Subsystem・Adapterを接続する開発者の両方を対象とします。
+NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognitionの実装、使い方、制約をまとめます。
 
-**Nymphが活動を決め、Coreがその実行を管理します。** Coreの完成とは、合意したこの基盤機能の完成を指します。会話・学習・人格を備えたNymph全体の完成を指すものではありません。
+**Nymphが活動を決め、Coreが実行を管理します。** 自律的な活動決定、自然な会話、人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
 
-| 知りたいこと | 読む章 |
+| 読みたい内容 | 章 |
 |---|---|
-| 導入すると何ができるか | 01〜03：構成・実行配置・起動と停止 |
-| 機能同士をどうつなぐか | 04〜07：登録・宣言・接続・呼出し・ストリーム |
-| 活動をどう制御するか | 08〜09：時刻と期間・変更・中断と再開 |
-| 障害・保存・再起動をどう扱うか | 10〜12：通知・後処理・履歴・再登録 |
-| 何を設定し、どう使い始めるか | 13〜14：設定値・実行手順・確認点 |
-| 実装時にどのAPIを見るか | 15〜16：公開入口・共有データの参照表 |
-| 適用範囲と検証上の限界 | 17：既知の課題・用語・関連資料 |
+| Coreの構成・配置・起動停止 | 01〜03 |
+| 登録・接続・操作・ストリーム | 04〜07 |
+| 活動・失敗・保存・再起動・設定 | 08〜13 |
+| 6区分の接続契約と3つの実機能 | 14〜18 |
+| 導入・実行例・開発者向けAPI | 19〜23 |
+| 適用範囲・検証・参照先 | 24 |
 
-ここでいう「契約」は、APIの入力・結果・状態・失敗時の振る舞いを意味します。章分けは説明用です。v1.0.0で検討するModule／Lifecycle／Capability／Communication／Task／Error Contractの正式な区分や互換性保証を、この資料で新たに確定するものではありません。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.3.0**はCognitionを追加し、PR #123でレビュー中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
 
-本文と図は公開v0.9.0の実装を説明します。図で省略した分岐は本文・契約表で補います。公開APIの正確な署名は[API一覧](api-reference.md)、操作の詳しい定義は[Core API](core-api.md)を参照してください。
+本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名は[API一覧](api-reference.md)、意味は[Core API](core-api.md)と各機能ガイドを参照してください。
 
 <!-- pagebreak -->
 
@@ -48,7 +47,7 @@ flowchart TB
 | 活動の時刻監視、変更と状態通知 | 活動内容・優先度・終了・再開の判断 |
 | 保存と障害通知、後処理を待つ仕組み | 安全な中断点、所有する資源の解放 |
 
-CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。本番のMemory・Agency・Persona等は、現在のCore配布に含まれません。
+CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognitionは開発候補に同梱します。Agency・Persona・Sleep等は未実装です。
 
 <!-- pagebreak -->
 
@@ -433,13 +432,155 @@ flowchart TB
 
 <!-- pagebreak -->
 
-## 14 使い始める：公開版で動きを確認する
+## 14 Core接続契約：共通の6区分
 
-CPython 3.12以上を用意します。v0.9.0で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
+機能はCore内部を直接importせず、公開Contractsの窓口を使います。共通契約はv1.0で確立し、Memory・Document・Cognitionも同じ基盤へ接続します。
 
-1. [v0.9.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.9.0)からwheel・sdist・SHA256SUMSを取得し、ハッシュを照合します。
+| 契約区分 | 機能側とCoreが共有する内容 |
+|---|---|
+| Module | ID・種別・依存、実装版と提供契約、factory・設定・配置 |
+| Lifecycle | start/run/stop、依存順起動・逆順停止、部分初期化の後処理 |
+| Capability | 契約ID/版・操作名・ASYNC・ストリーム/実行処理の宣言 |
+| Communication | 候補・要求側選定・bind固定・prepare・直接/Core経由 |
+| Task | 活動の登録・開始・変更・通知・終了。判断はNymph |
+| Error | 値で返す業務失敗/容量/連携失敗と、例外・結果不明の区別 |
+
+```mermaid
+flowchart LR
+    D[登録情報と設定] --> V[validate_module_registration]
+    V --> G[Groupへ登録]
+    G --> F[factoryとstartで提供を登録]
+    F --> R[run以降に接続して利用]
+```
+
+図11：登録前検証は宣言と設定を確認します。factoryのimport・起動・保存や、機能の実動作の保証は行いません。提供ハンドラーは初期化完了までに登録します。
+
+**移行時の注意**：v0.9のCoreClient.requestは公開APIから除外しました。名前付き管理APIと業務契約の操作を使います。ModuleContextの内部資源管理メソッドへの依存も避けます。Core 15名・Contracts 98名の共通API基準と、各業務契約の版を分けて確認してください。
+
+型・互換性の境界は[共通接続契約](module-contracts.md)、変更点は[v1.0移行手順](migration-v1.md)にあります。
+
+<!-- pagebreak -->
+
+## 15 Memory：経験・知識を出典付きで保存する
+
+Memoryはv1.1から同梱しています。契約は`ntk.memory.records/1`、操作はすべてASYNCです。記録の内容や真偽をCoreやMemoryが判断することはありません。
+
+```mermaid
+flowchart LR
+    N[要求側] -->|put / get / query| M[Memory]
+    M -->|commitしてから成功| D[(専用SQLite)]
+    D --> M
+    M -->|元記録・保存順・保存時刻| N
+```
+
+図12：Coreの接続・活動履歴とMemoryの経験・知識は別の保存物です。
+
+| 操作・入力 | 成功結果と制約 |
+|---|---|
+| put(record) | record_id・kind・content・source_kind・source・occurred_atを保存 |
+| get(record_id) | 元の6項目にsequence・stored_atを加えた記録 |
+| query(kind, source_kind, after, limit) | 完全一致フィルタと保存順ページ。最大8件 |
+| source_kind | observed / reported / inferred / imagined / dream。真偽の順位ではない |
+| 保存上限 | 1記録の正規化JSONが4096 bytes以下。ASCII escapeで計算 |
+| 同じID | 同じ正規化内容は冪等。異なる内容はmemory.conflict |
+
+factoryは`nymph_toolkit.subsystems.memory:factory`、設定は絶対ファイルパス`path`です。1つのDBを1つの実体が所有します。SQLite対応Python、フレーム上限65536 bytes以上を使います。
+
+同時受付は1件です。未知形式・破損を自動上書きしません。取消や期限切れは未保存保証ではなく、要求側がIDで結果を確認します。編集・削除・忘却・意味検索・記憶統合は未実装です。[Memoryガイド](memory.md)
+
+<!-- pagebreak -->
+
+## 16 Document：ローカル文書をMemoryへ取り込む
+
+Documentはv1.2から同梱するAdapterです。契約`ntk.document.import/1`の`ingest(request)`で、明示したUTF-8 txt/mdを1件のMemory記録にします。
+
+```mermaid
+flowchart LR
+    N[要求側] -->|相対パス・ID・区分・時刻| A[Document Adapter]
+    F[root内のtxt/md] -->|上限付き読込| A
+    A -->|出典URIと元bytesのSHA-256を付与| M[Memory put]
+    M -->|保存結果| N
+```
+
+図13：内容の学習はDocumentの責務に含めません。Cognitionへの学習要求は別の操作です。
+
+| 項目 | 契約 |
+|---|---|
+| 設定 | 既存絶対ディレクトリroot、選択済みmemory_module_id |
+| ingest入力 | path・record_id・kind・source_kind・occurred_atの5項目 |
+| ファイル | 通常ファイル、UTF-8、最大65536 bytes。先頭BOMのみ除去 |
+| Memory上限 | 出典URI/hash等も含め4096 JSON bytes。超過は保存せず返す |
+| 再取込 | 同じID/内容は冪等。本文・出典・区分等が違えば競合 |
+
+root外・上位移動・不正文字コード・空白のみ/NUL本文は拒否します。root制限は敵対的なファイル交換へのセキュリティ境界ではありません。自動分割・監視取込、PDF/Office/HTML/URL・OCRは未実装です。
+
+接続先は要求側が指定し、Core許可後に固定して再利用します。同時受付1件。結果不明ならMemoryのgetで照合し、自動再送しません。[Documentガイド](document.md)
+
+<!-- pagebreak -->
+
+## 17 Cognition：注釈から初期の規則性を学ぶ
+
+**開発候補v1.3のみ**のSubsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
+
+```mermaid
+flowchart TB
+    N[要求側] -->|記録ID・tokens・concepts| L[Cognition learn]
+    M[Memory get] -->|本文・出典区分・記録| L
+    L -->|本文とtokensの整合を確認| D[(学習専用SQLite)]
+    D --> I[inspect：頻度・局所語順・関連・根拠]
+    I --> N
+```
+
+図14：元記録はMemory、学習例はCognition、接続許可と実行管理はCoreが担当します。学習を始めるか、何を使うかは要求側が決めます。
+
+契約は`ntk.cognition.learning/1`のASYNC `learn` / `inspect`。factoryは`nymph_toolkit.subsystems.cognition:factory`、設定は専用DBの絶対`path`と選択済み`memory_module_id`です。
+
+| 観察できる値 | 意味 |
+|---|---|
+| count / documents | 語の出現回数 / 語を含む学習例数 |
+| successors / end_probability | 例内の次語と終端の相対頻度 |
+| concepts / support_ratio | 語とラベルを共に含む例の割合。真偽・理解の確率ではない |
+| source_counts / evidence | 出典区分、Memory ID・fingerprint・学習sequence |
+
+語の区切りと概念ラベルは教師情報です。自律的な分節・概念形成、完全な構文/意味理解、会話生成を実現したものではありません。LLM・外部モデルを使いません。[Cognitionガイド](cognition.md)
+
+<!-- pagebreak -->
+
+## 18 Cognition：入力・失敗・保存の扱い
+
+以下はMemoryに本文「猫 は 眠る」が保存済みで、Cognitionへの接続が準備済みの場合の操作例です。
+
+```python
+receipt = await link.acall("learn", "cat-sleep",
+    tokens=["猫", "は", "眠る"],
+    concepts=["animal", "sleep"], timeout=10)
+profile = await link.acall("inspect", "猫",
+    source_kind="observed", after=0, limit=8, timeout=5)
+```
+
+成功値のdictか、失敗値かを確認してから結果を読みます。外側の期限はシナリオに応じて設定し、Cognition内部の個別Memory RPCの5秒と区別します。
+
+| 入力・保存 | 制約 |
+|---|---|
+| tokens / concepts | 1〜32語 / 0〜8ラベル。各非空・空白/NULなし・UTF-8 64 bytes以下 |
+| 本文との整合 | 本文の空白除去とtokensの連結が一致。ラベル重複は拒否 |
+| 学習保存 | 最大256例。commit後にreceiptを返す。再起動後に統計を再現 |
+| 再要求 | 同じID/記録/注釈は冪等。異なる内容はcognition.conflict |
+| inspect | 次語/概念は上位8件と総数。根拠は最大8件の保存順ページ |
+
+`cognition.invalid/full/storage`、Memoryの業務失敗、`TemporaryUnavailable`を区別します。LinkFailureではclose後、中断IDに対する完了報告と対象Memoryへのhealth申請を行います。結果不明等の例外経路はIDなしの完了報告をせず、元の例外を保持します。停止中はhealthを申請しません。
+
+取消・期限切れは未学習保証ではありません。要求側が接続状態を確認し、同じID/注釈の明示再要求で結果を照合します。元処理の自動再送・接続先切替は行いません。訂正・削除・忘却・長期/大規模性能は後続課題です。
+
+<!-- pagebreak -->
+
+## 19 使い始める：公開版で動きを確認する
+
+CPython 3.12以上を用意します。現行版で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
+
+1. [v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)からwheel・sdist・SHA256SUMSを取得し、ハッシュを照合します。
 2. 新しいvenvへwheelを通常インストールします。wheelには実行例が含まれないため、同版sdistのexamplesを使います。
-3. 版が0.9.0、import元がvenvのsite-packagesであることを確認します。
+3. 公開版が1.2.0、import元がvenvのsite-packagesであることを確認します。
 4. Runtimeから順に例を実行し、出力と終了コードを確認します。
 
 コマンド一式は[通常導入ガイド](getting-started.md)にあります。開発用の`pip install -e .`は作業ツリーを読む方式で、公開wheelの通常導入とは分けます。
@@ -452,12 +593,15 @@ CPython 3.12以上を用意します。v0.9.0で検証済みなのはWindows／L
 | task_manager_demo.py | 予定到達後の継続、明示終了、再起動後の履歴 |
 | activity_changes_demo.py | 予定・優先度変更、中断・同じ処理からの再開 |
 | hybrid_demo.py | 子へのRPC・ストリーム・遠隔活動・後処理確認 |
+| module_contract_demo.py | 6区分の接続契約・登録前検証 |
+| memory_demo.py / document_demo.py | 保存・文書取込・再起動取得 |
+| cognition_demo.py（候補のみ） | 注釈付き学習・根拠・出典区分・再起動 |
 
 FileStoreを使う例の履歴は一時フォルダへ保存され、通常終了時に消えます。結果を残す場合は[実行例ガイド](tutorials.md)のログ保存手順を使います。各例の正常停止と残存タスク0を確認してから、独自機能の接続へ進んでください。
 
 <!-- pagebreak -->
 
-## 14 実装例：最小のサービスを動かす
+## 20 実装例：最小のサービスを動かす
 
 最小のRuntime利用例です。環境構築後にPythonファイルへ保存して実行できます。サービスのフックは、初期化・主処理・後処理を分けるための入口です。
 
@@ -488,16 +632,17 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-同梱の6例も後処理後に終了するデモで、常駐するNymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
+公開版の9例と開発候補の10番目の例も後処理後に終了するデモで、常駐するNymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
-## 15 開発者向け付録：公開入口と責任
+## 21 開発者向け付録：公開入口と責任
 
-Coreの公開入口は以下の14件です。共有型・列挙値・例外は`nymph_toolkit.contracts`からimportします。表は所有関係の案内で、全引数の一覧は[生成API資料](api-reference.md)にあります。
+Coreの公開入口は以下の15件です。共有型・列挙値・例外は`nymph_toolkit.contracts`からimportします。表は所有関係の案内で、全引数の一覧は[生成API資料](api-reference.md)にあります。
 
 | Coreの公開名 | 利用する場面 | 所有・終了の責任 |
 |---|---|---|
+| validate_module_registration | import/起動/保存前の登録検証 | 宣言・設定の妥当性を確認 |
 | Runtime | 実行入口の起動・待機・停止 | 呼出側が同じイベントループで操作 |
 | Registry | 登録・識別・依存確認 | 作成スレッドで操作 |
 | ModuleGroup | 複数サービスの組立て | Runtimeにライフサイクルを所有させる |
@@ -515,15 +660,15 @@ Coreの公開入口は以下の14件です。共有型・列挙値・例外は`n
 
 利用順序は、**Groupを作る → 機能・契約を宣言する → 必要な管理機能を取り付ける → Runtimeで開始する → run以降に操作する → Runtimeで後処理まで待つ**、が基本です。
 
-HybridGroupのfactoryではModuleContextの`provide`、`provide_stream`、`provide_executor`で提供内容を登録します。同じ操作名へ通常ハンドラーとストリーム受信を重複登録しません。`submit_remote`へ渡すのは登録済みの実行処理IDであり、関数実体ではありません。
+HybridGroupのfactoryまたはasync startの完了前に、ModuleContextの`provide`、`provide_stream`、`provide_executor`で提供内容を登録します。同じ操作名へ通常ハンドラーとストリーム受信を重複登録しません。`submit_remote`へ渡すのは登録済みの実行処理IDであり、関数実体ではありません。
 
 基盤のstart/run/stopがAPI一覧に載っていても、Runtime管理中に別の所有者が並行して呼ぶ使い方にはしません。詳細は[Core API](core-api.md)、[ハイブリッド実行](hybrid.md)を参照してください。
 
 <!-- pagebreak -->
 
-## 16 開発者向け付録：共有データと結果の読み方
+## 22 開発者向け付録：共有データと結果の読み方
 
-Contractsは型・状態・結果を共有するためのパッケージです。公開92名の署名と定義は[API一覧](api-reference.md)に収録しています。実装で使う主なまとまりは次のとおりです。
+Contractsは型・状態・結果を共有するためのパッケージです。公開98名の署名と定義は[API一覧](api-reference.md)に収録しています。実装で使う主なまとまりは次のとおりです。
 
 | 区分 | 主な型・値 | 確認する内容 |
 |---|---|---|
@@ -540,7 +685,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 <!-- pagebreak -->
 
-## 16 共有データ：活動・配置・結果
+## 23 共有データ：活動・配置・結果
 
 活動と通信の状態は、それぞれの公開型で確認します。遠隔で報告が失われた場合は、Coreが未確認の値を正常結果で埋め合わせることはありません。
 
@@ -560,19 +705,19 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 <!-- pagebreak -->
 
-## 17 適用範囲・検証状況・参照先
+## 24 適用範囲・検証状況・参照先
 
-v0.9.0は合意したCore機能をダミーで検証した版です。公開時にはWindows／Linux・Python 3.12〜3.15の8環境、300テスト、6実行例、通常wheel導入とsdist再ビルドを確認しました。各環境での運用性能や、任意の機能実装の品質を保証する測定ではありません。
+Coreの基盤に加え、Memory・Documentと開発候補Cognitionを実機能で検証しています。Windows／Linux・Python 3.12〜3.15の8環境で回帰・通常wheel導入・sdist再ビルドを確認します。公開版は9例、候補は10例です。確定コミットの結果は[B03記録](validation/v1.3.md)とPR #123で確認し、任意の機能実装や全環境の性能を保証する測定とは区別します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
-| 既知の終了時の課題 | Windows／Python 3.15のCIで子の終了時に通信切断・後処理未確認を1件観測。再実行・手元10反復では再現せず、原因調査を継続 |
+| Windows終了時の課題 #94 | NTK所有ソケットの解放が抜ける条件を修正し、v1.0以降に含む。正常終了・後処理確認の区別は維持 |
 | 処理量と保持 | 未保存履歴、保持した活動・命令結果・通知が増え続ける運用は、使用量の確認が必要 |
 | 強制停止 | 同一プロセスの非協調処理は強制停止できない。子の強制終了でも後処理を確認できない場合がある |
 | 長時間性能 | 30分負荷はv0.8の特定コミットの測定。後続修正・各環境の全てを同じ測定結果で代表しない |
-| 将来の契約 | v1.0の契約体系化・互換性範囲は別途判断。v1.xのSubsystem名・順序・配分も提案 |
+| 後続の機能 | v1.0の共通契約は採用済み。v1.4以降の機能配分・訂正・会話・自律活動は後続判断 |
 
-現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、本番Subsystem・Adapter、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
+現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Agency・Persona・Sleep・Web/音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
 
 | 用語 | 本資料での意味 |
 |---|---|
@@ -582,6 +727,6 @@ v0.9.0は合意したCore機能をダミーで検証した版です。公開時�
 | 協調的中断 | 実行側が安全な区切りと後処理を担当して止まること |
 | 結果不明 | 処理が失敗したと確定できず、照会が必要な状態 |
 
-手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、厳密な定義は[Core API](core-api.md)・[API一覧](api-reference.md)、判断根拠は[ADR索引](adr/README.md)、製品の証拠は[v0.9検証記録](validation/v0.9.md)を参照してください。Windows終了時の調査は[課題 #94](https://github.com/Tao-pyth/nymph-toolkit/issues/94)で追跡します。
+手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、厳密な定義は[Core API](core-api.md)・[API一覧](api-reference.md)、判断根拠は[ADR索引](adr/README.md)、製品の証拠は[B00](validation/v1.0.md)・[B01](validation/v1.1.md)・[B02](validation/v1.2.md)・[B03](validation/v1.3.md)を参照してください。Windows終了時の修正は[検証記録](validation/windows-shutdown.md)で確認できます。
 
-本資料とNTKの自作コード・Contracts・設計文書には[Apache-2.0](../LICENSE)を適用します。第三者成果物とNymphの個体データは、それぞれの条件で扱います。本資料は公開版の利用説明であり、将来機能を納品済みの機能として含めません。
+本資料とNTKの自作コード・Contracts・設計文書には[Apache-2.0](../LICENSE)を適用します。第三者成果物とNymphの個体データは、それぞれの条件で扱います。本資料は公開版と開発候補を区別して説明し、将来機能を実装済みとして含めません。

@@ -55,3 +55,7 @@ Memoryの最小保存/取得・形式・B01は[ADR 0027](0027-v1.1-memory.md)で
 ## R33の後続判断
 
 Documentの小さなUTF-8文書取込とMemory連携、失敗/取消・B02は[ADR 0028](0028-v1.2-document-adapter.md)で具体化した。他形式、分割、意味理解/学習、他Adapterの案は維持し一括採用しない。
+
+## R35の後続判断
+
+Cognitionの明示区切り/ラベル付き学習、Memory根拠と専用保存、B03は[ADR 0029](0029-v1.3-cognition-learning.md)で具体化した。完全な構文/意味理解・概念の自律形成や後続の訂正/対話/忘却案を一括採用しない。

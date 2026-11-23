@@ -1,69 +1,58 @@
-# 顧客向け契約・利用ガイドの更新と配布
+# 顧客向け主要Docsの更新・同期・配布
 
-## 編集元と対象版
+R36・[ADR 0030](adr/0030-customer-docs-as-primary.md)により、[customer-guide.md](customer-guide.md)・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.3.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
 
-[customer-guide.md](customer-guide.md)を本文と図の編集元とする。対象は公開済みv0.9.0、読者は導入担当者と機能を接続する開発担当者の両方。現在の契約を説明する資料であり、v1.0の正式な契約区分や互換性を新たに採用する文書ではない。
+## 正本と同期対象
 
-MarkdownはGitHubで図を含めて読める。配布用PDFとHTMLは同じ本文から生成する。`<!-- pagebreak -->`が印刷時のページ境界、`mermaid`コードブロックが図の編集元である。説明・表・図を同時に更新し、正確な署名は[API一覧](api-reference.md)、意味は[Core API](core-api.md)、採用状態は[ADR索引](adr/README.md)に照合する。
+Markdownを本文・表・Mermaid図の正本とし、`<!-- pagebreak -->`でA4のページを区切る。PDF/HTMLを直接編集しない。対象版・公開状態・公開版・確認日は[確認証跡](customer-guide.sources.json)と表紙へ記録する。生成側は証跡から版と日付を読み、pyprojectの対象版と一致させる。
 
-今回の文書は親[#90](https://github.com/Tao-pyth/nymph-toolkit/issues/90)・子[#95](https://github.com/Tao-pyth/nymph-toolkit/issues/95)、生成と同期は子[#96](https://github.com/Tao-pyth/nymph-toolkit/issues/96)で扱う。全てv1.0.0マイルストーンに属する準備作業。生成ツール・設定の変更も[Issue運用](issue-workflow.md)の対象になる。
+check_customer_docs.pyはpyproject、全src/examplesのPython、ルートMarkdown、Docs（validationと生成引継ぎ書を除く）、contracts-v1.jsonをハッシュで照合する。追加・削除も検出する。検証記録と生成引継ぎ書は循環更新を避けて除外し、通常のcheck_docsで検査する。機能/文書の差分を本文・図へ反映、または説明に変更不要と判断した理由を記録してから証跡を更新する。CIは自動承認・自動更新しない。
 
-## 任意の文書生成環境
+## 更新手順
 
-生成ツールは[tools/customer-docs](../tools/customer-docs/package.json)へ分離している。Node.js・pnpm・ブラウザーは文書作成時だけに使い、NTKのPython実行時依存には含めない。確認環境はWindows、Node.js 24.22.3、pnpm 11.25.0、Microsoft Edge。依存版はpackage.jsonとpnpm-lock.yamlに固定する。
-
-リポジトリ直下で、Node.js 24系とpnpm 11.25.0を利用できる状態にして実行する。
-
-```powershell
-node --version
-pnpm --version
-pnpm --dir tools/customer-docs install --frozen-lockfile
-node tools/customer-docs/build.mjs --browser 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
-```
-
-`--browser`には実際のChromium系ブラウザー実行ファイルを指定する。別の場所にインストールした場合は変更する。Playwright管理のChromiumを使う場合は、次のように取得してから生成する。
+1. 対象マイルストーンと親子Issueを確認する。今回の方針/原稿は#124、生成/検査/CIは#125で、親#13・v1.3.0へコード変更前に登録した。
+2. 主要Docs・公開API・ADR・実装と本文/図を照合する。未公開機能を公開済みと表示しない。版が変わる場合は証跡と表紙も更新する。
+3. 内容レビューの理由を記録して証跡を更新し、引継ぎ書を再生成する。
+4. 同じMarkdownからPDF/HTMLを生成し、全文抽出・ページ数・ハッシュ・配置を検査する。PDF全ページのPNGを目視し、文字欠け・重なり・図の可読性・余白を確認する。
+5. 結果をIssue/PRへ記録しコミットする。配布用はcleanな同一コミットで再生成・検査する。Python製品CIとCustomer Docs CIの成功後にレビュー/公開判定へ進む。
 
 ```powershell
-pnpm --dir tools/customer-docs exec playwright install chromium
-node tools/customer-docs/build.mjs
-```
-
-日本語フォントが必要で、CSSはYu Gothic、Meiryo、Noto Sans CJK JPの順に参照する。フォント・ブラウザーが異なると改行やページ内の配置が変わるため、環境変更時も全ページを確認する。上記のPlaywright管理ブラウザーおよびLinuxでの生成は今回の実測対象外。
-
-## 生成物と参照先
-
-生成先は`output/pdf/`。以下の3点を出力する。生成物とnode_modulesはGit対象外とする。
-
-| ファイル | 内容 |
-|---|---|
-| NTK-Core-v0.9.0-Customer-Guide-ja.pdf | A4の日本語配布資料。本文・図・リンク・ページ番号を収録 |
-| NTK-Core-v0.9.0-Customer-Guide-ja.html | CSSとSVG図を内包。外部スクリプトを必要としない閲覧用 |
-| NTK-Core-v0.9.0-Customer-Guide-ja.json | MarkdownのSHA-256、参照コミット、ブラウザー版、ページ・図の数、配置検査結果 |
-
-文書内の相対リンクは、生成時の`git rev-parse HEAD`に対するGitHubのファイルURLへ変換する。変更をコミットして、そのコミットをGitHubへ反映してから配布版を作る。レビュー中に別の参照先を使う場合は次のように指定できる。
-
-```powershell
-node tools/customer-docs/build.mjs --browser 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe' --ref codex/91-docs-onboarding
-```
-
-配布時は移動するブランチよりコミットSHAを使う。JSONに記録した参照先と本文の版を確認する。HTMLの図・本文はオフラインでも表示できるが、参照先のGitHubを開く操作にはネット接続が必要。PDFの作成日時やSVGの識別子等が変わるため、生成物のバイト単位の一致は保証しない。本文SHAと生成条件で版を識別する。
-
-## 同期と検証
-
-1. 本文・図・表を、現行の個別Docs・公開API・ADR・実装と照合する。過去の実装段階と現在の制約を区別する。
-2. 生成ツールを実行する。Mermaidの描画数、JavaScriptエラー、本文の横方向のはみ出し、フッターとの余白を自動確認し、異常時は失敗する。
-3. PDFを開き、全ページを画像にして確認する。日本語の欠け、図の線・文字の重なり、小さすぎるラベル、表の分割、空白ページ、ページ番号を確認する。HTMLの配置検査だけで完了しない。
-4. PDFの実ページ数とJSONのページ数、抽出できる本文、参照リンクを確認する。今回の成果は20ページ・図10点。PDFビューアーや任意のPDF描画ツールで確認できる。今回の描画・抽出にはpypdfium2・pypdfを使用したが、必須の生成依存には追加していない。
-5. 実行例を変更した場合は、対象版を通常導入した独立環境で動かし、結果と終了を確認する。現在の本文にある最小Runtime例は公開v0.9.0 wheelで確認している。
-6. 引継ぎ書を再生成し、次の検査を実行する。結果・環境・未確認範囲を[検証記録](validation/customer-guide.md)と子Issueへ残す。
-
-```powershell
+python tools/check_customer_docs.py --write --review-note '変更内容を本文・図・公開状態と照合した理由'
 python tools/build_handoff.py
-python tools/build_handoff.py --check
 python tools/check_docs.py
 python tools/check_api.py
+python tools/check_contracts.py
 python tools/check_completion.py
-git diff --check
 ```
 
-引継ぎ書には本文・本書・検証記録を全文収録する。PDFの改ページ指示も収録されるが、引継ぎ書そのものを本ツールでPDF化するわけではない。既存CIではDocs・API・証拠参照の検査を継続し、ブラウザーを使うPDF生成は任意の作業として分ける。公開済みタグ・Release添付は更新せず、配布資料の新しい版は別の成果物として扱う。
+証跡だけの更新は内容レビューの代わりにならない。検査は変更の見落とし・版の不一致・古い生成物を止める仕組みであり、説明の意味が正しいかはレビューする。
+
+## 生成環境とコマンド
+
+Node.js 24、pnpm 11.25.0、Playwright管理Chromium（または実在するChromium系ブラウザー）、日本語フォントを使う。package.json/lockで依存を固定する。PDF検査は専用requirementsを使い、製品の実行時依存に追加しない。
+
+```powershell
+pnpm --dir tools/customer-docs install --frozen-lockfile
+pnpm --dir tools/customer-docs exec playwright install chromium
+python -m pip install -r tools/customer-docs/requirements.txt
+node tools/customer-docs/build.mjs
+python tools/check_customer_docs.py --artifacts output/pdf --render-dir output/pdf/pages
+```
+
+別のPythonを使う場合は生成に`--python .venv/Scripts/python.exe`等を指定する。WindowsのEdgeを使う場合は`--browser 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'`を追加できる。Linux CIはPlaywrightの`install --with-deps chromium`と`fonts-noto-cjk`を使う。ブラウザー/フォント変更時も全ページを確認する。
+
+配布前は`python tools/check_customer_docs.py --artifacts output/pdf --require-clean`で確認する。未コミットのpreviewは配布対象外。`--ref`は現在のcheckoutへ解決できる参照に限り、異なるコミットのリンクを付けない。
+
+## 成果物と取得先
+
+出力先は`output/pdf/`。ファイル名は`NTK-v<対象版>-Customer-Guide-ja`に`.md`・`.pdf`・`.html`・`.json`を付ける。原稿とPDF/HTML、JSONの4点を一式として扱う。JSONには原稿・確認証跡・生成入力・成果物のSHA-256、参照コミット、dirty状態、ブラウザー、ページ/図数・配置検査を記録する。
+
+PDFはA4、HTMLはCSSと描画済みSVGを内包する。本文と図の閲覧はオフラインで可能だが、GitHubの参照リンクはネット接続を使う。PDFメタデータやSVG ID等によりバイト単位の再現を約束せず、内容とハッシュ・生成条件で識別する。
+
+[Core checks workflow](https://github.com/Tao-pyth/nymph-toolkit/actions/workflows/ci.yml)の**Customer Docs**を全push/PRで実行し、成功したrunの`customer-docs-<SHA>` artifactから一式とページPNGを取得する。対象SHAを確認して取得する。CI artifactの保持は90日で、期限切れ後は同コミットから再生成する。正式公開時は同タグから生成・検証した一式をReleaseへ保存する。公開済みタグ/添付は置換しない。
+
+Git管理対象は原稿・証跡・生成/検査コードで、重複する生成PDF/HTMLとnode_modulesは対象外。引継ぎ書には原稿・本手順・ADR・検証記録を収録する。検証結果は[顧客資料の検証記録](validation/customer-guide.md)へ残す。
+
+失敗したCIの生成物は調査用の`customer-docs-diagnostics-<SHA>`へ7日間だけ保存する。これは配布用の検証合格を意味しない。PDFのページ数/寸法はpypdf、原文タイトル/本文の照合とPNG化はPDFiumを用いる。ブラウザーとCJKフォントによる抽出文字の差を、タイトル検査の省略で回避しない。
+
+CI環境の参考：[PlaywrightのCI手順](https://playwright.dev/docs/ci)、[GitHub artifact保存](https://github.com/actions/upload-artifact)。
