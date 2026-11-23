@@ -1,4 +1,4 @@
-# v1.1.0のトラブルシューティング
+# v1.2.0のトラブルシューティング
 
 対象は、[通常導入](getting-started.md)・[実行例](tutorials.md)で問題が起きた人と、同版のCoreを呼び出す開発者。ここでは既存の契約に沿って原因を切り分ける。変更を伴う修正へ進む場合は[Issue運用](issue-workflow.md)に従う。
 
@@ -21,7 +21,7 @@ PowerShellでは導入時の作業フォルダで次を実行する。Linuxで�
 | `venv` / `ensurepip` / `pip`がない | そのPythonの導入元とvenv構成 | 同じ版のPythonに対応するvenv/pipを公式・OSの手順で用意する | 仮想環境の`-m pip --version`が通る |
 | ダウンロード失敗、SHA256不一致 | HTTPエラー、途中取得、ファイル名とRelease版、checksum一覧の2件 | 同じReleaseから対象と一覧を再取得し、一致を確認してから使う | wheelとsdistの両方が一致 |
 | `No module named nymph_toolkit` | pipを実行したPythonと、例を実行したPythonのパス | 同じvenvの`python -m pip`でwheelを導入し、同じ実行ファイルで例を動かす | import元がvenvのsite-packagesになる |
-| 版が1.1.0と違う、`src`からimportされる | `pip show`の版・Location・Editable project location、`sys.executable` | 通常導入の確認なら新しいvenvに公開wheelを入れる。開発環境ならメタデータ変更後に`pip install -e .`をやり直す | 版とimport元が選んだ導入方法に一致 |
+| 版が1.2.0と違う、`src`からimportされる | `pip show`の版・Location・Editable project location、`sys.executable` | 通常導入の確認なら新しいvenvに公開wheelを入れる。開発環境ならメタデータ変更後に`pip install -e .`をやり直す | 版とimport元が選んだ導入方法に一致 |
 | `examples/...`が見つからない | wheelだけを取得していないか、現在の作業フォルダ | 同版sdistを展開し、導入ガイドのパスで実行する | まずRuntime例が終了コード0 |
 | `No module named hybrid_dummy` | `hybrid_demo.py`だけをコピーしていないか | 同版の`examples/`を一式使う。独自機能のfactoryは共有venvからimport可能にする | Hybrid例のPASSと子の終了確認 |
 | `NotImplementedError`等で子が起動しない | Windowsのイベントループが子プロセスに対応するか、Notebook等で別ループを使っていないか | まず端末から同梱例の`asyncio.run`で実行する。独自ホストは対応ループを使う | Hybrid例が起動・通信・停止まで通る |
@@ -74,6 +74,6 @@ Windowsで`_ProactorBasePipeTransport._call_connection_lost()`内の`shutdown`�
 
 公開ログには認証情報や他者の非公開データを含めず、必要ならパス等を伏せる。今回のガイドの検証範囲は[文書整備の記録](validation/docs-onboarding.md)を参照する。
 
-## v1.2開発候補のDocument取込
+## Document取込
 
-公開v1.1のwheelではDocumentをimportできない。開発checkoutのeditable導入と版/import元を確認する。`document.too_large`は本文だけでなく出典URI/hash等を含む4096 JSON bytes制限の場合もある。切捨て・部分保存は行わない。kind/source_kind/時刻・IDは要求元が指定し、再取込で変えるとmemory.conflictになる。失敗/取消/結果不明の判断とMemory照合、接続中断後の再prepareは[Document利用ガイド](document.md)を参照する。
+Documentはv1.2.0以降のwheelに含まれる。版/import元を確認し、旧版を使用している場合は通常導入手順で新しい環境を作る。`document.too_large`は本文だけでなく出典URI/hash等を含む4096 JSON bytes制限の場合もある。切捨て・部分保存は行わない。kind/source_kind/時刻・IDは要求元が指定し、再取込で変えるとmemory.conflictになる。失敗/取消/結果不明の判断とMemory照合、接続中断後の再prepareは[Document利用ガイド](document.md)を参照する。

@@ -1,6 +1,6 @@
 # Document Adapter — v1.2の文書入力とMemory連携
 
-R33・[ADR 0028](adr/0028-v1.2-document-adapter.md)で具体化した開発候補。公開済みv1.1.0には含まれない。ローカルの小さなUTF-8テキスト/Markdownを明示指定で取り込み、出典付き記録として[Memory](memory.md)へ保存する。内容の理解・真偽判定・自動分類・学習は行わない。
+R33・[ADR 0028](adr/0028-v1.2-document-adapter.md)で具体化し、v1.2.0に同梱したAdapter。[通常導入](getting-started.md)で使用できる。ローカルの小さなUTF-8テキスト/Markdownを明示指定で取り込み、出典付き記録として[Memory](memory.md)へ保存する。内容の理解・真偽判定・自動分類・学習は行わない。
 
 ## 接続と責務
 
@@ -94,6 +94,6 @@ contentは読んだ本文、sourceは`file:///.../note.md#sha256=<元bytesのハ
 
 ## 実行・検証と次の範囲
 
-開発checkoutをeditable導入して`python examples/document_demo.py`を実行する。9番目の例は一時ディレクトリに自作ダミー文書とMemory DBを作り、直接/Core経由取込、同じIDの再取込、未取得/競合、Core/Memory再起動後の取得、終了を確認して一時ファイルを削除する。外部文書や実データは使用しない。
+[9つの実行例ガイド](tutorials.md)の通常wheelと同版sdistを使う。開発checkoutではeditable導入後に`python examples/document_demo.py`を実行できる。9番目の例は一時ディレクトリに自作ダミー文書とMemory DBを作り、直接/Core経由取込、同じIDの再取込、未取得/競合、Core/Memory再起動後の取得、終了を確認して一時ファイルを削除する。外部文書や実データは使用しない。
 
 [B02検証記録](validation/v1.2.md)に条件と結果を記載する。PDF/Office/HTML/URL・OCR、分割/再帰/監視取込、意味抽出/分類/学習、訂正/削除/忘却、複製/移植/伝播は未採用。v1.1の公開物を後から置換しない。
