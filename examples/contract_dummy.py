@@ -83,9 +83,12 @@ class Function:
                                       timedelta(seconds=.02))
             await core.submit_remote(request, provider, "work", {"via": "contract"})
             async with asyncio.timeout(5):
-                while not (await core.activity("snapshot", request.key)).planned_end_notified:
+                while True:
+                    snapshot = await core.activity("snapshot", request.key)
+                    # Planned time and executor start are independent evidence.
+                    if snapshot.planned_end_notified and snapshot.state == ActivityState.RUNNING:
+                        break
                     await asyncio.sleep(.005)
-            assert (await core.activity("snapshot", request.key)).state == ActivityState.RUNNING
             await core.activity("finish", request.key)
             ended = await core.activity("wait", request.key, timeout=5)
             assert ended.cleanup_confirmed and ended.state == ActivityState.STOPPED

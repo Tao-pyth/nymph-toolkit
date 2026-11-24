@@ -19,6 +19,7 @@ from nymph_toolkit.core import (
     CoreClient, DirectLink, FileStore, HybridGroup, ModuleContext, Runtime,
     StreamReceiver, StreamSender, validate_module_registration,
 )
+from nymph_toolkit.core.hybrid_tasks import HybridTaskManager
 from examples.contract_dummy import KEY, OPERATIONS
 
 CONTRACT = ContractSpec(KEY, tuple(OperationSpec(n, OperationMode.ASYNC) for n in OPERATIONS))
@@ -91,6 +92,27 @@ class RegistrationTests(unittest.TestCase):
 
 
 class ModuleContractIntegrationTests(unittest.IsolatedAsyncioTestCase):
+    async def test_planned_end_before_remote_start_still_waits_for_execution(self):
+        original = HybridTaskManager._run_remote
+        observed = []
+
+        async def delayed_start(manager, entry, remote):
+            # Hold real dispatch until the planned time has passed. The example
+            # must still wait for executor evidence before requesting finish.
+            async with asyncio.timeout(2):
+                while not manager.snapshot(entry.request.key).planned_end_notified:
+                    await asyncio.sleep(.005)
+            observed.append(manager.snapshot(entry.request.key))
+            await asyncio.sleep(.1)
+            return await original(manager, entry, remote)
+
+        with patch.object(HybridTaskManager, "_run_remote", delayed_start):
+            await self.scenario(ModuleKind.ADAPTER, Placement.LOCAL, Placement.PROCESS)
+        self.assertEqual(len(observed), 1)
+        self.assertTrue(observed[0].planned_end_notified)
+        self.assertEqual(observed[0].state, contracts.ActivityState.STARTING)
+        self.assertIsNone(observed[0].started_at)
+
     async def test_both_kinds_and_four_placements_use_only_public_contracts(self):
         for kind in ModuleKind:
             for requester in Placement:
@@ -123,7 +145,7 @@ class ModuleContractIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 call = await group.connections.prepare(BindingKey("provider", KEY), wait_timeout=5)
                 result = await asyncio.wait_for(call.acall("exercise", "provider"), 15)
                 self.assertEqual(result, {"rpc": "direct+core", "stream": "received",
-                                          "activity": "nymph-finished", "registration": "sealed"})
+                                          "activity": "nymph-finished", "registration": "sealed"}, repr(result))
             finally:
                 await runtime.stop()
             for context in contexts:
