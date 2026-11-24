@@ -44,13 +44,25 @@ def main() -> None:
                      "adapters/web/__init__.py", "adapters/web/_reader.py", "contracts/agency.py",
                      "subsystems/agency/__init__.py", "subsystems/agency/_model.py", "subsystems/agency/_store.py", "subsystems/agency/_execution.py", "contracts/persona.py", "subsystems/persona/__init__.py", "subsystems/persona/_model.py", "subsystems/persona/_store.py", "contracts/sleep.py", "subsystems/sleep/__init__.py", "subsystems/sleep/_model.py", "subsystems/sleep/_store.py"):
             assert "nymph_toolkit/" + path in names
+        for path in ("contracts/sleep_activity.py", "contracts/voice.py", "subsystems/sleep_activity/__init__.py",
+                     "subsystems/sleep_activity/_store.py", "subsystems/sleep_activity/_model.py",
+                     "adapters/discord_voice/__init__.py", "adapters/discord_voice/_audio.py",
+                     "adapters/discord_voice/_model.py", "adapters/discord_voice/_session.py",
+                     "adapters/discord_voice/_model_files.py", "adapters/discord_voice/model-files.json",
+                     "adapters/discord_voice/bridge.mjs", "adapters/discord_voice/node/package.json",
+                     "adapters/discord_voice/node/pnpm-lock.yaml"):
+            assert "nymph_toolkit/" + path in names
+        assert not any("node_modules/" in name for name in names)
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
-        assert metadata["Version"] == "1.9.0"
+        assert metadata["Version"] == "1.10.0"
         assert metadata["Requires-Python"] == ">=3.12"
         assert metadata["License-Expression"] == "Apache-2.0"
-        assert metadata.get_all("Requires-Dist", []) == []
+        requirements = metadata.get_all("Requires-Dist", [])
+        assert len(requirements) == 1 and requirements[0].split(";")[0].strip() == "vosk==0.3.45"
+        assert requirements[0].split(";")[1].strip().replace("'", '"') == 'extra == "voice"'
+        assert metadata.get_all("Provides-Extra") == ["voice"]
         license_path = next(n for n in names if n.endswith(".dist-info/licenses/LICENSE"))
         assert package.read(license_path) == (root / "LICENSE").read_bytes()
     env = os.environ.copy()
@@ -75,7 +87,13 @@ def main() -> None:
             "import nymph_toolkit.subsystems.sleep as sleep; from nymph_toolkit.contracts.sleep import SLEEP_CONTRACT; "
             "assert Path(sleep.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "from importlib.metadata import version; import sys; "
-            "assert version('nymph-toolkit') == '1.9.0'; "
+            "assert version('nymph-toolkit') == '1.10.0'; "
+            "import importlib.util; assert importlib.util.find_spec('vosk') is None; "
+            "import nymph_toolkit.adapters.discord_voice as voice; import nymph_toolkit.subsystems.sleep_activity as sleep_activity; "
+            "from nymph_toolkit.contracts.voice import VOICE_CONTRACT; from nymph_toolkit.contracts.sleep_activity import SLEEP_ACTIVITY_CONTRACT; "
+            "assert Path(voice.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
+            "assert Path(sleep_activity.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
+            "assert Path(voice.__file__).with_name('bridge.mjs').is_file(); "
             "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "assert RuntimeState.NEW.value == 'new'; print('installed imports: PASS')"
         )
@@ -117,6 +135,9 @@ def main() -> None:
         subprocess.run([str(python), "-I", str(work / "examples/persona_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/persona_agency_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/sleep_demo.py")], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "examples/sleep_activity_demo.py")], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "examples/voice_audio_demo.py")], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "examples/voice_capture.py"), "--help"], cwd=work, env=env, check=True)
         subprocess.run(
             [str(python), "-I", "-W", "error", "-m", "unittest", "discover",
              "-s", str(work / "tests"), "-t", str(work), "-v"],

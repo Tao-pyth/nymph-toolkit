@@ -1,10 +1,10 @@
 # NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.9.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
+**Nymph Toolkit / 対象 v1.10.0（開発候補） / 公開版 v1.2.0 / 2026-11-25**
 
 ## この資料で分かること
 
-NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Web・Agency・Persona・Sleepの実装、使い方、制約をまとめます。
+NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Web・Agency・Persona・Sleep・睡眠活動・音声観測の実装、使い方、制約をまとめます。
 
 **Nymphが活動を決め、Coreが実行を管理します。** Agencyの活動循環・特性反映とSleepの初期統合を含みます。自然な会話や人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
 
@@ -13,11 +13,11 @@ NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入
 | Coreの構成・配置・起動停止 | 01〜03 |
 | 登録・接続・操作・ストリーム | 04〜07 |
 | 活動・失敗・保存・再起動・設定 | 08〜13 |
-| 6区分の接続契約と実機能・活動循環・人格特性 | 14〜18G |
+| 6区分の接続契約・実機能・睡眠活動・音声 | 14〜18J |
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.9.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携・Sleepを含みます。前段PR #123/#131/#137/#143/#149/#156は未マージです。v1.9の全受入は親#19で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.10.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携・Sleepを含みます。前段PR #123/#131/#137/#143/#149/#156/#162は未マージです。v1.10は睡眠活動と音声を実装・検証中で、実Discord受信と先行#169を含む最終受入が残ります。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名は[API一覧](api-reference.md)、意味は[Core API](core-api.md)と各機能ガイドを参照してください。
 
@@ -47,7 +47,7 @@ flowchart TB
 | 活動の時刻監視、変更と状態通知 | 活動内容・優先度・終了・再開の判断 |
 | 保存と障害通知、後処理を待つ仕組み | 安全な中断点、所有する資源の解放 |
 
-CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Web・Agency・Persona・Sleepは開発候補に同梱します。睡眠活動との循環や音声は後続です。
+CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Web・Agency・Persona・Sleepは開発候補に同梱します。睡眠活動との循環と音声をv1.10候補へ追加しています。音声の依存とモデルは明示導入します。
 
 <!-- pagebreak -->
 
@@ -520,7 +520,7 @@ root外・上位移動・不正文字コード・空白のみ/NUL本文は拒否
 
 ## 17 Cognition：注釈から初期の規則性を学ぶ
 
-**v1.3で追加し、v1.9候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
+**v1.3で追加し、v1.10候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
 
 ```mermaid
 flowchart TB
@@ -792,6 +792,86 @@ flowchart LR
 
 <!-- pagebreak -->
 
+## 18H 睡眠活動：案の生成と適用をつなぐ
+
+Agencyが選んだ睡眠活動をCoreが管理し、専用の実行側がSleepの周期とPersonaの更新を接続します。Nymph側が適用を指定した場合だけ、人格修正案を公開契約で渡します。
+
+```mermaid
+flowchart LR
+    A["Agency<br/>休息を選択"] --> C["Core<br/>活動の実行管理"]
+    C --> E["睡眠実行側<br/>意図・結果を保存"]
+    E --> S["Sleep<br/>周期と人格案"]
+    S --> E
+    E -->|"指定がある場合"| P["Persona<br/>外部差分を適用"]
+    P -->|"次判断で参照"| A
+```
+
+図22：意思決定はNymph側にあり、Coreは採用した活動を管理します。
+
+| 契約 `ntk.sleep.activities/1` | 役割 |
+|---|---|
+| `get(request_id)` | 保存済みの段階・周期・適用結果を読む |
+| `reconcile(request_id)` | 相手へ結果を照会する。元操作は再送しない |
+| `apply(request_id)` | 適用指定あり・周期保存済み・未送信の案を明示適用 |
+
+周期の成功と人格適用の成功は別です。結果不明は照会で確認し、版の競合を自動修正して適用しません。同じ要求を再登録しても過去記録を返すだけで、再起動だけで活動を再開しません。
+
+実行側は最大4096要求を専用SQLiteへ保存します。途中の保存や通信は安全な区切りまで進め、中断中は同じ状態を保持します。[契約と使い方](sleep-activity.md)
+
+<!-- pagebreak -->
+
+## 18I 音声観測：同意と期限を伴う外部入力
+
+Discord Voice Adapterは、告知と本人の同意を確認した音声を一時的に観測する開発候補です。**実DiscordのDAVE受信は未検証**であり、ローカル試験の成功とは区別しています。
+
+```mermaid
+flowchart LR
+    O["運用者<br/>告知・同意確認"] --> V["Voice Adapter"]
+    D["Discord<br/>DAVE・Opus"] --> N["所有Node helper<br/>話者別PCM"]
+    N --> V
+    V --> A["ローカルVosk<br/>文字起こし・音響特徴"]
+    A --> Q["期限付き観測<br/>利用側がread"]
+    V --> X["撤回・参加者変更・停止<br/>消去と後処理"]
+```
+
+図23：音声知覚を補助技術で行い、Cognitionの意味理解とは分けます。
+
+音声用の追加依存・日本語モデルを明示導入します。Coreの必須依存は増えません。Runtime起動だけでは接続せず、Bot tokenはローカル環境変数から渡します。モデルの内容は起動時に照合します。
+
+接続時にBot以外の全参加者の同意を確認します。参加・離脱・撤回・接続エラーで止まり、自動再接続しません。取得・ASRへの同意は、学習や永続保存への同意を兼ねません。Memory/Cognitionへの自動投入も行いません。
+
+文字起こしは推定です。区間長・音量の指標・ゼロ交差率から、感情や人格を断定しません。[導入・同意・現時点の制約](voice.md)
+
+<!-- pagebreak -->
+
+## 18J 音声契約と保持・削除
+
+契約`ntk.voice.observation/1`の5操作はいずれも非同期です。
+
+| 操作 | 利用側が確認すること |
+|---|---|
+| `start_session(session_id, consent)` | 同意参照・参加者ID・保持秒数を指定して開始 |
+| `status()` | 状態・理由・件数・後処理完了を確認 |
+| `read(session_id, after, limit)` | 期限内の観測をページ単位で取得 |
+| `stop_session(session_id)` | 停止・消去・所有処理の回収を待つ |
+| `revoke(session_id, user_id)` | 同意撤回としてセッション全体を停止 |
+
+観測には話者・取得時刻・出典区分、文字起こしと語の時刻/信頼値、音響特徴、PCM hashを付けます。生音声ファイルは保存しません。保持は最終PCM受付から1〜300秒、セッションは最大600秒です。
+
+| 境界 | 初期上限 |
+|---|---|
+| 同意の参加者 | 1〜8名 |
+| 音声の区間 / ASR worker | 最大5秒 / 1つ |
+| 待機区間 / 保持観測 | 8区間 / 64件 |
+| 1回の読出し | 最大4件・49152 JSON bytes |
+| 同じRuntimeのセッションID | 最大64件 |
+
+上限超過を隠して継続せず停止します。撤回/停止時は待機音声と観測を消し、処理中ASRが後から返っても公開しません。後処理完了を待ち、再接続は新しいIDで明示します。
+
+メモリの物理的消去や、返却済みコピーの削除は保証しません。利用側は端末出力・保存先の保持と削除を管理します。[詳細契約](voice.md)・[検証と残作業](validation/v1.10.md)
+
+<!-- pagebreak -->
+
 ## 19 使い始める：公開版で動きを確認する
 
 CPython 3.12以上を用意します。現行版で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
@@ -820,7 +900,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 
 ## 19A 開発候補の機能を試す
 
-このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の8例を加え、v1.9候補では17例です。
+このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の10例を加え、v1.10候補では19例です。
 
 | 実行例 | 確認できること |
 |---|---|
@@ -832,6 +912,8 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 | persona_demo.py | 特性の参照・外部差分・版/ID・履歴 |
 | persona_agency_demo.py | 特性更新で選択を変え、元の活動を再開 |
 | sleep_demo.py | 根拠統合・夢失効・人格案の明示適用・再起動 |
+| sleep_activity_demo.py | 休息活動から周期/人格適用・次判断まで |
+| voice_audio_demo.py | 外部接続なしの合成PCM特徴検証 |
 
 例は説明用の明示教材・観測・特性を使います。自由会話や一般的意味理解の完成を示すものではありません。通常の例は後処理を終えて終了し、一時保存先も削除します。Textの対話モードは明示JSON指示を受け付けます。
 
@@ -872,7 +954,7 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-公開版は9例、候補は17例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
+公開版は9例、候補は19例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
@@ -947,7 +1029,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ## 24 適用範囲・検証状況・参照先
 
-Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Persona・Sleepを検証しています。公開版は9例、候補は17例。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。v1.8は485テスト、9ジョブCI、顧客32ページ/20図が成功。v1.9の最終受入は[B09記録](validation/v1.9.md)・親#19で確認します。
+Coreと各機能、睡眠活動・音声観測を検証しています。公開版は9例、候補は19例。実音声接続は同意確認後に個別実行します。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。v1.9の終了確認調査#169とv1.10の最終受入・実Discord未検証は[B09](validation/v1.9.md)・[B10](validation/v1.10.md)で追跡します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -957,7 +1039,7 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Per
 | 長時間性能 | 30分負荷はv0.8の特定コミットの測定。後続修正・各環境の全てを同じ測定結果で代表しない |
 | 後続の機能 | v1.0の共通契約は採用済み。v1.5のAgencyはADR 0032。活動循環はADR 0034、自由会話は後続判断 |
 
-現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Personaの自発更新・睡眠活動循環・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
+現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Personaの自発更新・Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
 
 | 用語 | 本資料での意味 |
 |---|---|
@@ -967,6 +1049,6 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Per
 | 協調的中断 | 実行側が安全な区切りと後処理を担当して止まること |
 | 結果不明 | 処理が失敗したと確定できず、照会が必要な状態 |
 
-手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、契約は[Core API](core-api.md)・[API一覧](api-reference.md)、判断は[ADR索引](adr/README.md)、証拠は[B00](validation/v1.0.md)・[B01](validation/v1.1.md)・[B02](validation/v1.2.md)・[B03](validation/v1.3.md)・[B04](validation/v1.4.md)・[B05](validation/v1.5.md)・[B06](validation/v1.6.md)・[B07](validation/v1.7.md)・[B08](validation/v1.8.md)・[B09](validation/v1.9.md)を参照してください。Windows終了時の修正は[検証記録](validation/windows-shutdown.md)にあります。
+手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、契約は[Core API](core-api.md)・[API一覧](api-reference.md)、判断は[ADR索引](adr/README.md)、証拠は[B00](validation/v1.0.md)・[B01](validation/v1.1.md)・[B02](validation/v1.2.md)・[B03](validation/v1.3.md)・[B04](validation/v1.4.md)・[B05](validation/v1.5.md)・[B06](validation/v1.6.md)・[B07](validation/v1.7.md)・[B08](validation/v1.8.md)・[B09](validation/v1.9.md)・[B10](validation/v1.10.md)を参照してください。Windows終了時の修正は[検証記録](validation/windows-shutdown.md)にあります。
 
 本資料とNTKの自作コード・Contracts・設計文書には[Apache-2.0](../LICENSE)を適用します。第三者成果物とNymphの個体データは、それぞれの条件で扱います。本資料は公開版と開発候補を区別して説明し、将来機能を実装済みとして含めません。

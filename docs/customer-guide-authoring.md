@@ -1,12 +1,12 @@
 # 顧客向け主要Docsの更新・同期・配布
 
-R36・[ADR 0030](adr/0030-customer-docs-as-primary.md)により、[customer-guide.md](customer-guide.md)・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.9.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
+R36・[ADR 0030](adr/0030-customer-docs-as-primary.md)により、[customer-guide.md](customer-guide.md)・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.10.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
 
 ## 正本と同期対象
 
 Markdownを本文・表・Mermaid図の正本とし、`<!-- pagebreak -->`でA4のページを区切る。PDF/HTMLを直接編集しない。対象版・公開状態・公開版・確認日は[確認証跡](customer-guide.sources.json)と表紙へ記録する。生成側は証跡から版と日付を読み、pyprojectの対象版と一致させる。
 
-check_customer_docs.pyはpyproject、全src/examplesのPython、ルートMarkdown、Docs（validationと生成引継ぎ書を除く）、contracts-v1.jsonをハッシュで照合する。追加・削除も検出する。検証記録と生成引継ぎ書は循環更新を避けて除外し、通常のcheck_docsで検査する。機能/文書の差分を本文・図へ反映、または説明に変更不要と判断した理由を記録してから証跡を更新する。CIは自動承認・自動更新しない。
+check_customer_docs.pyはpyproject、全src/examplesのPython・音声bridge/モデルmanifest・Node manifest/lock（node_modulesを除く）、ルートMarkdown、Docs（validationと生成引継ぎ書を除く）、contracts-v1.jsonをハッシュで照合する。追加・削除も検出する。検証記録と生成引継ぎ書は循環更新を避けて除外し、通常のcheck_docsで検査する。機能/文書の差分を本文・図へ反映、または説明に変更不要と判断した理由を記録してから証跡を更新する。CIは自動承認・自動更新しない。
 
 ## 更新手順
 

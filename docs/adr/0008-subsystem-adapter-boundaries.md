@@ -79,3 +79,7 @@ R37・[ADR 0031](0031-v1.4-text-web-and-correction.md)でText Interaction・Web�
 ## R37のv1.9具体化
 
 [ADR 0037](0037-v1.9-sleep.md)でSleep所有の根拠統合/忘却・現在夢/人格修正案とB09を具体化した。Memory原本/Cognition学習の削除と区別し、睡眠循環/案の適用はv1.10へ残す。
+
+## v1.10で具体化した睡眠活動と音声
+
+[ADR 0038](0038-v1.10-sleep-cycle-and-voice.md)により、Nymph側の睡眠実行機能が公開Sleep/Persona契約を接続する。Coreは価値判断をしない。音声AdapterはローカルASRで観測を返し、Memory保存やCognition学習を自動投入しない。初期音声/同意/保持の範囲を具体化し、Desktop等の将来案は維持する。
