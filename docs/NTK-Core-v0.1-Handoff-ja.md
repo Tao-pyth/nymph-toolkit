@@ -11441,6 +11441,12 @@ Windows / CPython3.15.2で全506回帰400.672秒、通常wheelで506件483.247�
 
 #161へ変更前に記録し、ジョブ全体の枠を40分へ変更する。全件実保存・ソース/配布両試験・全例を維持する。製品のRPC/終了期限、SQLiteの耐久性や試験の受入内容は変更しない。後続コミットのCIと顧客成果物を再確認してからB09-07を完了とする。
 
+### 2045bdcのCIと終了確認の調査
+
+[CI 45414242583](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45414242583)は8ジョブ成功、Windows/Python3.13のソース506件でCognitionの受付済み学習・Runtime停止試験が1件失敗した。PROCESS配置で`cleanup_confirmed`が偽だったが、元のassertには機能名・終了理由がなく原因未特定である。B09-07は未完了とする。
+
+変更前に親#19・同じマイルストーンへ子[#169](https://github.com/Tao-pyth/nymph-toolkit/issues/169)を登録し、失敗時に全機能のProcessSnapshotを表示する診断だけを追加した。終了期限3秒・製品・期待条件は変更していない。Windows/CPython3.15.2の同じ試験を20回（計80配置/取消・停止ケース）反復し86.932秒で成功したが、CI失敗の原因解消を意味しない。後続CIの診断と再現を確認し、調査中の状態を維持する。
+
 ---
 
 <a id="section-93"></a>

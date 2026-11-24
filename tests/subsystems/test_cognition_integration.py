@@ -164,7 +164,8 @@ class CognitionIntegrationTests(unittest.IsolatedAsyncioTestCase):
                         lock.close()
                         if stop is not None: await stop
                         else: await runtime.stop()
-                    self.assertTrue(all(group.process(n).cleanup_confirmed for n in ("memory", "document", "cognition", "nymph")))
+                    snapshots = {n: group.process(n) for n in ("memory", "document", "cognition", "nymph")}
+                    self.assertTrue(all(s.cleanup_confirmed for s in snapshots.values()), repr(snapshots))
                     with closing(sqlite3.connect(root/"cognition.db")) as db:
                         rows = db.execute("SELECT payload FROM samples").fetchall()
                     self.assertEqual([json.loads(r[0])["record_id"] for r in rows], ["one"])
