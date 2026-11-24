@@ -12,7 +12,8 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         python: ["3.12", "3.13", "3.14", "3.15"]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    # Source and installed-wheel suites both run in this job (Windows ~5 min each).
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -33,6 +34,7 @@ jobs:
       - run: python examples/cognition_demo.py
       - run: python examples/text_interaction_demo.py
       - run: python examples/web_demo.py
+      - run: python examples/agency_demo.py
       - run: python -W error tools/validate_hybrid_load.py --duration 1 --requests 8 --chunks 4 --cycle-requests 4 --cycle-chunks 2 --sample-interval 1 --output .git/v09-load-smoke.json
       - run: python tools/check_docs.py
       - run: python tools/check_api.py

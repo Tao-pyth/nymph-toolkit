@@ -168,3 +168,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## v1.4開発候補の11・12番目の例
 
 `python examples/text_interaction_demo.py`は観測・教師入力・訂正・根拠照会、`python examples/web_demo.py`はローカルHTTPのHTML取得・出典保存・明示学習を行い、PASSと後処理確認で終了する。一時データを削除し、外部Webサイトには接続しない。`python examples/text_interaction_demo.py --interactive --data-dir .local/text-session`でJSON-lines入力と永続データを利用できる。5操作・入力形式・EOF・DB移行・制約は[入力/訂正ガイド](interaction.md)を参照する。公開v1.2の9例と開発候補を区別する。
+
+## v1.5候補のAgency例
+
+`python examples/agency_demo.py`は実Memory/Cognitionへ接続し、未知語の調査→学習後の活用→睡眠圧による休息の決定を確認する。さらに再起動後、同じ決定IDから元の結果を読み、所有資源を回収して終了する。13番目の開発用例で、公開v1.2の9例には含まれない。実行への適用循環はv1.6。[契約・入力](agency.md)を参照する。
