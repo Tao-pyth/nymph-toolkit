@@ -14,7 +14,7 @@ from nymph_toolkit.contracts.memory import MEMORY_CONTRACT
 from ._model import catalog, decide, fields, identifier, observation, request, snapshot
 from ._store import Store
 
-__all__ = ["factory"]
+__all__ = ["factory", "execution_factory"]
 
 
 async def _settled(future):
@@ -226,3 +226,9 @@ class _Agency:
 
 def factory(context: ModuleContextProtocol, config: object) -> RuntimeService[object]:
     return _Agency(context,config)
+
+
+def execution_factory(context: ModuleContextProtocol, config: object) -> RuntimeService[object]:
+    """Opt-in Agency-owned decisions and execution; starts inactive on every boot."""
+    from ._execution import ExecutingAgency
+    return ExecutingAgency(context, config)

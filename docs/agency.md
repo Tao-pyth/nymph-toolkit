@@ -116,3 +116,7 @@ python -W error -m unittest tests.subsystems.test_agency tests.subsystems.test_a
 ```
 
 実Memory/Cognitionで未知→学習→疲労の選択変化、原本保持、保存後の再要求、再起動、4配置/両経路を検証する。TaskManagerへの自律的な登録・継続的実行はv1.6の受入で確認する。[全体進捗](implementation-progress.md)
+
+## v1.6で追加する活動適用
+
+本書のdecisions/1とfactoryは維持する。任意のexecution_factoryとactivities/1による継続判断・Core適用は[活動循環ガイド](agency-execution.md)とADR 0034を参照する。v1.5時点の対象外と、後続で採用した範囲を区別する。

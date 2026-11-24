@@ -172,3 +172,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## v1.5候補のAgency例
 
 `python examples/agency_demo.py`は実Memory/Cognitionへ接続し、未知語の調査→学習後の活用→睡眠圧による休息の決定を確認する。さらに再起動後、同じ決定IDから元の結果を読み、所有資源を回収して終了する。13番目の開発用例で、公開v1.2の9例には含まれない。実行への適用循環はv1.6。[契約・入力](agency.md)を参照する。
+
+## v1.6候補のAgency活動循環例
+
+14番目は`python examples/agency_execution_demo.py`。[活動循環ガイド](agency-execution.md)の契約で明示的に開始し、Agencyが選択したstudyでCognitionを学習させる。学習結果からapplyへ移り、睡眠圧の観測変更で休息へ切り替え、同じ活動を再開し、haltで安全に終了する。教材は教師情報付きで、一般的な会話やSleep本実装ではない。

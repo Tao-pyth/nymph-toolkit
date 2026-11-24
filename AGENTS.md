@@ -50,3 +50,5 @@ v1.3 CognitionはR35・[ADR 0029](docs/adr/0029-v1.3-cognition-learning.md)の�
 v1.4はR37・[ADR 0031](docs/adr/0031-v1.4-text-web-and-correction.md)で対話/Web・学習注釈訂正を具体化した。ADR 0029の旧対象外を暗黙に上書きせず、この後続判断を参照する。Memory原本を維持し、訂正は明示契約/設定と命令ID・expected_revisionで行う。Web取得と保存と学習を分ける。v1.10全体の目標と未着手段階は[進捗](docs/implementation-progress.md)で追跡し、v1.4のみの完了を全体達成としない。
 
 v1.5 AgencyはR37・[ADR 0032](docs/adr/0032-v1.5-agency-decisions.md)を確認する。価値判断はAgency、実行管理はCore。utility-v1の入力/根拠/予定/変更案と決定履歴を扱い、決定保存を活動登録成功と扱わない。Memory原本・Core安定APIを維持し、再起動では決定を照会する。TaskManager適用循環はv1.6で具体化する。
+
+v1.6のAgency活動循環は[ADR 0034](docs/adr/0034-v1.6-agency-execution.md)に従う。任意execution_factoryは起動時inactive。保存済み決定と実際の適用結果を分け、受付だけで現在planを置換しない。容量不足は新観測/状態変化まで待ち、連携エラーは所有活動の後処理後に中断完了を報告する。結果不明は同一管理要求の照会で解決し、元の操作を自動再送しない。
