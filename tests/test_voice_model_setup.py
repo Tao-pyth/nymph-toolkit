@@ -29,10 +29,12 @@ class VoiceModelSetupTests(unittest.TestCase):
                 files={"config/data": dict(bytes=len(content), sha256=hashlib.sha256(content).hexdigest())})), encoding="utf-8")
             with patch.object(setup, "MANIFEST", manifest), patch.object(_model_files, "MANIFEST", manifest):
                 with patch.object(setup.urllib.request, "urlopen", return_value=io.BytesIO(data)) as download:
-                    self.assertEqual(setup.prepare(root / "installed"), root / "installed")
+                    # Windows TEMP may use an 8.3 alias (RUNNER~1); prepare
+                    # returns the resolved path to the same installed directory.
+                    self.assertTrue(setup.prepare(root / "installed").samefile(root / "installed"))
                     download.assert_called_once()
                 with patch.object(setup.urllib.request, "urlopen", side_effect=AssertionError("Unrequested network")):
-                    self.assertEqual(setup.prepare(root / "installed"), root / "installed")
+                    self.assertTrue(setup.prepare(root / "installed").samefile(root / "installed"))
                     target = root / "installed/config/data"
                     target.write_bytes(b"user changed")
                     with self.assertRaises(ValueError): setup.prepare(root / "installed")

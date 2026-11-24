@@ -63,6 +63,7 @@ export async function receive(config, emit, commands, dependencies) {
     await client.login(token);
     if (stopping) return finished;
     const channel = await client.channels.fetch(config.voice_channel_id);
+    if (stopping) return finished;
     if (!channel || channel.guildId !== config.guild_id || channel.type !== ChannelType.GuildVoice) {
       throw new Error('channel_unavailable');
     }

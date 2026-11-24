@@ -33,9 +33,13 @@ def main():
             emit(dict(type="pcm", user_id=user, at="2026-11-24T00:00:00Z", pcm=pcm))
             emit(dict(type="segment_end", user_id=user))
     for line in sys.stdin:
-        if json.loads(line).get("type") == "stop":
+        kind = json.loads(line).get("type")
+        if kind == "stop":
             emit(dict(type="stopped", reason="requested"))
             return
+        if kind == "segment":
+            emit(dict(type="pcm", user_id=user, at="2026-11-24T00:00:00Z", pcm=pcm))
+            emit(dict(type="segment_end", user_id=user))
 
 
 if __name__ == "__main__": main()

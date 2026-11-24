@@ -6,13 +6,17 @@ import test from 'node:test';
 import { configuration, participants, receive } from '../../src/nymph_toolkit/adapters/discord_voice/bridge.mjs';
 
 const config = () => ({ type: 'start', node_modules_path: process.cwd(), guild_id: '100', voice_channel_id: '200', participants: ['300'] });
-function fixture() {
+function fixture(blockAt = null) {
   const channel = { id: '200', guildId: '100', type: 2, guild: { voiceAdapterCreator: {} },
     members: new Map([['900', {}], ['300', {}]]), permissionsFor: () => ({ has: () => true }) };
-  let client, deletes = 0;
+  let client, deletes = 0, joins = 0;
+  const entered = Promise.withResolvers(), released = Promise.withResolvers();
+  async function checkpoint(stage) {
+    if (blockAt === stage) { entered.resolve(); await released.promise; }
+  }
   class Client extends EventEmitter {
-    constructor() { super(); client = this; this.user = { id: '900' }; this.channels = { fetch: async () => channel }; }
-    async login(token) { assert.equal(token, 'private-test-token'); }
+    constructor() { super(); client = this; this.user = { id: '900' }; this.channels = { fetch: async () => { await checkpoint('fetch'); return channel; } }; }
+    async login(token) { assert.equal(token, 'private-test-token'); await checkpoint('login'); }
     async destroy() { this.destroyed = true; }
   }
   const connection = new EventEmitter();
@@ -31,9 +35,10 @@ function fixture() {
   }
   const dependencies = { Client, GatewayIntentBits: { Guilds: 1, GuildVoiceStates: 2 }, ChannelType: { GuildVoice: 2 },
     PermissionFlagsBits: { ViewChannel: 1, Connect: 2 }, Opus,
-    voice: { joinVoiceChannel: options => { assert.equal(options.daveEncryption, true); assert.equal(options.selfDeaf, false); return connection; },
-      entersState: async () => {}, VoiceConnectionStatus: { Ready: 'ready' }, EndBehaviorType: { AfterSilence: 1 } } };
-  return { dependencies, channel, connection, streams, get client() { return client; }, get deletes() { return deletes; } };
+    voice: { joinVoiceChannel: options => { joins++; assert.equal(options.daveEncryption, true); assert.equal(options.selfDeaf, false); return connection; },
+      entersState: async () => { await checkpoint('ready'); }, VoiceConnectionStatus: { Ready: 'ready' }, EndBehaviorType: { AfterSilence: 1 } } };
+  return { dependencies, channel, connection, streams, entered: entered.promise, release: released.resolve,
+    get client() { return client; }, get deletes() { return deletes; }, get joins() { return joins; } };
 }
 
 async function ready(frames) {
@@ -105,5 +110,24 @@ test('lost DAVE status, explicit stop and output pressure reclaim owned resource
     assert.equal(frames.at(-1).reason, { dave: 'audio_decode_failed', stop: 'requested', pressure: 'output_capacity' }[mode]);
     assert.equal(f.deletes, 1);
     assert.equal(f.connection.destroyed, true);
+  }
+});
+
+test('stop during startup never creates a late connection or resumes reception', { timeout: 5000 }, async () => {
+  for (const stage of ['login', 'fetch', 'ready']) {
+    const f = fixture(stage), commands = new EventEmitter(), frames = [];
+    process.env.NTK_DISCORD_TOKEN = 'private-test-token';
+    const task = receive(config(), frame => { frames.push(frame); return true; }, commands, f.dependencies);
+    await f.entered;
+    commands.emit('stop');
+    await new Promise(resolve => setImmediate(resolve));
+    f.release();
+    await task;
+    assert.deepEqual(frames, [{ type: 'stopped', reason: 'requested' }], stage);
+    assert.equal(f.joins, stage === 'ready' ? 1 : 0, stage);
+    assert.equal(f.client.destroyed, true, stage);
+    if (stage === 'ready') assert.equal(f.connection.destroyed, true);
+    f.connection.receiver.speaking.emit('start', '300');
+    assert.equal(f.streams.size, 0, stage);
   }
 });

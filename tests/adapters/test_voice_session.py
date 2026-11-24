@@ -192,6 +192,40 @@ class VoiceSessionTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual((await self.service.read("0"))["observations"], [])
         self.assertEqual(set(self.service.history["0"]), {"summary", "fingerprint"})
 
+    async def test_observation_ceiling_stops_instead_of_silently_losing_input(self):
+        self.service.clock = lambda: 100.0
+        await self.service.start_session("one", permission())
+        await self.observation()
+        for sequence in range(2, 65):
+            self.processes[0].stdin.write(b'{"type":"segment"}\n')
+            await self.processes[0].stdin.drain()
+            await until(lambda: self.service.current.sequence >= sequence)
+        status = await self.service.status()
+        self.assertEqual((status["state"], status["observation_count"], status["last_sequence"]), ("listening", 64, 64))
+        self.processes[0].stdin.write(b'{"type":"segment"}\n')
+        await self.processes[0].stdin.drain()
+        await until(lambda: self.service.current.cleanup_confirmed)
+        status = await self.service.status()
+        self.assertEqual((status["state"], status["reason"], status["last_sequence"]), ("failed", "observation_capacity", 64))
+        self.assertEqual((await self.service.read("one"))["observations"], [])
+        self.assertEqual(len(self.processes), 1)
+        self.assertIsNotNone(self.processes[0].returncode)
+
+    async def test_session_deadline_stops_and_clears_without_waiting_for_a_read(self):
+        clock = [100.0]; self.service.clock = lambda: clock[0]
+        await self.service.start_session("one", permission())
+        await self.observation()
+        clock[0] = 699.9
+        await asyncio.sleep(.15)
+        self.assertEqual(self.service.current.state, "listening")
+        clock[0] = 700.0
+        await until(lambda: self.service.current.cleanup_confirmed)
+        status = await self.service.status()
+        self.assertEqual((status["state"], status["reason"], status["observation_count"]), ("stopped", "session_expired", 0))
+        self.assertEqual(self.service.current.permission, {})
+        self.assertEqual(len(self.processes), 1)
+        self.assertIsNotNone(self.processes[0].returncode)
+
     async def test_stop_during_process_creation_waits_and_drains_owned_helper(self):
         original = self.service.spawn
         entered, release = asyncio.Event(), asyncio.Event()
