@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-25",
-  "review_note": "開始途中の停止とBot移動/切断の見逃しを再現・修正。Node全8件、同チャンネル維持/指定外停止を確認し顧客本文へ反映。先行169の診断は原因未特定を維持。",
+  "review_note": "8c5228eの実装と受入のassertを照合し、配布542件・診断・要求別証拠と残作業を検証記録/進捗へ反映。顧客本文の最終受入継続・実Discord未確認・#169未解決の説明と図は一致しており変更不要。公開状態/契約は維持。",
   "sources": {
     "AGENTS.md": "b590eef09d1567137edde6ba371926829ac9901b821bc8e2d9411f4a134929fc",
     "CHANGELOG.md": "c5cebd493d3a30154ac0ce7144d514dea157b97577cb74e61e5b653afac6897c",
@@ -63,7 +63,7 @@
     "docs/document.md": "95f0a12797e6c058a25719ac34d0d4fbb7b7d8cb94eafa6cde12c95d5c431c19",
     "docs/getting-started.md": "76906ceacf3716666f9caaede10afe470be4da2887b43532f45b937c37e34ab8",
     "docs/hybrid.md": "b28b7a37a3b29ca9ffbf41327d66b299b32b4cb85a82e2256701ceda498a41e2",
-    "docs/implementation-progress.md": "56f696baaeb1eacbd2f3d283ec7bc42f240748147a5ef30d2f7ed972951f2a6d",
+    "docs/implementation-progress.md": "d44ed8214d300bda8a227e09e461194507d4b38bf717050bd7d99bdce2c20b1c",
     "docs/interaction.md": "a2f9e173c8cef0ddaf7bd85717ff530e2fe6c9ba8919f55d50823061f2deeab9",
     "docs/issue-workflow.md": "7f61f9e5f4b52f18c04bd01d9553df3f8adfcededfcba247c9c8a942c5b4293d",
     "docs/memory.md": "f6ef87d3eeca3e42fb5f015b60f201c3d4233a3d2d23ae904ffe7fdfed6618ce",
