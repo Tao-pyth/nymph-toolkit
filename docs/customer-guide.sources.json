@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-24",
-  "review_note": "v1.5 Agencyの判断・履歴・4配置と28ページ/17図を照合。pendingの再観測時に開始時刻を維持する修正と8件の局所回帰、入力上限/公開境界をガイド/ADRへ反映。最終432テストと配布/CIはB05で別途追跡。ADR0033の提案状態を維持。",
+  "review_note": "v1.5最終432テスト/通常配布と全28ページ確認を記録。CIの10分制限を検証内容を維持して20分へ変更。顧客本文/図の契約・制約は同じ。",
   "sources": {
     "AGENTS.md": "ccf7a2323b6ea7ddd27d3cb2228dc1086534358b77f513c7763b24d6de85dc20",
     "CHANGELOG.md": "8058fbe4c3d2d34a77a580d1f4045b5ba5054dc9954753c41eb11246f3549af6",
