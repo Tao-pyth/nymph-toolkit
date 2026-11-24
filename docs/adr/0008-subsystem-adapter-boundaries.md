@@ -71,3 +71,7 @@ R37・[ADR 0031](0031-v1.4-text-web-and-correction.md)でText Interaction・Web�
 ## R37のv1.6具体化
 
 [ADR 0034](0034-v1.6-agency-execution.md)でAgency/TaskManagerの循環とB06を具体化した。活動の価値判断はAgency、実行管理はCore。Persona/Sleep/音声などの後続提案を一括採用しない。
+
+## R37のv1.7具体化
+
+[ADR 0035](0035-v1.7-persona.md)でPersonaの参照・外部差分・現在値/履歴保存とB07を具体化した。Agency反映とSleepの修正値生成は後続段階。人格を自発更新しない境界を維持する。
