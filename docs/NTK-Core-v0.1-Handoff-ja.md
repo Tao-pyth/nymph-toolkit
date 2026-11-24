@@ -11447,6 +11447,20 @@ Windows / CPython3.15.2で全506回帰400.672秒、通常wheelで506件483.247�
 
 変更前に親#19・同じマイルストーンへ子[#169](https://github.com/Tao-pyth/nymph-toolkit/issues/169)を登録し、失敗時に全機能のProcessSnapshotを表示する診断だけを追加した。終了期限3秒・製品・期待条件は変更していない。Windows/CPython3.15.2の同じ試験を20回（計80配置/取消・停止ケース）反復し86.932秒で成功したが、CI失敗の原因解消を意味しない。後続CIの診断と再現を確認し、調査中の状態を維持する。
 
+### 315b3ffの再CIと詳細診断
+
+[CI 45419478075](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45419478075)は全9ジョブ成功し、Windows3.13でもソース/通常wheelの当該試験が成功した。元の失敗時には機能別の終了理由がなく、原因は引き続き未特定である。再実行成功だけでB09-07や#169を完了としない。
+
+#169へ事前記録した追加調査として、診断コマンド（`tools/diagnose_cognition_shutdown.py`）で同じ試験を反復し、機能別stop開始/完了、ProcessSnapshot変更、FileStore flushの時間を単調時計で記録する。試験の終了期限3秒・保存・期待条件は変更しない。診断wrapperの追加がタイミングへ影響する可能性もあるため、計測値を非計測時の性能保証とはしない。
+
+```console
+python -W error tools/diagnose_cognition_shutdown.py --attempts 20 --output output/cognition-shutdown.json
+```
+
+v1.9ブランチ限定のWindows/Python3.13診断ジョブで実行し、成否にかかわらずJSON artifactを残す。通常の全回帰/配布/顧客Docsジョブも維持する。成功時の基準値と失敗時の段階を比較し、必要な修正を判断する。60秒以上の滞留ではスレッドスタックも出力する。
+
+診断コマンドのローカル確認は2反復・8ケースが成功した。Core停止時間は0.129〜0.249秒、試験全体は各4.855/4.356秒だった。機能別snapshot・stop・flush時刻がJSONへ残ることを確認した。Windows CIの元の失敗を再現した証拠とは扱わない。
+
 ---
 
 <a id="section-93"></a>

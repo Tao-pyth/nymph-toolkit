@@ -5,6 +5,25 @@ on:
 permissions:
   contents: read
 jobs:
+  cognition-shutdown-diagnostic:
+    # Temporary investigation for #169; this never replaces acceptance checks.
+    if: github.head_ref == 'codex/v1.9-sleep' || github.ref == 'refs/heads/codex/v1.9-sleep'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e .
+      - run: python -W error tools/diagnose_cognition_shutdown.py --attempts 20 --output output/cognition-shutdown.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: cognition-shutdown-${{ github.event.pull_request.head.sha || github.sha }}
+          path: output/cognition-shutdown.json
+          if-no-files-found: warn
+          retention-days: 30
   check:
     strategy:
       fail-fast: false

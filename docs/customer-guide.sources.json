@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-24",
-  "review_note": "PR #162 / #161: 全506回帰・通常配布・33ページ全表示の結果とWindows3.12 CI全体期限取消を確認。製品契約と顧客本文は同じで、最終受入は引き続き確認中。CI40分枠へ変更し試験内容を維持する。",
+  "review_note": "製品契約は変更せず、169の終了診断コマンド/ブランチ限定Windows3.13反復CIを追加。顧客本文の終了未確認/期限/169調査中という説明を確認し維持。315b3ff再CI成功と原因未特定を区別。",
   "sources": {
     "AGENTS.md": "450b1f735a20c5f557fc795e03e9dd6b0cab2c20290813c8b9a4fb63be4494a1",
     "CHANGELOG.md": "714e94799fb466f717767ea4a13dad915c185756dcf994003ad3cd4e9014793f",
