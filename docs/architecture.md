@@ -341,3 +341,9 @@ Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contract
 `src/nymph_toolkit/subsystems/agency/`（factory・判断モデル・専用保存）、`contracts/agency.py`（decisions/1）、`docs/agency.md`、ADR 0032、`validation/v1.5.md`、`examples/agency_demo.py`、`tests/subsystems/test_agency*.py`を追加した。単一配布に同梱する。Memory/Cognitionの公開契約で根拠を取得し、活動選択・時刻/期間/優先度/変更案をAgencyが決める。Coreの既存契約は維持する。
 
 決定履歴と活動の実行履歴は別。決定の保存・照会は実行開始や変更適用の証拠にならない。v1.6で実行側の状態/版と結び、v1.5では4配置・両経路で判断と根拠・再起動照会を検証する。人格/Sleepは後続。
+
+## R37のv1.6：Agencyが実行を判断しCoreが管理
+
+`subsystems/agency/_execution.py`と任意execution_factoryが、観測/学習根拠/実行状態から決定して、公開CoreClientのTask操作へ適用する。Core内部をimportしない。`contracts/agency.py`の追加activities/1、`docs/agency-execution.md`、ADR 0034、`validation/v1.6.md`、`examples/agency_execution_demo.py`、`tests/subsystems/test_agency_execution.py`に実装/説明/検証を置く。
+
+決定の保存、命令受付、適用完了、実行後処理の確認を分ける。実行結果を観測して次を判断するのはAgency。再起動はinactiveで、過去履歴を活動へ自動復元しない。接続固定・協調中断・Coreの64判断は維持する。

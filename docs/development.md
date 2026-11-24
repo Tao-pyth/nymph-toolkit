@@ -1,6 +1,6 @@
 # 開発準備とGit運用
 
-本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.5.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.6.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
 
 ## 公開準備時の環境
 
@@ -198,3 +198,7 @@ v1.3当時の通常配布検査は`python -m build --outdir .git/v13-dist`、`py
 ## v1.5 Agency候補
 
 `python -m pip install -e .`で1.5.0を導入し、`python examples/agency_demo.py`と全回帰を実行する。[Agencyガイド](agency.md)は初期判断と限界を説明する。通常配布は`python -m build --outdir .git/v15-dist`、`python tools/check_dist.py --dist-dir .git/v15-dist`で全テスト/13例とsdistを確認。既存Core API/契約/64判断、主要Docsと引継ぎ同期も必須。結果は[B05](validation/v1.5.md)。
+
+## v1.6の活動循環
+
+editable環境を1.6.0へ更新し、`python examples/agency_execution_demo.py`、`python -W error -m unittest tests.subsystems.test_agency_execution -v`を実行する。通常配布の検証先は`.git/v16-dist`とする。check_distは全回帰と14例・sdist再構築を行う。CLI/公開導入はv1.2.0と区別する。

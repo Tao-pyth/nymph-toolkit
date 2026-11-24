@@ -182,3 +182,10 @@
 - R9・ADR 0012で `Tao-pyth/nymph-toolkit` のpublic公開を採用し、Issue・Pull Requestでの参加方針をCONTRIBUTINGへ追加。
 
 資料・設計・開発基盤を中心とした初回public公開。Coreコード・本番Subsystem・Adapter・実行テストは未実装である。[リリース記録](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v0.1.0)に対象コミットと確認結果を記載する。
+
+## v1.6.0開発候補（未リリース）
+
+- Agencyの任意execution_factory、activities/1の有効化・観測・状態・停止・履歴を追加。
+- 公開TaskManager契約で登録・期間/優先度/開始前時刻変更・中断/再開・終了を適用し、Coreの実行観測を次の判断へ渡す。
+- 14番目の実行例とB06、4配置/結果不明/競合/停止・再起動の検証、主要Docsを整備。最終受入はvalidation/v1.6で追跡する。
+- 公開版v1.2.0、安定Core/Contractsと過去のReleaseを維持。

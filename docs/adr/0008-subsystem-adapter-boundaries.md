@@ -67,3 +67,7 @@ R37・[ADR 0031](0031-v1.4-text-web-and-correction.md)でText Interaction・Web�
 ## R37のv1.5具体化
 
 [ADR 0032](0032-v1.5-agency-decisions.md)で、Agencyの初期の規則ベース活動選択・変更案・決定保存とB05を具体化した。Coreへ価値判断を移さず、実行状態との適用循環はv1.6で扱う。他の未採用案を一括採用しない。
+
+## R37のv1.6具体化
+
+[ADR 0034](0034-v1.6-agency-execution.md)でAgency/TaskManagerの循環とB06を具体化した。活動の価値判断はAgency、実行管理はCore。Persona/Sleep/音声などの後続提案を一括採用しない。

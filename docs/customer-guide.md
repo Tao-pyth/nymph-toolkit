@@ -1,6 +1,6 @@
 # NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.5.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
+**Nymph Toolkit / 対象 v1.6.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
 
 ## この資料で分かること
 
@@ -13,11 +13,11 @@ NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入
 | Coreの構成・配置・起動停止 | 01〜03 |
 | 登録・接続・操作・ストリーム | 04〜07 |
 | 活動・失敗・保存・再起動・設定 | 08〜13 |
-| 6区分の接続契約と6つの実機能・訂正 | 14〜18C |
+| 6区分の接続契約と実機能・訂正・活動循環 | 14〜18D |
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.5.0**はCognition・Text/Web・注釈訂正・Agencyを含みます。前段PR #123/#131は未マージ、v1.5は親#15で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.6.0**はCognition・Text/Web・注釈訂正・Agencyを含みます。前段PR #123/#131/#137は未マージ、v1.6の活動循環は親#16で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名は[API一覧](api-reference.md)、意味は[Core API](core-api.md)と各機能ガイドを参照してください。
 
@@ -520,7 +520,7 @@ root外・上位移動・不正文字コード・空白のみ/NUL本文は拒否
 
 ## 17 Cognition：注釈から初期の規則性を学ぶ
 
-**v1.3で追加し、v1.5候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
+**v1.3で追加し、v1.6候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
 
 ```mermaid
 flowchart TB
@@ -645,7 +645,7 @@ flowchart LR
     P -. "v1.6で適用" .-> T["TaskManager"]
 ```
 
-図17：v1.5は判断・保存・照会まで。活動の登録・実行状態との循環は次段階で検証します。
+図17：v1.5の判断・保存・照会を、v1.6の任意実行機能へ接続できます。次章で活動循環を説明します。
 
 | 判断の例 | 説明できる結果 |
 |---|---|
@@ -659,6 +659,37 @@ flowchart LR
 決定は専用SQLiteへ原子的に保存してから返します。同じID/入力は元の決定を返し、再起動後も照会できます。別の入力でIDを流用すると競合です。最大4096決定で、上限でも過去履歴を自動削除しません。決定保存は活動の実行成功を意味しません。
 
 Memory原本を変更せず、出典区分・fingerprintと学習例数を判断根拠へ残します。取消や結果不明は未保存保証ではなく、IDで照会します。`python examples/agency_demo.py`で選択変化・再起動を再現できます。[設定・入力・失敗・上限](agency.md)
+
+<!-- pagebreak -->
+
+## 18D Agency：決定を実行し、結果から次を判断する
+
+v1.6の任意`execution_factory`は、明示有効化した後に活動を選び、Coreへ登録・変更を依頼します。Coreは実行状態を返します。保存した決定、命令の受付、適用完了、実行後処理を区別します。
+
+```mermaid
+flowchart LR
+    O["目標・内部状態の観測"] --> A["Agency<br/>根拠から活動を決定"]
+    A -->|"登録・変更"| T["Core<br/>TaskManager"]
+    T --> E["実行機能<br/>処理・安全な区切り"]
+    E -->|"状態・結果"| T
+    T -->|"状態・版・予定到達"| A
+```
+
+図18：活動の選択と継続判断はAgencyが担当します。実学習の結果で次の活動が変わることを検証します。
+
+| activities/1の操作 | 利用側が確認すること |
+|---|---|
+| activate | セッションIDと観測を指定。受付時点で活動開始済みとは限らない |
+| observe | 内部状態・目標・利用可能な活動を更新。観測版で競合を検出 |
+| status | 前景活動、予定・期間・優先度・計時、受付/適用、失敗・結果不明 |
+| halt | 所有活動へ協調的な終了を要求。stoppedと後処理確認を待つ |
+| history | 過去のCore活動履歴を照会。現在の活動へ自動復元しない |
+
+休息を選んだ場合は、元の活動の中断を確認して切り替えます。元の活動へ戻るときは同じ継続を再開します。予定時間到達の通知後はAgencyが継続・変更を判断し、Coreが勝手に延長・終了しません。
+
+容量不足では新しい観測・活動変化を待ちます。連携障害では所有活動の後処理後に中断完了を報告します。管理要求の結果不明は同じ要求IDで照会し、元の操作を自動再送しません。再起動はinactiveで始まります。
+
+`python examples/agency_execution_demo.py`は、選ばれた学習活動がCognitionへ実際に学習を登録し、休息へ切り替えて元へ戻る例です。初期目標や教材は入力されたもので、一般的な推論・目的の自律生成やSleepの完成ではありません。[設定・全契約・上限・停止](agency-execution.md)
 
 <!-- pagebreak -->
 
@@ -685,7 +716,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 | memory_demo.py / document_demo.py | 保存・文書取込・再起動取得 |
 | cognition_demo.py（候補のみ） | 注釈付き学習・根拠・出典区分・再起動 |
 | text_interaction_demo.py / web_demo.py（候補のみ） | 明示対話・注釈訂正、HTTP取得・出典・学習 |
-| agency_demo.py（候補のみ） | 根拠/内部状態による活動選択、決定保存・再起動 |
+| agency_demo.py / agency_execution_demo.py（候補のみ） | 根拠/内部状態による活動選択、決定保存・再起動 |
 
 FileStoreを使う例の履歴は一時フォルダへ保存され、通常終了時に消えます。結果を残す場合は[実行例ガイド](tutorials.md)のログ保存手順を使います。各例の正常停止と残存タスク0を確認してから、独自機能の接続へ進んでください。
 
@@ -722,7 +753,7 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-公開版は9例、候補は13例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
+公開版は9例、候補は14例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
@@ -797,7 +828,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ## 24 適用範囲・検証状況・参照先
 
-Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agencyを検証しています。公開版は9例、候補は13例。v1.4は全411テスト・通常配布・8環境CIを通過。v1.5の全回帰・配布・主要Docs/CIの結果は[B05記録](validation/v1.5.md)・親#15で確認します。
+Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agencyを検証しています。公開版は9例、候補は14例。v1.4は全411テスト・通常配布・8環境CIを通過。v1.5は全432テスト・通常配布・9ジョブCIを確認済み。v1.6の最終受入は[B06記録](validation/v1.6.md)・親#16で確認します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -805,7 +836,7 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agencyを検
 | 処理量と保持 | 未保存履歴、保持した活動・命令結果・通知が増え続ける運用は、使用量の確認が必要 |
 | 強制停止 | 同一プロセスの非協調処理は強制停止できない。子の強制終了でも後処理を確認できない場合がある |
 | 長時間性能 | 30分負荷はv0.8の特定コミットの測定。後続修正・各環境の全てを同じ測定結果で代表しない |
-| 後続の機能 | v1.0の共通契約は採用済み。v1.5のAgencyはADR 0032。適用循環・自由会話は後続判断 |
+| 後続の機能 | v1.0の共通契約は採用済み。v1.5のAgencyはADR 0032。活動循環はADR 0034、自由会話は後続判断 |
 
 現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Persona・Sleep・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
 
@@ -817,6 +848,6 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agencyを検
 | 協調的中断 | 実行側が安全な区切りと後処理を担当して止まること |
 | 結果不明 | 処理が失敗したと確定できず、照会が必要な状態 |
 
-手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、契約は[Core API](core-api.md)・[API一覧](api-reference.md)、判断は[ADR索引](adr/README.md)、証拠は[B00](validation/v1.0.md)・[B01](validation/v1.1.md)・[B02](validation/v1.2.md)・[B03](validation/v1.3.md)・[B04](validation/v1.4.md)・[B05](validation/v1.5.md)を参照してください。Windows終了時の修正は[検証記録](validation/windows-shutdown.md)にあります。
+手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、契約は[Core API](core-api.md)・[API一覧](api-reference.md)、判断は[ADR索引](adr/README.md)、証拠は[B00](validation/v1.0.md)・[B01](validation/v1.1.md)・[B02](validation/v1.2.md)・[B03](validation/v1.3.md)・[B04](validation/v1.4.md)・[B05](validation/v1.5.md)・[B06](validation/v1.6.md)を参照してください。Windows終了時の修正は[検証記録](validation/windows-shutdown.md)にあります。
 
 本資料とNTKの自作コード・Contracts・設計文書には[Apache-2.0](../LICENSE)を適用します。第三者成果物とNymphの個体データは、それぞれの条件で扱います。本資料は公開版と開発候補を区別して説明し、将来機能を実装済みとして含めません。
