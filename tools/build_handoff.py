@@ -66,7 +66,7 @@ R35でv1.3 CognitionとMemory連携の開発が指示された。親#13・子#11
 
 R36で顧客向けMarkdown・PDF・HTMLも主要Docsとし、対象コミットの実装と常に同期することが明示指示された。親#13の子#124・#125を変更前に登録し、ADR 0030へ採用方針を記録した。原稿・図・公開状態の更新、同期証跡、必須CI生成、全ページの表示確認を行う。開発候補と公開版を区別し、過去の公開スナップショットは保持する。
 
-R37でv1.10まで実装・検証を反復する目標が指示された。v1.4は親#14・子#126〜#130を先行登録し、ADR 0031で対話・Web入力・学習注釈訂正を具体化。具体API・数値はCodexの実装判断として区別する。前段PR #123は未マージで、公開版v1.2と開発候補v1.4を分ける。v1.5は親#15・子#132〜#136、ADR 0032で活動選択・変更判断・決定保存とB05を具体化した。v1.6は親#16・子#138〜#142、ADR 0034で活動循環とCore適用・B06を具体化した。後続v1.7〜v1.10も各段階で設計・子登録・実装・検証・主要Docs同期を行い、途中版だけで全体目標を完了としない。
+R37でv1.10まで実装・検証を反復する目標が指示された。v1.4は親#14・子#126〜#130を先行登録し、ADR 0031で対話・Web入力・学習注釈訂正を具体化。具体API・数値はCodexの実装判断として区別する。前段PR #123は未マージで、公開版v1.2と開発候補v1.4を分ける。v1.5は親#15・子#132〜#136、ADR 0032で活動選択・変更判断・決定保存とB05を具体化した。v1.6は親#16・子#138〜#142、ADR 0034で活動循環とCore適用・B06を具体化した。v1.7は親#17・子#144〜#148、ADR 0035でPersonaの保持/外部修正/履歴とB07を具体化した。後続v1.8〜v1.10も各段階で設計・子登録・実装・検証・主要Docs同期を行い、途中版だけで全体目標を完了としない。
 
 """
 
@@ -78,7 +78,7 @@ def sources():
         "docs/getting-started.md", "docs/tutorials.md", "docs/troubleshooting.md",
         "docs/vision.md", "docs/architecture.md", "docs/runtime.md", "docs/registry.md",
         "docs/connections.md", "docs/task-manager.md", "docs/hybrid.md",
-        "docs/agency-execution.md", "docs/agency.md", "docs/interaction.md", "docs/implementation-progress.md", "docs/cognition.md", "docs/document.md", "docs/memory.md", "docs/core-api.md", "docs/api-reference.md", "docs/module-contracts.md", "docs/migration-v1.md", "docs/adr/README.md",
+        "docs/persona.md", "docs/agency-execution.md", "docs/agency.md", "docs/interaction.md", "docs/implementation-progress.md", "docs/cognition.md", "docs/document.md", "docs/memory.md", "docs/core-api.md", "docs/api-reference.md", "docs/module-contracts.md", "docs/migration-v1.md", "docs/adr/README.md",
     ]
     result += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/adr").glob("[0-9]*.md"))]
     result += ["docs/roadmap.md", "docs/acceptance.md"]

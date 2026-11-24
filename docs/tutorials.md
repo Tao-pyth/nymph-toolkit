@@ -176,3 +176,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## v1.6候補のAgency活動循環例
 
 14番目は`python examples/agency_execution_demo.py`。[活動循環ガイド](agency-execution.md)の契約で明示的に開始し、Agencyが選択したstudyでCognitionを学習させる。学習結果からapplyへ移り、睡眠圧の観測変更で休息へ切り替え、同じ活動を再開し、haltで安全に終了する。教材は教師情報付きで、一般的な会話やSleep本実装ではない。
+
+## 開発候補v1.7：Persona（15番目）
+
+`python examples/persona_demo.py`。初期curiosity=500/sociability=400を読み、外部差分で600/350へ更新し、両経路・同じIDの再要求・版競合・2回の起動で保存を確認する。最後にPASSを表示して後処理まで終了する。保存先は例の一時フォルダで、終了時に削除する。値と根拠は例の明示入力。[契約と保存](persona.md)、[検証範囲](validation/v1.7.md)を参照。

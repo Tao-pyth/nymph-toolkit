@@ -52,3 +52,5 @@ v1.4はR37・[ADR 0031](docs/adr/0031-v1.4-text-web-and-correction.md)で対話/
 v1.5 AgencyはR37・[ADR 0032](docs/adr/0032-v1.5-agency-decisions.md)を確認する。価値判断はAgency、実行管理はCore。utility-v1の入力/根拠/予定/変更案と決定履歴を扱い、決定保存を活動登録成功と扱わない。Memory原本・Core安定APIを維持し、再起動では決定を照会する。TaskManager適用循環はv1.6で具体化する。
 
 v1.6のAgency活動循環は[ADR 0034](docs/adr/0034-v1.6-agency-execution.md)に従う。任意execution_factoryは起動時inactive。保存済み決定と実際の適用結果を分け、受付だけで現在planを置換しない。容量不足は新観測/状態変化まで待ち、連携エラーは所有活動の後処理後に中断完了を報告する。結果不明は同一管理要求の照会で解決し、元の操作を自動再送しない。
+
+v1.7 Personaは[ADR 0035](docs/adr/0035-v1.7-persona.md)を確認する。外部差分だけを原子的に適用し、Coreへ人格評価を置かない。現在値/版と成功履歴を同時保存し、同じID/要求を再適用しない。初期値は空DBだけ、設定違い/破損を自動初期化しない。通信取消は未保存保証ではなく、get_updateで照合する。Agency連携はv1.8、Sleepの修正生成は後続へ分ける。

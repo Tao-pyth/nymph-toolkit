@@ -132,7 +132,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
-### 現在の配置（公開v1.2と開発候補v1.4）
+### 現在の配置（公開v1.2と開発候補v1.7）
 
 文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用は[ADR 0011](adr/0011-apache-2.0-license.md)に従う。
 
@@ -164,6 +164,10 @@ nymph-toolkit/
 ├─ examples/cognition_demo.py        # 10番目：v1.3からの初期学習
 ├─ examples/text_interaction_demo.py # 11番目：観測・教師入力・訂正/CLI
 ├─ examples/web_demo.py              # 12番目：HTTP文章と明示学習
+├─ examples/agency_demo.py           # 13番目：活動判断・決定保存
+├─ examples/agency_execution_demo.py # 14番目：活動循環・実学習
+├─ examples/persona_demo.py          # 15番目：人格特性の外部修正・保存
+├─ examples/persona_requester.py
 ├─ examples/cognition_requester.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
@@ -188,7 +192,7 @@ nymph-toolkit/
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
 │  ├─ getting-started.md            # 公開v1.2.0通常導入・初回実行
-│  ├─ tutorials.md                  # 公開9例と開発候補の10番目
+│  ├─ tutorials.md                  # 公開9例と候補15例
 │  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md
@@ -205,6 +209,11 @@ nymph-toolkit/
 │  ├─ cognition.md                   # v1.3初期学習とMemory根拠
 │  ├─ interaction.md                 # v1.4入力・訂正・CLI・DB移行
 │  ├─ agency.md                     # v1.5判断・根拠・決定保存/照会
+│  ├─ agency-execution.md            # v1.6活動循環とCore適用
+│  ├─ persona.md                     # v1.7特性・外部修正・履歴
+│  ├─ validation/v1.5.md             # B05の実装受入
+│  ├─ validation/v1.6.md             # B06の実装受入
+│  ├─ validation/v1.7.md             # B07の確認状況
 │  ├─ implementation-progress.md     # v1.10までの実施状況
 │  ├─ validation/v1.4.md             # B04検証と未完了の受入
 │  ├─ document.md                    # v1.2文書入力とMemory連携
@@ -262,19 +271,24 @@ nymph-toolkit/
 │     ├─ 0028-v1.2-document-adapter.md
 │     ├─ 0029-v1.3-cognition-learning.md
 │     ├─ 0030-customer-docs-as-primary.md
-│     └─ 0031-v1.4-text-web-and-correction.md
+│     ├─ 0031-v1.4-text-web-and-correction.md
+│     ├─ 0032-v1.5-agency-decisions.md
+│     ├─ 0033-input-candidate-contract.md # 別件の入力前処理提案。未採用
+│     ├─ 0034-v1.6-agency-execution.md
+│     └─ 0035-v1.7-persona.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     ├─ contracts/                  # memory/document/cognition/revision/text_interaction/webの業務契約
+│     ├─ contracts/                  # Core共通型とMemory/Cognition/Agency/Persona/Adapter業務契約
 │     ├─ adapters/document/          # ローカル文書入力とMemory連携
 │     ├─ adapters/text_interaction/  # 観測・教師入力・訂正・照会
 │     ├─ adapters/web/               # 許可originのHTTP文章取得
 │     ├─ adapters/_interaction.py    # 新規入力Adapterの所有・接続補助
 │     ├─ subsystems/memory/           # 同梱する最小Memory
 │     ├─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
-│     └─ subsystems/agency/           # 根拠付き活動決定と専用履歴
-└─ tests/                            # subsystems/にMemory/Cognition単体・統合試験
+│     ├─ subsystems/agency/           # 根拠付き判断・活動循環と専用履歴
+│     └─ subsystems/persona/          # 長期特性・外部差分・専用履歴
+└─ tests/                            # subsystems/にMemory/Cognition/Agency/Personaの単体・統合試験
    ├─ core/
    ├─ adapters/                     # Document単体・4配置・障害試験
    ├─ subsystems/
@@ -347,3 +361,7 @@ Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contract
 `subsystems/agency/_execution.py`と任意execution_factoryが、観測/学習根拠/実行状態から決定して、公開CoreClientのTask操作へ適用する。Core内部をimportしない。`contracts/agency.py`の追加activities/1、`docs/agency-execution.md`、ADR 0034、`validation/v1.6.md`、`examples/agency_execution_demo.py`、`tests/subsystems/test_agency_execution.py`に実装/説明/検証を置く。
 
 決定の保存、命令受付、適用完了、実行後処理の確認を分ける。実行結果を観測して次を判断するのはAgency。再起動はinactiveで、過去履歴を活動へ自動復元しない。接続固定・協調中断・Coreの64判断は維持する。
+
+## v1.7 Personaの配置と責務
+
+`src/nymph_toolkit/subsystems/persona/`に人格特性の保持・外部修正・保存を同梱し、`src/nymph_toolkit/contracts/persona.py`でtraits/1を宣言する。利用・検証は[Persona](persona.md)・[B07](validation/v1.7.md)、判断は[ADR 0035](adr/0035-v1.7-persona.md)。Coreは接続・ライフサイクルを管理するだけで、人格値や活動の価値を選ばない。初期値は初回のみ適用し、現在値と修正履歴を同一transactionで保存する。Agencyへの選択反映はv1.8で具体化する。

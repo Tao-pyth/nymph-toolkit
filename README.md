@@ -12,7 +12,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在使える機能と公開状態
 
-2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.6.0開発候補** です。未マージのv1.3〜v1.5候補（PR #123 / #131 / #137）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
+2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.7.0開発候補** です。未マージのv1.3〜v1.6候補（PR #123 / #131 / #137 / #143）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
 
 | 機能 | 実装した範囲・操作 | 利用できる版・資料 |
 |---|---|---|
@@ -23,14 +23,23 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Text Interaction・Cognition訂正 | 観測・教師情報・照会の5操作、revisionと命令ID付き注釈訂正 | v1.4開発候補。[入力・訂正ガイド](docs/interaction.md) |
 | Web Adapter | 許可originのHTTP文章取得・HTML本文抽出・Memory保存 | v1.4開発候補。[入力・訂正ガイド](docs/interaction.md) |
 | Agency | 根拠と内部状態からの決定・保存、Coreへの適用と活動循環 | v1.5/1.6開発候補。[判断](docs/agency.md)・[実行](docs/agency-execution.md) |
+| Persona | 長期特性の参照、外部差分、現在値/修正履歴の原子的保存 | v1.7開発候補。[Persona](docs/persona.md) |
 
-Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Persona・Sleep、Discord Voice・Desktop Adapterは後続です。v1.5の実装受入は[B05記録](docs/validation/v1.5.md)、v1.10までの残作業は[進捗](docs/implementation-progress.md)へ記録します。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)にあります。
+Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。Agencyへの人格反映、Sleep、Discord Voice・Desktop Adapterは後続です。v1.5の実装受入は[B05記録](docs/validation/v1.5.md)、v1.10までの残作業は[進捗](docs/implementation-progress.md)へ記録します。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)にあります。
 
-## v1.6.0開発候補 — AgencyとTaskManagerの活動循環
+## v1.7.0開発候補 — Personaの人格特性
+
+業務契約は`ntk.persona.traits/1`（get/apply/get_update/history）。初期値を再起動で再適用せず、未知形式・破損・設定違いを拒否します。
+
+1〜32の名前付き特性を整数0〜1000で保持し、外部からの差分を観測版・命令ID・根拠付きで適用します。現在値と修正履歴を同一トランザクションで保存し、再起動後も照会できます。Persona自身は更新を開始しません。
+
+[Personaガイド](docs/persona.md)・[ADR 0035](docs/adr/0035-v1.7-persona.md)・[B07記録](docs/validation/v1.7.md)を参照してください。単体/保存12件・4配置を含む統合4件と15番目の例が成功。全回帰・通常配布・CI・主要Docs生成は継続中です。
+
+## 前段v1.6.0 — AgencyとTaskManagerの活動循環
 
 Agencyが観測と学習根拠から活動を選び、Coreへ登録・変更・中断/再開・終了を依頼します。実行状態と予定到達を使って継続判断し、明示有効化前や再起動直後には活動を開始しません。14番目の例では実際のCognition学習と、休息への切替・元の活動の再開を確認できます。
 
-[活動循環ガイド](docs/agency-execution.md)・[ADR 0034](docs/adr/0034-v1.6-agency-execution.md)・[B06記録](docs/validation/v1.6.md)で範囲と検証進捗を追います。全回帰・配布・主要Docs/CIの最終受入は親#16・子#142で確認中です。
+[活動循環ガイド](docs/agency-execution.md)・[ADR 0034](docs/adr/0034-v1.6-agency-execution.md)・[B06記録](docs/validation/v1.6.md)で範囲と検証進捗を追います。PR #143 / d0f22ebは全450テスト・通常配布/14例・9ジョブCIが成功。顧客29ページ/18図をWindows/Linuxで確認済みです。未マージです。
 
 ## 前段v1.5.0開発候補 — Agencyの活動決定
 
@@ -48,7 +57,7 @@ Windows/Python 3.15.2で全411テスト、通常wheel導入・12例・sdist再�
 
 R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。[利用ガイド](docs/cognition.md)、[ADR 0029](docs/adr/0029-v1.3-cognition-learning.md)、[B03検証記録](docs/validation/v1.3.md)に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。 Cognition実装時に全378テスト・10例・8環境CI・通常wheel/sdistを確認し、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)でレビューします。最終SHAと結果は[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)に記録します。
 
-v1.3の初期実装をこのcheckoutの1.6.0候補へ継承しています。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
+v1.3の初期実装をこのcheckoutの1.7.0候補へ継承しています。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
 
 ## 公開済みv1.2.0 — Document Adapter
 
@@ -68,7 +77,7 @@ CoreとSubsystem・Adapterをつなぐ6区分の[接続契約](docs/module-contr
 
 配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.6.0はCognition・Text/Web・訂正・Agencyの判断と活動循環を含み、実行例は14例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.7.0はCognition・Text/Web・訂正・Agencyの判断と活動循環、Personaを含み、実行例は15例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -103,7 +112,7 @@ v1.0.0は316テスト（製品304件＋検査12件）、7実行例、全8環境C
 
 30分の負荷測定はv0.8の特定コミットに対する結果です。後続修正の検証範囲とともに[v0.8検証記録](docs/validation/v0.8.md)へ記録しており、現在の全環境で同じ長時間性能を保証するものではありません。
 
-v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1 MemoryはR31・ADR 0027で初期範囲を具体化しました。v1.2はR33・ADR 0028でDocumentの初期範囲を具体化しました。v1.3はR35・ADR 0029で初期学習の範囲を具体化しました。v1.4はR37・ADR 0031で範囲を具体化しました。v1.5はADR 0032、v1.6はADR 0034で具体化しました。後続v1.7.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
+v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1 MemoryはR31・ADR 0027で初期範囲を具体化しました。v1.2はR33・ADR 0028でDocumentの初期範囲を具体化しました。v1.3はR35・ADR 0029で初期学習の範囲を具体化しました。v1.4はR37・ADR 0031で範囲を具体化しました。v1.5はADR 0032、v1.6はADR 0034、v1.7はADR 0035で具体化しました。後続v1.8.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
 
 将来のPC全体の状況取得はAdapterが担当します。Desktop Adapterはv1.10.0までの配分に含めず将来課題とし、複製・移植・伝播機構は初期スコープ外です。
 
