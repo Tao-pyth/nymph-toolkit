@@ -11,7 +11,8 @@ from nymph_toolkit.contracts import (
 from nymph_toolkit.contracts.agency import AGENCY_KEY
 from nymph_toolkit.contracts.cognition import COGNITION_CONTRACT
 from nymph_toolkit.contracts.memory import MEMORY_CONTRACT
-from ._model import catalog, decide, fields, identifier, observation, request, snapshot
+from nymph_toolkit.contracts.persona import PERSONA_CONTRACT
+from ._model import catalog, decide, fields, identifier, observation, persona_observation, persona_settings, request, snapshot
 from ._store import Store
 
 __all__ = ["factory", "execution_factory"]
@@ -35,15 +36,21 @@ async def _settled(future):
 
 class _Agency:
     def __init__(self, context, config):
-        fields(config, "path memory_module_id cognition_module_id catalog")
+        has_persona = type(config) is dict and "persona" in config
+        fields(config, "path memory_module_id cognition_module_id catalog" + (" persona" if has_persona else ""))
+        self.persona = persona_settings(config["persona"]) if has_persona else None
         self.catalog = catalog(config["catalog"])
         self.providers = {MEMORY_CONTRACT.key:identifier(config["memory_module_id"]),
                           COGNITION_CONTRACT.key:identifier(config["cognition_module_id"])}
         if context.settings.max_frame_bytes < 65536:
             raise ValueError("Agency requires max_frame_bytes >= 65536")
         self.context = context
-        self.store = Store(config["path"], {"module_id":context.module_id, "catalog":self.catalog,
-                           "memory_module_id":config["memory_module_id"], "cognition_module_id":config["cognition_module_id"]})
+        identity = {"module_id":context.module_id, "catalog":self.catalog,
+                    "memory_module_id":config["memory_module_id"], "cognition_module_id":config["cognition_module_id"]}
+        if self.persona is not None:
+            self.providers[PERSONA_CONTRACT.key] = self.persona["module_id"]
+            identity["persona"] = self.persona
+        self.store = Store(config["path"], identity)
         self.links, self.bound = {}, set()
         self.active = self.stop_task = self.pool = None
         self.started = self.ready = self.closing = self.busy = False
@@ -170,8 +177,16 @@ class _Agency:
                 evidence.append(observation(goal,record,profile))
             except (ValueError,TypeError,KeyError,OverflowError) as error:
                 return OperationFailure("agency.evidence",str(error))
+        if self.persona is not None:
+            traits = await self._call(PERSONA_CONTRACT, "get")
+            if isinstance(traits, (OperationFailure, TemporaryUnavailable, LinkFailure)):
+                return traits
+            try:
+                evidence = dict(goals=evidence, persona=persona_observation(traits, self.persona))
+            except (ValueError, TypeError, KeyError, OverflowError, RecursionError) as error:
+                return OperationFailure("agency.evidence", str(error))
         try:
-            result = decide(value,evidence,self.catalog,self.context.module_id,previous)
+            result = decide(value,evidence,self.catalog,self.context.module_id,previous,persona=self.persona)
         except (ValueError,TypeError,OverflowError) as error:
             return OperationFailure("agency.invalid",str(error))
         return await self._work(self.store.execute,"save",value,evidence,result)

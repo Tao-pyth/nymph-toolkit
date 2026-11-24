@@ -173,7 +173,43 @@ def validate_evidence(value, goals):
         integer(item["documents"], 0, 256)
 
 
-def decide(value, evidence, templates, module_id, previous=None):
+def persona_settings(value):
+    value = snapshot(value, 2048)
+    fields(value, "module_id motive_traits")
+    identifier(value["module_id"])
+    fields(value["motive_traits"], "rest explore achieve social")
+    for name in value["motive_traits"].values():
+        if type(name) is not str or not re.fullmatch(r"[a-z][a-z0-9_]{0,31}", name):
+            raise ValueError("Persona mapping requires a valid trait name")
+    return value
+
+
+def persona_observation(value, settings):
+    value = snapshot(value, 4096)
+    fields(value, "module_id revision traits updated_at")
+    if value["module_id"] != settings["module_id"]:
+        raise ValueError("Persona returned a different module identity")
+    integer(value["revision"], 0, 2**63 - 1)
+    timestamp(value["updated_at"])
+    traits = value["traits"]
+    if type(traits) is not dict or not 1 <= len(traits) <= 32:
+        raise ValueError("Persona requires 1..32 traits")
+    for name, number in traits.items():
+        if type(name) is not str or not re.fullmatch(r"[a-z][a-z0-9_]{0,31}", name):
+            raise ValueError("Invalid Persona trait name")
+        integer(number, 0, 1000)
+    if set(settings["motive_traits"].values()) - set(traits):
+        raise ValueError("Persona is missing a configured trait")
+    return value
+
+
+def decide(value, evidence, templates, module_id, previous=None, *, persona=None):
+    persona_source = None
+    if persona is not None:
+        persona = persona_settings(persona)
+        fields(evidence, "goals persona")
+        persona_source = persona_observation(evidence["persona"], persona)
+        evidence = evidence["goals"]
     validate_evidence(evidence, value["goals"])
     current = value["current"]
     if current is not None and (previous is None or previous["plan"] is None):
@@ -193,6 +229,13 @@ def decide(value, evidence, templates, module_id, previous=None):
                 missing = max(0, goal["target_documents"]-item["documents"])*1000//goal["target_documents"]
                 score = goal["importance"] * (missing if motive == "explore" else 1000-missing)//1000
                 candidates.append(dict(template_id=template["template_id"], goal_id=goal["goal_id"], motive=motive, score=score))
+    if persona_source is not None:
+        for candidate in candidates:
+            trait = persona["motive_traits"][candidate["motive"]]
+            factor = 500 + persona_source["traits"][trait]
+            candidate["base_score"] = candidate["score"]
+            candidate["multiplier_per_mille"] = factor
+            candidate["score"] = min(1000, candidate["score"] * factor // 1000)
     def order(candidate):
         retained = old is not None and all(candidate[k] == old[k] for k in ("template_id", "goal_id"))
         return (-candidate["score"], not retained, candidate["template_id"], candidate["goal_id"] or "")
@@ -238,5 +281,8 @@ def decide(value, evidence, templates, module_id, previous=None):
             directive = "pause" if current["state"] == "running" and current["supports_pause"] else "finish"
     result = dict(decision_id=value["decision_id"], policy=POLICY, requested_at=value["now"], directive=directive,
                   target=target, plan=plan, selected=selected, candidates=candidates, evidence=evidence, state=state)
+    if persona_source is not None:
+        result["policy"] = "utility-persona-v1"
+        result["persona"] = dict(persona_source, motive_traits=persona["motive_traits"])
     # Fail before saving if the receipt cannot fit its declared transport budget.
     return snapshot(result, 49152)

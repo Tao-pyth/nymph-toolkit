@@ -90,3 +90,7 @@ python examples/agency_execution_demo.py
 14番目の例は、Memoryに教材を保存し、Agencyが選んだstudyで実際にCognition.learnを呼び出す。学習済み根拠からapplyへ移り、睡眠圧の観測変更でrestへ切り替え、元の活動へ戻り、haltで終了する。教材の区切り・ラベルは明示された教師情報。例のworkerは教材を実行するための機能で、本番のSleepやPersonaではない。
 
 別プロセスの例用workerを読み込むため、例の実行時だけ例フォルダをPYTHONPATHへ設定する。本番機能は共有Python環境へ導入する。4配置・両経路・再起動・障害の確認範囲は[B06記録](validation/v1.6.md)を参照する。
+
+## v1.8の特性反映
+
+任意persona設定は[連携ガイド](persona-agency.md)に従う。外部修正の反映は次の新しい判断時であり、すぐ反映したい場合はPersonaの保存確認後にobserveで新しい観測版を作る。Coreの状態報告とAgencyの命令適用記録は別々に確認する。

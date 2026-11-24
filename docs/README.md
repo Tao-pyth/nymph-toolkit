@@ -1,6 +1,6 @@
 # Docsの読み方と根拠
 
-初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.7.0のCognition・Text/Web・訂正・Agency判断/活動循環・Personaと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。[機能・公開状態の一覧](../README.md)と[2026年11月23日の整合点検](validation/docs-current.md)を参照する。
+初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.8.0のCognition・Text/Web・訂正・Agency判断/活動循環・Personaと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。[機能・公開状態の一覧](../README.md)と[2026年11月23日の整合点検](validation/docs-current.md)を参照する。
 
 R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memory.md)・[B01結果](validation/v1.1.md)を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
 
@@ -21,7 +21,7 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | 問題を調べる | [トラブルシューティング](troubleshooting.md) → 対象機能のDocs・検証記録 |
 | 判断を追う | [ADR索引](adr/README.md) → [採用64項目](adr/0022-v0.7-v0.9-hybrid-and-completion.md) → [証拠対応表](validation/core-coverage.md) |
 
-導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.7候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
+導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.8候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
 
 ## 文書一覧と格納場所
 
@@ -41,6 +41,8 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
 | [validation/docs-onboarding.md](validation/docs-onboarding.md) | D01〜D04・D09の検証結果、対象版、確認範囲 |
 | [validation/docs-current.md](validation/docs-current.md) | v1.3候補までの実装・資料・公開状態の点検、訂正箇所と確認範囲 |
+| [persona-agency.md](persona-agency.md) | v1.8候補の人格特性と活動選択・保存互換・再評価 |
+| [validation/v1.8.md](validation/v1.8.md) | B08の確認状況 |
 | [persona.md](persona.md) | v1.7候補の人格特性・外部差分・原子的保存/履歴 |
 | [validation/v1.7.md](validation/v1.7.md) | B07の局所/統合・回帰/配布/CI/主要Docsの確認状況 |
 | [agency-execution.md](agency-execution.md) | v1.6候補の明示有効化・観測・活動循環・Core適用・停止 |
@@ -263,3 +265,7 @@ v1.5は親#15・子#132〜#136を先行登録し、[ADR 0032](adr/0032-v1.5-agen
 ## R37のv1.6具体化
 
 親#16と子#138〜#142を先に登録し、ADR 0034でAgencyの明示有効化・実行状態を使う継続判断・公開Coreへの適用とB06を具体化した。基点v1.5 PR #137は30f2639の全9ジョブCI・432テスト・顧客28ページ/17図を確認済み。v1.6自身の最終受入は[検証記録](validation/v1.6.md)へ分離する。ADR 0033は提案のまま保持する。
+
+## R37のv1.8具体化
+
+親#18・子#151〜#155を先行登録し、ADR 0036を設計子#151へ実装前に記録した。人格特性の参照・初期重み付け・保存形式2・再評価とB08を具体化したCodex判断であり、個々の規則/値のユーザー承認とは区別する。[連携ガイド](persona-agency.md)・[検証記録](validation/v1.8.md)を引継ぎ書へ全文収録する。

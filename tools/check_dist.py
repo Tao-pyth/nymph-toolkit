@@ -47,7 +47,7 @@ def main() -> None:
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
-        assert metadata["Version"] == "1.7.0"
+        assert metadata["Version"] == "1.8.0"
         assert metadata["Requires-Python"] == ">=3.12"
         assert metadata["License-Expression"] == "Apache-2.0"
         assert metadata.get_all("Requires-Dist", []) == []
@@ -73,7 +73,7 @@ def main() -> None:
             "import nymph_toolkit.subsystems.cognition as cognition; from nymph_toolkit.contracts.cognition import COGNITION_CONTRACT; "
             "assert Path(cognition.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "from importlib.metadata import version; import sys; "
-            "assert version('nymph-toolkit') == '1.7.0'; "
+            "assert version('nymph-toolkit') == '1.8.0'; "
             "assert Path(core.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "assert RuntimeState.NEW.value == 'new'; print('installed imports: PASS')"
         )
@@ -113,6 +113,7 @@ def main() -> None:
         subprocess.run([str(python), "-I", str(work / "examples/agency_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/agency_execution_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/persona_demo.py")], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "examples/persona_agency_demo.py")], cwd=work, env=env, check=True)
         subprocess.run(
             [str(python), "-I", "-W", "error", "-m", "unittest", "discover",
              "-s", str(work / "tests"), "-t", str(work), "-v"],
