@@ -1,6 +1,13 @@
 # 変更履歴
 
-## 未リリース — v1.3.0候補
+## 未リリース — v1.4.0候補
+
+- R37・ADR 0031、親#14・子#126〜#130で対話・Web・訂正を実装中。v1.10までの継続目標と各段階の進捗を記録。
+- Text Interactionの5操作とJSON-lines CLI、許可originのHTTP取得・HTML抽出とMemory保存を追加。
+- Cognition revision/1を明示有効化。注釈訂正・命令冪等/競合・4096命令上限、既知SQLite形式1→2の原子的移行を追加。
+- 4配置・直接/Core経由・再起動・障害/取消/停止を追加検証。全411テスト（Windows/Python 3.15.2）成功。配布・CI・主要Docsの最終受入はB04記録へ分離。
+
+## 前段の未リリース — v1.3.0候補
 
 - R36・ADR 0030で顧客Markdown/PDF/HTMLを主要Docs化。本文をCore接続契約・Memory/Document/Cognitionまで更新し、同期証跡・生成/検査・必須CI artifactを追加。#124/#125で追跡。
 

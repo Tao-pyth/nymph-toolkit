@@ -1,6 +1,6 @@
 # 開発準備とGit運用
 
-本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.3.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.4.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
 
 ## 公開準備時の環境
 
@@ -45,7 +45,7 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Core/接続契約/Mem
 
 ## v0.9の完成監査（当時の手順）
 
-v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下のコマンド、14＋92件・6例という件数はv0.9.0のcheckoutで使った当時の手順である。現在のcheckoutでは上の環境構築と末尾のv1.3節を使い、Core 15件・Contracts 98件・10例を照合する。現行の意味と証拠は[Core API](core-api.md)・[証拠対応表](validation/core-coverage.md)を参照する。
+v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下のコマンド、14＋92件・6例という件数はv0.9.0のcheckoutで使った当時の手順である。現在のcheckoutでは上の環境構築と末尾のv1.4節を使い、Core 15件・Contracts 98件・12例を照合する。現行の意味と証拠は[Core API](core-api.md)・[証拠対応表](validation/core-coverage.md)を参照する。
 
 ```powershell
 .venv/Scripts/python.exe tools/check_api.py
@@ -177,16 +177,20 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ## v1.1 Memoryの開発・配布確認
 
-[Memory](memory.md)と[ADR 0027](adr/0027-v1.1-memory.md)を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。Memoryは8番目の例。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。v1.1当時は`.git/v11-dist`を使ったが、現在の配布検査は末尾のv1.3節を使う。
+[Memory](memory.md)と[ADR 0027](adr/0027-v1.1-memory.md)を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。Memoryは8番目の例。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。v1.1当時は`.git/v11-dist`を使ったが、現在の配布検査は末尾のv1.4節を使う。
 
 ## v1.2 Documentの開発確認
 
-以下はv1.2開発時点の手順。現在の開発候補は末尾のv1.3節を参照する。checkoutをeditable導入して[Documentガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
+以下はv1.2開発時点の手順。現在の開発候補は末尾のv1.4節を参照する。checkoutをeditable導入して[Documentガイド](document.md)・[ADR 0028](adr/0028-v1.2-document-adapter.md)に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
 
 配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。v1.2当時の検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
 
 ## v1.3 Cognitionの開発確認
 
-このcheckoutを`python -m pip install -e .`で導入し、版が1.3.0であることを確認する。[Cognitionガイド](cognition.md)・[ADR 0029](adr/0029-v1.3-cognition-learning.md)に従い、`python examples/cognition_demo.py`と`python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v`を実行する。公開v1.2のwheelにはCognitionは含まれない。
+v1.3当時はcheckoutを`python -m pip install -e .`で導入し、版1.3.0を確認した。現行checkoutは末尾のv1.4節を使う。[Cognitionガイド](cognition.md)・[ADR 0029](adr/0029-v1.3-cognition-learning.md)に従い、`python examples/cognition_demo.py`と`python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v`を実行する。公開v1.2のwheelにはCognitionは含まれない。
 
-現在の通常配布検査は`python -m build --outdir .git/v13-dist`、`python tools/check_dist.py --dist-dir .git/v13-dist`で1.3.0を期待する。全回帰、10例、短い4配置負荷、sdist同一wheel再構築、API/契約/64項目/Docs同期を確認する。公開済みタグ・添付と現行版向け導入ガイドを開発候補へ無断で置き換えない。
+v1.3当時の通常配布検査は`python -m build --outdir .git/v13-dist`、`python tools/check_dist.py --dist-dir .git/v13-dist`で1.3.0を期待する。全回帰、10例、短い4配置負荷、sdist同一wheel再構築、API/契約/64項目/Docs同期を確認する。公開済みタグ・添付と現行版向け導入ガイドを開発候補へ無断で置き換えない。
+
+## v1.4候補の開発・検証
+
+`python -m pip install -e .`後にimportlib.metadataで1.4.0を確認する。[入力・訂正ガイド](interaction.md)の例2件を含む12例、全回帰、`python tools/check_api.py`・`check_contracts.py`・`check_completion.py`を確認する。通常配布は`python -m build --outdir .git/v14-dist`、`python tools/check_dist.py --dist-dir .git/v14-dist`。顧客主要Docsは本文/図を実装へ照合して証跡を更新し、PDF/HTML生成・全ページ表示確認を行う。その後引継ぎ書を再生成し`python tools/check_docs.py`を通す。正確な結果と未完了は[B04](validation/v1.4.md)へ記録する。

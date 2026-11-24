@@ -10,7 +10,7 @@ NTKは、経験から言葉と世界を学び、記憶を積み重ね、自ら�
 
 ## 採用された構成
 
-v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[Connections](connections.md)とADR 0019、活動管理は[TaskManager](task-manager.md)とADR 0020・0021を参照する。v1.1でMemory、v1.2でDocumentを公開し、v1.3候補ではCognitionの初期学習を実装した。[機能と公開状態](../README.md)を現在の入口とする。
+v0.2でRuntime、v0.3でRegistry・ModuleGroup、v0.4でConnections・FileStore、v0.5でTaskManagerと必要なContractsを実装した。[Runtimeの使い方](runtime.md)と[Registryの使い方](registry.md)、ADR 0014・0016にライフサイクル、登録・依存管理、失敗通知と後処理を記録する。接続・保存は[Connections](connections.md)とADR 0019、活動管理は[TaskManager](task-manager.md)とADR 0020・0021を参照する。v1.1でMemory、v1.2でDocumentを公開し、v1.3候補ではCognitionの初期学習を実装し、v1.4候補ではText/Web入力と注釈訂正を追加した。[機能と公開状態](../README.md)を現在の入口とする。
 
 Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Registry・Connections・TaskManagerの4責務は確定している。v0.xの初期実装はCoreを対象とし、Nymph・Subsystem・Adapterの役割は検証用ダミーで再現した。R31でv1.1 Memoryを最初の実Subsystemとして追加した。現行の実行例も要求側はダミーで、Nymphの自律的な意思決定は未実装。根拠はR2、判断記録はADR 0001・0005と後続の0027〜0029。
 
@@ -21,7 +21,7 @@ Coreを中心にSubsystem・Adapterを着脱する構成と、Core Runtime・Reg
 | Connections | 採用した経路で接続と通信を管理する | ADR 0015・0017・0018の方針をADR 0019で具体化。候補・接続固定・操作・中断・ヘルス、非同期保存・救命を実装しA04を確認 |
 | TaskManager | Nymphが決めた活動の予定、実行状態、変更を管理する | ADR 0020で予定・実行追跡、到達通知、安全な終了、履歴参照、ADR 0021で時刻・期間・優先度変更と中断再開を実装。別プロセスへの適用は0022・0023で具体化しHybridTaskManagerとして実装 |
 | Subsystem | 着脱する機能単位 | Memoryを公開、Cognitionをv1.3候補に実装。Core共通接続契約と個別業務契約を利用 |
-| Adapter | 外部環境との接点を担う着脱可能な構成要素 | Documentを公開。将来のPC状況取得Adapterは未実装 |
+| Adapter | 外部環境との接点を担う着脱可能な構成要素 | Documentを公開、Text/Webをv1.4候補に実装。将来のPC状況取得Adapterは未実装 |
 
 4責務の採用と、上表の詳細なAPI分担は別々に状態を管理する。TaskManagerの活動決定権に関する境界は確定事項である。
 
@@ -132,7 +132,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
-### 現在の配置（公開v1.2と開発候補v1.3）
+### 現在の配置（公開v1.2と開発候補v1.4）
 
 文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用は[ADR 0011](adr/0011-apache-2.0-license.md)に従う。
 
@@ -161,7 +161,9 @@ nymph-toolkit/
 ├─ examples/memory_requester.py
 ├─ examples/document_demo.py         # 9番目：Document取込・Memory連携
 ├─ examples/document_requester.py
-├─ examples/cognition_demo.py        # 10番目：v1.3候補の初期学習
+├─ examples/cognition_demo.py        # 10番目：v1.3からの初期学習
+├─ examples/text_interaction_demo.py # 11番目：観測・教師入力・訂正/CLI
+├─ examples/web_demo.py              # 12番目：HTTP文章と明示学習
 ├─ examples/cognition_requester.py
 ├─ tools/check_dist.py
 ├─ tools/benchmark_connections.py
@@ -201,6 +203,9 @@ nymph-toolkit/
 │  ├─ migration-v1.md                # v0.9からの移行
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
 │  ├─ cognition.md                   # v1.3初期学習とMemory根拠
+│  ├─ interaction.md                 # v1.4入力・訂正・CLI・DB移行
+│  ├─ implementation-progress.md     # v1.10までの実施状況
+│  ├─ validation/v1.4.md             # B04検証と未完了の受入
 │  ├─ document.md                    # v1.2文書入力とMemory連携
 │  ├─ memory.md                      # v1.1保存・取得と運用
 │  ├─ validation/v1.3.md             # 開発候補のB03受入結果
@@ -255,12 +260,16 @@ nymph-toolkit/
 │     ├─ 0027-v1.1-memory.md
 │     ├─ 0028-v1.2-document-adapter.md
 │     ├─ 0029-v1.3-cognition-learning.md
-│     └─ 0030-customer-docs-as-primary.md
+│     ├─ 0030-customer-docs-as-primary.md
+│     └─ 0031-v1.4-text-web-and-correction.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     ├─ contracts/                  # memory.py / document.py / cognition.pyの業務契約
+│     ├─ contracts/                  # memory/document/cognition/revision/text_interaction/webの業務契約
 │     ├─ adapters/document/          # ローカル文書入力とMemory連携
+│     ├─ adapters/text_interaction/  # 観測・教師入力・訂正・照会
+│     ├─ adapters/web/               # 許可originのHTTP文章取得
+│     ├─ adapters/_interaction.py    # 新規入力Adapterの所有・接続補助
 │     ├─ subsystems/memory/           # 同梱する最小Memory
 │     └─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
 └─ tests/                            # subsystems/にMemory/Cognition単体・統合試験
@@ -320,3 +329,7 @@ v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cogni
 ## R35：CognitionとMemoryの境界
 
 Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contracts/cognition.py`、ガイドは`docs/cognition.md`、判断はADR 0029、結果は`docs/validation/v1.3.md`、実行例は`examples/cognition_demo.py`、検証は`tests/subsystems/test_cognition*.py`に置く。学習の入力と実施を要求側、元記録の保存/取得をMemory、初期統計と根拠/専用保存をCognition、接続許可/実行管理をCoreが担当する。明示された区切り・ラベルの共起を、自律的な概念形成や文法の完成と扱わない。
+
+## R37：対話・Web入力と訂正
+
+[ADR 0031](adr/0031-v1.4-text-web-and-correction.md)に従い、Core既存APIを維持して業務契約3件を追加。TextはMemoryの原記録とCognitionの明示教師入力をつなぎ、WebはHTTP取得・本文抽出・出典保存を担う。Cognitionは専用DBの注釈と集計を訂正し、Memory原本を変更しない。入力の保存だけで学習や活動決定を始めない。構成・呼出図・配置・保存形式移行・取消/障害は[interaction](interaction.md)、全体の残作業は[進捗](implementation-progress.md)。docs/interaction.mdとvalidation/v1.4.md、examples/interaction_setup.py・text_interaction_demo.py・web_demo.py、tests/adapters/の単体・結合・CLI検証を追加した。

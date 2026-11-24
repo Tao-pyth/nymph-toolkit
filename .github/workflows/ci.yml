@@ -31,6 +31,8 @@ jobs:
       - run: python examples/memory_demo.py
       - run: python examples/document_demo.py
       - run: python examples/cognition_demo.py
+      - run: python examples/text_interaction_demo.py
+      - run: python examples/web_demo.py
       - run: python -W error tools/validate_hybrid_load.py --duration 1 --requests 8 --chunks 4 --cycle-requests 4 --cycle-chunks 2 --sample-interval 1 --output .git/v09-load-smoke.json
       - run: python tools/check_docs.py
       - run: python tools/check_api.py

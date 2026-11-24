@@ -164,3 +164,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## 開発候補v1.3の10番目の例
 
 公開v1.2.0の9例とは別に、このcheckoutでは`python examples/cognition_demo.py`を実行できる。[開発手順](development.md)でeditable導入する。Document→Memoryの文書を要求側の区切り/ラベルで学習し、頻度・局所語順・関連・出典区分・根拠、冪等/競合と再起動を照合する。最後に`PASS: Cognition learning, evidence, source separation, Memory/Document, restart, cleanup`と表示し、一時文書・DBを削除する。[Cognitionガイド](cognition.md)の能力の限界と失敗時動作を参照する。
+
+## v1.4開発候補の11・12番目の例
+
+`python examples/text_interaction_demo.py`は観測・教師入力・訂正・根拠照会、`python examples/web_demo.py`はローカルHTTPのHTML取得・出典保存・明示学習を行い、PASSと後処理確認で終了する。一時データを削除し、外部Webサイトには接続しない。`python examples/text_interaction_demo.py --interactive --data-dir .local/text-session`でJSON-lines入力と永続データを利用できる。5操作・入力形式・EOF・DB移行・制約は[入力/訂正ガイド](interaction.md)を参照する。公開v1.2の9例と開発候補を区別する。

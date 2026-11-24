@@ -1,6 +1,6 @@
 # Docsの読み方と根拠
 
-初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.3.0のCognitionと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。[機能・公開状態の一覧](../README.md)と[2026年11月23日の整合点検](validation/docs-current.md)を参照する。
+初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.4.0のCognition・Text/Web・訂正と後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。[機能・公開状態の一覧](../README.md)と[2026年11月23日の整合点検](validation/docs-current.md)を参照する。
 
 R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memory.md)・[B01結果](validation/v1.1.md)を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
 
@@ -21,7 +21,7 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | 問題を調べる | [トラブルシューティング](troubleshooting.md) → 対象機能のDocs・検証記録 |
 | 判断を追う | [ADR索引](adr/README.md) → [採用64項目](adr/0022-v0.7-v0.9-hybrid-and-completion.md) → [証拠対応表](validation/core-coverage.md) |
 
-導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.3候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
+導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.4候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
 
 ## 文書一覧と格納場所
 
@@ -41,6 +41,9 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
 | [validation/docs-onboarding.md](validation/docs-onboarding.md) | D01〜D04・D09の検証結果、対象版、確認範囲 |
 | [validation/docs-current.md](validation/docs-current.md) | v1.3候補までの実装・資料・公開状態の点検、訂正箇所と確認範囲 |
+| [interaction.md](interaction.md) | v1.4候補の対話/Web・訂正、契約・移行・CLI |
+| [validation/v1.4.md](validation/v1.4.md) | B04の実装受入、回帰・配布・CI・資料確認 |
+| [implementation-progress.md](implementation-progress.md) | R37のv1.10までの残作業と証拠 |
 | [cognition.md](cognition.md) | 開発候補v1.3の初期学習・根拠・運用・能力の限界 |
 | [validation/v1.3.md](validation/v1.3.md) | B03のモデル/Memory連携・回帰・配布・CI結果 |
 | [document.md](document.md) | v1.2の文書取込・Memory連携・上限と失敗時動作 |
@@ -246,3 +249,7 @@ Cognition開発・親/ADR確認・未決/初期スコープ/受入整理・子Is
 ## R36：顧客資料を主要Docsとして同期
 
 ユーザーが顧客向けMarkdown・PDF・HTMLも主要Docsとし、常に最新版と同様にすることを明示指示した。[ADR 0030](adr/0030-customer-docs-as-primary.md)で採用し、R27の任意生成・v0.9固定の運用を更新する。親#13・v1.3.0に文書#124・生成/CI#125をコード変更前に登録した。最新とは対象ブランチ/コミットの実装であり、公開候補を公開済みと扱わず、過去のタグ/Release添付を置換しない。本文・図・全形式を同期し、ハッシュ検査に加えて内容・表示をレビューする。
+
+## R37：v1.10までの段階的な実装・検証
+
+v1.10全体の目標を維持し、最初のv1.4を親#14・子#126〜#130とADR 0031で具体化した。基点は未マージPR #123。具体API・数値をユーザーが個別承認したとは扱わず、実装前のCodex判断として記録する。実装受入・主要Docs・レビュー用候補とマージ/公開を区別する。[進捗](implementation-progress.md)・[B04](validation/v1.4.md)を参照する。

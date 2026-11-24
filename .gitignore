@@ -27,3 +27,6 @@ output/pdf/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Explicit local example sessions
+.local/
