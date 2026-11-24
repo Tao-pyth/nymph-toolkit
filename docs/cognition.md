@@ -125,4 +125,8 @@ python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.tes
 
 10番目の例はDocument→Memory→Cognition、語順/関連と出典区分、直接/Core経由、冪等/競合、再起動を照合し、`PASS: Cognition learning, evidence, source separation, Memory/Document, restart, cleanup`で終わる。一時文書・DBは終了時に削除する。[B03検証記録](validation/v1.3.md)で初期確認、全回帰、配布、確定コミットのCIを区別する。
 
-未分割日本語の分節、完全な構文/意味理解、自律的な概念形成、文章生成/対話、訂正/削除/忘却、Web/対話Adapter、学習計画、大規模/長期性能・物理故障/電源断は今回の対象外。初期の有限コーパスでの結果を一般的な日本語能力へ外挿しない。
+R35/v1.3当初は未分割日本語の分節、完全な構文/意味理解、自律的な概念形成、文章生成/対話、訂正/削除/忘却、Web/対話Adapter、学習計画、大規模/長期性能・物理故障/電源断を対象外とした。後続v1.4の訂正・入力Adapterの採用は次節で区別する。初期の有限コーパスでの結果を一般的な日本語能力へ外挿しない。
+
+## v1.4で追加した注釈訂正
+
+R35当初の訂正対象外を、R37・[ADR 0031](adr/0031-v1.4-text-web-and-correction.md)で明示的に拡張した。`enable_revision=true`とrevision/1を追加宣言して利用する。learning/1を維持し、Memory原本は編集しない。命令IDとexpected_revision、DB形式1→2の移行・旧バイナリへ戻せない点、操作/失敗/取消は[入力・訂正ガイド](interaction.md)を参照する。削除・忘却・自律学習・一般的意味理解を一括採用したものではない。

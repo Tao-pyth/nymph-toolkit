@@ -9,8 +9,9 @@ from nymph_toolkit.contracts import (
     OperatingState, OutcomeUnknown, ProtocolError, RuntimeService, TemporaryUnavailable, Usage,
 )
 from nymph_toolkit.contracts.cognition import COGNITION_KEY
+from nymph_toolkit.contracts.cognition_revision import COGNITION_REVISION_KEY
 from nymph_toolkit.contracts.memory import MEMORY_CONTRACT, MEMORY_KEY
-from ._model import annotations, observation, query
+from ._model import annotations, identifier, observation, query
 from ._store import Store
 
 __all__ = ["factory"]
@@ -34,22 +35,30 @@ async def _settled(future):
 
 class _Cognition:
     def __init__(self, context, config):
-        if type(config) is not dict or set(config) != {"path", "memory_module_id"}:
-            raise ValueError("Cognition config requires path and memory_module_id")
+        if (type(config) is not dict or not {"path", "memory_module_id"} <= set(config)
+                or set(config) - {"path", "memory_module_id", "enable_revision"}
+                or type(config.get("enable_revision", False)) is not bool):
+            raise ValueError("Cognition config requires path/memory_module_id and optional bool enable_revision")
         provider = config["memory_module_id"]
         if type(provider) is not str or not provider.strip() or provider != provider.strip():
             raise ValueError("memory_module_id must be nonempty trimmed text")
         if context.settings.max_frame_bytes < 65536:
             raise ValueError("Cognition requires max_frame_bytes >= 65536")
         self.context, self.provider = context, provider
-        self.store = Store(config["path"], provider)
+        self.enable_revision = config.get("enable_revision", False)
+        self.store = Store(config["path"], provider, self.enable_revision)
         self.pool = self.active = self.link = self.stop_task = None
         self.ready = self.closing = self.busy = self.bound = False
         context.provide(COGNITION_KEY, {"learn": self.learn, "inspect": self.inspect})
+        if self.enable_revision:
+            context.provide(COGNITION_REVISION_KEY, {"correct": self.correct, "get_revision": self.get_revision})
 
     async def _usage(self, active):
         usage = Usage(OperatingState.RUNNING, True, active, 1)
-        await self.context.core.publish_usage(usage, contracts={COGNITION_KEY: usage})
+        contracts = {COGNITION_KEY: usage}
+        if self.enable_revision:
+            contracts[COGNITION_REVISION_KEY] = usage
+        await self.context.core.publish_usage(usage, contracts=contracts)
 
     async def _work(self, function, *args):
         return await _settled(asyncio.get_running_loop().run_in_executor(self.pool, function, *args))
@@ -87,6 +96,27 @@ class _Cognition:
             return OperationFailure("cognition.invalid", str(error))
         return await self._submit("inspect", *args)
 
+    async def get_revision(self, record_id):
+        if not self.enable_revision:
+            return OperationFailure("cognition.disabled", "Annotation revision is not enabled")
+        try:
+            identifier(record_id)
+        except (ValueError, TypeError) as error:
+            return OperationFailure("cognition.invalid", str(error))
+        return await self._submit("get_revision", record_id)
+
+    async def correct(self, record_id, *, command_id, expected_revision, tokens, concepts):
+        if not self.enable_revision:
+            return OperationFailure("cognition.disabled", "Annotation revision is not enabled")
+        try:
+            args = annotations(record_id, tokens, concepts)
+            identifier(command_id)
+            if type(expected_revision) is not int or not 0 <= expected_revision <= 2**63-2:
+                raise ValueError("expected_revision requires an integer in 0..2^63-2")
+        except (ValueError, TypeError) as error:
+            return OperationFailure("cognition.invalid", str(error))
+        return await self._submit("correct", *args, command_id, expected_revision)
+
     async def _submit(self, operation, *args):
         if not self.ready or self.closing or self.busy:
             return TemporaryUnavailable("Cognition is stopped or processing another operation")
@@ -123,8 +153,8 @@ class _Cognition:
         primary_error = None
         try:
             await self._usage(1)
-            if operation == "inspect":
-                return await self._work(self.store.execute, "inspect", *args)
+            if operation in ("inspect", "get_revision"):
+                return await self._work(self.store.execute, operation, *args)
             try:
                 unavailable = await self._connect()
                 if unavailable is not None:
@@ -136,10 +166,10 @@ class _Cognition:
                 if isinstance(record, (OperationFailure, TemporaryUnavailable)):
                     return record
                 try:
-                    sample = observation(record, *args)
+                    sample = observation(record, *args[:3])
                 except (ValueError, TypeError) as error:
                     return OperationFailure("cognition.invalid", str(error))
-                return await self._work(self.store.execute, "learn", sample)
+                return await self._work(self.store.execute, operation, sample, *args[3:])
             except (OutcomeUnknown, TimeoutError, ProtocolError, ConnectionNotReadyError) as original:
                 try:
                     await self._recover()

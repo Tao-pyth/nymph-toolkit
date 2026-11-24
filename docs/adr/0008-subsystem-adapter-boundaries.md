@@ -59,3 +59,7 @@ Documentの小さなUTF-8文書取込とMemory連携、失敗/取消・B02は[AD
 ## R35の後続判断
 
 Cognitionの明示区切り/ラベル付き学習、Memory根拠と専用保存、B03は[ADR 0029](0029-v1.3-cognition-learning.md)で具体化した。完全な構文/意味理解・概念の自律形成や後続の訂正/対話/忘却案を一括採用しない。
+
+## 後続v1.4の具体化
+
+R37・[ADR 0031](0031-v1.4-text-web-and-correction.md)でText Interaction・Web・注釈訂正の契約を追加した。明示的な教師情報とMemory原本を分け、Coreは意思決定しない。その他の後続段階の詳細を一括採用するものではない。
