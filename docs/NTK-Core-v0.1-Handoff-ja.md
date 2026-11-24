@@ -11433,6 +11433,14 @@ python tools/check_dist.py --dist-dir .git/v19-dist
 
 顧客Markdown/PDF/HTMLと引継ぎ書は更新手順（`docs/customer-guide-authoring.md`）に従い、最終コミットの全形式・全ページとCI artifactを照合する。v1.10の循環・音声、マージ/公開をこの段階の局所成功で完了扱いにしない。
 
+### 461be71の全回帰・配布・CI確認
+
+Windows / CPython3.15.2で全506回帰400.672秒、通常wheelで506件483.247秒・17例・4配置短時間負荷1.095秒・sdistから同一wheel再構築が成功した。最終cleanコミットのWindows顧客33ページ/21図は、表示確認済みの33画像と全ハッシュ一致。Linux artifact14928470177も全33ページを表示し、両HTMLの33ページ/21SVG・script/外部取得/描画エラー0、全形式のSHA/ハッシュを照合した。
+
+[CI 45410129172](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45410129172)は8ジョブ成功、Windows/Python3.12だけが20分のジョブ期限で取消となった。同環境のソース全506件は成功し、通常wheelのSleep4096周期試験中に期限到達した。Personaの4096件保存はこの配布試験で約122秒かかった。取消後のDB占有表示を、通常の終了試験で発生した障害と混同しない。
+
+#161へ変更前に記録し、ジョブ全体の枠を40分へ変更する。全件実保存・ソース/配布両試験・全例を維持する。製品のRPC/終了期限、SQLiteの耐久性や試験の受入内容は変更しない。後続コミットのCIと顧客成果物を再確認してからB09-07を完了とする。
+
 ---
 
 <a id="section-93"></a>

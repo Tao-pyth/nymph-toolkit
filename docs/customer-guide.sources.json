@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-24",
-  "review_note": "Sleepの4操作、対応token数、統合根拠の減衰/原本維持、夢と人格案/適用を図21と本文で照合。Windows顧客33ページ21図の全表示・HTML確認済み。公開v1.2/v1.9候補とv1.8受入済みを区別。",
+  "review_note": "PR #162 / #161: 全506回帰・通常配布・33ページ全表示の結果とWindows3.12 CI全体期限取消を確認。製品契約と顧客本文は同じで、最終受入は引き続き確認中。CI40分枠へ変更し試験内容を維持する。",
   "sources": {
     "AGENTS.md": "450b1f735a20c5f557fc795e03e9dd6b0cab2c20290813c8b9a4fb63be4494a1",
     "CHANGELOG.md": "714e94799fb466f717767ea4a13dad915c185756dcf994003ad3cd4e9014793f",
