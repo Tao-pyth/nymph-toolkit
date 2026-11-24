@@ -73,7 +73,11 @@ export async function receive(config, emit, commands, dependencies) {
     // Any change of the participant set ends this consented session. Muting or
     // changing presence within the same channel does not change that set.
     client.on('voiceStateUpdate', (before, after) => {
-      if (after.id === client.user.id) return;
+      if (after.id === client.user.id) {
+        // Moving within one voice server need not change transport readiness.
+        if (after.channelId !== channel.id) void stop('voice_disconnected');
+        return;
+      }
       if ((before.channelId === channel.id) !== (after.channelId === channel.id)) void stop('participants_changed');
     });
     connection = voice.joinVoiceChannel({ channelId: channel.id, guildId: channel.guildId,

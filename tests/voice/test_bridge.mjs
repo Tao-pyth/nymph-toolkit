@@ -131,3 +131,29 @@ test('stop during startup never creates a late connection or resumes reception',
     assert.equal(f.streams.size, 0, stage);
   }
 });
+
+test('bot movement or removal stops even if the transport remains Ready', async () => {
+  for (const channelId of ['201', null]) {
+    const f = fixture(), commands = new EventEmitter(), frames = [];
+    process.env.NTK_DISCORD_TOKEN = 'private-test-token';
+    const task = receive(config(), frame => { frames.push(frame); return true; }, commands, f.dependencies);
+    await ready(frames);
+    try {
+      f.client.emit('voiceStateUpdate', { channelId: null }, { id: '900', channelId: '200' });
+      f.client.emit('voiceStateUpdate', { channelId: '200' }, { id: '900', channelId: '200' });
+      assert.equal(f.connection.destroyed, undefined);
+      f.connection.receiver.speaking.emit('start', '300');
+      f.client.emit('voiceStateUpdate', { channelId: '200' }, { id: '900', channelId });
+      await new Promise(resolve => setImmediate(resolve));
+      assert.equal(frames.at(-1).reason, 'voice_disconnected');
+      assert.equal(f.connection.destroyed, true);
+      assert.equal(f.deletes, 1);
+      const count = frames.length;
+      f.streams.get('300').emit('data', Buffer.alloc(3840));
+      assert.equal(frames.length, count);
+    } finally {
+      commands.emit('stop');
+      await task;
+    }
+  }
+});
