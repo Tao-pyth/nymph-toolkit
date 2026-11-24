@@ -132,7 +132,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
-### 現在の配置（公開v1.2と開発候補v1.7）
+### 現在の配置（公開v1.2と開発候補v1.8）
 
 文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用は[ADR 0011](adr/0011-apache-2.0-license.md)に従う。
 
@@ -167,6 +167,7 @@ nymph-toolkit/
 ├─ examples/agency_demo.py           # 13番目：活動判断・決定保存
 ├─ examples/agency_execution_demo.py # 14番目：活動循環・実学習
 ├─ examples/persona_demo.py          # 15番目：人格特性の外部修正・保存
+├─ examples/persona_agency_demo.py   # 16番目：特性更新と活動選択・再開
 ├─ examples/persona_requester.py
 ├─ examples/cognition_requester.py
 ├─ tools/check_dist.py
@@ -211,9 +212,11 @@ nymph-toolkit/
 │  ├─ agency.md                     # v1.5判断・根拠・決定保存/照会
 │  ├─ agency-execution.md            # v1.6活動循環とCore適用
 │  ├─ persona.md                     # v1.7特性・外部修正・履歴
+│  ├─ persona-agency.md              # v1.8人格特性と選択への反映
 │  ├─ validation/v1.5.md             # B05の実装受入
 │  ├─ validation/v1.6.md             # B06の実装受入
 │  ├─ validation/v1.7.md             # B07の確認状況
+│  ├─ validation/v1.8.md             # B08の確認状況
 │  ├─ implementation-progress.md     # v1.10までの実施状況
 │  ├─ validation/v1.4.md             # B04検証と未完了の受入
 │  ├─ document.md                    # v1.2文書入力とMemory連携
@@ -275,7 +278,8 @@ nymph-toolkit/
 │     ├─ 0032-v1.5-agency-decisions.md
 │     ├─ 0033-input-candidate-contract.md # 別件の入力前処理提案。未採用
 │     ├─ 0034-v1.6-agency-execution.md
-│     └─ 0035-v1.7-persona.md
+│     ├─ 0035-v1.7-persona.md
+│     └─ 0036-v1.8-persona-agency.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -334,7 +338,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。後続の学習・意思決定方式、未実装Adapterの形式・権限、Personaへの修正値、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036で初期範囲を具体化した。後続の学習・意思決定方式、未実装Adapterの形式・権限、経験からの人格修正値生成、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ## R33：DocumentとMemoryの境界
 
@@ -364,4 +368,8 @@ Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contract
 
 ## v1.7 Personaの配置と責務
 
-`src/nymph_toolkit/subsystems/persona/`に人格特性の保持・外部修正・保存を同梱し、`src/nymph_toolkit/contracts/persona.py`でtraits/1を宣言する。利用・検証は[Persona](persona.md)・[B07](validation/v1.7.md)、判断は[ADR 0035](adr/0035-v1.7-persona.md)。Coreは接続・ライフサイクルを管理するだけで、人格値や活動の価値を選ばない。初期値は初回のみ適用し、現在値と修正履歴を同一transactionで保存する。Agencyへの選択反映はv1.8で具体化する。
+`src/nymph_toolkit/subsystems/persona/`に人格特性の保持・外部修正・保存を同梱し、`src/nymph_toolkit/contracts/persona.py`でtraits/1を宣言する。利用・検証は[Persona](persona.md)・[B07](validation/v1.7.md)、判断は[ADR 0035](adr/0035-v1.7-persona.md)。Coreは接続・ライフサイクルを管理するだけで、人格値や活動の価値を選ばない。初期値は初回のみ適用し、現在値と修正履歴を同一transactionで保存する。Agencyへの選択反映は後続のADR 0036で具体化した。
+
+## v1.8 PersonaとAgencyの連携
+
+[ADR 0036](adr/0036-v1.8-persona-agency.md)によりAgencyの任意設定でPersonaの公開traits/1を参照する。状態/学習根拠から得た候補得点を特性で補正し、取得した版・値・対応付けと基礎点・倍率を決定履歴へ保存する。Personaは保持/外部修正、Agencyは価値判断、Coreは実行管理を担当する。旧設定は形式1を維持し、有効時は新規DB形式2を使う。[利用と図解](persona-agency.md)・[B08](validation/v1.8.md)を参照。

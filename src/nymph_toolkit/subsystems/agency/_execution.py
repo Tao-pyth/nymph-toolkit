@@ -40,7 +40,8 @@ class _CapacityWait(Exception):
 
 class ExecutingAgency(_Agency):
     def __init__(self, context, config):
-        fields(config, "path memory_module_id cognition_module_id catalog execution")
+        fields(config, "path memory_module_id cognition_module_id catalog execution" +
+               (" persona" if type(config) is dict and "persona" in config else ""))
         options = snapshot(config["execution"], 8192)
         fields(options, "poll_seconds max_activities pause_executors")
         interval = options["poll_seconds"]

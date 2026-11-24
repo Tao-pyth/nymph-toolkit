@@ -120,3 +120,7 @@ python -W error -m unittest tests.subsystems.test_agency tests.subsystems.test_a
 ## v1.6で追加する活動適用
 
 本書のdecisions/1とfactoryは維持する。任意のexecution_factoryとactivities/1による継続判断・Core適用は[活動循環ガイド](agency-execution.md)とADR 0034を参照する。v1.5時点の対象外と、後続で採用した範囲を区別する。
+
+## v1.8の任意Persona参照
+
+persona設定を指定しなければ旧utility-v1を維持する。任意persona設定での特性参照・動機重みと形式2の保存は[連携ガイド](persona-agency.md)を参照。過去判断の再要求は以前の根拠を保持する。

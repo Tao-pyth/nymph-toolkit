@@ -180,3 +180,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## 開発候補v1.7：Persona（15番目）
 
 `python examples/persona_demo.py`。初期curiosity=500/sociability=400を読み、外部差分で600/350へ更新し、両経路・同じIDの再要求・版競合・2回の起動で保存を確認する。最後にPASSを表示して後処理まで終了する。保存先は例の一時フォルダで、終了時に削除する。値と根拠は例の明示入力。[契約と保存](persona.md)、[検証範囲](validation/v1.7.md)を参照。
+
+## 開発候補v1.8：PersonaとAgency（16番目）
+
+`python examples/persona_agency_demo.py`。実Cognitionの学習後、同じ観測・目標を維持し、休息への特性だけを500→1000→500と外部更新する。Agencyが知識活用→休息→同じ継続の再開を選び、Coreへ適用する。2回の起動で特性/判断履歴と活動非復元を確認し、PASSを表示して後処理まで終了する。一時保存先は正常終了時に削除する。[連携と保存](persona-agency.md)・[検証範囲](validation/v1.8.md)。

@@ -18,6 +18,7 @@ class Store:
         if type(path) is not str or not Path(path).is_absolute():
             raise ValueError("Agency path must be an absolute file path")
         self.path, self.identity = path, json.loads(dump(identity))
+        self.version = 2 if "persona" in identity else 1
         self.connection = None
 
     def open(self):
@@ -32,9 +33,9 @@ class Store:
                 connection.execute("CREATE TABLE metadata (identity TEXT NOT NULL)")
                 connection.execute("INSERT INTO metadata VALUES (?)", (dump(self.identity),))
                 connection.execute(f"PRAGMA application_id={APPLICATION_ID}")
-                connection.execute("PRAGMA user_version=1")
+                connection.execute(f"PRAGMA user_version={self.version}")
                 connection.commit()
-            elif app != APPLICATION_ID or version != 1:
+            elif app != APPLICATION_ID or version != self.version:
                 raise ValueError("Unsupported Agency database identity/version; file left intact")
             expected = [("sequence", "INTEGER"), ("decision_id", "TEXT"), ("input", "TEXT"), ("evidence", "TEXT"), ("result", "TEXT")]
             if ([(r[1],r[2]) for r in connection.execute("PRAGMA table_info(decisions)")] != expected
@@ -48,7 +49,8 @@ class Store:
             for position, (sequence, key, raw_input, raw_evidence, raw_result) in enumerate(rows, 1):
                 value = request(json.loads(raw_input), self.identity["catalog"])
                 previous = history.get(value["current"]["decision_id"]) if value["current"] else None
-                expected_result = decide(value, json.loads(raw_evidence), self.identity["catalog"], self.identity["module_id"], previous)
+                expected_result = decide(value, json.loads(raw_evidence), self.identity["catalog"], self.identity["module_id"],
+                                         previous, persona=self.identity.get("persona"))
                 expected_result["sequence"] = sequence
                 if (type(sequence) is not int or sequence != position or key != value["decision_id"] or key in history
                         or dump(expected_result) != dump(json.loads(raw_result))):
