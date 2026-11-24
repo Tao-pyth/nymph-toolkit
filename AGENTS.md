@@ -56,3 +56,5 @@ v1.6のAgency活動循環は[ADR 0034](docs/adr/0034-v1.6-agency-execution.md)�
 v1.7 Personaは[ADR 0035](docs/adr/0035-v1.7-persona.md)を確認する。外部差分だけを原子的に適用し、Coreへ人格評価を置かない。現在値/版と成功履歴を同時保存し、同じID/要求を再適用しない。初期値は空DBだけ、設定違い/破損を自動初期化しない。通信取消は未保存保証ではなく、get_updateで照合する。Agency連携はv1.8、Sleepの修正生成は後続へ分ける。
 
 v1.8のPersona/Agency連携は[ADR 0036](docs/adr/0036-v1.8-persona-agency.md)に従う。任意persona設定の省略時は旧utility-v1/DB形式1を維持し、有効時は新しい形式2で根拠を保存する。Personaの値を中立値で代用せず、Agencyが選択する。外部更新の再評価には新しい決定IDまたはobserveを使い、過去判断を書き換えない。自動移行・Personaの自発更新・Coreの価値判断を追加しない。
+
+v1.9 Sleepは[ADR 0037](docs/adr/0037-v1.9-sleep.md)に従う。初期の忘却はSleep現在統合状態の寄与に限定し、Memory原本/Cognition既存学習を削除しない。夢は次の成功周期で失効し、人格根拠にしない。observedの初回評価だけから修正案を生成し、案と適用成功を分ける。Sleep自身のPersona.apply・睡眠活動循環はv1.10の別判断へ残す。

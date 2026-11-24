@@ -1,23 +1,23 @@
 # NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.8.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
+**Nymph Toolkit / 対象 v1.9.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
 
 ## この資料で分かること
 
-NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Web・Agency・Personaの実装、使い方、制約をまとめます。
+NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Web・Agency・Persona・Sleepの実装、使い方、制約をまとめます。
 
-**Nymphが活動を決め、Coreが実行を管理します。** Agencyの活動循環・特性保持と選択への反映を含みます。自然な会話や人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
+**Nymphが活動を決め、Coreが実行を管理します。** Agencyの活動循環・特性反映とSleepの初期統合を含みます。自然な会話や人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
 
 | 読みたい内容 | 章 |
 |---|---|
 | Coreの構成・配置・起動停止 | 01〜03 |
 | 登録・接続・操作・ストリーム | 04〜07 |
 | 活動・失敗・保存・再起動・設定 | 08〜13 |
-| 6区分の接続契約と実機能・活動循環・人格特性 | 14〜18F |
+| 6区分の接続契約と実機能・活動循環・人格特性 | 14〜18G |
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.8.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携を含みます。前段PR #123/#131/#137/#143/#149は未マージです。v1.8の全受入は親#18で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.9.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携・Sleepを含みます。前段PR #123/#131/#137/#143/#149/#156は未マージです。v1.9の全受入は親#19で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名は[API一覧](api-reference.md)、意味は[Core API](core-api.md)と各機能ガイドを参照してください。
 
@@ -47,7 +47,7 @@ flowchart TB
 | 活動の時刻監視、変更と状態通知 | 活動内容・優先度・終了・再開の判断 |
 | 保存と障害通知、後処理を待つ仕組み | 安全な中断点、所有する資源の解放 |
 
-CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Web・Agency・Personaは開発候補に同梱します。PersonaとAgencyの連携は候補に含み、Sleep等は後続です。
+CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Web・Agency・Persona・Sleepは開発候補に同梱します。睡眠活動との循環や音声は後続です。
 
 <!-- pagebreak -->
 
@@ -486,7 +486,7 @@ flowchart LR
 
 factoryは`nymph_toolkit.subsystems.memory:factory`、設定は絶対ファイルパス`path`です。1つのDBを1つの実体が所有します。SQLite対応Python、フレーム上限65536 bytes以上を使います。
 
-同時受付は1件です。未知形式・破損を自動上書きしません。取消や期限切れは未保存保証ではなく、要求側がIDで結果を確認します。編集・削除・忘却・意味検索・記憶統合は未実装です。[Memoryガイド](memory.md)
+同時受付は1件です。未知形式・破損を自動上書きしません。取消や期限切れは未保存保証ではなく、要求側がIDで結果を確認します。Memory原本の編集・削除・忘却・意味検索は未実装です。Sleepの別状態での統合とは区別します。[Memoryガイド](memory.md)
 
 <!-- pagebreak -->
 
@@ -520,7 +520,7 @@ root外・上位移動・不正文字コード・空白のみ/NUL本文は拒否
 
 ## 17 Cognition：注釈から初期の規則性を学ぶ
 
-**v1.3で追加し、v1.8候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
+**v1.3で追加し、v1.9候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
 
 ```mermaid
 flowchart TB
@@ -719,7 +719,7 @@ flowchart LR
 
 取消や期限切れでも保存が完了する場合があります。受付済みworkerの完了と後処理を待ち、更新IDで照合します。sourceは提供側の申告情報で、認証証明ではありません。
 
-`python examples/persona_demo.py`で、2特性の外部修正・両経路・同一IDの再要求・履歴・再起動を試せます。特性名と数値は説明用で、心理学的診断尺度や人格全体を表すものではありません。Agencyへの反映は次章、Sleepによる差分生成は後続です。[契約・設定・失敗](persona.md)
+`python examples/persona_demo.py`で、2特性の外部修正・両経路・同一IDの再要求・履歴・再起動を試せます。特性名と数値は説明用で、心理学的診断尺度や人格全体を表すものではありません。Agencyへの反映は次章、Sleepの修正案は18Gで説明します。[契約・設定・失敗](persona.md)
 
 <!-- pagebreak -->
 
@@ -759,6 +759,39 @@ persona設定を省略すると従来動作・DB形式1を維持します。有�
 
 <!-- pagebreak -->
 
+## 18G Sleep：統合状態・夢・人格案を分ける
+
+v1.9候補では、Memoryの原記録とCognitionの教師注釈を読み、Sleep自身の統合根拠を整理します。Coreは接続・実行を管理し、経験の価値を判断しません。
+
+```mermaid
+flowchart LR
+    E["Memory原記録<br/>Cognition注釈"] -->|"読出し・照合"| S["Sleep<br/>統合・減衰・夢・修正案"]
+    P["Persona<br/>現在特性"] -->|"getの結果"| S
+    S --> D[("周期履歴<br/>現在状態")]
+    S -->|"修正案"| R["利用側の明示適用"]
+    R -->|"apply"| P
+```
+
+図21：案を作るSleepと、適用を指示する利用側を分けます。Sleepは原記録や既存学習を変更しません。
+
+| 操作・状態 | 利用側が確認すること |
+|---|---|
+| cycle / get | ID・観測版・0〜4記録で周期を実行 / 保存済み結果を照会 |
+| state / inspect | 現在根拠・夢をページ取得 / ラベル別の件数・寄与と出典を照会 |
+| strength | 再観測で1000。未観測の成功周期ごとに250減り、4周期で外れる |
+| 現在夢 | 2件のtokensを再結合。次の成功周期で前の夢を失効 |
+| 人格修正案 | 初回評価のobservedだけを使用。traitごとに周期±5、現在値の範囲内 |
+
+**忘却対象はSleepの現在統合状態です。** Memory原本・Cognitionの学習・周期監査は保持します。一般的な意味理解、Nymph全体の知識削除や、自然な夢文章の完成ではありません。
+
+夢はdream区分と元IDを持ち、現実の経験や人格差分の根拠にしません。過去のreceiptを読んでも現在夢を復活させません。人格案を作っただけではPersonaは変わらず、利用側がapplyと保存結果を照合します。
+
+同ID/同入力は再実行せず元の結果を返します。取消・通信期限切れは未保存保証ではなく、getで照合します。現在根拠16件、周期履歴4096件、同時受付1件。再起動だけでは周期を進めません。
+
+`python examples/sleep_demo.py`で統合・失効・利用側の人格適用と再起動を確認できます。[設定・対応範囲](sleep.md)・[検証](validation/v1.9.md)
+
+<!-- pagebreak -->
+
 ## 19 使い始める：公開版で動きを確認する
 
 CPython 3.12以上を用意します。現行版で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
@@ -787,7 +820,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 
 ## 19A 開発候補の機能を試す
 
-このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の7例を加え、v1.8候補では16例です。
+このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の8例を加え、v1.9候補では17例です。
 
 | 実行例 | 確認できること |
 |---|---|
@@ -798,6 +831,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 | agency_execution_demo.py | 活動登録・実学習・中断/再開・協調終了 |
 | persona_demo.py | 特性の参照・外部差分・版/ID・履歴 |
 | persona_agency_demo.py | 特性更新で選択を変え、元の活動を再開 |
+| sleep_demo.py | 根拠統合・夢失効・人格案の明示適用・再起動 |
 
 例は説明用の明示教材・観測・特性を使います。自由会話や一般的意味理解の完成を示すものではありません。通常の例は後処理を終えて終了し、一時保存先も削除します。Textの対話モードは明示JSON指示を受け付けます。
 
@@ -838,7 +872,7 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-公開版は9例、候補は16例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
+公開版は9例、候補は17例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階では[Registry](registry.md)でGroupの構成を、[Connections](connections.md)で契約宣言と接続を確認します。別プロセス化する場合は[HybridGroup](hybrid.md)のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
@@ -913,7 +947,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ## 24 適用範囲・検証状況・参照先
 
-Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Persona連携を検証しています。公開版は9例、候補は16例。v1.4は全411テスト・通常配布・8環境CIを通過。v1.5は全432テスト・通常配布・9ジョブCIを確認済み。v1.6は全450テスト・通常配布・9ジョブCIと29ページ/18図を確認済み。v1.7は全469テスト・通常配布・9ジョブCIを確認済み。v1.8の最終受入は[B08記録](validation/v1.8.md)・親#18で確認します。
+Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Persona・Sleepを検証しています。公開版は9例、候補は17例。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。v1.8は485テスト、9ジョブCI、顧客32ページ/20図が成功。v1.9の最終受入は[B09記録](validation/v1.9.md)・親#19で確認します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -923,7 +957,7 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Per
 | 長時間性能 | 30分負荷はv0.8の特定コミットの測定。後続修正・各環境の全てを同じ測定結果で代表しない |
 | 後続の機能 | v1.0の共通契約は採用済み。v1.5のAgencyはADR 0032。活動循環はADR 0034、自由会話は後続判断 |
 
-現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Personaの自発更新・Sleep・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
+現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Personaの自発更新・睡眠活動循環・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
 
 | 用語 | 本資料での意味 |
 |---|---|
@@ -933,6 +967,6 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Per
 | 協調的中断 | 実行側が安全な区切りと後処理を担当して止まること |
 | 結果不明 | 処理が失敗したと確定できず、照会が必要な状態 |
 
-手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、契約は[Core API](core-api.md)・[API一覧](api-reference.md)、判断は[ADR索引](adr/README.md)、証拠は[B00](validation/v1.0.md)・[B01](validation/v1.1.md)・[B02](validation/v1.2.md)・[B03](validation/v1.3.md)・[B04](validation/v1.4.md)・[B05](validation/v1.5.md)・[B06](validation/v1.6.md)・[B07](validation/v1.7.md)・[B08](validation/v1.8.md)を参照してください。Windows終了時の修正は[検証記録](validation/windows-shutdown.md)にあります。
+手順は[導入](getting-started.md)・[実行例](tutorials.md)・[問題解決](troubleshooting.md)、契約は[Core API](core-api.md)・[API一覧](api-reference.md)、判断は[ADR索引](adr/README.md)、証拠は[B00](validation/v1.0.md)・[B01](validation/v1.1.md)・[B02](validation/v1.2.md)・[B03](validation/v1.3.md)・[B04](validation/v1.4.md)・[B05](validation/v1.5.md)・[B06](validation/v1.6.md)・[B07](validation/v1.7.md)・[B08](validation/v1.8.md)・[B09](validation/v1.9.md)を参照してください。Windows終了時の修正は[検証記録](validation/windows-shutdown.md)にあります。
 
 本資料とNTKの自作コード・Contracts・設計文書には[Apache-2.0](../LICENSE)を適用します。第三者成果物とNymphの個体データは、それぞれの条件で扱います。本資料は公開版と開発候補を区別して説明し、将来機能を実装済みとして含めません。

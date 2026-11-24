@@ -56,7 +56,7 @@ R35でv1.3 CognitionとMemory連携の開発が指示された。親#13・子#11
 
 R36で顧客向けMarkdown・PDF・HTMLも主要Docsとし、対象コミットの実装と常に同期することが明示指示された。親#13の子#124・#125を変更前に登録し、ADR 0030へ採用方針を記録した。原稿・図・公開状態の更新、同期証跡、必須CI生成、全ページの表示確認を行う。開発候補と公開版を区別し、過去の公開スナップショットは保持する。
 
-R37でv1.10まで実装・検証を反復する目標が指示された。v1.4は親#14・子#126〜#130を先行登録し、ADR 0031で対話・Web入力・学習注釈訂正を具体化。具体API・数値はCodexの実装判断として区別する。前段PR #123は未マージで、公開版v1.2と開発候補v1.4を分ける。v1.5は親#15・子#132〜#136、ADR 0032で活動選択・変更判断・決定保存とB05を具体化した。v1.6は親#16・子#138〜#142、ADR 0034で活動循環とCore適用・B06を具体化した。v1.7は親#17・子#144〜#148、ADR 0035でPersonaの保持/外部修正/履歴とB07を具体化した。v1.8は親#18・子#151〜#155、ADR 0036でPersona参照・動機の重み・履歴とB08を具体化した。後続v1.9〜v1.10も各段階で設計・子登録・実装・検証・主要Docs同期を行い、途中版だけで全体目標を完了としない。
+R37でv1.10まで実装・検証を反復する目標が指示された。v1.4は親#14・子#126〜#130を先行登録し、ADR 0031で対話・Web入力・学習注釈訂正を具体化。具体API・数値はCodexの実装判断として区別する。前段PR #123は未マージで、公開版v1.2と開発候補v1.4を分ける。v1.5は親#15・子#132〜#136、ADR 0032で活動選択・変更判断・決定保存とB05を具体化した。v1.6は親#16・子#138〜#142、ADR 0034で活動循環とCore適用・B06を具体化した。v1.7は親#17・子#144〜#148、ADR 0035でPersonaの保持/外部修正/履歴とB07を具体化した。v1.8は親#18・子#151〜#155、ADR 0036でPersona参照・動機の重み・履歴とB08を具体化した。v1.9は親#19・子#157〜#161、ADR 0037でSleep所有の統合根拠/忘却・夢/人格修正案とB09を具体化した。後続v1.10も各段階で設計・子登録・実装・検証・主要Docs同期を行い、途中版だけで全体目標を完了としない。
 
 ## 収録文書
 
@@ -76,85 +76,88 @@ R37でv1.10まで実装・検証を反復する目標が指示された。v1.4�
 14. [Connectionsの操作契約（v0.4）](#section-14)
 15. [TaskManagerの操作契約と活動履歴](#section-15)
 16. [v0.7 ハイブリッド実行と通信](#section-16)
-17. [PersonaとAgency：人格特性を活動選択へ反映する（v1.8候補）](#section-17)
-18. [Persona：人格特性の参照と外部修正（v1.7候補）](#section-18)
-19. [Agencyの活動実行と継続判断（v1.6候補）](#section-19)
-20. [Agency：根拠と内部状態から活動を決める](#section-20)
-21. [Text Interaction・Web入力と学習訂正（v1.4開発候補）](#section-21)
-22. [v1.10.0までの実装・検証の進捗](#section-22)
-23. [Cognition Subsystem — v1.3の初期学習](#section-23)
-24. [Document Adapter — v1.2の文書入力とMemory連携](#section-24)
-25. [Memory Subsystem v1.1](#section-25)
-26. [Core APIと利用上の契約](#section-26)
-27. [公開APIの実装一覧](#section-27)
-28. [v1.0 Core接続契約](#section-28)
-29. [v0.9からv1.0への移行](#section-29)
-30. [ADR索引と更新方法](#section-30)
-31. [ADR 0001 Coreと統合リポジトリ](#section-31)
-32. [ADR 0002 実行モデル](#section-32)
-33. [ADR 0003 通信経路](#section-33)
-34. [ADR 0004 活動の決定権](#section-34)
-35. [ADR 0005 初期実装の範囲](#section-35)
-36. [ADR 0006 v1.0.0のCore接続契約](#section-36)
-37. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-37)
-38. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-38)
-39. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-39)
-40. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-40)
-41. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-41)
-42. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-42)
-43. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-43)
-44. [ADR 0014 v0.2の開発環境と最小Runtime](#section-44)
-45. [ADR 0015 Coreが許可する直接通信の採用](#section-45)
-46. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-46)
-47. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-47)
-48. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-48)
-49. [ADR 0019 v0.4のConnections実装判断](#section-49)
-50. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-50)
-51. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-51)
-52. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-52)
-53. [ADR 0023 v0.7の実装契約](#section-53)
-54. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-54)
-55. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-55)
-56. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-56)
-57. [ADR 0027 v1.1 Memoryの最小保存・取得](#section-57)
-58. [ADR 0028 v1.2 Document AdapterとMemory連携](#section-58)
-59. [ADR 0029 v1.3 Cognitionの初期学習とMemory連携](#section-59)
-60. [ADR 0030 顧客向けMarkdown・PDF・HTMLを主要Docsとして同期する](#section-60)
-61. [ADR 0031 v1.4 対話・Web入力と学習注釈の訂正](#section-61)
-62. [ADR 0032 v1.5 Agencyの根拠付き活動決定](#section-62)
-63. [ADR 0033 入力候補の共通契約と前処理アダプタ](#section-63)
-64. [ADR 0034 v1.6 Agencyの活動循環とTaskManager適用](#section-64)
-65. [ADR 0035 v1.7 Personaの人格特性・外部修正・履歴](#section-65)
-66. [ADR 0036 v1.8 Personaを根拠にしたAgencyの選択](#section-66)
-67. [NTK開発ロードマップ](#section-67)
-68. [受入基準・検討案と検証記録](#section-68)
-69. [Core採用事項と検証証拠の対応](#section-69)
-70. [顧客向け契約・利用ガイドの検証記録](#section-70)
-71. [v1.3候補までの実装機能と資料の整合点検](#section-71)
-72. [v0.9.0利用者向けDocsの検証記録](#section-72)
-73. [v0.2 Runtime受入記録](#section-73)
-74. [v0.3受入記録](#section-74)
-75. [v0.4の受入記録](#section-75)
-76. [v0.5の受入確認と検証経過](#section-76)
-77. [v0.6の受入確認と検証経過](#section-77)
-78. [v0.7の受入確認と検証経過](#section-78)
-79. [v0.8 統合・障害・負荷検証記録](#section-79)
-80. [v0.9 Core機能完成の検証記録](#section-80)
-81. [v1.0 Core接続契約の検証](#section-81)
-82. [v1.1 Memoryの受入記録](#section-82)
-83. [v1.2 Document Adapterの受入・検証記録](#section-83)
-84. [v1.3 Cognitionの受入・検証記録](#section-84)
-85. [v1.4 B04実装・検証記録](#section-85)
-86. [v1.5 Agencyの検証記録](#section-86)
-87. [v1.6 Agency活動循環の検証記録](#section-87)
-88. [v1.7 Personaの検証記録](#section-88)
-89. [v1.8 Persona連携の検証記録](#section-89)
-90. [WindowsのTCP終了処理の修正・検証（#94）](#section-90)
-91. [開発準備とGit運用](#section-91)
-92. [マイルストーンと親子Issueの運用](#section-92)
-93. [公開準備とリリース手順](#section-93)
-94. [変更履歴](#section-94)
-95. [Apache License 2.0（原文）](#section-95)
+17. [Sleep：根拠の統合・忘却・夢と人格修正案（v1.9候補）](#section-17)
+18. [PersonaとAgency：人格特性を活動選択へ反映する（v1.8候補）](#section-18)
+19. [Persona：人格特性の参照と外部修正（v1.7候補）](#section-19)
+20. [Agencyの活動実行と継続判断（v1.6候補）](#section-20)
+21. [Agency：根拠と内部状態から活動を決める](#section-21)
+22. [Text Interaction・Web入力と学習訂正（v1.4開発候補）](#section-22)
+23. [v1.10.0までの実装・検証の進捗](#section-23)
+24. [Cognition Subsystem — v1.3の初期学習](#section-24)
+25. [Document Adapter — v1.2の文書入力とMemory連携](#section-25)
+26. [Memory Subsystem v1.1](#section-26)
+27. [Core APIと利用上の契約](#section-27)
+28. [公開APIの実装一覧](#section-28)
+29. [v1.0 Core接続契約](#section-29)
+30. [v0.9からv1.0への移行](#section-30)
+31. [ADR索引と更新方法](#section-31)
+32. [ADR 0001 Coreと統合リポジトリ](#section-32)
+33. [ADR 0002 実行モデル](#section-33)
+34. [ADR 0003 通信経路](#section-34)
+35. [ADR 0004 活動の決定権](#section-35)
+36. [ADR 0005 初期実装の範囲](#section-36)
+37. [ADR 0006 v1.0.0のCore接続契約](#section-37)
+38. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-38)
+39. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-39)
+40. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-40)
+41. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-41)
+42. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-42)
+43. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-43)
+44. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-44)
+45. [ADR 0014 v0.2の開発環境と最小Runtime](#section-45)
+46. [ADR 0015 Coreが許可する直接通信の採用](#section-46)
+47. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-47)
+48. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-48)
+49. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-49)
+50. [ADR 0019 v0.4のConnections実装判断](#section-50)
+51. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-51)
+52. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-52)
+53. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-53)
+54. [ADR 0023 v0.7の実装契約](#section-54)
+55. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-55)
+56. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-56)
+57. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-57)
+58. [ADR 0027 v1.1 Memoryの最小保存・取得](#section-58)
+59. [ADR 0028 v1.2 Document AdapterとMemory連携](#section-59)
+60. [ADR 0029 v1.3 Cognitionの初期学習とMemory連携](#section-60)
+61. [ADR 0030 顧客向けMarkdown・PDF・HTMLを主要Docsとして同期する](#section-61)
+62. [ADR 0031 v1.4 対話・Web入力と学習注釈の訂正](#section-62)
+63. [ADR 0032 v1.5 Agencyの根拠付き活動決定](#section-63)
+64. [ADR 0033 入力候補の共通契約と前処理アダプタ](#section-64)
+65. [ADR 0034 v1.6 Agencyの活動循環とTaskManager適用](#section-65)
+66. [ADR 0035 v1.7 Personaの人格特性・外部修正・履歴](#section-66)
+67. [ADR 0036 v1.8 Personaを根拠にしたAgencyの選択](#section-67)
+68. [ADR 0037 v1.9 Sleepの初期統合・忘却・夢・人格修正案](#section-68)
+69. [NTK開発ロードマップ](#section-69)
+70. [受入基準・検討案と検証記録](#section-70)
+71. [Core採用事項と検証証拠の対応](#section-71)
+72. [顧客向け契約・利用ガイドの検証記録](#section-72)
+73. [v1.3候補までの実装機能と資料の整合点検](#section-73)
+74. [v0.9.0利用者向けDocsの検証記録](#section-74)
+75. [v0.2 Runtime受入記録](#section-75)
+76. [v0.3受入記録](#section-76)
+77. [v0.4の受入記録](#section-77)
+78. [v0.5の受入確認と検証経過](#section-78)
+79. [v0.6の受入確認と検証経過](#section-79)
+80. [v0.7の受入確認と検証経過](#section-80)
+81. [v0.8 統合・障害・負荷検証記録](#section-81)
+82. [v0.9 Core機能完成の検証記録](#section-82)
+83. [v1.0 Core接続契約の検証](#section-83)
+84. [v1.1 Memoryの受入記録](#section-84)
+85. [v1.2 Document Adapterの受入・検証記録](#section-85)
+86. [v1.3 Cognitionの受入・検証記録](#section-86)
+87. [v1.4 B04実装・検証記録](#section-87)
+88. [v1.5 Agencyの検証記録](#section-88)
+89. [v1.6 Agency活動循環の検証記録](#section-89)
+90. [v1.7 Personaの検証記録](#section-90)
+91. [v1.8 Persona連携の検証記録](#section-91)
+92. [v1.9 Sleep初期機能の検証記録](#section-92)
+93. [WindowsのTCP終了処理の修正・検証（#94）](#section-93)
+94. [開発準備とGit運用](#section-94)
+95. [マイルストーンと親子Issueの運用](#section-95)
+96. [公開準備とリリース手順](#section-96)
+97. [変更履歴](#section-97)
+98. [Apache License 2.0（原文）](#section-98)
 
 ---
 
@@ -176,7 +179,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在使える機能と公開状態
 
-2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.8.0開発候補** です。未マージのv1.3〜v1.7候補（PR #123 / #131 / #137 / #143 / #149）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
+2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.9.0開発候補** です。未マージのv1.3〜v1.8候補（PR #123 / #131 / #137 / #143 / #149 / #156）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
 
 | 機能 | 実装した範囲・操作 | 利用できる版・資料 |
 |---|---|---|
@@ -188,14 +191,21 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Web Adapter | 許可originのHTTP文章取得・HTML本文抽出・Memory保存 | v1.4開発候補。入力・訂正ガイド（`docs/interaction.md`） |
 | Agency | 根拠と内部状態からの決定・保存、Coreへの適用と活動循環 | v1.5/1.6開発候補。判断（`docs/agency.md`）・実行（`docs/agency-execution.md`） |
 | Persona | 長期特性の参照、外部差分、現在値/修正履歴の原子的保存 | v1.7開発候補。Persona（`docs/persona.md`） |
+| Sleep | 根拠の統合/減衰・現在夢の再結合/失効・人格修正案 | v1.9開発候補。Sleep（`docs/sleep.md`） |
 
-Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。Sleep、Discord Voice・Desktop Adapterは後続です。v1.5の実装受入はB05記録（`docs/validation/v1.5.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）にあります。
+Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。睡眠活動の循環、Discord Voice・Desktop Adapterは後続です。v1.5の実装受入はB05記録（`docs/validation/v1.5.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）にあります。
 
-### v1.8.0開発候補 — PersonaとAgencyの連携
+### v1.9.0開発候補 — Sleepの初期統合
+
+Memory原本とCognitionの教師注釈から根拠を統合し、使わない根拠を成功周期ごとに減衰させます。夢の再結合/失効と、初めて評価する実経験から小さな人格修正案を生成します。忘却対象はSleepの現在統合状態で、Memory原本/Cognitionの学習は保持します。Personaへの適用は利用側の明示操作です。
+
+Sleepガイド（`docs/sleep.md`）・ADR 0037（`docs/adr/0037-v1.9-sleep.md`）・B09記録（`docs/validation/v1.9.md`）を参照してください。規則/保存/サービスと実4配置/両経路/再起動、17番目の実行例を確認。全回帰・配布・CI・主要Docsの最終受入は継続中です。
+
+### v1.8で追加したPersonaとAgencyの連携
 
 任意のpersona設定で、人格特性を活動の得点へ反映し、どの版・値・規則で選んだかを判断履歴へ残します。特性の外部更新後に再観測すると、Agencyが選択を見直し、Coreへ中断・切替・再開を依頼します。設定省略時は旧動作を維持し、有効時は別のAgency DB形式2を使用します。
 
-連携ガイド（`docs/persona-agency.md`）・ADR 0036（`docs/adr/0036-v1.8-persona-agency.md`）・B08記録（`docs/validation/v1.8.md`）を参照してください。16件の局所/統合試験と16番目の例が成功。全回帰・配布・CI・主要Docsの最終確認は継続中です。
+連携ガイド（`docs/persona-agency.md`）・ADR 0036（`docs/adr/0036-v1.8-persona-agency.md`）・B08記録（`docs/validation/v1.8.md`）を参照してください。PR #156 / 9d690eaで全485件・通常配布/16例・9ジョブCI、顧客32ページ/20図のWindows/Linux全表示・全形式照合を確認済みです。未マージです。
 
 ### v1.7で追加したPersonaの人格特性
 
@@ -247,7 +257,7 @@ CoreとSubsystem・Adapterをつなぐ6区分の接続契約（`docs/module-cont
 
 配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.8.0はCognition・Text/Web・訂正・Agencyの判断/活動循環とPersona連携を含み、実行例は16例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.9.0はCognition・Text/Web・訂正・Agencyの判断/活動循環・Persona連携とSleepの初期機能を含み、実行例は17例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -282,7 +292,7 @@ v1.0.0は316テスト（製品304件＋検査12件）、7実行例、全8環境C
 
 30分の負荷測定はv0.8の特定コミットに対する結果です。後続修正の検証範囲とともにv0.8検証記録（`docs/validation/v0.8.md`）へ記録しており、現在の全環境で同じ長時間性能を保証するものではありません。
 
-v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1 MemoryはR31・ADR 0027で初期範囲を具体化しました。v1.2はR33・ADR 0028でDocumentの初期範囲を具体化しました。v1.3はR35・ADR 0029で初期学習の範囲を具体化しました。v1.4はR37・ADR 0031で範囲を具体化しました。v1.5はADR 0032、v1.6はADR 0034、v1.7はADR 0035で具体化しました。v1.8はADR 0036で具体化しました。後続v1.9.0〜v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
+v0.1.0はGitHub公開、v0.9.0は合意したCore機能完成の節目です。v1.0.0はCoreとSubsystem・Adapterの接続契約整備の節目です。v1.1 MemoryはR31・ADR 0027で初期範囲を具体化しました。v1.2はR33・ADR 0028でDocumentの初期範囲を具体化しました。v1.3はR35・ADR 0029で初期学習の範囲を具体化しました。v1.4はR37・ADR 0031で範囲を具体化しました。v1.5はADR 0032、v1.6はADR 0034、v1.7はADR 0035で具体化しました。v1.8はADR 0036で具体化しました。v1.9はADR 0037で具体化しました。後続v1.10.0の名称・実装順・機能配分、奇数／偶数マイナーの運用は提案段階です。最終ビジョンと各版の実装範囲を区別します。
 
 将来のPC全体の状況取得はAdapterが担当します。Desktop Adapterはv1.10.0までの配分に含めず将来課題とし、複製・移植・伝播機構は初期スコープ外です。
 
@@ -399,6 +409,8 @@ v1.7 PersonaはADR 0035（`docs/adr/0035-v1.7-persona.md`）を確認する。�
 
 v1.8のPersona/Agency連携はADR 0036（`docs/adr/0036-v1.8-persona-agency.md`）に従う。任意persona設定の省略時は旧utility-v1/DB形式1を維持し、有効時は新しい形式2で根拠を保存する。Personaの値を中立値で代用せず、Agencyが選択する。外部更新の再評価には新しい決定IDまたはobserveを使い、過去判断を書き換えない。自動移行・Personaの自発更新・Coreの価値判断を追加しない。
 
+v1.9 SleepはADR 0037（`docs/adr/0037-v1.9-sleep.md`）に従う。初期の忘却はSleep現在統合状態の寄与に限定し、Memory原本/Cognition既存学習を削除しない。夢は次の成功周期で失効し、人格根拠にしない。observedの初回評価だけから修正案を生成し、案と適用成功を分ける。Sleep自身のPersona.apply・睡眠活動循環はv1.10の別判断へ残す。
+
 ---
 
 <a id="section-4"></a>
@@ -407,7 +419,7 @@ v1.8のPersona/Agency連携はADR 0036（`docs/adr/0036-v1.8-persona-agency.md`�
 
 ## Docsの読み方と根拠
 
-初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.8.0のCognition・Text/Web・訂正・Agency判断/活動循環・Personaと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。機能・公開状態の一覧（`README.md`）と2026年11月23日の整合点検（`docs/validation/docs-current.md`）を参照する。
+初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.9.0のCognition・Text/Web・訂正・Agency判断/活動循環・Persona・Sleepと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。機能・公開状態の一覧（`README.md`）と2026年11月23日の整合点検（`docs/validation/docs-current.md`）を参照する。
 
 R31のv1.1 Memoryは利用ガイド（`docs/memory.md`）・ADR 0027（`docs/adr/0027-v1.1-memory.md`）・B01結果（`docs/validation/v1.1.md`）を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
 
@@ -428,7 +440,7 @@ v1.2のDocument Adapterは利用ガイド（`docs/document.md`）・ADR 0028（`
 | 問題を調べる | トラブルシューティング（`docs/troubleshooting.md`） → 対象機能のDocs・検証記録 |
 | 判断を追う | ADR索引（`docs/adr/README.md`） → 採用64項目（`docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`） → 証拠対応表（`docs/validation/core-coverage.md`） |
 
-導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.8候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。Vision（`docs/vision.md`）は長期目標、v1.xの名称・配分はロードマップ（`docs/roadmap.md`）の採用状態に従う。
+導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.9候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。Vision（`docs/vision.md`）は長期目標、v1.xの名称・配分はロードマップ（`docs/roadmap.md`）の採用状態に従う。
 
 ### 文書一覧と格納場所
 
@@ -448,6 +460,8 @@ v1.2のDocument Adapterは利用ガイド（`docs/document.md`）・ADR 0028（`
 | troubleshooting.md（`docs/troubleshooting.md`） | 症状別の確認・対処・回復確認と報告方法 |
 | validation/docs-onboarding.md（`docs/validation/docs-onboarding.md`） | D01〜D04・D09の検証結果、対象版、確認範囲 |
 | validation/docs-current.md（`docs/validation/docs-current.md`） | v1.3候補までの実装・資料・公開状態の点検、訂正箇所と確認範囲 |
+| sleep.md（`docs/sleep.md`） | v1.9候補の統合根拠/忘却・夢・人格修正案と保存 |
+| validation/v1.9.md（`docs/validation/v1.9.md`） | B09の確認状況 |
 | persona-agency.md（`docs/persona-agency.md`） | v1.8候補の人格特性と活動選択・保存互換・再評価 |
 | validation/v1.8.md（`docs/validation/v1.8.md`） | B08の確認状況 |
 | persona.md（`docs/persona.md`） | v1.7候補の人格特性・外部差分・原子的保存/履歴 |
@@ -677,6 +691,10 @@ v1.5は親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.
 
 親#18・子#151〜#155を先行登録し、ADR 0036を設計子#151へ実装前に記録した。人格特性の参照・初期重み付け・保存形式2・再評価とB08を具体化したCodex判断であり、個々の規則/値のユーザー承認とは区別する。連携ガイド（`docs/persona-agency.md`）・検証記録（`docs/validation/v1.8.md`）を引継ぎ書へ全文収録する。
 
+### R37のv1.9具体化
+
+親#19・子#157〜#161とADR 0037でSleep初期範囲/B09を具体化した。一般的な意味理解や全記憶の削除へ広げず、統合状態・夢・人格修正案を扱うCodex判断として記録する。Sleepガイド（`docs/sleep.md`）・B09記録（`docs/validation/v1.9.md`）を引継ぎ書へ全文収録する。
+
 ---
 
 <a id="section-5"></a>
@@ -685,24 +703,24 @@ v1.5は親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.
 
 ## NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.8.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
+**Nymph Toolkit / 対象 v1.9.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
 
 ### この資料で分かること
 
-NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Web・Agency・Personaの実装、使い方、制約をまとめます。
+NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Web・Agency・Persona・Sleepの実装、使い方、制約をまとめます。
 
-**Nymphが活動を決め、Coreが実行を管理します。** Agencyの活動循環・特性保持と選択への反映を含みます。自然な会話や人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
+**Nymphが活動を決め、Coreが実行を管理します。** Agencyの活動循環・特性反映とSleepの初期統合を含みます。自然な会話や人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
 
 | 読みたい内容 | 章 |
 |---|---|
 | Coreの構成・配置・起動停止 | 01〜03 |
 | 登録・接続・操作・ストリーム | 04〜07 |
 | 活動・失敗・保存・再起動・設定 | 08〜13 |
-| 6区分の接続契約と実機能・活動循環・人格特性 | 14〜18F |
+| 6区分の接続契約と実機能・活動循環・人格特性 | 14〜18G |
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.8.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携を含みます。前段PR #123/#131/#137/#143/#149は未マージです。v1.8の全受入は親#18で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.9.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携・Sleepを含みます。前段PR #123/#131/#137/#143/#149/#156は未マージです。v1.9の全受入は親#19で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名はAPI一覧（`docs/api-reference.md`）、意味はCore API（`docs/core-api.md`）と各機能ガイドを参照してください。
 
@@ -732,7 +750,7 @@ flowchart TB
 | 活動の時刻監視、変更と状態通知 | 活動内容・優先度・終了・再開の判断 |
 | 保存と障害通知、後処理を待つ仕組み | 安全な中断点、所有する資源の解放 |
 
-CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Web・Agency・Personaは開発候補に同梱します。PersonaとAgencyの連携は候補に含み、Sleep等は後続です。
+CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Web・Agency・Persona・Sleepは開発候補に同梱します。睡眠活動との循環や音声は後続です。
 
 <!-- pagebreak -->
 
@@ -1171,7 +1189,7 @@ flowchart LR
 
 factoryは`nymph_toolkit.subsystems.memory:factory`、設定は絶対ファイルパス`path`です。1つのDBを1つの実体が所有します。SQLite対応Python、フレーム上限65536 bytes以上を使います。
 
-同時受付は1件です。未知形式・破損を自動上書きしません。取消や期限切れは未保存保証ではなく、要求側がIDで結果を確認します。編集・削除・忘却・意味検索・記憶統合は未実装です。Memoryガイド（`docs/memory.md`）
+同時受付は1件です。未知形式・破損を自動上書きしません。取消や期限切れは未保存保証ではなく、要求側がIDで結果を確認します。Memory原本の編集・削除・忘却・意味検索は未実装です。Sleepの別状態での統合とは区別します。Memoryガイド（`docs/memory.md`）
 
 <!-- pagebreak -->
 
@@ -1205,7 +1223,7 @@ root外・上位移動・不正文字コード・空白のみ/NUL本文は拒否
 
 ### 17 Cognition：注釈から初期の規則性を学ぶ
 
-**v1.3で追加し、v1.8候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
+**v1.3で追加し、v1.9候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
 
 ```mermaid
 flowchart TB
@@ -1404,7 +1422,7 @@ flowchart LR
 
 取消や期限切れでも保存が完了する場合があります。受付済みworkerの完了と後処理を待ち、更新IDで照合します。sourceは提供側の申告情報で、認証証明ではありません。
 
-`python examples/persona_demo.py`で、2特性の外部修正・両経路・同一IDの再要求・履歴・再起動を試せます。特性名と数値は説明用で、心理学的診断尺度や人格全体を表すものではありません。Agencyへの反映は次章、Sleepによる差分生成は後続です。契約・設定・失敗（`docs/persona.md`）
+`python examples/persona_demo.py`で、2特性の外部修正・両経路・同一IDの再要求・履歴・再起動を試せます。特性名と数値は説明用で、心理学的診断尺度や人格全体を表すものではありません。Agencyへの反映は次章、Sleepの修正案は18Gで説明します。契約・設定・失敗（`docs/persona.md`）
 
 <!-- pagebreak -->
 
@@ -1444,6 +1462,39 @@ persona設定を省略すると従来動作・DB形式1を維持します。有�
 
 <!-- pagebreak -->
 
+### 18G Sleep：統合状態・夢・人格案を分ける
+
+v1.9候補では、Memoryの原記録とCognitionの教師注釈を読み、Sleep自身の統合根拠を整理します。Coreは接続・実行を管理し、経験の価値を判断しません。
+
+```mermaid
+flowchart LR
+    E["Memory原記録<br/>Cognition注釈"] -->|"読出し・照合"| S["Sleep<br/>統合・減衰・夢・修正案"]
+    P["Persona<br/>現在特性"] -->|"getの結果"| S
+    S --> D[("周期履歴<br/>現在状態")]
+    S -->|"修正案"| R["利用側の明示適用"]
+    R -->|"apply"| P
+```
+
+図21：案を作るSleepと、適用を指示する利用側を分けます。Sleepは原記録や既存学習を変更しません。
+
+| 操作・状態 | 利用側が確認すること |
+|---|---|
+| cycle / get | ID・観測版・0〜4記録で周期を実行 / 保存済み結果を照会 |
+| state / inspect | 現在根拠・夢をページ取得 / ラベル別の件数・寄与と出典を照会 |
+| strength | 再観測で1000。未観測の成功周期ごとに250減り、4周期で外れる |
+| 現在夢 | 2件のtokensを再結合。次の成功周期で前の夢を失効 |
+| 人格修正案 | 初回評価のobservedだけを使用。traitごとに周期±5、現在値の範囲内 |
+
+**忘却対象はSleepの現在統合状態です。** Memory原本・Cognitionの学習・周期監査は保持します。一般的な意味理解、Nymph全体の知識削除や、自然な夢文章の完成ではありません。
+
+夢はdream区分と元IDを持ち、現実の経験や人格差分の根拠にしません。過去のreceiptを読んでも現在夢を復活させません。人格案を作っただけではPersonaは変わらず、利用側がapplyと保存結果を照合します。
+
+同ID/同入力は再実行せず元の結果を返します。取消・通信期限切れは未保存保証ではなく、getで照合します。現在根拠16件、周期履歴4096件、同時受付1件。再起動だけでは周期を進めません。
+
+`python examples/sleep_demo.py`で統合・失効・利用側の人格適用と再起動を確認できます。設定・対応範囲（`docs/sleep.md`）・検証（`docs/validation/v1.9.md`）
+
+<!-- pagebreak -->
+
 ### 19 使い始める：公開版で動きを確認する
 
 CPython 3.12以上を用意します。現行版で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
@@ -1472,7 +1523,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 
 ### 19A 開発候補の機能を試す
 
-このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の7例を加え、v1.8候補では16例です。
+このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の8例を加え、v1.9候補では17例です。
 
 | 実行例 | 確認できること |
 |---|---|
@@ -1483,6 +1534,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 | agency_execution_demo.py | 活動登録・実学習・中断/再開・協調終了 |
 | persona_demo.py | 特性の参照・外部差分・版/ID・履歴 |
 | persona_agency_demo.py | 特性更新で選択を変え、元の活動を再開 |
+| sleep_demo.py | 根拠統合・夢失効・人格案の明示適用・再起動 |
 
 例は説明用の明示教材・観測・特性を使います。自由会話や一般的意味理解の完成を示すものではありません。通常の例は後処理を終えて終了し、一時保存先も削除します。Textの対話モードは明示JSON指示を受け付けます。
 
@@ -1523,7 +1575,7 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-公開版は9例、候補は16例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
+公開版は9例、候補は17例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
@@ -1598,7 +1650,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ### 24 適用範囲・検証状況・参照先
 
-Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Persona連携を検証しています。公開版は9例、候補は16例。v1.4は全411テスト・通常配布・8環境CIを通過。v1.5は全432テスト・通常配布・9ジョブCIを確認済み。v1.6は全450テスト・通常配布・9ジョブCIと29ページ/18図を確認済み。v1.7は全469テスト・通常配布・9ジョブCIを確認済み。v1.8の最終受入はB08記録（`docs/validation/v1.8.md`）・親#18で確認します。
+Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Persona・Sleepを検証しています。公開版は9例、候補は17例。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。v1.8は485テスト、9ジョブCI、顧客32ページ/20図が成功。v1.9の最終受入はB09記録（`docs/validation/v1.9.md`）・親#19で確認します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -1608,7 +1660,7 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Per
 | 長時間性能 | 30分負荷はv0.8の特定コミットの測定。後続修正・各環境の全てを同じ測定結果で代表しない |
 | 後続の機能 | v1.0の共通契約は採用済み。v1.5のAgencyはADR 0032。活動循環はADR 0034、自由会話は後続判断 |
 
-現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Personaの自発更新・Sleep・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
+現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Personaの自発更新・睡眠活動循環・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
 
 | 用語 | 本資料での意味 |
 |---|---|
@@ -1618,7 +1670,7 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Per
 | 協調的中断 | 実行側が安全な区切りと後処理を担当して止まること |
 | 結果不明 | 処理が失敗したと確定できず、照会が必要な状態 |
 
-手順は導入（`docs/getting-started.md`）・実行例（`docs/tutorials.md`）・問題解決（`docs/troubleshooting.md`）、契約はCore API（`docs/core-api.md`）・API一覧（`docs/api-reference.md`）、判断はADR索引（`docs/adr/README.md`）、証拠はB00（`docs/validation/v1.0.md`）・B01（`docs/validation/v1.1.md`）・B02（`docs/validation/v1.2.md`）・B03（`docs/validation/v1.3.md`）・B04（`docs/validation/v1.4.md`）・B05（`docs/validation/v1.5.md`）・B06（`docs/validation/v1.6.md`）・B07（`docs/validation/v1.7.md`）・B08（`docs/validation/v1.8.md`）を参照してください。Windows終了時の修正は検証記録（`docs/validation/windows-shutdown.md`）にあります。
+手順は導入（`docs/getting-started.md`）・実行例（`docs/tutorials.md`）・問題解決（`docs/troubleshooting.md`）、契約はCore API（`docs/core-api.md`）・API一覧（`docs/api-reference.md`）、判断はADR索引（`docs/adr/README.md`）、証拠はB00（`docs/validation/v1.0.md`）・B01（`docs/validation/v1.1.md`）・B02（`docs/validation/v1.2.md`）・B03（`docs/validation/v1.3.md`）・B04（`docs/validation/v1.4.md`）・B05（`docs/validation/v1.5.md`）・B06（`docs/validation/v1.6.md`）・B07（`docs/validation/v1.7.md`）・B08（`docs/validation/v1.8.md`）・B09（`docs/validation/v1.9.md`）を参照してください。Windows終了時の修正は検証記録（`docs/validation/windows-shutdown.md`）にあります。
 
 本資料とNTKの自作コード・Contracts・設計文書にはApache-2.0（`LICENSE`）を適用します。第三者成果物とNymphの個体データは、それぞれの条件で扱います。本資料は公開版と開発候補を区別して説明し、将来機能を実装済みとして含めません。
 
@@ -1630,7 +1682,7 @@ Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agency・Per
 
 ## 顧客向け主要Docsの更新・同期・配布
 
-R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、customer-guide.md（`docs/customer-guide.md`）・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.8.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
+R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、customer-guide.md（`docs/customer-guide.md`）・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.9.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
 
 ### 正本と同期対象
 
@@ -1999,6 +2051,10 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ### 開発候補v1.8：PersonaとAgency（16番目）
 
 `python examples/persona_agency_demo.py`。実Cognitionの学習後、同じ観測・目標を維持し、休息への特性だけを500→1000→500と外部更新する。Agencyが知識活用→休息→同じ継続の再開を選び、Coreへ適用する。2回の起動で特性/判断履歴と活動非復元を確認し、PASSを表示して後処理まで終了する。一時保存先は正常終了時に削除する。連携と保存（`docs/persona-agency.md`）・検証範囲（`docs/validation/v1.8.md`）。
+
+### 開発候補v1.9：Sleep（17番目）
+
+`python examples/sleep_demo.py`。実Memory/Cognition/Personaから根拠を取得し、出典別の統合・減衰/忘却・夢の失効を照合する。人格案は利用側が明示適用し、原本/学習は維持する。2回の起動で状態/履歴を確認し、PASSを表示して後処理する。一時保存先は正常終了時に削除する。契約（`docs/sleep.md`）・検証（`docs/validation/v1.9.md`）。
 
 ---
 
@@ -2625,7 +2681,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
-#### 現在の配置（公開v1.2と開発候補v1.8）
+#### 現在の配置（公開v1.2と開発候補v1.9）
 
 文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用はADR 0011（`docs/adr/0011-apache-2.0-license.md`）に従う。
 
@@ -2661,6 +2717,7 @@ nymph-toolkit/
 ├─ examples/agency_execution_demo.py # 14番目：活動循環・実学習
 ├─ examples/persona_demo.py          # 15番目：人格特性の外部修正・保存
 ├─ examples/persona_agency_demo.py   # 16番目：特性更新と活動選択・再開
+├─ examples/sleep_demo.py             # 17番目：統合・夢失効・人格案と明示適用
 ├─ examples/persona_requester.py
 ├─ examples/cognition_requester.py
 ├─ tools/check_dist.py
@@ -2686,7 +2743,7 @@ nymph-toolkit/
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
 │  ├─ getting-started.md            # 公開v1.2.0通常導入・初回実行
-│  ├─ tutorials.md                  # 公開9例と候補15例
+│  ├─ tutorials.md                  # 公開9例と候補17例
 │  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md
@@ -2706,6 +2763,8 @@ nymph-toolkit/
 │  ├─ agency-execution.md            # v1.6活動循環とCore適用
 │  ├─ persona.md                     # v1.7特性・外部修正・履歴
 │  ├─ persona-agency.md              # v1.8人格特性と選択への反映
+│  ├─ sleep.md                       # v1.9統合根拠/忘却・夢・人格案
+│  ├─ validation/v1.9.md             # B09の確認状況
 │  ├─ validation/v1.5.md             # B05の実装受入
 │  ├─ validation/v1.6.md             # B06の実装受入
 │  ├─ validation/v1.7.md             # B07の確認状況
@@ -2772,11 +2831,12 @@ nymph-toolkit/
 │     ├─ 0033-input-candidate-contract.md # 別件の入力前処理提案。未採用
 │     ├─ 0034-v1.6-agency-execution.md
 │     ├─ 0035-v1.7-persona.md
-│     └─ 0036-v1.8-persona-agency.md
+│     ├─ 0036-v1.8-persona-agency.md
+│     └─ 0037-v1.9-sleep.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     ├─ contracts/                  # Core共通型とMemory/Cognition/Agency/Persona/Adapter業務契約
+│     ├─ contracts/                  # Core共通型とMemory/Cognition/Agency/Persona/Sleep/Adapter業務契約
 │     ├─ adapters/document/          # ローカル文書入力とMemory連携
 │     ├─ adapters/text_interaction/  # 観測・教師入力・訂正・照会
 │     ├─ adapters/web/               # 許可originのHTTP文章取得
@@ -2784,8 +2844,9 @@ nymph-toolkit/
 │     ├─ subsystems/memory/           # 同梱する最小Memory
 │     ├─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
 │     ├─ subsystems/agency/           # 根拠付き判断・活動循環と専用履歴
-│     └─ subsystems/persona/          # 長期特性・外部差分・専用履歴
-└─ tests/                            # subsystems/にMemory/Cognition/Agency/Personaの単体・統合試験
+│     ├─ subsystems/persona/          # 長期特性・外部差分・専用履歴
+│     └─ subsystems/sleep/            # 統合根拠/減衰・夢・人格案と周期履歴
+└─ tests/                            # subsystems/にMemory/Cognition/Agency/Persona/Sleepの単体・統合試験
    ├─ core/
    ├─ adapters/                     # Document単体・4配置・障害試験
    ├─ subsystems/
@@ -2831,7 +2892,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036で初期範囲を具体化した。後続の学習・意思決定方式、未実装Adapterの形式・権限、経験からの人格修正値生成、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。後続の学習・意思決定方式、未実装Adapterの形式・権限、睡眠活動との循環、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ### R33：DocumentとMemoryの境界
 
@@ -2866,6 +2927,10 @@ ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）に従い、Core既
 ### v1.8 PersonaとAgencyの連携
 
 ADR 0036（`docs/adr/0036-v1.8-persona-agency.md`）によりAgencyの任意設定でPersonaの公開traits/1を参照する。状態/学習根拠から得た候補得点を特性で補正し、取得した版・値・対応付けと基礎点・倍率を決定履歴へ保存する。Personaは保持/外部修正、Agencyは価値判断、Coreは実行管理を担当する。旧設定は形式1を維持し、有効時は新規DB形式2を使う。利用と図解（`docs/persona-agency.md`）・B08（`docs/validation/v1.8.md`）を参照。
+
+### v1.9 Sleepの所有する統合状態
+
+ADR 0037（`docs/adr/0037-v1.9-sleep.md`）により`contracts/sleep.py`と`subsystems/sleep/`を同梱する。Memory/注釈/Personaは公開契約で読み、専用SQLiteに周期と現在統合状態を保存する。忘却はこの状態への寄与だけで、原本/既存学習は保持する。現在夢と人格修正案も区別し、Sleep自身はPersonaを更新しない。Coreは価値判断を担当しない。図解と使い方（`docs/sleep.md`）・B09（`docs/validation/v1.9.md`）。
 
 ---
 
@@ -3389,6 +3454,109 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 <a id="section-17"></a>
 
+収録元 `docs/sleep.md`
+
+## Sleep：根拠の統合・忘却・夢と人格修正案（v1.9候補）
+
+ADR 0037（`docs/adr/0037-v1.9-sleep.md`）・親#19・B09に対応する。公開版はv1.2.0。この初期実装は小さな規則で根拠を整理する。一般的な意味理解やNymph全体の記憶・人格の完成を示すものではない。
+
+### 所有と接続
+
+SleepはMemory原本とCognitionの教師注釈を公開契約で読み、専用SQLiteに統合根拠を保持する。Personaの現在特性も読み、適用可能な修正案を生成する。Coreは通信と実行環境を管理し、経験の価値を評価しない。
+
+```mermaid
+flowchart LR
+    M["Memory：原記録"] -->|"get"| S["Sleep：統合・減衰・夢・修正案"]
+    C["Cognition：教師注釈"] -->|"get_revision"| S
+    P["Persona：現在特性"] -->|"get"| S
+    S --> D[("現在状態と周期履歴")]
+    S -->|"修正案"| R["利用側の明示適用"]
+    R -->|"apply"| P
+```
+
+Sleep自体はMemory/Cognitionへの書込みもPersona.applyも行わない。利用側が案を適用する例を同梱する。睡眠活動とAgencyの自律循環はv1.10で具体化する。
+
+### 設定
+
+`nymph_toolkit.subsystems.sleep:factory`をSUBSYSTEMとして登録し、`contracts.sleep.SLEEP_CONTRACT`を宣言する。Memory・Cognition・PersonaのIDをrequiresへ指定する。
+
+```python
+config = {
+    "path": "D:/ntk-data/sleep.sqlite3",
+    "memory_module_id": "memory",
+    "cognition_module_id": "cognition",
+    "persona_module_id": "persona",
+    "trait_rules": [{"concept": "explore", "trait": "curiosity", "delta": 3}],
+}
+```
+
+パスは絶対ファイルパス。Cognitionはenable_revision=trueとrevision/1の宣言が必要。trait_rulesは1〜8個、conceptは一意、traitはPersonaに存在するASCII名、deltaは非bool整数−5〜5（0を除く）。例の対応付けは利用側の初期規則で、Sleepが語の意味を理解して評価した結果ではない。フレーム上限は65536 bytes以上。
+
+### 操作
+
+契約は`ntk.sleep.consolidation/1`。すべてASYNC。
+
+| 操作 | 内容 |
+|---|---|
+| cycle(request) | 明示した根拠を取得し、統合状態と周期receiptを原子的に保存 |
+| get(cycle_id) | 過去のreceipt。再観測せず、過去夢を復活させない |
+| state(after=0, limit=4) | 現在版・根拠件数・最大4件の根拠ページ・現在夢・next_after |
+| inspect(concept, source_kind=None) | 現在の概念ラベルに対応する件数/strength/出典別件数と根拠 |
+
+```python
+await core.bind(SLEEP_KEY, "sleep", timeout=5)
+state = await core.invoke(SLEEP_KEY, "state", timeout=5)
+result = await core.invoke(SLEEP_KEY, "cycle", {
+    "cycle_id": "sleep-001",
+    "expected_revision": state["revision"],
+    "record_ids": ["experience-a", "experience-b"],
+}, timeout=30)
+```
+
+record_idsは重複なし0〜4件、cycle_id/記録IDはtrim済み・非空・NULなしUTF-8 128 bytes以下。順序は正規化する。expected_revisionは0〜4096の整数。空IDリストでも成功周期を進め、未観測根拠を減衰する。
+
+Sleepが扱う1記録は1〜16 tokens、0〜8 concepts、注釈根拠4096 ASCII JSON bytes以内。Cognitionの32-token契約を変更するものではなく、Sleepの初期対応範囲である。大きい注釈を自動で切り詰めない。Memoryの本文/出典/hashと注釈を照合し、先に取得した値を次のawaitより前にコピーする。提供先の観測は逐次であり、分散transactionではない。
+
+### 統合と忘却の意味
+
+今回観測した記録のstrengthを1000とし、観測しなかったものを成功周期ごとに250減らす。0になる4回目で利用中の根拠から外す。inspectの件数/合計も変わる。これは周期単位の初期規則で、経過時間・記憶の確率・真偽評価ではない。
+
+現在根拠は最大16件。4件/周期・4周期の窓という規則から、この上限を保つ。超過防御はあるが、正常な入力系列で上限超過が発生すると主張しない。Cognition側で訂正した注釈は、同じ記録を新しい周期で再観測したとき反映する。外れた記録も明示再観測で戻せる。
+
+**忘れるのはSleepの現在統合状態への寄与である。** Memory原本・Cognitionの学習・過去の周期監査は保持する。一般的な知識の削除機能と混同しない。
+
+### 夢と人格修正
+
+夢は現在根拠のうちdream以外の先頭2件をID順に選び、先の前半tokensと後の後半tokensを再結合する。2件未満なら生成しない。夢のsource_kind、元ID、規則を記録する。文法的な文章や現実の出来事として扱わない。
+
+新しい成功周期で前の現在夢を失効させる。失敗周期では元の夢を維持する。stateは現在夢のtokensを返し、過去getはID/hashと失効記録を返す。監査の物理削除を保証するものではない。夢を自動で学習・保存したり人格の根拠にしたりしない。
+
+人格案は、初めて評価するobservedのMemory IDだけから作る。ラベルに対応する差分を合算し、traitごとに周期±5へ制限、現在値0〜1000を超えない差分に縮める。reported/inferred/imagined/dreamからは生成しない。再観測や同IDの注釈訂正を新しい実経験として再加算しない。全差分0ならpersona_proposalはnull。
+
+proposalはPersona.apply用のcommand_id・expected_revision・deltas・reason・sourceで、contributionsへ寄与IDと規則を残す。案の生成だけでは人格は変わらない。適用した利用側はget_updateで結果を照合する。Persona版が古ければ既存契約どおり拒否され、Sleepが勝手に版を読み替えたり再送したりしない。
+
+### 永続化・失敗・終了
+
+| 結果 | 意味 |
+|---|---|
+| sleep.invalid / sleep.evidence | 入力 / 提供根拠が対応形式外。周期を進めない |
+| sleep.cycle_conflict / sleep.revision_conflict | ID内容違い / 現在版違い |
+| sleep.active_full / sleep.history_full | 現在根拠の防御上限 / 4096周期上限。既存情報は保持 |
+| sleep.not_found / sleep.storage | 周期なし / 保存・読出し障害 |
+| TemporaryUnavailable / LinkFailure | 容量・停止 / 連携エラー。業務失敗とは分ける |
+
+同ID/同じ入力の再要求は元のreceiptを返し、減衰・夢生成・修正案を二重実行しない。同時受付は1件。取消・期限切れは未保存保証ではなく、getで照合する。DBと現在状態/履歴/評価済みIDを一括commitし、rollback時は版もIDも消費しない。
+
+再起動で全履歴を当時の規則と根拠から照合する。未知形式・設定違い・破損を上書きしない。再起動だけで周期を進めず、現在夢も次の成功周期まで保持する。stateのページは取得時点の現在状態なので、途中で版が変われば同じ一連のsnapshotとは扱わない。
+
+接続は要求側が選び、Core許可後に固定窓口を再利用する。容量不足をhealth扱いせず、通常連携エラーでは窓口の後処理・自身の中断完了・個別healthを行う。元の操作の自動再実行や相手の自動切替はない。停止時は所有worker/taskの終了を待つ。
+
+`python examples/sleep_demo.py`は実3機能からの観測、出典別統合、夢の失効、明示人格適用、原本/学習の維持、再起動を確認し終了する。B09検証記録（`docs/validation/v1.9.md`）と開発手順（`docs/development.md`）を参照。
+
+---
+
+<a id="section-18"></a>
+
 収録元 `docs/persona-agency.md`
 
 ## PersonaとAgency：人格特性を活動選択へ反映する（v1.8候補）
@@ -3474,7 +3642,7 @@ python -W error -m unittest tests.subsystems.test_agency_persona tests.subsystem
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/persona.md`
 
@@ -3564,11 +3732,11 @@ Personaは受付済みworkerを排出してからDBとthreadを閉じる。Runti
 
 `python examples/persona_demo.py`は、値の参照、外部差分、再要求、版競合、両通信経路、再起動後の同じ値を検証して終了する。例の根拠・差分は明示入力であり、経験の意味評価を自動実行するものではない。
 
-Agencyの選択への反映はv1.8連携ガイド（`docs/persona-agency.md`）とADR 0036で具体化した。Sleepによる修正値生成はv1.9以降で判断する。人格全体や人工人格の完成とは区別する。検証の進捗はB07記録（`docs/validation/v1.7.md`）を参照する。
+Agencyの選択への反映はv1.8連携ガイド（`docs/persona-agency.md`）とADR 0036で具体化した。Sleepによる修正案生成はv1.9ガイド（`docs/sleep.md`）で具体化した。自動適用と睡眠循環は後続判断とする。人格全体や人工人格の完成とは区別する。検証の進捗はB07記録（`docs/validation/v1.7.md`）を参照する。
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/agency-execution.md`
 
@@ -3671,7 +3839,7 @@ python examples/agency_execution_demo.py
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `docs/agency.md`
 
@@ -3804,7 +3972,7 @@ persona設定を指定しなければ旧utility-v1を維持する。任意person
 
 ---
 
-<a id="section-21"></a>
+<a id="section-22"></a>
 
 収録元 `docs/interaction.md`
 
@@ -3913,7 +4081,7 @@ python examples/text_interaction_demo.py --interactive --data-dir .local/text-se
 
 ---
 
-<a id="section-22"></a>
+<a id="section-23"></a>
 
 収録元 `docs/implementation-progress.md`
 
@@ -3928,15 +4096,15 @@ R37（2026年11月24日）の目標は、既存ロードマップに沿ってv1.
 | v1.5 | Agencyの活動計画・意思決定 | 親#15・子#132〜#136・ADR 0032。PR #137 / 30f2639、432テスト/通常配布/13例、9ジョブCI成功。顧客28ページ/17図の全表示・artifact照合済み。未マージ |
 | v1.6 | Agency/TaskManagerの実行・変更・状態把握 | 子#138〜#142・ADR 0034。PR #143 / d0f22eb、全450テスト/通常配布/14例・9ジョブCI成功。顧客29ページ/18図をWindows/Linuxで全表示・照合済み。未マージ |
 | v1.7 | Personaの保持・参照・外部更新 | 親#17・子#144〜#148/#150・ADR 0035。PR #149 / 2acecef、全469件/通常配布/15例・9ジョブCI成功。顧客30ページ/19図をWindows/Linuxで全表示・照合済み。未マージ |
-| v1.8 | Persona/Agencyの選択への反映 | 親#18・子#151〜#155・ADR 0036。任意設定/参照/根拠保存と16番目の実行例を実装。16件の局所/統合試験が成功。全485回帰/配布/CI/主要Docsは継続中 |
-| v1.9 | Sleepの経験統合・忘却・夢・人格修正 | 親#19。詳細設計・子Issue登録・実装・検証は未着手 |
+| v1.8 | Persona/Agencyの選択への反映 | 親#18・子#151〜#155・ADR 0036。PR #156 / 9d690ea、全485件/通常配布/16例・9ジョブCI成功。顧客32ページ/20図をWindows/Linuxで全表示・照合済み。未マージ |
+| v1.9 | Sleepの経験統合・忘却・夢・人格修正 | 親#19・子#157〜#161・ADR 0037。統合状態/減衰・夢失効・人格案・原子的保存と17番目の例を実装。局所・実4配置/両経路/再起動を確認。全回帰/配布/CI/主要Docsは継続中 |
 | v1.10 | 睡眠循環・Discord音声受信/ASR/音響特徴 | 親#20。詳細設計・子登録・実装/検証は未着手。実音声の利用条件と実機検証は別途確認 |
 
 各段階で正常系だけでなく失敗・取消・停止・保存/再起動・契約互換性を確認する。顧客Markdown/PDF/HTMLと引継ぎ書も同時に更新する。テストや代替入力だけを、外部サービスで未確認の動作の証明に使わない。
 
 ---
 
-<a id="section-23"></a>
+<a id="section-24"></a>
 
 収録元 `docs/cognition.md`
 
@@ -4073,9 +4241,13 @@ R35/v1.3当初は未分割日本語の分節、完全な構文/意味理解、�
 
 R35当初の訂正対象外を、R37・ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）で明示的に拡張した。`enable_revision=true`とrevision/1を追加宣言して利用する。learning/1を維持し、Memory原本は編集しない。命令IDとexpected_revision、DB形式1→2の移行・旧バイナリへ戻せない点、操作/失敗/取消は入力・訂正ガイド（`docs/interaction.md`）を参照する。削除・忘却・自律学習・一般的意味理解を一括採用したものではない。
 
+### Sleepからの参照
+
+v1.9 Sleep（`docs/sleep.md`）はrevision/1の教師注釈とMemory根拠を照合する。Sleepの現在根拠が減衰してもCognitionの学習は削除されない。Sleepの16-token対応範囲とCognitionの32-token契約を区別する。
+
 ---
 
-<a id="section-24"></a>
+<a id="section-25"></a>
 
 収録元 `docs/document.md`
 
@@ -4181,7 +4353,7 @@ B02検証記録（`docs/validation/v1.2.md`）に条件と結果を記載する�
 
 ---
 
-<a id="section-25"></a>
+<a id="section-26"></a>
 
 収録元 `docs/memory.md`
 
@@ -4318,9 +4490,13 @@ Memory自体には編集・訂正/削除・忘却、Working/Procedural Memory、
 
 Document連携はv1.2・ADR 0028、Cognitionによるgetと初期学習は開発候補v1.3・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）で具体化した。Memoryの保存/取得契約は変更しない。
 
+### Sleepとの関係
+
+v1.9 Sleep（`docs/sleep.md`）は記録を読み、独自の統合状態と周期履歴を保持する。Sleepの忘却はMemory原本の削除・更新ではなく、既存records/1の契約を維持する。
+
 ---
 
-<a id="section-26"></a>
+<a id="section-27"></a>
 
 収録元 `docs/core-api.md`
 
@@ -4423,7 +4599,7 @@ ActivityStateはPENDING、STARTING（遠隔の実開始待ち）、RUNNING、PAU
 
 ---
 
-<a id="section-27"></a>
+<a id="section-28"></a>
 
 収録元 `docs/api-reference.md`
 
@@ -5953,7 +6129,7 @@ Usage(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingStat
 
 ---
 
-<a id="section-28"></a>
+<a id="section-29"></a>
 
 収録元 `docs/module-contracts.md`
 
@@ -6047,7 +6223,7 @@ python tools/check_contracts.py
 
 ---
 
-<a id="section-29"></a>
+<a id="section-30"></a>
 
 収録元 `docs/migration-v1.md`
 
@@ -6070,7 +6246,7 @@ R29で「必要な破壊的API整理も今回に含める」と明示された�
 
 ---
 
-<a id="section-30"></a>
+<a id="section-31"></a>
 
 収録元 `docs/adr/README.md`
 
@@ -6137,9 +6313,17 @@ ADR 0035（`docs/adr/0035-v1.7-persona.md`）はv1.7の実装判断。親#17・�
 
 ADR 0036（`docs/adr/0036-v1.8-persona-agency.md`）は、Personaの保持/外部修正とAgencyの価値判断を接続するv1.8実装判断。旧設定は維持し、初期規則と保存形式・再評価の契機を明示する。実装受入・公開はB08の証拠と別工程で追跡する。
 
+### v1.9の実装判断
+
+| ADR | 状態 | 対応Issue |
+|---|---|---|
+| 0037 Sleep初期統合（`docs/adr/0037-v1.9-sleep.md`） | R37の実装判断。統合根拠/忘却・夢/人格案・保存とB09 | 親#19・子#157〜#161 |
+
+Memory原本とCognition学習の削除、睡眠活動の循環、人格の自動適用を暗黙に含めない。実装受入と公開を区別する。
+
 ---
 
-<a id="section-31"></a>
+<a id="section-32"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -6193,7 +6377,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-32"></a>
+<a id="section-33"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -6231,7 +6415,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-33"></a>
+<a id="section-34"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -6294,7 +6478,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-34"></a>
+<a id="section-35"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -6361,7 +6545,7 @@ ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）で、Agencyの初期の�
 
 ---
 
-<a id="section-35"></a>
+<a id="section-36"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -6397,7 +6581,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-36"></a>
+<a id="section-37"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -6448,7 +6632,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-37"></a>
+<a id="section-38"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -6495,7 +6679,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-38"></a>
+<a id="section-39"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -6577,9 +6761,13 @@ ADR 0034（`docs/adr/0034-v1.6-agency-execution.md`）でAgency/TaskManagerの�
 
 ADR 0035（`docs/adr/0035-v1.7-persona.md`）でPersonaの参照・外部差分・現在値/履歴保存とB07を具体化した。Agency反映とSleepの修正値生成は後続段階。人格を自発更新しない境界を維持する。
 
+### R37のv1.9具体化
+
+ADR 0037（`docs/adr/0037-v1.9-sleep.md`）でSleep所有の根拠統合/忘却・現在夢/人格修正案とB09を具体化した。Memory原本/Cognition学習の削除と区別し、睡眠循環/案の適用はv1.10へ残す。
+
 ---
 
-<a id="section-39"></a>
+<a id="section-40"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -6638,7 +6826,7 @@ ADR 0027（`docs/adr/0027-v1.1-memory.md`）により、追加外部依存のな
 
 ---
 
-<a id="section-40"></a>
+<a id="section-41"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -6691,7 +6879,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-41"></a>
+<a id="section-42"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -6745,7 +6933,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-42"></a>
+<a id="section-43"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -6785,7 +6973,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-43"></a>
+<a id="section-44"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -6828,7 +7016,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-44"></a>
+<a id="section-45"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -6897,7 +7085,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-45"></a>
+<a id="section-46"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -6968,7 +7156,7 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-46"></a>
+<a id="section-47"></a>
 
 収録元 `docs/adr/0016-v0.3-registry.md`
 
@@ -7046,7 +7234,7 @@ Runtimeの開始待機・停止待機が取消された場合もADR 0014の後�
 
 ---
 
-<a id="section-47"></a>
+<a id="section-48"></a>
 
 収録元 `docs/adr/0017-connection-binding-and-health.md`
 
@@ -7119,7 +7307,7 @@ ADR 0015の直接通信採用とADR 0016のRegistry・ModuleGroupを前提とす
 
 ---
 
-<a id="section-48"></a>
+<a id="section-49"></a>
 
 収録元 `docs/adr/0018-connection-selection-health-and-recovery.md`
 
@@ -7243,7 +7431,7 @@ R15：Docsの根拠一覧（`docs/README.md`）に記録した、本チャット
 
 ---
 
-<a id="section-49"></a>
+<a id="section-50"></a>
 
 収録元 `docs/adr/0019-v0.4-connections.md`
 
@@ -7368,7 +7556,7 @@ R16は本チャットのv0.4着手指示。R15の採用方針はADR 0018、既�
 
 ---
 
-<a id="section-50"></a>
+<a id="section-51"></a>
 
 収録元 `docs/adr/0020-v0.5-task-manager.md`
 
@@ -7537,7 +7725,7 @@ Docsの根拠表（`docs/README.md`）のR2・R4・R10・R16・R17。R17はv0.5�
 
 ---
 
-<a id="section-51"></a>
+<a id="section-52"></a>
 
 収録元 `docs/adr/0021-v0.6-activity-changes.md`
 
@@ -7719,7 +7907,7 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 ---
 
-<a id="section-52"></a>
+<a id="section-53"></a>
 
 収録元 `docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`
 
@@ -7890,7 +8078,7 @@ R19：v0.9までの一問一答、確認事項1〜64の一覧、ユーザーに�
 
 ---
 
-<a id="section-53"></a>
+<a id="section-54"></a>
 
 収録元 `docs/adr/0023-v0.7-implementation-contracts.md`
 
@@ -7984,7 +8172,7 @@ A07-01〜14に対応する実TCP・実子プロセスの検証を行う。ロー
 
 ---
 
-<a id="section-54"></a>
+<a id="section-55"></a>
 
 収録元 `docs/adr/0024-v0.8-integration-validation.md`
 
@@ -8057,7 +8245,7 @@ Windows/Linux × CPython 3.12〜3.15で、ソース、通常wheelインストー
 
 ---
 
-<a id="section-55"></a>
+<a id="section-56"></a>
 
 収録元 `docs/adr/0025-v0.9-core-completion.md`
 
@@ -8115,7 +8303,7 @@ R25でユーザーがPR #86のレビュー、問題解消後のマージとv0.9.
 
 ---
 
-<a id="section-56"></a>
+<a id="section-57"></a>
 
 収録元 `docs/adr/0026-v1.0-core-connection-contracts.md`
 
@@ -8201,7 +8389,7 @@ Core/Contractsの明示exportと、module-contractsに記す利用者向けメ�
 
 ---
 
-<a id="section-57"></a>
+<a id="section-58"></a>
 
 収録元 `docs/adr/0027-v1.1-memory.md`
 
@@ -8287,7 +8475,7 @@ ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）のCognitionがrecords/1
 
 ---
 
-<a id="section-58"></a>
+<a id="section-59"></a>
 
 収録元 `docs/adr/0028-v1.2-document-adapter.md`
 
@@ -8354,7 +8542,7 @@ PR #116のレビュー・マージ・v1.2.0公開指示により、公開確認�
 
 ---
 
-<a id="section-59"></a>
+<a id="section-60"></a>
 
 収録元 `docs/adr/0029-v1.3-cognition-learning.md`
 
@@ -8428,7 +8616,7 @@ learn/inspect共通で同時受付1件。追加要求はTemporaryUnavailable。S
 
 ---
 
-<a id="section-60"></a>
+<a id="section-61"></a>
 
 収録元 `docs/adr/0030-customer-docs-as-primary.md`
 
@@ -8466,7 +8654,7 @@ Node・pnpm・Chromium・日本語フォント・PDF検査ライブラリは文�
 
 ---
 
-<a id="section-61"></a>
+<a id="section-62"></a>
 
 収録元 `docs/adr/0031-v1.4-text-web-and-correction.md`
 
@@ -8536,7 +8724,7 @@ Adapterの共有補助は新規Adapter内部に閉じ、Coreや別Subsystemのpr
 
 ---
 
-<a id="section-62"></a>
+<a id="section-63"></a>
 
 収録元 `docs/adr/0032-v1.5-agency-decisions.md`
 
@@ -8632,7 +8820,7 @@ Agencyがconfigured提供先を候補/契約/稼働情報から確認し、Core�
 
 ---
 
-<a id="section-63"></a>
+<a id="section-64"></a>
 
 収録元 `docs/adr/0033-input-candidate-contract.md`
 
@@ -8720,7 +8908,7 @@ Webと文書は取得元ごとに本文と出典を組み立て、対話の観�
 
 ---
 
-<a id="section-64"></a>
+<a id="section-65"></a>
 
 収録元 `docs/adr/0034-v1.6-agency-execution.md`
 
@@ -8799,7 +8987,7 @@ statusはafter（0〜128）/limit（1〜16、既定8）で登録順の活動要�
 
 ---
 
-<a id="section-65"></a>
+<a id="section-66"></a>
 
 収録元 `docs/adr/0035-v1.7-persona.md`
 
@@ -8869,7 +9057,7 @@ SQLiteエラーはpersona.storage。適用途中の失敗はrollbackし、過去
 
 ---
 
-<a id="section-66"></a>
+<a id="section-67"></a>
 
 収録元 `docs/adr/0036-v1.8-persona-agency.md`
 
@@ -8934,7 +9122,95 @@ Personaの業務失敗・TemporaryUnavailable・LinkFailure/結果不明はMemor
 
 ---
 
-<a id="section-67"></a>
+<a id="section-68"></a>
+
+収録元 `docs/adr/0037-v1.9-sleep.md`
+
+## ADR 0037 v1.9 Sleepの初期統合・忘却・夢・人格修正案
+
+### 状態・根拠
+
+2026年11月24日、R37のv1.10までの継続実装・検証に基づくCodex実装判断。個々のAPI・規則・具体値をユーザーの個別承認とは扱わない。親#19・マイルストーンv1.9.0へ、設計#157、規則#158、保存#159、接続/実連携#160、配布/主要Docs#161を、実親子関係付きでコード変更前に登録した。基点はv1.8 PR #156。先行PRの履歴を保持し、実装受入とマージ/公開を区別する。ADR 0033は提案のまま変更しない。
+
+### 背景・初期範囲
+
+ADR 0008・0010のSleep構想を、小さな規則と追跡可能な根拠で検証する。Sleepは実経験と教師ラベルを統合し、利用中の統合根拠を減衰/忘却し、経験を再結合した夢と外部人格修正の案を作る。Coreは周期の内容や価値を判断しない。Personaは自身で修正を開始しない。
+
+初期の忘却対象はSleepが所有する利用中の根拠と、その根拠から作る集計である。Memory原本、Cognitionの既存学習、監査履歴は削除・変更しない。この範囲を「Nymph全体が知識を忘れた」と表現しない。夢の失効も現在の利用対象からの除外であり、監査情報の物理削除保証ではない。
+
+### D1 配置・公開契約
+
+同じ配布物に`subsystems.sleep:factory`と`contracts.sleep`を追加する。`SLEEP_KEY/SLEEP_CONTRACT`は`ntk.sleep.consolidation/1`。全ASYNC操作は`cycle(request)`、`get(cycle_id)`、`state(after=0, limit=4)`、`inspect(concept, source_kind=None)`。
+
+設定は専用SQLiteの絶対`path`、選択済み`memory_module_id/cognition_module_id/persona_module_id`、`trait_rules`。1〜8個の規則は`{concept, trait, delta}`で、conceptはCognitionと同じ空白/NULなしUTF-8 64 bytes以下、規則間で一意。traitはPersonaのASCII名、deltaはboolを除く整数−5〜5（0を除く）。全設定をコピーして保存同一性へ含める。フレーム上限65536 bytes以上、追加の実行時Python依存なし。
+
+必要な既存契約はMemory records/1、Cognition revision/1（enable_revisionを明示）、Persona traits/1。Core/Contractsの安定公開面と各既存契約を変更しない。機能の内部実装をimportせず、Memory.get、Cognition.get_revision、Persona.getだけを使う。
+
+### D2 入力・根拠
+
+cycleの正確な入力は`{cycle_id, expected_revision, record_ids}`。IDは非空trim済みNULなしUTF-8 128 bytes以内、版はboolを除く整数0〜4096。record_idsは重複のない0〜4 IDで、正規化時に文字列順へ並べる。空入力も有効で、根拠の減衰と夢の失効を進める。同じID/同じ正規化入力は保存済みreceiptを返し、再観測/減衰/人格案の再生成をしない。同ID異内容はcycle_conflict、古い版はrevision_conflict。
+
+各IDについてMemoryの8項目と、現在のCognition注釈/版を取得し、Memory応答の正規化JSON SHA256、source_kind、ID、本文の空白除去とtokens連結を照合する。Sleep初期版は1〜16 tokens、0〜8 concepts、コンパクトな注釈根拠1件4096 ASCII JSON bytes以内。超過は切り捨てず全周期を拒否する。Cognitionの32-token契約そのものを狭めない。
+
+Memory応答を最初の後続awaitより前にコピーする。注釈とPersonaも検証してコピーする。PersonaのID/版/trait/時刻と全対応traitの存在を照合する。取得は逐次観測であり、複数Subsystemを跨ぐ同時点のsnapshotではない。Cognition側の後続訂正は、新しい周期の再観測時に反映する。保存するのはID・fingerprint・区分・tokens・concepts・注釈版で、Memory原本の複製/移植機能にはしない。
+
+### D3 統合と忘却
+
+規則名は`consolidation-v1`。利用中の根拠は最大16件。今回観測した根拠は最新注釈へ置き換えstrength=1000とし、今回観測しなかった根拠は成功周期ごとに250減らす。0になれば利用中の根拠から外し、forgotten IDをreceiptへ記録する。未使用の経過4周期で外れる。経過秒数、生理的記憶強度、真偽確率ではない。
+
+最大16件を超える周期はactive_fullとして全拒否し、容量を理由に別の根拠を黙って捨てない。過去に外れたIDを明示的に再観測すると再び利用できる。inspectは指定conceptに対応する現在の根拠数・strength合計・出典別件数・根拠ID/fingerprint/注釈版を返す。未知conceptは0件。source_kindを指定すればその区分に限定する。ラベル共起を意味理解や真偽の評価と主張しない。
+
+### D4 夢
+
+新しい成功周期ごとに前の現在夢を失効させる。現在根拠のうちsource_kind=dream以外をID順に取り、先頭2件があれば、1件目の前半tokensと2件目の後半tokensを連結した1つの夢を作る（最大16 tokens）。2件未満なら新しい夢はない。結合規則・元ID・夢ID・`source_kind=dream`を明示する。自然な文章生成や夢の意味理解とは表現しない。
+
+現在夢はstateにだけ本文/tokensを返す。getの過去receiptには夢ID/hashと失効した夢IDを残し、過去の現在夢を復活させない。夢をMemoryやCognitionへ自動投入せず、人格修正の根拠にも使わない。夢について現実に対話した経験を別のobserved記録として扱うことは妨げない。
+
+### D5 人格修正案
+
+source_kind=observedのうち、過去の成功周期で人格案の評価に使っていないMemory IDだけを対象にする。意味の自動評価ではなく、与えられたconceptと設定trait_rulesの対応で差分を合算する。同じIDの再観測や注釈訂正を、別の新しい実経験として二重加算しない。夢・reported/inferred/imaginedはこの初期規則の人格差分を作らない。
+
+同一traitの合計を周期あたり−5〜5に制限し、観測現在値から0〜1000を超えない差分へ縮める。0のみならproposalはnull。その他はPersona.applyへ渡せるcommand_id/expected_revision/deltas/reason/sourceをreceiptへ保存する。command_idはSleep module_idとcycle_idからSHA256で決定し、source.actor_idはSleepのID、referenceは周期への参照とする。どの新しいID/ラベルが寄与したかをreceiptに残す。
+
+Sleep v1.9は修正案を生成・保存するだけで、Persona.applyを呼ばない。生成成功と適用成功は別で、未適用でも同じ経験から別の案を自動再生成しない。利用側は既存案を照合して明示適用できる。古いPersona版での拒否を自動で再基準化しない。睡眠活動・Agencyとの循環と案の適用/結果不明照合はv1.10で具体化する。
+
+### D6 保存・容量・再起動
+
+専用SQLite形式1へ、設定同一性、現在統合状態、周期の入力/根拠/Persona snapshot/receipt、評価済みIDを同一transactionで保存する。commit後に成功を返す。最大4096周期、上限時はhistory_fullで新しい周期を拒否し、過去照会は続ける。最大16現在根拠と、削除しない周期履歴を区別する。1ファイル1所有者、SQLite lock待ち1秒。
+
+起動時に構造/quick_check/同一性と全周期を再計算して保存状態へ照合し、未知形式・破損・設定違いを自動修復せず拒否する。保存失敗はrollbackし、IDと版を消費しない。再起動後も状態・夢・評価済みIDを保持し、再起動だけで周期を進めたり活動を再登録したりしない。stateは現在の版、根拠総数、最大4件の根拠ページ、現在夢と次ページ位置を返す。すべての応答は49152 JSON bytes以内に検査する。
+
+### D7 接続・障害・所有
+
+既存の候補/属性/稼働情報を確認し、要求側の設定IDを選定してCoreへbindする。同一起動内の固定と許可済み窓口再利用を維持する。候補切替・利用ごとの再審査・定期ヘルス・操作自動再送は追加しない。
+
+同時受付1件。容量不足はTemporaryUnavailable、提供側の業務失敗はそのまま返す。不正根拠はsleep.evidence、入力不正はsleep.invalid。LinkFailureは窓口を閉じて自身の操作を終え、協調的中断完了と個別healthを申請する。結果不明は後処理障害で隠さず保持する。
+
+所有taskと専用workerを取消/停止時にも排出し、DBと全窓口を閉じる。取消や通信期限切れは未保存保証ではなく、get(cycle_id)で保存結果を照合する。個別RPCは5秒、複数呼出を束ねた周期全体の予算とは分ける。
+
+### B09
+
+| ID | 採用受入 |
+|---|---|
+| B09-01 | 実Memory/CognitionのID/本文/hash/注釈/区分整合、明示設定とコピー、拒否時の無変更 |
+| B09-02 | 独立期待値による統合数/strength/出典分離、4周期の減衰・忘却・再観測、16件超過の全拒否 |
+| B09-03 | 決定的な夢の再結合/区分、次成功周期で失効・失敗時保持、現実と夢/人格根拠を混同しない |
+| B09-04 | observedの初回評価・差分合算/上限/値境界/根拠・冪等。実Personaへ明示適用して契約一致を確認し、Sleep単独の自動applyは0回 |
+| B09-05 | 原子的保存/版/ID/4096周期上限・rollback/破損/形式/同一性・再起動、過去夢の非復活 |
+| B09-06 | 4配置/両経路・実3機能連携、容量/連携エラー/結果不明・取消/停止/後処理、原本/既存学習不変 |
+| B09-07 | 全回帰・17例・通常wheel/sdist・8環境+Customer Docs CI・安定API/64判断・主要Docs/全PDF/HTML/引継ぎ書同期 |
+
+### 未採用・後続
+
+一般的な意味圧縮/知識グラフ、Cognitionの学習削除、Memory原本削除、学習済み知識全体の忘却、自然な夢文章、生理学的モデル、人格全体の再構成は未実装と明示する。SleepをCoreの意思決定機構にしない。v1.10では睡眠活動との接続と人格修正案の適用、Discord音声を別の判断/子Issueで具体化する。公開版v1.2.0と候補を区別する。
+
+### 実装時の補足
+
+#157へコード変更前に追記した。expected_revisionは満杯の現在版4096も受け付け、入力不正ではなくhistory_fullを返す。4件/周期・250減衰では正常な履歴から16現在根拠を超えないことを検証し、active_fullは将来の状態/規則変更への防御と区別する。
+
+---
+
+<a id="section-69"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -9090,7 +9366,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 
 ### v1.0.0以降のロードマップ案
 
-**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1 Memoryの最小範囲・業務契約・B01はR31・ADR 0027で具体化した。v1.2はADR 0028、v1.3はADR 0029、v1.4はADR 0031、v1.5はADR 0032、v1.6はADR 0034、v1.7はADR 0035、v1.8はADR 0036で具体化した。v1.9以降の名称、順序、配分、業務契約と受入は段階ごとの判断対象である。日付・開発期間・工数の見積もりは設定しない。
+**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1 Memoryの最小範囲・業務契約・B01はR31・ADR 0027で具体化した。v1.2はADR 0028、v1.3はADR 0029、v1.4はADR 0031、v1.5はADR 0032、v1.6はADR 0034、v1.7はADR 0035、v1.8はADR 0036、v1.9はADR 0037で具体化した。v1.10以降の名称、順序、配分、業務契約と受入は段階ごとの判断対象である。日付・開発期間・工数の見積もりは設定しない。
 
 #### リリース運用案
 
@@ -9116,7 +9392,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 | v1.6.0 | TaskManager連携強化（R37で具体化） | Agency活動循環・Core適用・実行状態/結果・協調中断/再開 | B06-01〜06 |
 | v1.7.0 | Persona Subsystem（R37で具体化） | 名前付き特性の参照/外部差分・現在値/履歴の原子的保存、ADR 0035 | B07-01〜06 |
 | v1.8.0 | Persona連携強化（R37で具体化） | 明示設定による参照/動機重み・根拠保存・活動への適用、ADR 0036 | B08-01〜06 |
-| v1.9.0 | Sleep Subsystem | 記憶統合・忘却・夢・人格更新の初期機能 | B09 |
+| v1.9.0 | Sleep Subsystem（R37で具体化） | 統合根拠/忘却・現在夢の失効・人格修正案、ADR 0037 | B09-01〜07 |
 | v1.10.0 | Sleep連携・Discord Voice Adapter | 睡眠循環の統合と音声観測の導入 | B10 |
 
 各段階の実装内容と受入条件は設計・ADRで具体化する。上表の検証IDはacceptance.md（`docs/acceptance.md`）の案に対応し、機能完成を宣言するものではない。
@@ -9228,9 +9504,17 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 - 検証/完了条件：B08-01〜06、全回帰/通常配布/8環境CI、主要Docs全形式/全ページを検証記録（`docs/validation/v1.8.md`）へ残す。
 - 後続判断：経験からの修正値生成とSleep循環はv1.9以降。Coreへ価値判断を移さない。
 
+### R37：v1.9の実施
+
+- 着手条件：親#19・v1.9.0、先行PR #156と関連ADRを確認し、子#157〜#161をコード変更前に登録する。
+- 採用判断：ADR 0037（`docs/adr/0037-v1.9-sleep.md`）。Sleep所有の統合状態/忘却、夢と実経験の分離・次成功周期失効、人格修正案の生成、原子的保存。
+- 成果物：consolidation/1、専用SQLite、17番目の実行例、利用ガイド（`docs/sleep.md`）。Memory原本/Cognition学習は保持する。
+- 検証/完了：B09-01〜07、全回帰/通常配布/CI、主要Docs全形式・全ページを検証記録（`docs/validation/v1.9.md`）へ残す。
+- 後続判断：v1.10の睡眠活動循環・人格案適用・音声。v1.9を全般的な知識忘却やNymph完成としない。
+
 ---
 
-<a id="section-68"></a>
+<a id="section-70"></a>
 
 収録元 `docs/acceptance.md`
 
@@ -9608,9 +9892,23 @@ ADR 0036（`docs/adr/0036-v1.8-persona-agency.md`）・結果（`docs/validation
 | B08-05 | 容量/連携障害/不正結果・取消/停止/後処理、履歴照会と再起動inactive、自動修正なし |
 | B08-06 | 全回帰/通常wheel/sdist/16例/8環境CI、主要Docs/顧客全形式/全ページ/引継ぎ書 |
 
+### B09 v1.9 Sleep初期範囲の具体化（R37）
+
+ADR 0037（`docs/adr/0037-v1.9-sleep.md`）・結果（`docs/validation/v1.9.md`）に対応する。忘却対象/人格案と適用の境界はガイド（`docs/sleep.md`）に従う。
+
+| ID | 採用受入 |
+|---|---|
+| B09-01 | 実Memory/CognitionのID/本文/hash/注釈/区分整合、明示設定とコピー、拒否時の無変更 |
+| B09-02 | 独立期待値による統合数/strength/出典分離、4周期の減衰・忘却・再観測、16件超過の全拒否 |
+| B09-03 | 決定的な夢の再結合/区分、次成功周期で失効・失敗時保持、現実と夢/人格根拠を混同しない |
+| B09-04 | observedの初回評価・差分合算/上限/値境界/根拠・冪等。実Personaへ明示適用して契約一致を確認し、Sleep単独の自動applyは0回 |
+| B09-05 | 原子的保存/版/ID/4096周期上限・rollback/破損/形式/同一性・再起動、過去夢の非復活 |
+| B09-06 | 4配置/両経路・実3機能連携、容量/連携エラー/結果不明・取消/停止/後処理、原本/既存学習不変 |
+| B09-07 | 全回帰・17例・通常wheel/sdist・8環境+Customer Docs CI・安定API/64判断・主要Docs/全PDF/HTML/引継ぎ書同期 |
+
 ---
 
-<a id="section-69"></a>
+<a id="section-71"></a>
 
 収録元 `docs/validation/core-coverage.md`
 
@@ -9705,7 +10003,7 @@ v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播�
 
 ---
 
-<a id="section-70"></a>
+<a id="section-72"></a>
 
 収録元 `docs/validation/customer-guide.md`
 
@@ -9779,7 +10077,7 @@ Agencyの初期判断・根拠・決定保存・実行との境界を18C節/図1
 
 ---
 
-<a id="section-71"></a>
+<a id="section-73"></a>
 
 収録元 `docs/validation/docs-current.md`
 
@@ -9836,7 +10134,7 @@ v1.3.0のレビュー・マージ・公開後確認は未完了。Cognitionの�
 
 ---
 
-<a id="section-72"></a>
+<a id="section-74"></a>
 
 収録元 `docs/validation/docs-onboarding.md`
 
@@ -9915,7 +10213,7 @@ git diff --check
 
 ---
 
-<a id="section-73"></a>
+<a id="section-75"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -9985,7 +10283,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-74"></a>
+<a id="section-76"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -10056,7 +10354,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-75"></a>
+<a id="section-77"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -10135,7 +10433,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-76"></a>
+<a id="section-78"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -10187,7 +10485,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-77"></a>
+<a id="section-79"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -10248,7 +10546,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-78"></a>
+<a id="section-80"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -10309,7 +10607,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-79"></a>
+<a id="section-81"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -10438,7 +10736,7 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-80"></a>
+<a id="section-82"></a>
 
 収録元 `docs/validation/v0.9.md`
 
@@ -10526,7 +10824,7 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 ---
 
-<a id="section-81"></a>
+<a id="section-83"></a>
 
 収録元 `docs/validation/v1.0.md`
 
@@ -10597,7 +10895,7 @@ PR #103のhead cc445daをレビューし、契約型と実体、検証の副作�
 
 ---
 
-<a id="section-82"></a>
+<a id="section-84"></a>
 
 収録元 `docs/validation/v1.1.md`
 
@@ -10669,7 +10967,7 @@ R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/i
 
 ---
 
-<a id="section-83"></a>
+<a id="section-85"></a>
 
 収録元 `docs/validation/v1.2.md`
 
@@ -10742,7 +11040,7 @@ B02-01〜06の初期実装受入は合格。今回の実装判断、公開Core/M
 
 ---
 
-<a id="section-84"></a>
+<a id="section-86"></a>
 
 収録元 `docs/validation/v1.3.md`
 
@@ -10807,7 +11105,7 @@ B03-01〜06の初期実装受入は合格。今回の実装判断と未採用範
 
 ---
 
-<a id="section-85"></a>
+<a id="section-87"></a>
 
 収録元 `docs/validation/v1.4.md`
 
@@ -10862,7 +11160,7 @@ artifact 14914438438を取得し、clean対象SHA・132入力・Markdown/PDF/HTM
 
 ---
 
-<a id="section-86"></a>
+<a id="section-88"></a>
 
 収録元 `docs/validation/v1.5.md`
 
@@ -10921,7 +11219,7 @@ python tools/check_docs.py
 
 ---
 
-<a id="section-87"></a>
+<a id="section-89"></a>
 
 収録元 `docs/validation/v1.6.md`
 
@@ -10978,7 +11276,7 @@ PR #143 / d0f22ebe642b2601b98f2b1376640d404f7dba1eでB06-01〜06の採用範囲�
 
 ---
 
-<a id="section-88"></a>
+<a id="section-90"></a>
 
 収録元 `docs/validation/v1.7.md`
 
@@ -11040,7 +11338,7 @@ python tools/check_dist.py --dist-dir .git/v17-dist
 
 ---
 
-<a id="section-89"></a>
+<a id="section-91"></a>
 
 収録元 `docs/validation/v1.8.md`
 
@@ -11083,9 +11381,89 @@ python tools/check_dist.py --dist-dir .git/v18-dist
 
 顧客資料の同期・生成・全ページ表示・同一SHA artifact照合は更新手順（`docs/customer-guide-authoring.md`）に従う。v1.9〜v1.10と公開作業は別に追跡する。
 
+### 最終受入の追記（9d690ea）
+
+PR [#156](https://github.com/Tao-pyth/nymph-toolkit/pull/156)、9d690ea001df6a1d505d23ba0098d0da95ccc471でB08-01〜06を確認した。ソース485件345.272秒、通常wheel485件349.912秒・16例・4配置短時間負荷1.035秒・sdistから同一wheelの再構築が成功。
+
+[CI 45404241069](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45404241069)はWindows/Linux × Python3.12〜3.15とCustomer Docsの全9ジョブが成功。cleanな同一SHAのWindows/Linux顧客32ページ/20図、155入力と成果物ハッシュ、両HTMLのscript/外部取得/描画エラー0を照合し、全ページを表示確認した。Linux artifactは14923624623。証拠は親#18・子#151〜#155とPRに記録し、レビュー可能とした。未マージ/未公開で、v1.9〜v1.10の完了とは区別する。
+
 ---
 
-<a id="section-90"></a>
+<a id="section-92"></a>
+
+収録元 `docs/validation/v1.9.md`
+
+## v1.9 Sleep初期機能の検証記録
+
+親#19・子#157〜#161、ADR 0037（`docs/adr/0037-v1.9-sleep.md`）の採用範囲を検証する。基点は未マージPR #156。実装受入とマージ・正式公開は別工程。
+
+### 現在の確認
+
+Windows / CPython3.15.2、警告をエラー扱いにして検証した。初回の規則/保存10件は、JSON上限テストの教材が実際には上限内で1件失敗した。ASCII escapeで4096 bytesを超える教材へ訂正し、その試験は成功した。上限の製品実装を変更して試験を通したものではない。4096周期実行と再起動検証は初回から成功。最終全回帰で再確認する。
+
+サービス7件が0.544秒、実4配置/両経路/2起動・通信期限切れと保存結果・公開importの3件が35.804秒で成功。実Personaの容量/通常連携エラー注入1件が1.091秒で成功。17番目のsleep_demo.pyは`-I -W error`で成功した。
+
+| ID | 現在の証拠 |
+|---|---|
+| B09-01 | Memory/注釈hash・ID・本文・出典、コピー、型/上限/不正、旧原本と学習保持 |
+| B09-02 | 独立期待値でstrength 1000→750→500→250→除外、再観測/訂正、16件の窓とページ、将来超過への防御 |
+| B09-03 | 決定的なtokens再結合、次成功周期で失効・rollback時保持、過去receiptの非復活 |
+| B09-04 | observedの初回評価、±5/値境界/複数trait、夢等の除外、実Personaへの利用側の明示適用 |
+| B09-05 | 同ID/版、rollback、4096周期、再起動再計算、破損/形式/設定違い拒否 |
+| B09-06 | Sleep/提供側4配置×両入口×2起動、容量/連携障害/結果不明保持・取消/停止・worker/子回収 |
+| B09-07 | 全回帰・通常配布・17例・8環境CI・主要Docs全形式は継続中 |
+
+通常の4件/周期・4周期窓で16件を超えない。active_fullは防御コードで、正常な入力系列から超過する検証とは区別する。忘却はSleep現在状態の寄与に限定し、Cognitionの知識削除の証拠としない。
+
+98主要文書/1582ローカルリンクと引継ぎ書、Core15名/Contracts98名・採用64判断の検査が成功した。162入力を照合し、Windows顧客33ページ/21図を生成・全表示確認した。初回に最終ページの検証履歴がフッターへ重なったため、過去版の説明を簡潔に整理して再生成した。最小余白15px、HTMLは33ページ/21SVG・script/外部取得/描画エラー0。最終cleanコミット生成、Linux artifact、全506回帰・通常配布・CIは後続で確認する。
+
+### 再現
+
+```console
+python -W error -m unittest tests.subsystems.test_sleep tests.subsystems.test_sleep_service tests.subsystems.test_sleep_integration -v
+python -I -W error examples/sleep_demo.py
+python -W error -m unittest discover -s tests -t . -v
+python tools/check_api.py
+python tools/check_contracts.py
+python tools/check_completion.py
+python tools/check_docs.py
+python -m build --outdir .git/v19-dist
+python tools/check_dist.py --dist-dir .git/v19-dist
+```
+
+顧客Markdown/PDF/HTMLと引継ぎ書は更新手順（`docs/customer-guide-authoring.md`）に従い、最終コミットの全形式・全ページとCI artifactを照合する。v1.10の循環・音声、マージ/公開をこの段階の局所成功で完了扱いにしない。
+
+### 461be71の全回帰・配布・CI確認
+
+Windows / CPython3.15.2で全506回帰400.672秒、通常wheelで506件483.247秒・17例・4配置短時間負荷1.095秒・sdistから同一wheel再構築が成功した。最終cleanコミットのWindows顧客33ページ/21図は、表示確認済みの33画像と全ハッシュ一致。Linux artifact14928470177も全33ページを表示し、両HTMLの33ページ/21SVG・script/外部取得/描画エラー0、全形式のSHA/ハッシュを照合した。
+
+[CI 45410129172](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45410129172)は8ジョブ成功、Windows/Python3.12だけが20分のジョブ期限で取消となった。同環境のソース全506件は成功し、通常wheelのSleep4096周期試験中に期限到達した。Personaの4096件保存はこの配布試験で約122秒かかった。取消後のDB占有表示を、通常の終了試験で発生した障害と混同しない。
+
+#161へ変更前に記録し、ジョブ全体の枠を40分へ変更する。全件実保存・ソース/配布両試験・全例を維持する。製品のRPC/終了期限、SQLiteの耐久性や試験の受入内容は変更しない。後続コミットのCIと顧客成果物を再確認してからB09-07を完了とする。
+
+### 2045bdcのCIと終了確認の調査
+
+[CI 45414242583](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45414242583)は8ジョブ成功、Windows/Python3.13のソース506件でCognitionの受付済み学習・Runtime停止試験が1件失敗した。PROCESS配置で`cleanup_confirmed`が偽だったが、元のassertには機能名・終了理由がなく原因未特定である。B09-07は未完了とする。
+
+変更前に親#19・同じマイルストーンへ子[#169](https://github.com/Tao-pyth/nymph-toolkit/issues/169)を登録し、失敗時に全機能のProcessSnapshotを表示する診断だけを追加した。終了期限3秒・製品・期待条件は変更していない。Windows/CPython3.15.2の同じ試験を20回（計80配置/取消・停止ケース）反復し86.932秒で成功したが、CI失敗の原因解消を意味しない。後続CIの診断と再現を確認し、調査中の状態を維持する。
+
+### 315b3ffの再CIと詳細診断
+
+[CI 45419478075](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45419478075)は全9ジョブ成功し、Windows3.13でもソース/通常wheelの当該試験が成功した。元の失敗時には機能別の終了理由がなく、原因は引き続き未特定である。再実行成功だけでB09-07や#169を完了としない。
+
+#169へ事前記録した追加調査として、診断コマンド（`tools/diagnose_cognition_shutdown.py`）で同じ試験を反復し、機能別stop開始/完了、ProcessSnapshot変更、FileStore flushの時間を単調時計で記録する。試験の終了期限3秒・保存・期待条件は変更しない。診断wrapperの追加がタイミングへ影響する可能性もあるため、計測値を非計測時の性能保証とはしない。
+
+```console
+python -W error tools/diagnose_cognition_shutdown.py --attempts 20 --output output/cognition-shutdown.json
+```
+
+v1.9ブランチ限定のWindows/Python3.13診断ジョブで実行し、成否にかかわらずJSON artifactを残す。通常の全回帰/配布/顧客Docsジョブも維持する。成功時の基準値と失敗時の段階を比較し、必要な修正を判断する。60秒以上の滞留ではスレッドスタックも出力する。
+
+診断コマンドのローカル確認は2反復・8ケースが成功した。Core停止時間は0.129〜0.249秒、試験全体は各4.855/4.356秒だった。機能別snapshot・stop・flush時刻がJSONへ残ることを確認した。Windows CIの元の失敗を再現した証拠とは扱わない。
+
+---
+
+<a id="section-93"></a>
 
 収録元 `docs/validation/windows-shutdown.md`
 
@@ -11160,13 +11538,13 @@ PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル�
 
 ---
 
-<a id="section-91"></a>
+<a id="section-94"></a>
 
 収録元 `docs/development.md`
 
 ## 開発準備とGit運用
 
-本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は通常導入（`docs/getting-started.md`）と実行例ガイド（`docs/tutorials.md`）を先に読む。現在の開発候補はv1.8.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は通常導入（`docs/getting-started.md`）と実行例ガイド（`docs/tutorials.md`）を先に読む。現在の開発候補はv1.9.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
 
 ### 公開準備時の環境
 
@@ -11211,7 +11589,7 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Core/接続契約/Mem
 
 ### v0.9の完成監査（当時の手順）
 
-v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下のコマンド、14＋92件・6例という件数はv0.9.0のcheckoutで使った当時の手順である。現在のcheckoutでは上の環境構築と末尾のv1.8節を使い、Core 15件・Contracts 98件・16例を照合する。現行の意味と証拠はCore API（`docs/core-api.md`）・証拠対応表（`docs/validation/core-coverage.md`）を参照する。
+v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下のコマンド、14＋92件・6例という件数はv0.9.0のcheckoutで使った当時の手順である。現在のcheckoutでは上の環境構築と末尾のv1.9節を使い、Core 15件・Contracts 98件・17例を照合する。現行の意味と証拠はCore API（`docs/core-api.md`）・証拠対応表（`docs/validation/core-coverage.md`）を参照する。
 
 ```powershell
 .venv/Scripts/python.exe tools/check_api.py
@@ -11343,17 +11721,17 @@ Docs編集後は `python tools/build_handoff.py` で引継ぎ書を再生成し�
 
 ### v1.1 Memoryの開発・配布確認
 
-Memory（`docs/memory.md`）とADR 0027（`docs/adr/0027-v1.1-memory.md`）を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。Memoryは8番目の例。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。v1.1当時は`.git/v11-dist`を使ったが、現在の配布検査は末尾のv1.8節を使う。
+Memory（`docs/memory.md`）とADR 0027（`docs/adr/0027-v1.1-memory.md`）を読み、`python examples/memory_demo.py`、`python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_memory_integration -v`で確認する。Memoryは8番目の例。通常導入は公開版の導入ガイドに従い、開発環境の版とimport元を別途確認する。v1.1当時は`.git/v11-dist`を使ったが、現在の配布検査は末尾のv1.9節を使う。
 
 ### v1.2 Documentの開発確認
 
-以下はv1.2開発時点の手順。現在の開発候補は末尾のv1.8節を参照する。checkoutをeditable導入してDocumentガイド（`docs/document.md`）・ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
+以下はv1.2開発時点の手順。現在の開発候補は末尾のv1.9節を参照する。checkoutをeditable導入してDocumentガイド（`docs/document.md`）・ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）に従う。`python examples/document_demo.py`が9番目の例。`python -W error -m unittest discover -s tests/adapters -t . -v`で単体/統合、既存の全体discoverで回帰を確認する。
 
 配布候補は`python -m build --outdir .git/v12-dist`、`python tools/check_dist.py --dist-dir .git/v12-dist`。v1.2当時の検査は1.2.0を期待し、Core/Memory/Documentのimport、9例、全テスト、sdist再構築を確認する。Docs更新はbuild_handoff/check_docs、安定APIと採用64項目も従来どおり照合する。
 
 ### v1.3 Cognitionの開発確認
 
-v1.3当時はcheckoutを`python -m pip install -e .`で導入し、版1.3.0を確認した。現行checkoutは末尾のv1.8節を使う。Cognitionガイド（`docs/cognition.md`）・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）に従い、`python examples/cognition_demo.py`と`python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v`を実行する。公開v1.2のwheelにはCognitionは含まれない。
+v1.3当時はcheckoutを`python -m pip install -e .`で導入し、版1.3.0を確認した。現行checkoutは末尾のv1.9節を使う。Cognitionガイド（`docs/cognition.md`）・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）に従い、`python examples/cognition_demo.py`と`python -W error -m unittest tests.subsystems.test_cognition tests.subsystems.test_cognition_integration -v`を実行する。公開v1.2のwheelにはCognitionは含まれない。
 
 v1.3当時の通常配布検査は`python -m build --outdir .git/v13-dist`、`python tools/check_dist.py --dist-dir .git/v13-dist`で1.3.0を期待する。全回帰、10例、短い4配置負荷、sdist同一wheel再構築、API/契約/64項目/Docs同期を確認する。公開済みタグ・添付と現行版向け導入ガイドを開発候補へ無断で置き換えない。
 
@@ -11379,9 +11757,13 @@ v1.7時点の手順では`python -m pip install -e .`後に配布版1.7.0を確�
 
 親#18・子#151〜#155とADR 0036を確認し、`python -m pip install -e .`後に配布版1.8.0を照合する。局所試験は`python -W error -m unittest tests.subsystems.test_agency_persona tests.subsystems.test_agency_persona_integration -v`、例は`python examples/persona_agency_demo.py`。通常配布は`python -m build --outdir .git/v18-dist`と`python tools/check_dist.py --dist-dir .git/v18-dist`。全16例・全回帰・8環境CIと主要Docs全形式をB08で追跡する。
 
+### v1.9の開発候補
+
+親#19・子#157〜#161とADR 0037を確認し、`python -m pip install -e .`後に配布版1.9.0を照合する。局所は`python -W error -m unittest tests.subsystems.test_sleep tests.subsystems.test_sleep_service tests.subsystems.test_sleep_integration -v`、例は`python examples/sleep_demo.py`。通常配布は`python -m build --outdir .git/v19-dist`と`python tools/check_dist.py --dist-dir .git/v19-dist`。全17例・全回帰・8環境CIと主要Docs全形式をB09で追跡する。
+
 ---
 
-<a id="section-92"></a>
+<a id="section-95"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -11705,9 +12087,13 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親#18・マイルストーンv1.8.0へ、#151（設計/B08）、#152（参照/判断）、#153（根拠保存）、#154（実連携/例）、#155（配布/CI/主要Docs）を実親子関係付きで先行登録した。ADR 0036の内容は#151へコード変更前に記録した。具体的な値/規則はCodexの実装判断であり、登録だけで既存の提案を一括採用したものではない。
 
+### R37：v1.9の実装単位
+
+親#19・v1.9.0へ#157（設計）、#158（統合規則）、#159（保存）、#160（接続/実連携）、#161（回帰/配布/CI/主要Docs）を実親子関係付きで先行登録した。ADR 0037を#157へコード変更前に記録。具体値はCodex判断で、提案の一括採用や公開の承認と扱わない。
+
 ---
 
-<a id="section-93"></a>
+<a id="section-96"></a>
 
 収録元 `docs/release.md`
 
@@ -11976,9 +12362,13 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 
 公開版はv1.2.0。PR #149へ積み重ねる候補として、B08・通常配布/16例・9ジョブCIと顧客主要Docs全形式/全ページを確認する。v1.7の成功はv1.8の代用にならない。マージ/タグ/Release・公開後確認・親/マイルストーン終了は別工程。
 
+### v1.9候補の確認
+
+公開版v1.2.0を維持し、PR #156を基点とする候補をB09・通常配布/17例・9ジョブCIと主要Docs全形式/全ページで確認する。マージ/タグ/Release・公開後確認・親/マイルストーン終了は別工程。
+
 ---
 
-<a id="section-94"></a>
+<a id="section-97"></a>
 
 収録元 `CHANGELOG.md`
 
@@ -12186,9 +12576,15 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 - 旧設定/形式1を維持し、有効時は形式2の専用Agency DBへ保存。過去判断の再要求・再起動・原子性を確認。
 - 実Persona/Memory/Cognitionとの4配置・両経路、中断/切替/同じ継続再開、容量/障害を検証。16番目の例、ADR 0036、B08と主要Docsを追加。最終受入はvalidation/v1.8で追跡。
 
+### v1.9.0開発候補（未リリース）
+
+- Sleep consolidation/1のcycle/get/state/inspect、出典付き根拠の統合/減衰・現在夢の再結合と失効・人格修正案を追加。
+- 周期/根拠/現在状態を原子的に保存し、同ID再要求・版/上限・rollback・再起動を検証。Memory原本と既存Cognition学習を維持。
+- 17番目の例、実3機能/4配置/両経路の連携、ADR 0037/B09と主要Docsを追加。最終受入はvalidation/v1.9で追跡。
+
 ---
 
-<a id="section-95"></a>
+<a id="section-98"></a>
 
 収録元 `LICENSE`
 

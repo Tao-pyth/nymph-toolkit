@@ -201,3 +201,9 @@
 - Agencyの任意persona設定とutility-persona-v1で、人格特性を活動選択へ反映し、根拠の版・値・基礎点・倍率を記録。
 - 旧設定/形式1を維持し、有効時は形式2の専用Agency DBへ保存。過去判断の再要求・再起動・原子性を確認。
 - 実Persona/Memory/Cognitionとの4配置・両経路、中断/切替/同じ継続再開、容量/障害を検証。16番目の例、ADR 0036、B08と主要Docsを追加。最終受入はvalidation/v1.8で追跡。
+
+## v1.9.0開発候補（未リリース）
+
+- Sleep consolidation/1のcycle/get/state/inspect、出典付き根拠の統合/減衰・現在夢の再結合と失効・人格修正案を追加。
+- 周期/根拠/現在状態を原子的に保存し、同ID再要求・版/上限・rollback・再起動を検証。Memory原本と既存Cognition学習を維持。
+- 17番目の例、実3機能/4配置/両経路の連携、ADR 0037/B09と主要Docsを追加。最終受入はvalidation/v1.9で追跡。
