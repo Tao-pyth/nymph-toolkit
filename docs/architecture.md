@@ -132,7 +132,7 @@ R6で、単一リポジトリを維持し、CoreとContractsを一つの配布�
 
 ContractsにはCoreと接続側が共有する契約を配置する。R29・ADR 0026でv1.0の共通接続契約を体系化した。Core・Subsystem・Adapterが公開Contractsを参照し、ContractsはCoreの実装をimportしない。将来の業務契約や配布分割は別途具体化する。
 
-### 現在の配置（公開v1.2と開発候補v1.8）
+### 現在の配置（公開v1.2と開発候補v1.9）
 
 文書・Git設定・Apache-2.0の `LICENSE` に加え、v0.2で `pyproject.toml`、`src/`、`tests/`、ダミー例、検証ツールとCIを配置した。自作コード・Contracts・設計文書へのライセンス適用は[ADR 0011](adr/0011-apache-2.0-license.md)に従う。
 
@@ -168,6 +168,7 @@ nymph-toolkit/
 ├─ examples/agency_execution_demo.py # 14番目：活動循環・実学習
 ├─ examples/persona_demo.py          # 15番目：人格特性の外部修正・保存
 ├─ examples/persona_agency_demo.py   # 16番目：特性更新と活動選択・再開
+├─ examples/sleep_demo.py             # 17番目：統合・夢失効・人格案と明示適用
 ├─ examples/persona_requester.py
 ├─ examples/cognition_requester.py
 ├─ tools/check_dist.py
@@ -193,7 +194,7 @@ nymph-toolkit/
 │  ├─ customer-guide-authoring.md   # 配布用PDF/HTMLの作成手順
 │  ├─ validation/customer-guide.md # 顧客資料の照合・表示検証
 │  ├─ getting-started.md            # 公開v1.2.0通常導入・初回実行
-│  ├─ tutorials.md                  # 公開9例と候補15例
+│  ├─ tutorials.md                  # 公開9例と候補17例
 │  ├─ troubleshooting.md            # 症状別の確認と対処
 │  ├─ vision.md
 │  ├─ architecture.md
@@ -213,6 +214,8 @@ nymph-toolkit/
 │  ├─ agency-execution.md            # v1.6活動循環とCore適用
 │  ├─ persona.md                     # v1.7特性・外部修正・履歴
 │  ├─ persona-agency.md              # v1.8人格特性と選択への反映
+│  ├─ sleep.md                       # v1.9統合根拠/忘却・夢・人格案
+│  ├─ validation/v1.9.md             # B09の確認状況
 │  ├─ validation/v1.5.md             # B05の実装受入
 │  ├─ validation/v1.6.md             # B06の実装受入
 │  ├─ validation/v1.7.md             # B07の確認状況
@@ -279,11 +282,12 @@ nymph-toolkit/
 │     ├─ 0033-input-candidate-contract.md # 別件の入力前処理提案。未採用
 │     ├─ 0034-v1.6-agency-execution.md
 │     ├─ 0035-v1.7-persona.md
-│     └─ 0036-v1.8-persona-agency.md
+│     ├─ 0036-v1.8-persona-agency.md
+│     └─ 0037-v1.9-sleep.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
-│     ├─ contracts/                  # Core共通型とMemory/Cognition/Agency/Persona/Adapter業務契約
+│     ├─ contracts/                  # Core共通型とMemory/Cognition/Agency/Persona/Sleep/Adapter業務契約
 │     ├─ adapters/document/          # ローカル文書入力とMemory連携
 │     ├─ adapters/text_interaction/  # 観測・教師入力・訂正・照会
 │     ├─ adapters/web/               # 許可originのHTTP文章取得
@@ -291,8 +295,9 @@ nymph-toolkit/
 │     ├─ subsystems/memory/           # 同梱する最小Memory
 │     ├─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
 │     ├─ subsystems/agency/           # 根拠付き判断・活動循環と専用履歴
-│     └─ subsystems/persona/          # 長期特性・外部差分・専用履歴
-└─ tests/                            # subsystems/にMemory/Cognition/Agency/Personaの単体・統合試験
+│     ├─ subsystems/persona/          # 長期特性・外部差分・専用履歴
+│     └─ subsystems/sleep/            # 統合根拠/減衰・夢・人格案と周期履歴
+└─ tests/                            # subsystems/にMemory/Cognition/Agency/Persona/Sleepの単体・統合試験
    ├─ core/
    ├─ adapters/                     # Document単体・4配置・障害試験
    ├─ subsystems/
@@ -338,7 +343,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036で初期範囲を具体化した。後続の学習・意思決定方式、未実装Adapterの形式・権限、経験からの人格修正値生成、Sleepの範囲、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。後続の学習・意思決定方式、未実装Adapterの形式・権限、睡眠活動との循環、音声受信・ASRは追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ## R33：DocumentとMemoryの境界
 
@@ -373,3 +378,7 @@ Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contract
 ## v1.8 PersonaとAgencyの連携
 
 [ADR 0036](adr/0036-v1.8-persona-agency.md)によりAgencyの任意設定でPersonaの公開traits/1を参照する。状態/学習根拠から得た候補得点を特性で補正し、取得した版・値・対応付けと基礎点・倍率を決定履歴へ保存する。Personaは保持/外部修正、Agencyは価値判断、Coreは実行管理を担当する。旧設定は形式1を維持し、有効時は新規DB形式2を使う。[利用と図解](persona-agency.md)・[B08](validation/v1.8.md)を参照。
+
+## v1.9 Sleepの所有する統合状態
+
+[ADR 0037](adr/0037-v1.9-sleep.md)により`contracts/sleep.py`と`subsystems/sleep/`を同梱する。Memory/注釈/Personaは公開契約で読み、専用SQLiteに周期と現在統合状態を保存する。忘却はこの状態への寄与だけで、原本/既存学習は保持する。現在夢と人格修正案も区別し、Sleep自身はPersonaを更新しない。Coreは価値判断を担当しない。[図解と使い方](sleep.md)・[B09](validation/v1.9.md)。

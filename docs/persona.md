@@ -84,4 +84,4 @@ Personaは受付済みworkerを排出してからDBとthreadを閉じる。Runti
 
 `python examples/persona_demo.py`は、値の参照、外部差分、再要求、版競合、両通信経路、再起動後の同じ値を検証して終了する。例の根拠・差分は明示入力であり、経験の意味評価を自動実行するものではない。
 
-Agencyの選択への反映は[v1.8連携ガイド](persona-agency.md)とADR 0036で具体化した。Sleepによる修正値生成はv1.9以降で判断する。人格全体や人工人格の完成とは区別する。検証の進捗は[B07記録](validation/v1.7.md)を参照する。
+Agencyの選択への反映は[v1.8連携ガイド](persona-agency.md)とADR 0036で具体化した。Sleepによる修正案生成は[v1.9ガイド](sleep.md)で具体化した。自動適用と睡眠循環は後続判断とする。人格全体や人工人格の完成とは区別する。検証の進捗は[B07記録](validation/v1.7.md)を参照する。

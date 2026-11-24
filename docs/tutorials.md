@@ -184,3 +184,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## 開発候補v1.8：PersonaとAgency（16番目）
 
 `python examples/persona_agency_demo.py`。実Cognitionの学習後、同じ観測・目標を維持し、休息への特性だけを500→1000→500と外部更新する。Agencyが知識活用→休息→同じ継続の再開を選び、Coreへ適用する。2回の起動で特性/判断履歴と活動非復元を確認し、PASSを表示して後処理まで終了する。一時保存先は正常終了時に削除する。[連携と保存](persona-agency.md)・[検証範囲](validation/v1.8.md)。
+
+## 開発候補v1.9：Sleep（17番目）
+
+`python examples/sleep_demo.py`。実Memory/Cognition/Personaから根拠を取得し、出典別の統合・減衰/忘却・夢の失効を照合する。人格案は利用側が明示適用し、原本/学習は維持する。2回の起動で状態/履歴を確認し、PASSを表示して後処理する。一時保存先は正常終了時に削除する。[契約](sleep.md)・[検証](validation/v1.9.md)。

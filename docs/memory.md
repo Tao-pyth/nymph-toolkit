@@ -130,3 +130,7 @@ python -W error -m unittest tests.subsystems.test_memory tests.subsystems.test_m
 Memory自体には編集・訂正/削除・忘却、Working/Procedural Memory、意味検索、統合、学習は未実装。夢区分は保存上の区別で、生成や次の睡眠時の失効を実装したものではない。複製・移植・伝播を追加していない。
 
 Document連携はv1.2・ADR 0028、Cognitionによるgetと初期学習は開発候補v1.3・[ADR 0029](adr/0029-v1.3-cognition-learning.md)で具体化した。Memoryの保存/取得契約は変更しない。
+
+## Sleepとの関係
+
+[v1.9 Sleep](sleep.md)は記録を読み、独自の統合状態と周期履歴を保持する。Sleepの忘却はMemory原本の削除・更新ではなく、既存records/1の契約を維持する。

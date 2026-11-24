@@ -130,3 +130,7 @@ R35/v1.3当初は未分割日本語の分節、完全な構文/意味理解、�
 ## v1.4で追加した注釈訂正
 
 R35当初の訂正対象外を、R37・[ADR 0031](adr/0031-v1.4-text-web-and-correction.md)で明示的に拡張した。`enable_revision=true`とrevision/1を追加宣言して利用する。learning/1を維持し、Memory原本は編集しない。命令IDとexpected_revision、DB形式1→2の移行・旧バイナリへ戻せない点、操作/失敗/取消は[入力・訂正ガイド](interaction.md)を参照する。削除・忘却・自律学習・一般的意味理解を一括採用したものではない。
+
+## Sleepからの参照
+
+[v1.9 Sleep](sleep.md)はrevision/1の教師注釈とMemory根拠を照合する。Sleepの現在根拠が減衰してもCognitionの学習は削除されない。Sleepの16-token対応範囲とCognitionの32-token契約を区別する。

@@ -75,3 +75,7 @@ R37・[ADR 0031](0031-v1.4-text-web-and-correction.md)でText Interaction・Web�
 ## R37のv1.7具体化
 
 [ADR 0035](0035-v1.7-persona.md)でPersonaの参照・外部差分・現在値/履歴保存とB07を具体化した。Agency反映とSleepの修正値生成は後続段階。人格を自発更新しない境界を維持する。
+
+## R37のv1.9具体化
+
+[ADR 0037](0037-v1.9-sleep.md)でSleep所有の根拠統合/忘却・現在夢/人格修正案とB09を具体化した。Memory原本/Cognition学習の削除と区別し、睡眠循環/案の適用はv1.10へ残す。
