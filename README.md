@@ -12,7 +12,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在使える機能と公開状態
 
-2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.4.0開発候補** です。未マージのv1.3候補（PR #123）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
+2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.5.0開発候補** です。未マージのv1.3/v1.4候補（PR #123 / #131）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
 
 | 機能 | 実装した範囲・操作 | 利用できる版・資料 |
 |---|---|---|
@@ -22,20 +22,27 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Cognition Subsystem | 区切り・概念ラベル付き例の統計学習と根拠照会、`learn` / `inspect`（`ntk.cognition.learning/1`） | v1.3候補から継続。[Cognition](docs/cognition.md) |
 | Text Interaction・Cognition訂正 | 観測・教師情報・照会の5操作、revisionと命令ID付き注釈訂正 | v1.4開発候補。[入力・訂正ガイド](docs/interaction.md) |
 | Web Adapter | 許可originのHTTP文章取得・HTML本文抽出・Memory保存 | v1.4開発候補。[入力・訂正ガイド](docs/interaction.md) |
+| Agency | 根拠と内部状態から活動/変更案を選択、決定保存・照会 | v1.5開発候補。[Agencyガイド](docs/agency.md) |
 
-Agency・Persona・Sleep、Discord Voice・Desktop Adapterは未実装です。v1.4の実装受入は[B04記録](docs/validation/v1.4.md)、v1.10までの残作業は[進捗](docs/implementation-progress.md)へ記録します。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)、今回の資料点検は[整合点検記録](docs/validation/docs-current.md)にまとめています。
+Agencyの初期決定・保存・照会をv1.5候補へ追加しました。Persona・Sleep、Discord Voice・Desktop Adapterは後続です。v1.5の実装受入は[B05記録](docs/validation/v1.5.md)、v1.10までの残作業は[進捗](docs/implementation-progress.md)へ記録します。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)にあります。
 
-## v1.4.0開発候補 — 対話・Web入力と学習訂正
+## v1.5.0開発候補 — Agencyの活動決定
+
+内部状態・目標とMemory/Cognitionの根拠から活動内容・時刻・期間・優先度・変更案を選び、専用SQLiteへ決定を保存します。同じ決定IDは元の結果を返し、学習後の再評価には新しいIDを使います。[Agencyガイド](docs/agency.md)・[ADR 0032](docs/adr/0032-v1.5-agency-decisions.md)・[B05検証記録](docs/validation/v1.5.md)を参照してください。`python examples/agency_demo.py`が13番目の例です。
+
+v1.5は決定・保存・照会まで、TaskManagerへの適用と状態を使う継続判断はv1.6で具体化します。局所・4配置試験を確認し、全回帰・配布・主要Docs/CIの最終受入を親#15・子#136で追跡しています。公開済みではありません。
+
+## v1.4.0から継承 — 対話・Web入力と学習訂正
 
 R37・[ADR 0031](docs/adr/0031-v1.4-text-web-and-correction.md)で初期範囲を具体化し、親#14・子#126〜#130をコード変更前に登録しました。出典付き観測と明示学習を分け、Memory原本を維持した注釈訂正、命令の重複適用防止、DB形式1→2の移行を追加しています。Web取得は許可origin・UTF-8・上限付きGETです。自由会話や未分割文の自律学習は含みません。
 
-Windows/Python 3.15.2で全411テスト、通常wheel導入・12例・sdist再構築が成功しました。Core API/契約基準と顧客資料27ページ・16図も確認済みです。確定コミットの8環境CI・主要Docs一式の最終受入は[B04記録](docs/validation/v1.4.md)と親#14で追跡します。公開済みではありません。
+Windows/Python 3.15.2で全411テスト、通常wheel導入・12例・sdist再構築が成功しました。Core API/契約基準と顧客資料27ページ・16図も確認済みです。6ace316の8環境CIとCustomer Docsは全9ジョブ成功し、Linux生成の27ページ/16図も照合しました。[B04記録](docs/validation/v1.4.md)と親#14で追跡します。公開済みではありません。
 
 ## 前段v1.3.0開発候補 — Cognition Subsystem
 
 R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。[利用ガイド](docs/cognition.md)、[ADR 0029](docs/adr/0029-v1.3-cognition-learning.md)、[B03検証記録](docs/validation/v1.3.md)に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。 Cognition実装時に全378テスト・10例・8環境CI・通常wheel/sdistを確認し、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)でレビューします。最終SHAと結果は[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)に記録します。
 
-v1.3の初期実装をこのcheckoutの1.4.0候補へ継承しています。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
+v1.3の初期実装をこのcheckoutの1.5.0候補へ継承しています。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
 
 ## 公開済みv1.2.0 — Document Adapter
 
@@ -55,7 +62,7 @@ CoreとSubsystem・Adapterをつなぐ6区分の[接続契約](docs/module-contr
 
 配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.4.0はCognitionとText/Web・訂正を含み、実行例は12例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.5.0はCognition・Text/Web・訂正・Agencyを含み、実行例は13例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -74,7 +81,7 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 
 | やりたいこと | 最初に読む資料 | 確認できること |
 |---|---|---|
-| 導入・接続の全体像を説明する | [顧客向け契約・利用ガイド](docs/customer-guide.md) → [PDF/HTMLの取得・同期手順](docs/customer-guide-authoring.md) | Core・6契約・Memory・Document・Cognition・Text/Web・訂正の図解。公開版と開発候補を区別 |
+| 導入・接続の全体像を説明する | [顧客向け契約・利用ガイド](docs/customer-guide.md) → [PDF/HTMLの取得・同期手順](docs/customer-guide-authoring.md) | Core・6契約・Memory・Document・Cognition・Text/Web・訂正・Agencyの図解。公開版と開発候補を区別 |
 | 公開版を試す | [インストールと最初の実行](docs/getting-started.md) → [9つの実行例](docs/tutorials.md) | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
 | 機能を接続する | [Architecture](docs/architecture.md) → [Core API](docs/core-api.md) | 責務と配置、現在の契約、各機能Docsへの入口 |
 | 開発に参加する | [参加方針](CONTRIBUTING.md) → [Issue運用](docs/issue-workflow.md) → [開発手順](docs/development.md) | 着手前の課題管理、editable環境、テストと配布検証 |

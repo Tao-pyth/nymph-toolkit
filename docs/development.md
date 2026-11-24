@@ -1,6 +1,6 @@
 # 開発準備とGit運用
 
-本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.4.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.5.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
 
 ## 公開準備時の環境
 
@@ -56,7 +56,7 @@ v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyt
 .venv/Scripts/python.exe tools/check_dist.py --dist-dir .git/v09-dist
 ```
 
-check_apiは公開14＋92件の一覧と実装を照合する。API変更時は--writeで一覧を更新する。core-coverage.jsonは64項目の採用文・実在テストID・実装・資料の対応を保持し、check_completion.py --writeで表示表を再生成する。両検査は全動作試験の代わりにはならない。変更後はbuild_handoff.pyで単一引継ぎ書を同期する。
+check_apiは公開Core 15＋Contracts 98件の一覧と実装を照合する。API変更時は--writeで一覧を更新する。core-coverage.jsonは64項目の採用文・実在テストID・実装・資料の対応を保持し、check_completion.py --writeで表示表を再生成する。両検査は全動作試験の代わりにはならない。変更後はbuild_handoff.pyで単一引継ぎ書を同期する。
 
 配布検査は新規環境へ通常wheelを導入し、作業ツリーのsrcを含めず全試験・6実行例・API照合・4配置短負荷を実行して、sdist同一wheel再ビルドを確認する。--dist-dirは旧版のビルド成果物と混在させないための任意引数。CIは従来どおり空のdistを使う。A09の公開前の証拠と公開後結果の参照先は[検証記録](validation/v0.9.md)に記録する。
 
@@ -194,3 +194,7 @@ v1.3当時の通常配布検査は`python -m build --outdir .git/v13-dist`、`py
 ## v1.4候補の開発・検証
 
 `python -m pip install -e .`後にimportlib.metadataで1.4.0を確認する。[入力・訂正ガイド](interaction.md)の例2件を含む12例、全回帰、`python tools/check_api.py`・`check_contracts.py`・`check_completion.py`を確認する。通常配布は`python -m build --outdir .git/v14-dist`、`python tools/check_dist.py --dist-dir .git/v14-dist`。顧客主要Docsは本文/図を実装へ照合して証跡を更新し、PDF/HTML生成・全ページ表示確認を行う。その後引継ぎ書を再生成し`python tools/check_docs.py`を通す。正確な結果と未完了は[B04](validation/v1.4.md)へ記録する。
+
+## v1.5 Agency候補
+
+`python -m pip install -e .`で1.5.0を導入し、`python examples/agency_demo.py`と全回帰を実行する。[Agencyガイド](agency.md)は初期判断と限界を説明する。通常配布は`python -m build --outdir .git/v15-dist`、`python tools/check_dist.py --dist-dir .git/v15-dist`で全テスト/13例とsdistを確認。既存Core API/契約/64判断、主要Docsと引継ぎ同期も必須。結果は[B05](validation/v1.5.md)。

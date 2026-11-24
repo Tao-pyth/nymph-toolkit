@@ -56,7 +56,7 @@ R35でv1.3 CognitionとMemory連携の開発が指示された。親#13・子#11
 
 R36で顧客向けMarkdown・PDF・HTMLも主要Docsとし、対象コミットの実装と常に同期することが明示指示された。親#13の子#124・#125を変更前に登録し、ADR 0030へ採用方針を記録した。原稿・図・公開状態の更新、同期証跡、必須CI生成、全ページの表示確認を行う。開発候補と公開版を区別し、過去の公開スナップショットは保持する。
 
-R37でv1.10まで実装・検証を反復する目標が指示された。v1.4は親#14・子#126〜#130を先行登録し、ADR 0031で対話・Web入力・学習注釈訂正を具体化。具体API・数値はCodexの実装判断として区別する。前段PR #123は未マージで、公開版v1.2と開発候補v1.4を分ける。後続v1.5〜v1.10も各段階で設計・子登録・実装・検証・主要Docs同期を行い、途中版だけで全体目標を完了としない。
+R37でv1.10まで実装・検証を反復する目標が指示された。v1.4は親#14・子#126〜#130を先行登録し、ADR 0031で対話・Web入力・学習注釈訂正を具体化。具体API・数値はCodexの実装判断として区別する。前段PR #123は未マージで、公開版v1.2と開発候補v1.4を分ける。v1.5は親#15・子#132〜#136、ADR 0032で活動選択・変更判断・決定保存とB05を具体化した。後続v1.6〜v1.10も各段階で設計・子登録・実装・検証・主要Docs同期を行い、途中版だけで全体目標を完了としない。
 
 ## 収録文書
 
@@ -76,72 +76,76 @@ R37でv1.10まで実装・検証を反復する目標が指示された。v1.4�
 14. [Connectionsの操作契約（v0.4）](#section-14)
 15. [TaskManagerの操作契約と活動履歴](#section-15)
 16. [v0.7 ハイブリッド実行と通信](#section-16)
-17. [Text Interaction・Web入力と学習訂正（v1.4開発候補）](#section-17)
-18. [v1.10.0までの実装・検証の進捗](#section-18)
-19. [Cognition Subsystem — v1.3の初期学習](#section-19)
-20. [Document Adapter — v1.2の文書入力とMemory連携](#section-20)
-21. [Memory Subsystem v1.1](#section-21)
-22. [Core APIと利用上の契約](#section-22)
-23. [公開APIの実装一覧](#section-23)
-24. [v1.0 Core接続契約](#section-24)
-25. [v0.9からv1.0への移行](#section-25)
-26. [ADR索引と更新方法](#section-26)
-27. [ADR 0001 Coreと統合リポジトリ](#section-27)
-28. [ADR 0002 実行モデル](#section-28)
-29. [ADR 0003 通信経路](#section-29)
-30. [ADR 0004 活動の決定権](#section-30)
-31. [ADR 0005 初期実装の範囲](#section-31)
-32. [ADR 0006 v1.0.0のCore接続契約](#section-32)
-33. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-33)
-34. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-34)
-35. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-35)
-36. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-36)
-37. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-37)
-38. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-38)
-39. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-39)
-40. [ADR 0014 v0.2の開発環境と最小Runtime](#section-40)
-41. [ADR 0015 Coreが許可する直接通信の採用](#section-41)
-42. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-42)
-43. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-43)
-44. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-44)
-45. [ADR 0019 v0.4のConnections実装判断](#section-45)
-46. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-46)
-47. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-47)
-48. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-48)
-49. [ADR 0023 v0.7の実装契約](#section-49)
-50. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-50)
-51. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-51)
-52. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-52)
-53. [ADR 0027 v1.1 Memoryの最小保存・取得](#section-53)
-54. [ADR 0028 v1.2 Document AdapterとMemory連携](#section-54)
-55. [ADR 0029 v1.3 Cognitionの初期学習とMemory連携](#section-55)
-56. [ADR 0030 顧客向けMarkdown・PDF・HTMLを主要Docsとして同期する](#section-56)
-57. [ADR 0031 v1.4 対話・Web入力と学習注釈の訂正](#section-57)
-58. [NTK開発ロードマップ](#section-58)
-59. [受入基準・検討案と検証記録](#section-59)
-60. [Core採用事項と検証証拠の対応](#section-60)
-61. [顧客向け契約・利用ガイドの検証記録](#section-61)
-62. [v1.3候補までの実装機能と資料の整合点検](#section-62)
-63. [v0.9.0利用者向けDocsの検証記録](#section-63)
-64. [v0.2 Runtime受入記録](#section-64)
-65. [v0.3受入記録](#section-65)
-66. [v0.4の受入記録](#section-66)
-67. [v0.5の受入確認と検証経過](#section-67)
-68. [v0.6の受入確認と検証経過](#section-68)
-69. [v0.7の受入確認と検証経過](#section-69)
-70. [v0.8 統合・障害・負荷検証記録](#section-70)
-71. [v0.9 Core機能完成の検証記録](#section-71)
-72. [v1.0 Core接続契約の検証](#section-72)
-73. [v1.1 Memoryの受入記録](#section-73)
-74. [v1.2 Document Adapterの受入・検証記録](#section-74)
-75. [v1.3 Cognitionの受入・検証記録](#section-75)
-76. [v1.4 B04実装・検証記録](#section-76)
-77. [WindowsのTCP終了処理の修正・検証（#94）](#section-77)
-78. [開発準備とGit運用](#section-78)
-79. [マイルストーンと親子Issueの運用](#section-79)
-80. [公開準備とリリース手順](#section-80)
-81. [変更履歴](#section-81)
-82. [Apache License 2.0（原文）](#section-82)
+17. [Agency：根拠と内部状態から活動を決める](#section-17)
+18. [Text Interaction・Web入力と学習訂正（v1.4開発候補）](#section-18)
+19. [v1.10.0までの実装・検証の進捗](#section-19)
+20. [Cognition Subsystem — v1.3の初期学習](#section-20)
+21. [Document Adapter — v1.2の文書入力とMemory連携](#section-21)
+22. [Memory Subsystem v1.1](#section-22)
+23. [Core APIと利用上の契約](#section-23)
+24. [公開APIの実装一覧](#section-24)
+25. [v1.0 Core接続契約](#section-25)
+26. [v0.9からv1.0への移行](#section-26)
+27. [ADR索引と更新方法](#section-27)
+28. [ADR 0001 Coreと統合リポジトリ](#section-28)
+29. [ADR 0002 実行モデル](#section-29)
+30. [ADR 0003 通信経路](#section-30)
+31. [ADR 0004 活動の決定権](#section-31)
+32. [ADR 0005 初期実装の範囲](#section-32)
+33. [ADR 0006 v1.0.0のCore接続契約](#section-33)
+34. [ADR 0007 v1.x以降のリリース運用と開発順序](#section-34)
+35. [ADR 0008 v1.xのSubsystem・Adapter責務案](#section-35)
+36. [ADR 0009 単一リポジトリと段階的な配布パッケージ分割](#section-36)
+37. [ADR 0010 Nymphの最終ビジョンと実装範囲の区別](#section-37)
+38. [ADR 0011 自作コード・Contracts・設計文書へのApache-2.0適用](#section-38)
+39. [ADR 0012 個人アカウントでのv0.1.0公開と参加方針](#section-39)
+40. [ADR 0013 マイルストーン・親子Issueを前提とするコード変更](#section-40)
+41. [ADR 0014 v0.2の開発環境と最小Runtime](#section-41)
+42. [ADR 0015 Coreが許可する直接通信の採用](#section-42)
+43. [ADR 0016 v0.3のRegistryと複数対象のライフサイクル](#section-43)
+44. [ADR 0017 接続先の選定・固定とヘルスチェック](#section-44)
+45. [ADR 0018 要求側の接続選定・稼働管理・履歴保存と救命措置](#section-45)
+46. [ADR 0019 v0.4のConnections実装判断](#section-46)
+47. [ADR 0020 v0.5のTaskManager基本機能と活動判断の境界](#section-47)
+48. [ADR 0021 v0.6の活動変更の採用範囲と詳細設計](#section-48)
+49. [ADR 0022 v0.9までのハイブリッド実行・ストリーム・Core完成条件](#section-49)
+50. [ADR 0023 v0.7の実装契約](#section-50)
+51. [ADR 0024 v0.8の統合・障害・負荷検証条件](#section-51)
+52. [ADR 0025 v0.9のCore完成監査と配布前判定](#section-52)
+53. [ADR 0026 v1.0のCore接続契約と互換性境界](#section-53)
+54. [ADR 0027 v1.1 Memoryの最小保存・取得](#section-54)
+55. [ADR 0028 v1.2 Document AdapterとMemory連携](#section-55)
+56. [ADR 0029 v1.3 Cognitionの初期学習とMemory連携](#section-56)
+57. [ADR 0030 顧客向けMarkdown・PDF・HTMLを主要Docsとして同期する](#section-57)
+58. [ADR 0031 v1.4 対話・Web入力と学習注釈の訂正](#section-58)
+59. [ADR 0032 v1.5 Agencyの根拠付き活動決定](#section-59)
+60. [ADR 0033 入力候補の共通契約と前処理アダプタ](#section-60)
+61. [NTK開発ロードマップ](#section-61)
+62. [受入基準・検討案と検証記録](#section-62)
+63. [Core採用事項と検証証拠の対応](#section-63)
+64. [顧客向け契約・利用ガイドの検証記録](#section-64)
+65. [v1.3候補までの実装機能と資料の整合点検](#section-65)
+66. [v0.9.0利用者向けDocsの検証記録](#section-66)
+67. [v0.2 Runtime受入記録](#section-67)
+68. [v0.3受入記録](#section-68)
+69. [v0.4の受入記録](#section-69)
+70. [v0.5の受入確認と検証経過](#section-70)
+71. [v0.6の受入確認と検証経過](#section-71)
+72. [v0.7の受入確認と検証経過](#section-72)
+73. [v0.8 統合・障害・負荷検証記録](#section-73)
+74. [v0.9 Core機能完成の検証記録](#section-74)
+75. [v1.0 Core接続契約の検証](#section-75)
+76. [v1.1 Memoryの受入記録](#section-76)
+77. [v1.2 Document Adapterの受入・検証記録](#section-77)
+78. [v1.3 Cognitionの受入・検証記録](#section-78)
+79. [v1.4 B04実装・検証記録](#section-79)
+80. [v1.5 Agencyの検証記録](#section-80)
+81. [WindowsのTCP終了処理の修正・検証（#94）](#section-81)
+82. [開発準備とGit運用](#section-82)
+83. [マイルストーンと親子Issueの運用](#section-83)
+84. [公開準備とリリース手順](#section-84)
+85. [変更履歴](#section-85)
+86. [Apache License 2.0（原文）](#section-86)
 
 ---
 
@@ -163,7 +167,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在使える機能と公開状態
 
-2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.4.0開発候補** です。未マージのv1.3候補（PR #123）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
+2026年11月24日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.5.0開発候補** です。未マージのv1.3/v1.4候補（PR #123 / #131）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
 
 | 機能 | 実装した範囲・操作 | 利用できる版・資料 |
 |---|---|---|
@@ -173,20 +177,27 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Cognition Subsystem | 区切り・概念ラベル付き例の統計学習と根拠照会、`learn` / `inspect`（`ntk.cognition.learning/1`） | v1.3候補から継続。Cognition（`docs/cognition.md`） |
 | Text Interaction・Cognition訂正 | 観測・教師情報・照会の5操作、revisionと命令ID付き注釈訂正 | v1.4開発候補。入力・訂正ガイド（`docs/interaction.md`） |
 | Web Adapter | 許可originのHTTP文章取得・HTML本文抽出・Memory保存 | v1.4開発候補。入力・訂正ガイド（`docs/interaction.md`） |
+| Agency | 根拠と内部状態から活動/変更案を選択、決定保存・照会 | v1.5開発候補。Agencyガイド（`docs/agency.md`） |
 
-Agency・Persona・Sleep、Discord Voice・Desktop Adapterは未実装です。v1.4の実装受入はB04記録（`docs/validation/v1.4.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）、今回の資料点検は整合点検記録（`docs/validation/docs-current.md`）にまとめています。
+Agencyの初期決定・保存・照会をv1.5候補へ追加しました。Persona・Sleep、Discord Voice・Desktop Adapterは後続です。v1.5の実装受入はB05記録（`docs/validation/v1.5.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）にあります。
 
-### v1.4.0開発候補 — 対話・Web入力と学習訂正
+### v1.5.0開発候補 — Agencyの活動決定
+
+内部状態・目標とMemory/Cognitionの根拠から活動内容・時刻・期間・優先度・変更案を選び、専用SQLiteへ決定を保存します。同じ決定IDは元の結果を返し、学習後の再評価には新しいIDを使います。Agencyガイド（`docs/agency.md`）・ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）・B05検証記録（`docs/validation/v1.5.md`）を参照してください。`python examples/agency_demo.py`が13番目の例です。
+
+v1.5は決定・保存・照会まで、TaskManagerへの適用と状態を使う継続判断はv1.6で具体化します。局所・4配置試験を確認し、全回帰・配布・主要Docs/CIの最終受入を親#15・子#136で追跡しています。公開済みではありません。
+
+### v1.4.0から継承 — 対話・Web入力と学習訂正
 
 R37・ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）で初期範囲を具体化し、親#14・子#126〜#130をコード変更前に登録しました。出典付き観測と明示学習を分け、Memory原本を維持した注釈訂正、命令の重複適用防止、DB形式1→2の移行を追加しています。Web取得は許可origin・UTF-8・上限付きGETです。自由会話や未分割文の自律学習は含みません。
 
-Windows/Python 3.15.2で全411テスト、通常wheel導入・12例・sdist再構築が成功しました。Core API/契約基準と顧客資料27ページ・16図も確認済みです。確定コミットの8環境CI・主要Docs一式の最終受入はB04記録（`docs/validation/v1.4.md`）と親#14で追跡します。公開済みではありません。
+Windows/Python 3.15.2で全411テスト、通常wheel導入・12例・sdist再構築が成功しました。Core API/契約基準と顧客資料27ページ・16図も確認済みです。6ace316の8環境CIとCustomer Docsは全9ジョブ成功し、Linux生成の27ページ/16図も照合しました。B04記録（`docs/validation/v1.4.md`）と親#14で追跡します。公開済みではありません。
 
 ### 前段v1.3.0開発候補 — Cognition Subsystem
 
 R35により、Memoryの記録へ語の区切りと概念ラベルを添え、語彙頻度・例内の隣接語順・語とラベルの関連を学ぶ最小機構を実装しました。利用ガイド（`docs/cognition.md`）、ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）、B03検証記録（`docs/validation/v1.3.md`）に初期スコープ・未採用範囲・結果をまとめています。親[#13](https://github.com/Tao-pyth/nymph-toolkit/issues/13)に子#119〜#122をコード変更前に登録しました。 Cognition実装時に全378テスト・10例・8環境CI・通常wheel/sdistを確認し、[PR #123](https://github.com/Tao-pyth/nymph-toolkit/pull/123)でレビューします。最終SHAと結果は[#122](https://github.com/Tao-pyth/nymph-toolkit/issues/122)に記録します。
 
-v1.3の初期実装をこのcheckoutの1.4.0候補へ継承しています。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
+v1.3の初期実装をこのcheckoutの1.5.0候補へ継承しています。`python examples/cognition_demo.py`が10番目の開発用例です。根拠ID/hash・出典区分を保持し、専用SQLiteで最大256例を保存、再起動後に同じ統計を再現します。区切りとラベルは要求側の教師情報であり、未分割日本語の分節・完全な構文/意味理解・自律的な概念形成・会話生成は含めません。Core/Memory/Documentの既存契約は維持します。通常導入先は公開済みv1.2.0のままで、v1.3.0のタグ/Releaseは未作成です。
 
 ### 公開済みv1.2.0 — Document Adapter
 
@@ -206,7 +217,7 @@ CoreとSubsystem・Adapterをつなぐ6区分の接続契約（`docs/module-cont
 
 配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.4.0はCognitionとText/Web・訂正を含み、実行例は12例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.5.0はCognition・Text/Web・訂正・Agencyを含み、実行例は13例です。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -225,7 +236,7 @@ HybridGroup・HybridTaskManagerにより、同一PC・同じPython環境でLOCAL
 
 | やりたいこと | 最初に読む資料 | 確認できること |
 |---|---|---|
-| 導入・接続の全体像を説明する | 顧客向け契約・利用ガイド（`docs/customer-guide.md`） → PDF/HTMLの取得・同期手順（`docs/customer-guide-authoring.md`） | Core・6契約・Memory・Document・Cognition・Text/Web・訂正の図解。公開版と開発候補を区別 |
+| 導入・接続の全体像を説明する | 顧客向け契約・利用ガイド（`docs/customer-guide.md`） → PDF/HTMLの取得・同期手順（`docs/customer-guide-authoring.md`） | Core・6契約・Memory・Document・Cognition・Text/Web・訂正・Agencyの図解。公開版と開発候補を区別 |
 | 公開版を試す | インストールと最初の実行（`docs/getting-started.md`） → 9つの実行例（`docs/tutorials.md`） | Windows/Linuxの通常導入、期待出力、正常終了、ログ |
 | 機能を接続する | Architecture（`docs/architecture.md`） → Core API（`docs/core-api.md`） | 責務と配置、現在の契約、各機能Docsへの入口 |
 | 開発に参加する | 参加方針（`CONTRIBUTING.md`） → Issue運用（`docs/issue-workflow.md`） → 開発手順（`docs/development.md`） | 着手前の課題管理、editable環境、テストと配布検証 |
@@ -349,6 +360,8 @@ v1.2 DocumentはR33・ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`）に�
 v1.3 CognitionはR35・ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）の初期学習に従う。語の区切りと概念ラベルは要求側の教師情報で、完全な意味理解/文法獲得と表現しない。Memory ID・fingerprint・出典区分を保持し、専用SQLiteへ最大256例を保存する。Core/Memory/Documentの公開契約を維持し、公開Contractsだけで連携する。訂正/忘却・未分割文・会話生成・自律学習計画を暗黙に追加しない。B03実装受入と公開後確認を分ける。
 
 v1.4はR37・ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）で対話/Web・学習注釈訂正を具体化した。ADR 0029の旧対象外を暗黙に上書きせず、この後続判断を参照する。Memory原本を維持し、訂正は明示契約/設定と命令ID・expected_revisionで行う。Web取得と保存と学習を分ける。v1.10全体の目標と未着手段階は進捗（`docs/implementation-progress.md`）で追跡し、v1.4のみの完了を全体達成としない。
+
+v1.5 AgencyはR37・ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）を確認する。価値判断はAgency、実行管理はCore。utility-v1の入力/根拠/予定/変更案と決定履歴を扱い、決定保存を活動登録成功と扱わない。Memory原本・Core安定APIを維持し、再起動では決定を照会する。TaskManager適用循環はv1.6で具体化する。
 
 ---
 
@@ -612,6 +625,8 @@ Cognition開発・親/ADR確認・未決/初期スコープ/受入整理・子Is
 
 v1.10全体の目標を維持し、最初のv1.4を親#14・子#126〜#130とADR 0031で具体化した。基点は未マージPR #123。具体API・数値をユーザーが個別承認したとは扱わず、実装前のCodex判断として記録する。実装受入・主要Docs・レビュー用候補とマージ/公開を区別する。進捗（`docs/implementation-progress.md`）・B04（`docs/validation/v1.4.md`）を参照する。
 
+v1.5は親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）で具体化した。Agencyガイド（`docs/agency.md`）→B05記録（`docs/validation/v1.5.md`）の順に読む。学習状況と内部状態からの決定・保存・照会を実装し、適用循環はv1.6で扱う。詳細な規則/API/上限はCodexの実装判断であり、ユーザー個別承認と区別する。
+
 ---
 
 <a id="section-5"></a>
@@ -620,24 +635,24 @@ v1.10全体の目標を維持し、最初のv1.4を親#14・子#126〜#130とADR
 
 ## NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.4.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
+**Nymph Toolkit / 対象 v1.5.0（開発候補） / 公開版 v1.2.0 / 2026-11-24**
 
 ### この資料で分かること
 
-NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Webの実装、使い方、制約をまとめます。
+NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入担当者と開発担当者に向けて、Core・接続契約・Memory・Document・Cognition・Text/Web・Agencyの実装、使い方、制約をまとめます。
 
-**Nymphが活動を決め、Coreが実行を管理します。** 自律的な活動決定、自然な会話、人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
+**Nymphが活動を決め、Coreが実行を管理します。** Agencyの初期活動決定を追加しました。自然な会話や人格を備えたNymph全体は未完成です。Cognitionは区切りと概念ラベルを与える初期学習であり、一般的な意味理解の完成を示しません。
 
 | 読みたい内容 | 章 |
 |---|---|
 | Coreの構成・配置・起動停止 | 01〜03 |
 | 登録・接続・操作・ストリーム | 04〜07 |
 | 活動・失敗・保存・再起動・設定 | 08〜13 |
-| 6区分の接続契約と5つの実機能・訂正 | 14〜18B |
+| 6区分の接続契約と6つの実機能・訂正 | 14〜18C |
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.4.0**はCognition・Text/Web入力・注釈訂正を含みます。前段のv1.3はPR #123で未マージ、v1.4は親#14配下で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.5.0**はCognition・Text/Web・注釈訂正・Agencyを含みます。前段PR #123/#131は未マージ、v1.5は親#15で検証中です。候補の機能を利用するには、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名はAPI一覧（`docs/api-reference.md`）、意味はCore API（`docs/core-api.md`）と各機能ガイドを参照してください。
 
@@ -667,7 +682,7 @@ flowchart TB
 | 活動の時刻監視、変更と状態通知 | 活動内容・優先度・終了・再開の判断 |
 | 保存と障害通知、後処理を待つ仕組み | 安全な中断点、所有する資源の解放 |
 
-CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Webは開発候補に同梱します。Agency・Persona・Sleep等は未実装です。
+CoreとContractsは一つの`nymph-toolkit`パッケージです。Subsystem・Adapterは必要に応じて別配布にできる方針です。Memory・Documentは公開版に同梱し、Cognition・Text Interaction・Web・Agencyは開発候補に同梱します。Persona・Sleep等は後続です。
 
 <!-- pagebreak -->
 
@@ -1140,7 +1155,7 @@ root外・上位移動・不正文字コード・空白のみ/NUL本文は拒否
 
 ### 17 Cognition：注釈から初期の規則性を学ぶ
 
-**v1.3で追加し、v1.4候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
+**v1.3で追加し、v1.5候補にも含む**Subsystemです。ユーザー採用済みの初期方式として、Memoryの記録へ語の区切りと概念ラベルを与えます。空の語彙から頻度・隣接語順・ラベルの共起を蓄積します。
 
 ```mermaid
 flowchart TB
@@ -1252,6 +1267,36 @@ flowchart LR
 
 <!-- pagebreak -->
 
+### 18C Agency：活動を選び、判断の根拠を残す
+
+AgencyはNymph側の意思決定を担います。目標・内部状態・活動カタログを受け、Memoryの本文/出典とCognitionの学習例数を参照して選びます。Coreは活動の価値を判断しません。
+
+```mermaid
+flowchart LR
+    I["目標・内部状態<br/>利用可能な活動"] --> A["Agency<br/>比較・選択"]
+    E["Memory原本<br/>Cognition学習状況"] --> A
+    A --> J[("決定履歴")]
+    A --> P["活動案・変更案<br/>理由・得点・根拠"]
+    P -. "v1.6で適用" .-> T["TaskManager"]
+```
+
+図17：v1.5は判断・保存・照会まで。活動の登録・実行状態との循環は次段階で検証します。
+
+| 判断の例 | 説明できる結果 |
+|---|---|
+| 目標の語が未学習 | 学習不足と重要度から調査を選ぶ |
+| 同じ語を学習した後 | 新しい決定IDで再評価し、知識の活用へ変わる |
+| 睡眠圧が高い | 休息の得点が上がり、活動を再検討する |
+| 予定時間到達後も同じ活動を選ぶ | Agencyが延長案を返す。Coreは自動延長しない |
+
+契約は`ntk.agency.decisions/1`のASYNC decide / get。時刻・期間・優先度、開始/変更/中断/再開/終了/待機の案を返します。値は解釈可能な初期規則で生成し、目標と状態からの選択を検証できます。人格や一般的な推論・目的の自律生成の完成を示すものではありません。
+
+決定は専用SQLiteへ原子的に保存してから返します。同じID/入力は元の決定を返し、再起動後も照会できます。別の入力でIDを流用すると競合です。最大4096決定で、上限でも過去履歴を自動削除しません。決定保存は活動の実行成功を意味しません。
+
+Memory原本を変更せず、出典区分・fingerprintと学習例数を判断根拠へ残します。取消や結果不明は未保存保証ではなく、IDで照会します。`python examples/agency_demo.py`で選択変化・再起動を再現できます。設定・入力・失敗・上限（`docs/agency.md`）
+
+<!-- pagebreak -->
+
 ### 19 使い始める：公開版で動きを確認する
 
 CPython 3.12以上を用意します。現行版で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
@@ -1275,6 +1320,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 | memory_demo.py / document_demo.py | 保存・文書取込・再起動取得 |
 | cognition_demo.py（候補のみ） | 注釈付き学習・根拠・出典区分・再起動 |
 | text_interaction_demo.py / web_demo.py（候補のみ） | 明示対話・注釈訂正、HTTP取得・出典・学習 |
+| agency_demo.py（候補のみ） | 根拠/内部状態による活動選択、決定保存・再起動 |
 
 FileStoreを使う例の履歴は一時フォルダへ保存され、通常終了時に消えます。結果を残す場合は実行例ガイド（`docs/tutorials.md`）のログ保存手順を使います。各例の正常停止と残存タスク0を確認してから、独自機能の接続へ進んでください。
 
@@ -1311,7 +1357,7 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-公開版は9例、候補は12例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
+公開版は9例、候補は13例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
@@ -1386,7 +1432,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ### 24 適用範囲・検証状況・参照先
 
-Core・Memory・Documentに加え、候補のCognition・Text/Web・訂正を検証しています。公開版は9例、候補は12例。v1.4はWindows／Python 3.15.2で411テスト・通常配布の検証が成功しました。確定コミットの8環境CI・配布・顧客Docsの結果はB04記録（`docs/validation/v1.4.md`）と親#14で確認し、先行PR #123の成功をv1.4のCI成功とは扱いません。
+Core・Memory・Documentと候補のCognition・Text/Web・訂正・Agencyを検証しています。公開版は9例、候補は13例。v1.4は全411テスト・通常配布・8環境CIを通過。v1.5の全回帰・配布・主要Docs/CIの結果はB05記録（`docs/validation/v1.5.md`）・親#15で確認します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -1394,9 +1440,9 @@ Core・Memory・Documentに加え、候補のCognition・Text/Web・訂正を検
 | 処理量と保持 | 未保存履歴、保持した活動・命令結果・通知が増え続ける運用は、使用量の確認が必要 |
 | 強制停止 | 同一プロセスの非協調処理は強制停止できない。子の強制終了でも後処理を確認できない場合がある |
 | 長時間性能 | 30分負荷はv0.8の特定コミットの測定。後続修正・各環境の全てを同じ測定結果で代表しない |
-| 後続の機能 | v1.0の共通契約は採用済み。v1.4の明示入力・訂正はADR 0031。自由会話・自律活動は後続判断 |
+| 後続の機能 | v1.0の共通契約は採用済み。v1.5のAgencyはADR 0032。適用循環・自由会話は後続判断 |
 
-現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Agency・Persona・Sleep・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
+現在の対象外は、分散実行、稼働中の実体着脱、活動継続状態の自動復元、子だけの自動再起動、Persona・Sleep・音声/Desktop、複製・移植・伝播機構です。PC全体の状況取得は将来のAdapterが担当します。Core管理の失効は、敵対する機能を遮断するセキュリティ境界ではありません。
 
 | 用語 | 本資料での意味 |
 |---|---|
@@ -1406,7 +1452,7 @@ Core・Memory・Documentに加え、候補のCognition・Text/Web・訂正を検
 | 協調的中断 | 実行側が安全な区切りと後処理を担当して止まること |
 | 結果不明 | 処理が失敗したと確定できず、照会が必要な状態 |
 
-手順は導入（`docs/getting-started.md`）・実行例（`docs/tutorials.md`）・問題解決（`docs/troubleshooting.md`）、厳密な定義はCore API（`docs/core-api.md`）・API一覧（`docs/api-reference.md`）、判断根拠はADR索引（`docs/adr/README.md`）、製品の証拠はB00（`docs/validation/v1.0.md`）・B01（`docs/validation/v1.1.md`）・B02（`docs/validation/v1.2.md`）・B03（`docs/validation/v1.3.md`）・B04（`docs/validation/v1.4.md`）を参照してください。Windows終了時の修正は検証記録（`docs/validation/windows-shutdown.md`）で確認できます。
+手順は導入（`docs/getting-started.md`）・実行例（`docs/tutorials.md`）・問題解決（`docs/troubleshooting.md`）、契約はCore API（`docs/core-api.md`）・API一覧（`docs/api-reference.md`）、判断はADR索引（`docs/adr/README.md`）、証拠はB00（`docs/validation/v1.0.md`）・B01（`docs/validation/v1.1.md`）・B02（`docs/validation/v1.2.md`）・B03（`docs/validation/v1.3.md`）・B04（`docs/validation/v1.4.md`）・B05（`docs/validation/v1.5.md`）を参照してください。Windows終了時の修正は検証記録（`docs/validation/windows-shutdown.md`）にあります。
 
 本資料とNTKの自作コード・Contracts・設計文書にはApache-2.0（`LICENSE`）を適用します。第三者成果物とNymphの個体データは、それぞれの条件で扱います。本資料は公開版と開発候補を区別して説明し、将来機能を実装済みとして含めません。
 
@@ -1418,7 +1464,7 @@ Core・Memory・Documentに加え、候補のCognition・Text/Web・訂正を検
 
 ## 顧客向け主要Docsの更新・同期・配布
 
-R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、customer-guide.md（`docs/customer-guide.md`）・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.4.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
+R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、customer-guide.md（`docs/customer-guide.md`）・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.5.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
 
 ### 正本と同期対象
 
@@ -1771,6 +1817,10 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ### v1.4開発候補の11・12番目の例
 
 `python examples/text_interaction_demo.py`は観測・教師入力・訂正・根拠照会、`python examples/web_demo.py`はローカルHTTPのHTML取得・出典保存・明示学習を行い、PASSと後処理確認で終了する。一時データを削除し、外部Webサイトには接続しない。`python examples/text_interaction_demo.py --interactive --data-dir .local/text-session`でJSON-lines入力と永続データを利用できる。5操作・入力形式・EOF・DB移行・制約は入力/訂正ガイド（`docs/interaction.md`）を参照する。公開v1.2の9例と開発候補を区別する。
+
+### v1.5候補のAgency例
+
+`python examples/agency_demo.py`は実Memory/Cognitionへ接続し、未知語の調査→学習後の活用→睡眠圧による休息の決定を確認する。さらに再起動後、同じ決定IDから元の結果を読み、所有資源を回収して終了する。13番目の開発用例で、公開v1.2の9例には含まれない。実行への適用循環はv1.6。契約・入力（`docs/agency.md`）を参照する。
 
 ---
 
@@ -2469,6 +2519,7 @@ nymph-toolkit/
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
 │  ├─ cognition.md                   # v1.3初期学習とMemory根拠
 │  ├─ interaction.md                 # v1.4入力・訂正・CLI・DB移行
+│  ├─ agency.md                     # v1.5判断・根拠・決定保存/照会
 │  ├─ implementation-progress.md     # v1.10までの実施状況
 │  ├─ validation/v1.4.md             # B04検証と未完了の受入
 │  ├─ document.md                    # v1.2文書入力とMemory連携
@@ -2536,7 +2587,8 @@ nymph-toolkit/
 │     ├─ adapters/web/               # 許可originのHTTP文章取得
 │     ├─ adapters/_interaction.py    # 新規入力Adapterの所有・接続補助
 │     ├─ subsystems/memory/           # 同梱する最小Memory
-│     └─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
+│     ├─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
+│     └─ subsystems/agency/           # 根拠付き活動決定と専用履歴
 └─ tests/                            # subsystems/にMemory/Cognition単体・統合試験
    ├─ core/
    ├─ adapters/                     # Document単体・4配置・障害試験
@@ -2598,6 +2650,12 @@ Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contract
 ### R37：対話・Web入力と訂正
 
 ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）に従い、Core既存APIを維持して業務契約3件を追加。TextはMemoryの原記録とCognitionの明示教師入力をつなぎ、WebはHTTP取得・本文抽出・出典保存を担う。Cognitionは専用DBの注釈と集計を訂正し、Memory原本を変更しない。入力の保存だけで学習や活動決定を始めない。構成・呼出図・配置・保存形式移行・取消/障害はinteraction（`docs/interaction.md`）、全体の残作業は進捗（`docs/implementation-progress.md`）。docs/interaction.mdとvalidation/v1.4.md、examples/interaction_setup.py・text_interaction_demo.py・web_demo.py、tests/adapters/の単体・結合・CLI検証を追加した。
+
+### R37：Agencyの意思決定と実行の境界
+
+`src/nymph_toolkit/subsystems/agency/`（factory・判断モデル・専用保存）、`contracts/agency.py`（decisions/1）、`docs/agency.md`、ADR 0032、`validation/v1.5.md`、`examples/agency_demo.py`、`tests/subsystems/test_agency*.py`を追加した。単一配布に同梱する。Memory/Cognitionの公開契約で根拠を取得し、活動選択・時刻/期間/優先度/変更案をAgencyが決める。Coreの既存契約は維持する。
+
+決定履歴と活動の実行履歴は別。決定の保存・照会は実行開始や変更適用の証拠にならない。v1.6で実行側の状態/版と結び、v1.5では4配置・両経路で判断と根拠・再起動照会を検証する。人格/Sleepは後続。
 
 ---
 
@@ -3121,6 +3179,131 @@ runの正常復帰だけでは子を終了せず、stopまで提供窓口を保�
 
 <a id="section-17"></a>
 
+収録元 `docs/agency.md`
+
+## Agency：根拠と内部状態から活動を決める
+
+v1.5開発候補に同梱するNymph側の意思決定機構。ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）・親#15・子#132〜#136・B05記録（`docs/validation/v1.5.md`）で追跡する。公開版はv1.2.0。Coreの実行管理と区別し、v1.5では決定・保存・照会、v1.6で登録・変更適用・実行状態との循環を扱う。
+
+### 何ができるか
+
+目標と活動カタログ、休息の必要度などの内部状態を入力し、Memory原本とCognitionの学習例数を参照して活動を選ぶ。同じ目標でも、未知なら調査、学習済みなら活用、睡眠圧が強ければ休息へ選択が変わる。理由、候補の得点、根拠、時刻・期間・優先度、現在の活動への変更案を記録する。
+
+```mermaid
+flowchart LR
+    I["目標・内部状態<br/>活動カタログ・現在状態"] --> A["Agency<br/>比較・選択・変更判断"]
+    M["Memory<br/>本文・出典"] --> A
+    C["Cognition<br/>語の学習状況"] --> A
+    A --> J[("決定履歴<br/>専用SQLite")]
+    A --> P["活動案・理由<br/>保存後に返却"]
+    P -. "v1.6で適用と状態確認" .-> T["Core TaskManager<br/>実行・変更・通知"]
+```
+
+目標とカタログを入力することは、毎回の活動選択を外部が指定することとは異なる。Agency自身が観測と規則から選ぶ。ただし目的の自律生成、汎用推論、意味理解、人格・情動の完成ではない。人工的な状態指標と解釈可能な初期規則`utility-v1`であり、既存LLMを中核に使わない。
+
+### 配置と設定
+
+factoryは`nymph_toolkit.subsystems.agency:factory`。`ModuleKind.SUBSYSTEM`、Memory/Cognitionへの必要依存、`AGENCY_CONTRACT`を宣言する。契約は`nymph_toolkit.contracts.agency`からimportする。`HybridGroup`のLOCAL/PROCESSどちらでも使用できる。詳細な組立ては実行例（`examples/agency_demo.py`）。
+
+```python
+config = {
+    "path": "D:/ntk-data/agency.db",  # 既存の親ディレクトリ内の絶対ファイル
+    "memory_module_id": "memory",
+    "cognition_module_id": "cognition",
+    "catalog": [{
+        "template_id": "study", "motive": "explore",
+        "content": "学習目標を調べる",
+        "executor_module_id": "worker", "executor_id": "study",
+        "parameters": {}, "min_seconds": 60, "max_seconds": 300,
+        "delay_seconds": 0,
+    }],
+}
+```
+
+max_frame_bytesは65536以上。専用DBは1実体が所有し、同時受付は1件。DBには自身のID・選択先・カタログを記録し、不一致設定での再利用を拒否する。カタログ変更を既存履歴の書換えでごまかさず、変更・移行の設計を別途行う。実行先は活動案の宛先であり、v1.5の決定だけでは実在確認・予約・実行を行わない。
+
+### 公開操作 decisions/1
+
+| ASYNC操作 | 入力 | 結果 |
+|---|---|---|
+| decide(request) | 下記のJSON | 保存済み決定、または失敗値 |
+| get(decision_id) | 非空のID | 過去の決定そのもの。外部機能へ照会しない |
+
+```python
+request = {
+    "decision_id": "decide-001",
+    "now": "2026-11-24T12:00:00Z",
+    "state": {"sleep_pressure": 100, "cognitive_load": 100, "social_need": 50},
+    "goals": [{"goal_id": "understand-cat", "record_id": "lesson", "token": "猫",
+               "importance": 800, "target_documents": 1}],
+    "available": ["study"],
+    "current": None,
+}
+receipt = await link.acall("decide", request, timeout=15)
+saved = await link.acall("get", "decide-001", timeout=5)
+```
+
+Memoryには`lesson`の本文と出典が保存済みであること。目標語が本文中にあるか確認し、同じ出典区分でCognition inspectを取得する。個々の観測は逐次取得で、全機能の原子的な同時スナップショットではない。入力の列挙順を正規化するが、時刻・状態・目標が異なれば別入力になる。
+
+現在活動を再検討する場合のcurrent:
+
+```json
+{"decision_id":"decide-001","state":"running","revision":2,
+ "planned_end_notified":false,"supports_pause":true}
+```
+
+decision_idは、実際に登録/変更を適用したplanを持つ過去の決定を指す。未適用の候補を現在の活動として渡さない。state/revision/到達通知/中断対応は実行側の観測値であり、決定器が実行状態を推定した値ではない。
+
+### 得点・予定と結果
+
+不足度は`max(0, target_documents-documents)*1000//target_documents`。restは睡眠圧・認知負荷の最大、socialは交流必要度、exploreは重要度×不足度、achieveは重要度×充足度を使い、0〜1000へ揃える。正の最高点を選び、同点なら現在活動、次にID順とする。利用不能と報告された候補を除外するが、これはCoreの接続許可・容量予約ではない。
+
+期間はmin〜maxを得点で線形補間し整数秒、priorityは得点、開始遅延は設定遅延×(1000-score)//1000秒。0なら即時要求、その他はnowから計算した時刻を指定する。v1.6で実際にCoreへ届くまでに過去になった場合はCoreの拒否を受けてAgencyが再判断する。
+
+結果には`decision_id/sequence/policy/requested_at/directive/target/plan/selected/candidates/evidence/state`を含む。planはActivityRequest相当の7項目とtemplate_id/goal_id/executor_module_id/executor_id。parametersはconfiguredと、実行対象を示すgoal_id/record_id/tokenに分かれる。新しい活動IDは決定IDから安定に生成し、同じ活動の変更では維持する。
+
+| directive | Agencyの判断。v1.5では適用しない |
+|---|---|
+| start / idle | 現在活動がない、または終了済み。新規案を開始 / 候補なし |
+| continue / change | 同じ活動を維持 / 時刻・期間・優先度の変更案 |
+| pause / finish | 別候補を優先する、または候補なし。現在活動の協調的中断 / 終了案 |
+| resume | 元のplanのまま再開。変更は再開観測後の判断へ分ける |
+| wait | 開始・中断・再開待ち・終了の遷移中。確定を待つ |
+
+runningの開始時刻は変更しない。pendingでも期間・優先度が同じなら既存の開始時刻を維持し、再観測のたびに延期しない。予定到達の通知があり、同じ活動を再選択した場合は現在の合計期間に選んだ期間を足す変更案を返す。Core自身は延長を決めない。実行内容や根拠/語の変更をActivityChangeで書き換えず、別活動として扱う。1決定は1操作で、中断・終了確認前に次を開始しない。変更の受付と適用完了・版競合はv1.6で接続する。
+
+### 保存・失敗・再起動
+
+最大4096決定の入力・根拠・結果をSQLiteへ原子的に保存し、commit後に返す。同じIDと正規化入力は、学習状況が後で変わっても元の決定を返す。再評価には新しいIDを使う。根拠のMemory fingerprint・出典区分・学習例数は観測時点の証拠であり、真偽や理解の保証ではない。
+
+| 結果 | 扱い |
+|---|---|
+| agency.invalid | 入力/現在参照/計算可能範囲を修正する |
+| agency.evidence | 提供結果の形・出典・目標との整合を確認する |
+| agency.not_found | 決定IDなし。実行されたことを示さない |
+| agency.decision_conflict | 同じ決定IDに異なる入力。IDを流用しない |
+| agency.history_full | 上限。古い決定の照会・再要求は保持。自動削除なし |
+| agency.storage | 保存失敗。結果を照会し、DBを確認する |
+| Memory/Cognitionの業務失敗 | 元の失敗値を保持し、決定は保存しない |
+| TemporaryUnavailable | 停止中・処理中・提供先容量不足。自動再送しない |
+
+LinkFailureは該当窓口のclose・中断完了報告・ヘルス申請で処理する。結果不明は復旧/稼働通知の失敗でも隠さず、IDで照会する。利用ごとの接続選び直し・自動切替はしない。待機取消・期限切れは未保存保証ではない。受付済み処理とSQLite workerを所有し、停止は保存・窓口・workerの後処理を待つ。
+
+再起動時は形式・設定・全決定の整合を検査して読み、活動を自動登録しない。破損・未知形式のDBを空にして続行しない。カタログ16件、目標8件、正規化入力16384 bytes、parameters4096 bytes、期間/遅延86400秒などの全境界はADR 0032を参照する。
+
+### 再現
+
+```console
+python examples/agency_demo.py
+python -W error -m unittest tests.subsystems.test_agency tests.subsystems.test_agency_service -v
+```
+
+実Memory/Cognitionで未知→学習→疲労の選択変化、原本保持、保存後の再要求、再起動、4配置/両経路を検証する。TaskManagerへの自律的な登録・継続的実行はv1.6の受入で確認する。全体進捗（`docs/implementation-progress.md`）
+
+---
+
+<a id="section-18"></a>
+
 収録元 `docs/interaction.md`
 
 ## Text Interaction・Web入力と学習訂正（v1.4開発候補）
@@ -3228,7 +3411,7 @@ python examples/text_interaction_demo.py --interactive --data-dir .local/text-se
 
 ---
 
-<a id="section-18"></a>
+<a id="section-19"></a>
 
 収録元 `docs/implementation-progress.md`
 
@@ -3239,8 +3422,8 @@ R37（2026年11月24日）の目標は、既存ロードマップに沿ってv1.
 | 段階 | 実施・確認する範囲 | 現在の証拠・残作業 |
 |---|---|---|
 | 基点v1.3 | Cognition/Memory・顧客主要Docs | PR #123 / 24f5917、385テスト・PR CI 9ジョブ成功、未マージ |
-| v1.4 | Text Interaction・Web取込・学習訂正 | 親#14、子#126〜#130、ADR 0031。訂正・Text/Web・CLI・12例、Windows全411テスト・通常配布を確認。27ページ/16図の顧客資料を確認。確定コミットのCI・主要Docs一式の最終受入を追跡中 |
-| v1.5 | Agencyの活動計画・意思決定 | 親#15。設計・子登録・実装・検証が残る |
+| v1.4 | Text Interaction・Web取込・学習訂正 | 親#14、子#126〜#130、ADR 0031。訂正・Text/Web・CLI・12例、Windows全411テスト・通常配布を確認。27ページ/16図の顧客資料を確認。6ace316 / PR #131、push/PR CI全成功、Linux顧客27ページ/16図の取得・全ページ照合済み。未マージ |
+| v1.5 | Agencyの活動計画・意思決定 | 親#15・子#132〜#136・ADR 0032。判断/保存/公開連携を実装、局所/4配置/13番目の例を確認。全回帰・配布・主要Docs/CIを追跡中 |
 | v1.6 | Agency/TaskManagerの実行・変更・状態把握 | 親#16。同上 |
 | v1.7 | Personaの保持・参照・外部更新 | 親#17。同上 |
 | v1.8 | Persona/Agencyの選択への反映 | 親#18。同上 |
@@ -3251,7 +3434,7 @@ R37（2026年11月24日）の目標は、既存ロードマップに沿ってv1.
 
 ---
 
-<a id="section-19"></a>
+<a id="section-20"></a>
 
 収録元 `docs/cognition.md`
 
@@ -3390,7 +3573,7 @@ R35当初の訂正対象外を、R37・ADR 0031（`docs/adr/0031-v1.4-text-web-a
 
 ---
 
-<a id="section-20"></a>
+<a id="section-21"></a>
 
 収録元 `docs/document.md`
 
@@ -3496,7 +3679,7 @@ B02検証記録（`docs/validation/v1.2.md`）に条件と結果を記載する�
 
 ---
 
-<a id="section-21"></a>
+<a id="section-22"></a>
 
 収録元 `docs/memory.md`
 
@@ -3635,7 +3818,7 @@ Document連携はv1.2・ADR 0028、Cognitionによるgetと初期学習は開発
 
 ---
 
-<a id="section-22"></a>
+<a id="section-23"></a>
 
 収録元 `docs/core-api.md`
 
@@ -3738,7 +3921,7 @@ ActivityStateはPENDING、STARTING（遠隔の実開始待ち）、RUNNING、PAU
 
 ---
 
-<a id="section-23"></a>
+<a id="section-24"></a>
 
 収録元 `docs/api-reference.md`
 
@@ -5268,7 +5451,7 @@ Usage(state: nymph_toolkit.contracts.connections.OperatingState = <OperatingStat
 
 ---
 
-<a id="section-24"></a>
+<a id="section-25"></a>
 
 収録元 `docs/module-contracts.md`
 
@@ -5362,7 +5545,7 @@ python tools/check_contracts.py
 
 ---
 
-<a id="section-25"></a>
+<a id="section-26"></a>
 
 収録元 `docs/migration-v1.md`
 
@@ -5385,7 +5568,7 @@ R29で「必要な破壊的API整理も今回に含める」と明示された�
 
 ---
 
-<a id="section-26"></a>
+<a id="section-27"></a>
 
 収録元 `docs/adr/README.md`
 
@@ -5425,7 +5608,9 @@ ADRは設計判断の根拠と履歴を保存する。初稿の記録日は2026�
 | 0028 v1.2 Document AdapterとMemory連携（`docs/adr/0028-v1.2-document-adapter.md`） | R33の実装判断。UTF-8文書・1記録・出典/hash・接続・失敗/取消・B02。Core/Memory既存契約維持 | R33・親#12・子#112〜#115 |
 | 0029 v1.3 Cognitionの初期学習（`docs/adr/0029-v1.3-cognition-learning.md`） | 区切り/ラベル付き入力はR35補足回答で明示採用。語彙/語順/共起・Memory根拠・保存/失敗・B03の詳細は実装判断 | R35・親#13・子#119〜#122 |
 
+| 0032 v1.5 Agencyの活動決定（`docs/adr/0032-v1.5-agency-decisions.md`） | R37の実装判断。根拠付き規則、活動/変更案、決定保存/照会、B05。適用はv1.6 | 親#15・子#132〜#136 |
 | 0031 v1.4対話・Web入力と注釈訂正（`docs/adr/0031-v1.4-text-web-and-correction.md`） | R37の委任に基づく実装判断。追加3契約・保存形式移行・上限・失敗/所有・B04。個別のユーザー承認と区別 | R37・親#14・子#126〜#130 |
+| 0033 入力候補の共通契約と前処理アダプタ（`docs/adr/0033-input-candidate-contract.md`） | 提案。Web・文書・対話の入力候補と、既定値補完型・AI API連動型の差し替え条件 | 2026年11月24日のユーザー提案 |
 | 0030 顧客資料を主要Docsとして同期（`docs/adr/0030-customer-docs-as-primary.md`） | R36で採用。Markdown/PDF/HTMLの同時更新・同期検査・必須CI生成と公開条件 | R36・親#13・子#124/#125 |
 
 ### 記録方法
@@ -5444,7 +5629,7 @@ ADR 0017のR14時点の未決事項は履歴として保持し、R15で解消し
 
 ---
 
-<a id="section-27"></a>
+<a id="section-28"></a>
 
 収録元 `docs/adr/0001-core-and-repository.md`
 
@@ -5498,7 +5683,7 @@ R2の確定事項と統合リポジトリの指定、R3の文書・配置計画�
 
 ---
 
-<a id="section-28"></a>
+<a id="section-29"></a>
 
 収録元 `docs/adr/0002-execution-model.md`
 
@@ -5536,7 +5721,7 @@ R2のハイブリッド実行と技術の方向性、R5の接続契約整備の�
 
 ---
 
-<a id="section-29"></a>
+<a id="section-30"></a>
 
 収録元 `docs/adr/0003-communication-routing.md`
 
@@ -5599,7 +5784,7 @@ R2に記載された正式採用と後発提案の関係、R4の通信方式の�
 
 ---
 
-<a id="section-30"></a>
+<a id="section-31"></a>
 
 収録元 `docs/adr/0004-activity-authority.md`
 
@@ -5660,9 +5845,13 @@ R5ではAgency Subsystem（暫定名称）がNymph側の活動決定を担う配
 
 R2の活動内容・時刻・期間・変更の決定権とCoreの実行管理に関する明示。R4を根拠に責務境界を補足し、時間概念と変更操作の検討対象を追記した。R5を根拠にAgency配置案との関係を補足した。Docsの根拠表（`docs/README.md`）
 
+### R37のv1.5具体化
+
+ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）で、Agencyの初期の規則ベース活動選択・変更案・決定保存とB05を具体化した。Coreへ価値判断を移さず、実行状態との適用循環はv1.6で扱う。他の未採用案を一括採用しない。
+
 ---
 
-<a id="section-31"></a>
+<a id="section-32"></a>
 
 収録元 `docs/adr/0005-initial-scope.md`
 
@@ -5698,7 +5887,7 @@ R2の初期スコープ、R3のバージョン目標、R5のv1.x計画との適�
 
 ---
 
-<a id="section-32"></a>
+<a id="section-33"></a>
 
 収録元 `docs/adr/0006-core-connection-contracts.md`
 
@@ -5749,7 +5938,7 @@ R5「Codex編集依頼書：NTK v1.0.0以降の開発ロードマップ案」の
 
 ---
 
-<a id="section-33"></a>
+<a id="section-34"></a>
 
 収録元 `docs/adr/0007-v1-release-roadmap.md`
 
@@ -5796,7 +5985,7 @@ R5のリリース運用案、推奨ロードマップ、実装順序とAdapter�
 
 ---
 
-<a id="section-34"></a>
+<a id="section-35"></a>
 
 収録元 `docs/adr/0008-subsystem-adapter-boundaries.md`
 
@@ -5866,9 +6055,13 @@ Cognitionの明示区切り/ラベル付き学習、Memory根拠と専用保存�
 
 R37・ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）でText Interaction・Web・注釈訂正の契約を追加した。明示的な教師情報とMemory原本を分け、Coreは意思決定しない。その他の後続段階の詳細を一括採用するものではない。
 
+### R37のv1.5具体化
+
+ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）で、Agencyの初期の規則ベース活動選択・変更案・決定保存とB05を具体化した。Coreへ価値判断を移さず、実行状態との適用循環はv1.6で扱う。他の未採用案を一括採用しない。
+
 ---
 
-<a id="section-35"></a>
+<a id="section-36"></a>
 
 収録元 `docs/adr/0009-package-distribution.md`
 
@@ -5927,7 +6120,7 @@ ADR 0027（`docs/adr/0027-v1.1-memory.md`）により、追加外部依存のな
 
 ---
 
-<a id="section-36"></a>
+<a id="section-37"></a>
 
 収録元 `docs/adr/0010-project-vision.md`
 
@@ -5980,7 +6173,7 @@ R7の添付「Project Vision — 人工人格Nymphの最終到達目標」と、
 
 ---
 
-<a id="section-37"></a>
+<a id="section-38"></a>
 
 収録元 `docs/adr/0011-apache-2.0-license.md`
 
@@ -6034,7 +6227,7 @@ R8の「Apache-2.0で進めてください。自作コード・Contracts・設�
 
 ---
 
-<a id="section-38"></a>
+<a id="section-39"></a>
 
 収録元 `docs/adr/0012-v0.1-publication.md`
 
@@ -6074,7 +6267,7 @@ R9の「個人アカウント配下で、現在の資料を中心にpublic公開
 
 ---
 
-<a id="section-39"></a>
+<a id="section-40"></a>
 
 収録元 `docs/adr/0013-milestone-issue-workflow.md`
 
@@ -6117,7 +6310,7 @@ R10の「コードの修正を行うような変更」には「各バージョ�
 
 ---
 
-<a id="section-40"></a>
+<a id="section-41"></a>
 
 収録元 `docs/adr/0014-v0.2-runtime.md`
 
@@ -6186,7 +6379,7 @@ R11の実施指示、ロードマップV0.2、Issue #22〜#25。技術的な参�
 
 ---
 
-<a id="section-41"></a>
+<a id="section-42"></a>
 
 収録元 `docs/adr/0015-core-authorized-direct-communication.md`
 
@@ -6257,7 +6450,7 @@ R12の明示的な採用指示、R4の「Coreが許可した直接通信」と�
 
 ---
 
-<a id="section-42"></a>
+<a id="section-43"></a>
 
 収録元 `docs/adr/0016-v0.3-registry.md`
 
@@ -6335,7 +6528,7 @@ Runtimeの開始待機・停止待機が取消された場合もADR 0014の後�
 
 ---
 
-<a id="section-43"></a>
+<a id="section-44"></a>
 
 収録元 `docs/adr/0017-connection-binding-and-health.md`
 
@@ -6408,7 +6601,7 @@ ADR 0015の直接通信採用とADR 0016のRegistry・ModuleGroupを前提とす
 
 ---
 
-<a id="section-44"></a>
+<a id="section-45"></a>
 
 収録元 `docs/adr/0018-connection-selection-health-and-recovery.md`
 
@@ -6532,7 +6725,7 @@ R15：Docsの根拠一覧（`docs/README.md`）に記録した、本チャット
 
 ---
 
-<a id="section-45"></a>
+<a id="section-46"></a>
 
 収録元 `docs/adr/0019-v0.4-connections.md`
 
@@ -6657,7 +6850,7 @@ R16は本チャットのv0.4着手指示。R15の採用方針はADR 0018、既�
 
 ---
 
-<a id="section-46"></a>
+<a id="section-47"></a>
 
 収録元 `docs/adr/0020-v0.5-task-manager.md`
 
@@ -6826,7 +7019,7 @@ Docsの根拠表（`docs/README.md`）のR2・R4・R10・R16・R17。R17はv0.5�
 
 ---
 
-<a id="section-47"></a>
+<a id="section-48"></a>
 
 収録元 `docs/adr/0021-v0.6-activity-changes.md`
 
@@ -7008,7 +7201,7 @@ Docs根拠表（`docs/README.md`）のR18、ロードマップ（`docs/roadmap.m
 
 ---
 
-<a id="section-48"></a>
+<a id="section-49"></a>
 
 収録元 `docs/adr/0022-v0.7-v0.9-hybrid-and-completion.md`
 
@@ -7179,7 +7372,7 @@ R19：v0.9までの一問一答、確認事項1〜64の一覧、ユーザーに�
 
 ---
 
-<a id="section-49"></a>
+<a id="section-50"></a>
 
 収録元 `docs/adr/0023-v0.7-implementation-contracts.md`
 
@@ -7273,7 +7466,7 @@ A07-01〜14に対応する実TCP・実子プロセスの検証を行う。ロー
 
 ---
 
-<a id="section-50"></a>
+<a id="section-51"></a>
 
 収録元 `docs/adr/0024-v0.8-integration-validation.md`
 
@@ -7346,7 +7539,7 @@ Windows/Linux × CPython 3.12〜3.15で、ソース、通常wheelインストー
 
 ---
 
-<a id="section-51"></a>
+<a id="section-52"></a>
 
 収録元 `docs/adr/0025-v0.9-core-completion.md`
 
@@ -7404,7 +7597,7 @@ R25でユーザーがPR #86のレビュー、問題解消後のマージとv0.9.
 
 ---
 
-<a id="section-52"></a>
+<a id="section-53"></a>
 
 収録元 `docs/adr/0026-v1.0-core-connection-contracts.md`
 
@@ -7490,7 +7683,7 @@ Core/Contractsの明示exportと、module-contractsに記す利用者向けメ�
 
 ---
 
-<a id="section-53"></a>
+<a id="section-54"></a>
 
 収録元 `docs/adr/0027-v1.1-memory.md`
 
@@ -7576,7 +7769,7 @@ ADR 0029（`docs/adr/0029-v1.3-cognition-learning.md`）のCognitionがrecords/1
 
 ---
 
-<a id="section-54"></a>
+<a id="section-55"></a>
 
 収録元 `docs/adr/0028-v1.2-document-adapter.md`
 
@@ -7643,7 +7836,7 @@ PR #116のレビュー・マージ・v1.2.0公開指示により、公開確認�
 
 ---
 
-<a id="section-55"></a>
+<a id="section-56"></a>
 
 収録元 `docs/adr/0029-v1.3-cognition-learning.md`
 
@@ -7717,7 +7910,7 @@ learn/inspect共通で同時受付1件。追加要求はTemporaryUnavailable。S
 
 ---
 
-<a id="section-56"></a>
+<a id="section-57"></a>
 
 収録元 `docs/adr/0030-customer-docs-as-primary.md`
 
@@ -7755,7 +7948,7 @@ Node・pnpm・Chromium・日本語フォント・PDF検査ライブラリは文�
 
 ---
 
-<a id="section-57"></a>
+<a id="section-58"></a>
 
 収録元 `docs/adr/0031-v1.4-text-web-and-correction.md`
 
@@ -7825,7 +8018,191 @@ Adapterの共有補助は新規Adapter内部に閉じ、Coreや別Subsystemのpr
 
 ---
 
-<a id="section-58"></a>
+<a id="section-59"></a>
+
+収録元 `docs/adr/0032-v1.5-agency-decisions.md`
+
+## ADR 0032 v1.5 Agencyの根拠付き活動決定
+
+### 状態・根拠
+
+2026年11月24日、R37のv1.10までの実装・検証継続に基づく実装判断。ユーザーによる個別API・数値の承認ではない。親#15・マイルストーンv1.5.0の子#132（設計）、#133（判断モデル）、#134（保存）、#135（接続・統合）、#136（回帰・配布・主要Docs）をコード変更前に登録する。ADR 0004/0008のNymph/Core境界を維持し、Agencyの未決の初期方式を具体化する。v1.6の適用循環、v1.7以降の人格・睡眠は別途具体化する。
+
+### 背景
+
+CoreとTaskManagerは活動の価値を判断しない。単に呼出元が選んだ活動を中継するだけでは、Project Visionの「自分の状態や目的に応じた選択」を検証できない。一方、一般的な意味理解・目的の自律生成・人格形成を初期の決定器が達成したとも扱わない。初期機構は、小さな活動カタログと目標、内部状態の観測値から、追跡可能な規則で選択・再検討する。
+
+### 決定
+
+#### 1. 配置と契約
+
+同梱`nymph_toolkit.subsystems.agency:factory`、追加の`ntk.agency.decisions/1`（全ASYNC `decide(request)` / `get(decision_id)`）。公開Core/Contractsだけを使用し、Core 15名・Contractsトップレベル98名は変更しない。設定は絶対ファイル`path`、選択済み`memory_module_id`・`cognition_module_id`、活動`catalog`。1つのDBを1実体が所有する。最大フレーム65536 bytes以上、同時受付1件。通常の容量不足は即時応答しヘルス申請しない。
+
+#### 2. 入力と判断資料
+
+入力はJSONオブジェクトで`decision_id`、UTCへ正規化できる明示offset付き`now`、`state`、`goals`、`available`、`current`を必須とする。不明フィールドは拒否し、最初のawait前に深いコピー・検証を行う。
+
+- `state`: `sleep_pressure`・`cognitive_load`・`social_need`を0〜1000の整数で指定する。人工的な内部状態の観測で、人間の生理量や感情の証明ではない。v1.5でCoreが生成したりAgencyが自動時間経過させたりはしない。
+- `goals`: 最大8件、`goal_id`・`record_id`・`token`・`importance`（0〜1000）・`target_documents`（1〜256）。IDは重複不可。目標は入力された方向性であり、活動の最終選択はAgencyが行う。語は最大UTF-8 64 bytes、空白/NULなし。各目標のMemory原本をgetし、tokenが空白を除いた本文に含まれること、出典区分を検証する。
+- Cognition inspectを同じtoken・Memoryのsource_kindで取得する。学習例数documentsを不足度の観測とし、理解の確率や事実の真偽とは扱わない。Memory fingerprint、区分、語、documentsを根拠に残す。夢などの区分を混ぜて事実認定しない。取得は逐次のスナップショットで、複数Subsystemの同時点トランザクションではない。
+- `available`: 今回利用可能として観測されたカタログIDのリスト。カタログにないID・重複は拒否する。Coreの許可・容量予約の代用ではない。
+- `current`: null、または以前の保存済み`decision_id`、Coreから観測した`state`、`revision`、`planned_end_notified`、`supports_pause`。以前の決定のplanから現在の活動を参照する。過去の決定照会だけで活動を復元しない。
+
+カタログは1〜16件。各要素は`template_id`・`motive`（rest/explore/achieve/social）・`content`・`executor_module_id`・`executor_id`・`parameters`・`min_seconds`・`max_seconds`・`delay_seconds`。期間は整数1〜86400秒、min<=max、遅延0〜86400秒。パラメータはJSONオブジェクトで正規化4096 bytes以下、contentはUTF-8 512 bytes以下、IDはtrim済みUTF-8 128 bytes以下。入力全体は正規化16384 bytes以下。具体値は初期の再現・通信上限のための判断であり、将来の無制限能力を意味しない。
+
+#### 3. 決定規則 utility-v1
+
+目標ごとの不足度を`max(0, target_documents - documents) * 1000 // target_documents`とする。
+
+| 動機 | 0〜1000の得点 |
+|---|---|
+| rest | max(sleep_pressure, cognitive_load) |
+| explore | importance * 不足度 // 1000 |
+| achieve | importance * (1000 - 不足度) // 1000 |
+| social | social_need |
+
+explore/achieveは目標ごとに候補を作る。利用可能で得点が正の候補から最高点を選ぶ。同点は現在のtemplate/goalを優先し、残りはtemplate_id・goal_idの辞書順とする。入力量や列挙順による偶然の選択を避ける。候補と得点を結果へ保持する。最大128候補を理由付きで追跡できる。
+
+期間は`min_seconds + (max_seconds-min_seconds)*score//1000`、優先度はscore、遅延は`delay_seconds*(1000-score)//1000`秒。遅延0は即時の`start_at=null`、それ以外はnow+遅延をUTCで指定する。planはActivityRequest相当のJSON（requester_id/activity_id/content/start_at/duration_us/parameters/priority）と実行先を含む。パラメータは`configured`と`goal`を分け、目標・根拠・tokenを実行側へ渡す。新規activity_idはdecision_idのSHA-256から生成し、同じ活動への変更では既存IDを保つ。これはCoreへの登録成功を表さない。
+
+#### 4. 再検討と変更案
+
+決定結果には`directive`、現在活動への`target`（keyとexpected_revision）、選択案`plan`を含む。1決定で1つの操作を表す。複数操作の同時適用を仮定しない。
+
+- 現在活動なし・終端状態: 候補があればstart、なければidle。
+- starting/pausing/resume_pending/finishing: wait。未完了の状態遷移へ重ねて指示しない。
+- 候補なし: 現在活動へfinish。
+- 同じtemplate/goal: pendingは開始時刻・期間・優先度を比較しchange/continue、runningは開始時刻を維持して期間・優先度を比較しchange/continue、pausedはresume。
+- 同じ活動で予定時間到達の通知を観測し、引き続き選択した場合: 前の合計期間へ新たに選んだ期間を加えるchange案とする。nowだけでCoreの到達通知を捏造しない。v1.6では同じ予定版に対する延長の重複を防ぐ適用記録を扱う。
+- 別の候補: runningかつsupports_pauseならpause、それ以外の未終端はfinish。停止・中断が確認されるまで新しい活動を開始しない。中断後の別活動開始/復帰の管理はv1.6で具体化する。
+
+Coreは適用可能性・版競合を判断し、価値・優先度生成は行わない。v1.5は決定・保存・照会まで、登録・change/pause/resume/finish適用と状態取得はv1.6の範囲である。
+
+#### 5. 保存と再要求
+
+専用SQLite、application_idと形式1。設定カタログ/提供先/自身のIDをDBメタデータに保存し、不一致で起動拒否する（空にして上書きしない）。決定ID、正規化入力、根拠、結果を同じトランザクションで保存し、commit後にreceiptを返す。最大4096決定を保持し、上限ではagency.history_full、古い決定の照会・同入力再要求は維持する。同じID/入力は外部照会より先に元の結果を返し、異なる入力はagency.decision_conflict。新しい観測での再判断には新しいIDを使う。
+
+起動時に形式・schema・quick_check・全保存レコードの型/ID/順序/根拠/規則結果を確認する。破損・未知形式を修復・削除しない。保存エラーはagency.storage、入力はagency.invalid、不正提供結果はagency.evidence、参照なしはagency.not_found。Memory/Cognitionの業務失敗・容量不足は保持する。決定履歴はCore運用履歴・Memory原本と別で、再起動で活動を再登録しない。
+
+#### 6. 接続・所有権
+
+Agencyがconfigured提供先を候補/契約/稼働情報から確認し、Coreへbindして固定する。利用ごとの再選定・自動切替・再送は行わない。LinkFailureは該当窓口のclose、中断完了報告、該当先のヘルス申請。結果不明は回復/通知の二重障害で隠さない。決定取得後に保存済みか不明ならget(decision_id)で確認する。
+
+所有する単一workerでSQLiteを処理する。受付済み操作は待機取消でも完了と保存/後処理を待つ。stopは受付を止め、受付済み操作・窓口・workerを回収する。正常停止時の資源回収、起動途中失敗、二重停止を検証する。
+
+### 受入 B05
+
+| ID | 必須の証拠 |
+|---|---|
+| B05-01 | 正確な契約・設定・入力、無効値/上限/不変スナップショット、公開API基準維持 |
+| B05-02 | 手計算の得点/時刻/期間/優先度、未知→学習済み・内部状態変化・競合・同点・利用不能での選択と理由 |
+| B05-03 | 全状態の変更/中断/再開/終了/待機案、予定到達後のAgency判断、Coreで価値判断しない境界 |
+| B05-04 | 決定ID再要求/競合/再起動/設定違い/上限/破損/未知形式/途中失敗の原子性 |
+| B05-05 | 実Memory/Cognitionを含む4配置・両経路・再起動、原本を変えず学習で選択が変わる実行例 |
+| B05-06 | 容量・LinkFailure・結果不明と二重障害、取消/停止/起動失敗/資源回収 |
+| B05-07 | 全回帰・通常配布/13例・8環境CI、主要Docs/PDF全ページ/HTML/引継ぎ同期 |
+
+#### 実装時の具体化
+
+実行パラメータのgoalはgoal_id/record_id/tokenを保持し、評価用のimportance/target_documentsと分ける。同じtemplate/goal IDでも、根拠/語などの実行パラメータが変わる場合は別活動として中断/終了を判断する。ActivityChangeで変更できない内容を暗黙に書き換えない。pausedからのresume案は元のplanを保持し、期間/優先度変更は再開観測後の新たな判断へ分ける。currentの参照先は実際に登録/変更適用したplanの決定IDを利用側が渡す。未適用の選択案を現在の実行状態と扱わない。カタログ全体は正規化65536 bytes、決定結果（sequenceを除く）は49152 bytes以下とし、超過は保存前に拒否する。各フィールド上限を満たしても合計上限は別に検証する。
+
+### 影響・残事項
+
+継続判断に備え、同じ活動のpendingで期間・優先度が変わらない場合は、以前の開始時刻を維持する。再観測時のnowへ同じ相対遅延を加え直し、開始が永久に延期されることを防ぐ。得点/期間が変わった場合の予定再計算とは分け、手計算した20秒後の予定を10秒後に再観測する回帰試験で確認する。
+
+これは説明可能な初期の規則ベース意思決定で、一般的な推論・目的自律生成・人格や情動の完成ではない。活動の実際の実行結果を使う継続判断はv1.6、人格に基づく重みはv1.8、睡眠の内部処理はv1.9〜1.10で設計する。基点PR #131は未マージで、後続は積み重ねPRとして検証する。公開を実装受入と混同しない。
+
+---
+
+<a id="section-60"></a>
+
+収録元 `docs/adr/0033-input-candidate-contract.md`
+
+## ADR 0033 入力候補の共通契約と前処理アダプタ
+
+### 状態
+
+提案（2026年11月24日）。適用バージョン、公開契約名、実装範囲は要決定。
+
+### 背景
+
+Webと文書は取得元ごとに本文と出典を組み立て、対話の観測は要求側から記録を受け取る。これらの経路で、既定値の補完やAI APIによる変換を共通の形式で検証し、採用できるようにする。入力経路と記録区分は独立させる。たとえば、発言があった事実は対話の観測、その発言が伝える外部の出来事は伝聞として扱える。ADR 0027（`docs/adr/0027-v1.1-memory.md`） · ADR 0028（`docs/adr/0028-v1.2-document-adapter.md`） · ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）
+
+### 決定案
+
+#### 取得から保存まで
+
+入力元アダプタが取得済み本文と出典を組み立て、要求側が選んだ前処理アダプタの `prepare(request)` に渡す。前処理の返却を共通検証し、要求側が採用した候補を既存の `records/1` に明示的に保存する。学習は保存IDを使う別操作とする。Coreは接続と実行を管理し、候補の採否と次の操作はNymphまたは明示的に操作する要求側が決める。
+
+#### 必須項目と結果
+
+| 項目 | 契約 |
+|---|---|
+| `record_id` | 要求側が指定する保存用ID。前処理で固定する |
+| `input.input_type` | `web` / `document` / `conversation` |
+| `input.content` | 取得・抽出済みの非空本文 |
+| `input.source` | 入力元が確定した出典参照。取得元と根拠を追える非空文字列 |
+| `input.acquisition` | 取得処理の識別子と版。対話本文の受け渡しにも付与する |
+| `fields` | 明示指定の `kind`、`source_kind`、`occurred_at` を持つオブジェクト。指定がなければ空 |
+
+すべての結果に前処理の方式IDと設定版を含める。AI API方式では選択したモデルIDも含める。項目の由来は `explicit`（要求側指定）、`input`（取得済み入力）、`default`（設定）、`ai`（AI出力）で表す。
+
+| 状態 | 結果 |
+|---|---|
+| `ready` | `record_id`、`kind`、`content`、`source_kind`、`source`、`occurred_at` と各項目の由来。要求側が保存に渡せる候補 |
+| `needs_input` | 確定に必要な項目と理由。AIが未指定の区分を推定した場合は確認用の提案値を添える |
+| `failed` | 失敗した段階とコード。例は `invalid_input`、`external_processing_failed`、`too_large` |
+
+取り直せる必須値の欠落は要求を組み立てる側で `needs_input` とする。取得・解析の失敗や与えられた値の形式違反は `failed` とする。共通検証は明示値と出典の保持、Memoryの列挙値、RFC 3339時刻、正規化した6項目のJSONの上限（4096 bytes）を確認する。超過は拒否し、切り捨てや自動分割を行わない。候補の付帯情報は6項目の外側で返す。ADR 0027（`docs/adr/0027-v1.1-memory.md`）
+
+#### 差し替え条件
+
+1. 両方式は同じ要求・結果形式、明示値の優先順位、共通検証に従う。入力元の取得方法や出典形式に依存してアダプタを選び直す必要はない。方式の選択と設定版は処理開始時に確定する。Coreの管理接続に載せる場合は、提供先の選択と稼働中の固定に既存の接続契約を適用する。ADR 0019（`docs/adr/0019-v0.4-connections.md`）
+2. 既定値補完型は明示された設定で、省略された区分のみ補う。本文を保持する。出来事時刻の欠落は要求側に確認し、取得時刻やファイル更新時刻を代用しない。
+3. AI API連動型は要求側が送信先と送信範囲を明示的に許可した場合に呼び出す。要約・抽出を選んだ場合は変換結果を候補本文に入れる。未指定の区分は提案として返し、要求側が明示指定するまで `needs_input` とする。両方式ともID・出典・明示値を保持する。
+4. AI APIの拒否、期限超過、不正応答または送信許可の欠落は `failed` を返す。方式の再選択は要求側が新たな準備要求で行う。各方式は準備中に保存や学習を行わない。同じ保存IDで内容の異なる候補を保存した場合は既存の `memory.conflict` に従う。
+
+#### 入出力例
+
+例中の `H_web` と `H_doc` は、それぞれ取得・読込した元バイト列の64桁のSHA-256に置き換える。時刻は要求側が指定した架空の値。出力の6項目は表記順に `record_id`、`kind`、`content`、`source_kind`、`source`、`occurred_at` を示す。
+
+##### Web
+
+- 取得入力は `https://example.org/info`。抽出本文は「図書室は月曜休館です。火曜は10時に開館します。」。取得処理は `web.text/1`。出典 `S_web` は文字列 `{"url":"https://example.org/info","final_url":"https://example.org/library","sha256":"H_web"}`。
+- 準備入力はID `web-1`、取得済み入力（`web`、抽出本文、`S_web`、`web.text/1`）、明示値 `knowledge` / `reported` / `2026-11-24T00:00:00Z`。
+- 既定値補完型（設定版1）は `ready` を返す。出力は `web-1`、`knowledge`、抽出本文、`reported`、`S_web`、`2026-11-24T00:00:00Z`。本文・出典の由来は `input`、他は `explicit`。
+- 同じ入力を、本文送信を許可したAI API連動型（設定版1、モデルIDは設定値）に渡す例では、本文が「月曜休館、火曜10時開館。」の候補を `ready` で返す。本文の由来は `ai`、ほかの5項目と由来は上記と同じ。
+
+##### 文書
+
+- 取得入力は設定ルート内の `hours.md`。本文は「受付は17時まで。」。取得処理は `document.utf8/1`。出典 `S_doc` は `file:///D:/ntk-input/hours.md#sha256=H_doc`。
+- 準備入力はID `doc-1`、取得済み入力（`document`、本文、`S_doc`、`document.utf8/1`）、明示値 `occurred_at=2026-11-24T00:30:00Z`。
+- 文書を知識・伝聞として取り込む既定値補完型（設定版1）は `ready` を返す。出力は `doc-1`、`knowledge`、「受付は17時まで。」、`reported`、`S_doc`、`2026-11-24T00:30:00Z`。区分は `default`、本文・出典は `input`、ID・時刻は `explicit`。
+
+##### 対話
+
+- 取得入力は発言「窓口で申請しました。」と、要求側が渡した出典 `conversation:session-7/turn-12`。取得処理は `conversation.text/1`。
+- 準備入力はID `talk-1`、取得済み入力（`conversation`、発言本文、出典、`conversation.text/1`）、明示値 `occurred_at=2026-11-24T01:00:00Z`。時刻は発言があった時刻。
+- 発言自体を記録する対話用の既定値補完型（設定版1）は `ready` を返す。出力は `talk-1`、`experience`、「窓口で申請しました。」、`observed`、`conversation:session-7/turn-12`、`2026-11-24T01:00:00Z`。区分は `default`、本文・出典は `input`、ID・時刻は `explicit`。
+- 申請という外部の出来事を記録する場合は、要求側が `reported` と対象に対応する時刻を指定する。その時刻が不明なら `needs_input` とする。
+
+### 影響と検証
+
+現行Web・文書の取込と対話の `observe` は保存まで行う。採用時は取得と準備の入口を追加する方法を検討し、既存入口の結果と失敗の意味を維持する。共通検証では、同じWeb入力の方式差し替え、文書と対話の設定補完、明示値の優先、AI区分提案の確認待ち、外部送信の未許可、API障害、時刻不足、サイズ超過、保存IDの競合を確かめる。
+
+### 未決事項
+
+- 一時的な候補の寿命と、採用後に項目の由来・設定版・モデルIDを追跡する保存先
+- 変換前の本文を永続保存する場合の記録IDと派生候補との関連付け。出典のハッシュは取得元を識別し、要約の正しさの保証には使えない
+- AI APIの提供先・送信設定・期限と、公開契約の登録方法
+
+### 根拠
+
+2026年11月24日のユーザー提案と、Web・文書・対話での共通化および既定値補完型・AI API連動型の差し替えを具体化する依頼に基づく。外部モデルの導入は現行v1.4の採用範囲より後の判断とする。ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）
+
+---
+
+<a id="section-61"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -7835,7 +8212,7 @@ R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、顧�
 
 最終目標は、経験を通じて知識・言語・行動能力・人格を発達させ、自ら考え、学び、活動できる人工人格Nymphである。R7のProject Vision（`docs/vision.md`）を到達像とし、完成を特定のバージョンへ固定しない。以下の各段階は、その基盤と能力を検証する開発計画である。
 
-**GitHub公開＝V0.1、Core機能完成＝V0.9は確定目標。R19・ADR 0022でv0.9までの64項目とv0.7〜v0.9の配分・受入条件を設計採用した。** v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で採用範囲を具体化した。予定日や所要期間は設定せず、完了条件と判断記録に基づいて進める。根拠はR3・R19。v0.1〜v0.9のCore検証では本番Subsystem・Adapterの代わりにダミーを使う。R20でv0.7を実装し検証記録を追加した。v0.8はR22・R23で統合・障害・負荷・配布検証と公開を行い、証拠は検証記録（`docs/validation/v0.8.md`）へ集約する。v0.9はR24で完成確認を行い、配布前・公開後の判定を検証記録（`docs/validation/v0.9.md`）へ分ける。v1.xは各段階で具体化し、v1.0はADR 0026、v1.1はADR 0027、v1.2はADR 0028、v1.3はADR 0029、v1.4はR37・ADR 0031の採用範囲に従う。その他の配分案は引き続き提案である。
+**GitHub公開＝V0.1、Core機能完成＝V0.9は確定目標。R19・ADR 0022でv0.9までの64項目とv0.7〜v0.9の配分・受入条件を設計採用した。** v0.2はR11・ADR 0014、v0.3はR13・ADR 0016で採用範囲を具体化した。予定日や所要期間は設定せず、完了条件と判断記録に基づいて進める。根拠はR3・R19。v0.1〜v0.9のCore検証では本番Subsystem・Adapterの代わりにダミーを使う。R20でv0.7を実装し検証記録を追加した。v0.8はR22・R23で統合・障害・負荷・配布検証と公開を行い、証拠は検証記録（`docs/validation/v0.8.md`）へ集約する。v0.9はR24で完成確認を行い、配布前・公開後の判定を検証記録（`docs/validation/v0.9.md`）へ分ける。v1.xは各段階で具体化し、v1.0はADR 0026、v1.1はADR 0027、v1.2はADR 0028、v1.3はADR 0029、v1.4はR37・ADR 0031、v1.5はADR 0032の採用範囲に従う。その他の配分案は引き続き提案である。
 
 既存のV0.1・V0.9はv0.1.0・v0.9.0の節目を表す。R5で示されたv1.0.0の接続契約整備という目標と、v1.1.0〜v1.10.0の当初の開発計画案を後半に収録する。v1.1はR31・ADR 0027、v1.2はR33・ADR 0028で初期範囲を具体化した。後続のSubsystem名・Adapter名は暫定名称であり、名称・順序・機能配分は今後変更される可能性がある。
 
@@ -7981,7 +8358,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 
 ### v1.0.0以降のロードマップ案
 
-**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1 Memoryの最小範囲・業務契約・B01はR31・ADR 0027で具体化した。v1.2はADR 0028、v1.3はADR 0029、v1.4はADR 0031で具体化した。v1.5以降の名称、順序、配分、業務契約と受入は段階ごとの判断対象である。日付・開発期間・工数の見積もりは設定しない。
+**以下の後続配分・名称はR5に基づく設計提案である。** v1.0.0の接続契約目標は確定し、その詳細とB00受入はR29・ADR 0026で具体化した。v1.1 Memoryの最小範囲・業務契約・B01はR31・ADR 0027で具体化した。v1.2はADR 0028、v1.3はADR 0029、v1.4はADR 0031、v1.5はADR 0032で具体化した。v1.6以降の名称、順序、配分、業務契約と受入は段階ごとの判断対象である。日付・開発期間・工数の見積もりは設定しない。
 
 #### リリース運用案
 
@@ -8003,7 +8380,7 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 | v1.2.0 | Document Adapter（R33で具体化） | 小さなUTF-8文書取込とMemory連携、ADR 0028 | B02-01〜06 |
 | v1.3.0 | Cognition Subsystem（R35で具体化） | 明示区切り/ラベルからの語彙・隣接語順・関連学習、ADR 0029 | B03-01〜06 |
 | v1.4.0 | Text Interaction / Web Adapter（R37で具体化） | 明示観測/学習/注釈訂正・HTTP文章取得、ADR 0031 | B04-01〜07 |
-| v1.5.0 | Agency Subsystem | 自律的な活動計画・意思決定 | B05 |
+| v1.5.0 | Agency Subsystem（R37で具体化） | 内部状態/目標/学習根拠から活動・変更案を決定、保存/照会 | B05-01〜07 |
 | v1.6.0 | TaskManager連携強化 | 自律活動の実行・変更・状態把握 | B06 |
 | v1.7.0 | Persona Subsystem | 人格特性の保持・参照・修正 | B07 |
 | v1.8.0 | Persona連携強化 | Agencyとの統合・人格特性の反映 | B08 |
@@ -8052,7 +8429,11 @@ V0.9の完成対象は合意したCore機能である。将来のPC状況取得A
 - **検討・成果物の案** — v1.3.0でCognitionの初期学習機構を検討する。v1.4.0でText InteractionおよびWeb Adapterを通じ、文章観測、学習、出力、ユーザーからの訂正を検証できる構成を目指す。既存LLMを言語理解・文章生成の中核に利用することは現在のNTKの研究方針に含めない。
 - **判断と検証** — 学習方式、評価に用いる入力と観測結果、訂正の反映方法、Webの取得範囲を決める。能力が未完成の場合は対応する範囲を明示して試す。ADR 0008・B03・B04を基に記録する。
 
-#### v1.5.0〜v1.6.0 — Agencyと活動管理
+#### v1.5.0 — Agency（R37で実施）
+
+親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）でutility-v1、decisions/1、根拠/専用保存・再要求・B05を具体化した。成果物は同梱Agency、利用ガイド（`docs/agency.md`）、13番目の例、4配置/両経路・障害・取消/停止と検証記録（`docs/validation/v1.5.md`）。全回帰/配布/8環境CI・主要Docs同期を完了条件とする。活動の自動登録・実行状態との循環はv1.6で接続する。決定の保存を実行成功と扱わない。
+
+#### v1.5.0〜v1.6.0 — 当初のAgencyと活動管理の案
 
 - **着手時に確認すること** — 活動決定に利用できる情報と、Task Contract・TaskManagerの採用機能を確認する。
 - **検討・成果物の案** — v1.5.0でAgencyが活動内容、開始時刻、期間、優先度、変更を決める機構を検討する。v1.6.0でCore TaskManagerとの連携を強化し、登録・実行・状態追跡・変更要求の適用を検証する。
@@ -8095,13 +8476,13 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 
 ---
 
-<a id="section-59"></a>
+<a id="section-62"></a>
 
 収録元 `docs/acceptance.md`
 
 ## 受入基準・検討案と検証記録
 
-以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。B00はR29・ADR 0026で具体化し、B01はR31・ADR 0027で具体化し、B02はR33・ADR 0028で具体化し、B03はR35・ADR 0029で具体化し、B04はR37・ADR 0031で具体化し、B05〜B10は引き続き検討案とする。設計採用・文書検査・製品の受入合格を区別する。
+以下は各段階の**採用した受入基準、検討案と検証結果**である。A02はADR 0014、A03はADR 0016、A04はADR 0018・0019、A05・A06はADR 0020・0021で具体化した。R19・ADR 0022でA07〜A09も設計として採用したが、R20・ADR 0023でv0.7を実装した。A07の結果は検証記録（`docs/validation/v0.7.md`）に記載し、A08はR22・ADR 0024（`docs/adr/0024-v0.8-integration-validation.md`）で実施し、証拠と制約をv0.8検証記録（`docs/validation/v0.8.md`）へ残す。A09は後続R24・ADR 0025で実施し、現在の判定は検証記録（`docs/validation/v0.9.md`）へ分離する。B00はR29・ADR 0026で具体化し、B01はR31・ADR 0027で具体化し、B02はR33・ADR 0028で具体化し、B03はR35・ADR 0029で具体化し、B04はR37・ADR 0031で具体化し、B05はR37・ADR 0032で具体化し、B06〜B10は引き続き検討案とする。設計採用・文書検査・製品の受入合格を区別する。
 
 ### バージョン別シナリオ
 
@@ -8317,7 +8698,7 @@ ADR 0026（`docs/adr/0026-v1.0-core-connection-contracts.md`）の設計判断�
 | B02 v1.2.0（R33で下記に具体化） | Document入力とMemory連携 | 対応する文書を取得・取り込みし、保存・取得結果までを追う。未対応形式と取得失敗の扱いは採用契約に沿って確認する |
 | B03 v1.3.0（R35で下記に具体化） | Cognitionの初期学習 | 語彙・構文・概念の検証用入力を用い、採用した学習方式の変化を観察する。既存LLMを言語理解・文章生成の中核としない研究方針との整合を確認する |
 | B04 v1.4.0 | Text Interaction / Web連携 | 対応する文章の観測・学習・出力とユーザー訂正を試し、訂正の反映を採用した方法で観察する。対応能力の範囲を記録する |
-| B05 v1.5.0 | Agencyの活動決定 | 活動内容、開始時刻、期間、優先度、変更の決定元をAgencyの入力・出力から追跡する。意思決定方式と評価条件は後続ADRで決める |
+| B05 v1.5.0 | Agencyの活動決定 | ADR 0032のB05-01〜07で根拠付き判断・予定/変更案・決定保存/照会・配置/障害・配布と主要Docsを検証 |
 | B06 v1.6.0 | AgencyとTaskManager | 決定された活動の登録・実行・状態追跡・変更要求の適用と失敗通知を照合する。Coreが指定値と採用規則に従い、活動の価値判断を代行しないことを確認する |
 | B07 v1.7.0 | Personaの保持・参照・外部更新 | 人格特性の参照値と外部からの修正値の適用結果を確認する。自発的に人格修正処理を開始しない責務境界を確認する |
 | B08 v1.8.0 | PersonaとAgency | 人格特性の参照・修正後にAgencyが採用した選択方式で特性を反映することを確認する。特定の行動結果は方式と評価条件の採用後に定める |
@@ -8418,9 +8799,25 @@ R37・ADR 0031（`docs/adr/0031-v1.4-text-web-and-correction.md`）で具体化�
 | B04-06 | 容量、取消/停止、LinkFailure/health、結果不明と重複障害、所有worker/窓口の解放。再送・自動切替なし |
 | B04-07 | 全回帰・12例・8環境CI＋Customer Docs・通常配布/同一sdist再構築・API基準・主要Docs/PDF全ページ/HTML/引継ぎ書 |
 
+### B05：v1.5 Agencyの採用受入
+
+ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）と検証記録（`docs/validation/v1.5.md`）に対応する。対象の子Issue・実装・結果が一致してから合格とする。
+
+| ID | 手順と期待結果 |
+|---|---|
+| B05-01 | 契約/設定/入力/上限/変更スナップショットを検証。未知フィールド・bool数値・不正時刻・重複を拒否し、Core安定APIを維持 |
+| B05-02 | 目標とMemory/Cognition根拠・内部状態を変え、手計算した候補得点/時刻/期間/優先度・同点/利用不可と選択を照合 |
+| B05-03 | 各活動状態で変更・中断・再開・終了・待機案を照合。到達後の延長判断はAgency、開始済みの時刻は維持 |
+| B05-04 | 同ID/入力再要求・異入力競合・4096件上限・再起動・破損/設定/形式拒否・書込途中障害のrollbackを確認 |
+| B05-05 | 実Memory/Cognitionと4配置/両経路・再起動。原本保持、学習と内部状態による選択変化を13番目の例でも再現 |
+| B05-06 | 容量即時応答、連携エラー後処理/個別ヘルス、二重障害の結果不明保持、取消/停止/起動失敗と資源回収 |
+| B05-07 | 全回帰・通常wheel/13例/sdist・8環境CI、API/64判断/Docsと顧客全形式・全ページ確認 |
+
+登録・変更の実際の適用と継続循環はB06で検証する。入力の内部状態を人間の感情、学習例数を意味理解の確率、決定の保存を活動実行の成功とは扱わない。
+
 ---
 
-<a id="section-60"></a>
+<a id="section-63"></a>
 
 収録元 `docs/validation/core-coverage.md`
 
@@ -8515,7 +8912,7 @@ v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播�
 
 ---
 
-<a id="section-61"></a>
+<a id="section-64"></a>
 
 収録元 `docs/validation/customer-guide.md`
 
@@ -8583,9 +8980,13 @@ Windows／Python 3.15の終了時通信切断・後処理未確認は[#94](https
 
 27ページ・16図にText/Web入力と注釈訂正/保存移行を追加した。原稿と全PDF/HTMLの同期検査・全ページ画像確認を行い、Cognitionの旧対象版表記を訂正した。Windows生成・同一コミットのclean再生成・CIの実施状況はB04記録（`docs/validation/v1.4.md`）へ集約する。公開v1.2、未マージv1.3、v1.4候補と将来の範囲を区別する。
 
+### R37：v1.5候補
+
+Agencyの初期判断・根拠・決定保存・実行との境界を18C節/図17へ追加し、対象v1.5開発候補と公開v1.2を維持した。本文・表・実行例はAgencyガイド（`docs/agency.md`）とADR 0032に対応する。全28ページ/17図の生成・表示/最終コミット・CI取得はB05記録（`docs/validation/v1.5.md`）と子#136で追跡する。
+
 ---
 
-<a id="section-62"></a>
+<a id="section-65"></a>
 
 収録元 `docs/validation/docs-current.md`
 
@@ -8642,7 +9043,7 @@ v1.3.0のレビュー・マージ・公開後確認は未完了。Cognitionの�
 
 ---
 
-<a id="section-63"></a>
+<a id="section-66"></a>
 
 収録元 `docs/validation/docs-onboarding.md`
 
@@ -8721,7 +9122,7 @@ git diff --check
 
 ---
 
-<a id="section-64"></a>
+<a id="section-67"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -8791,7 +9192,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-65"></a>
+<a id="section-68"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -8862,7 +9263,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-66"></a>
+<a id="section-69"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -8941,7 +9342,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-67"></a>
+<a id="section-70"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -8993,7 +9394,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-68"></a>
+<a id="section-71"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -9054,7 +9455,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-69"></a>
+<a id="section-72"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -9115,7 +9516,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-70"></a>
+<a id="section-73"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -9244,7 +9645,7 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-71"></a>
+<a id="section-74"></a>
 
 収録元 `docs/validation/v0.9.md`
 
@@ -9332,7 +9733,7 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 ---
 
-<a id="section-72"></a>
+<a id="section-75"></a>
 
 収録元 `docs/validation/v1.0.md`
 
@@ -9403,7 +9804,7 @@ PR #103のhead cc445daをレビューし、契約型と実体、検証の副作�
 
 ---
 
-<a id="section-73"></a>
+<a id="section-76"></a>
 
 収録元 `docs/validation/v1.1.md`
 
@@ -9475,7 +9876,7 @@ R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/i
 
 ---
 
-<a id="section-74"></a>
+<a id="section-77"></a>
 
 収録元 `docs/validation/v1.2.md`
 
@@ -9548,7 +9949,7 @@ B02-01〜06の初期実装受入は合格。今回の実装判断、公開Core/M
 
 ---
 
-<a id="section-75"></a>
+<a id="section-78"></a>
 
 収録元 `docs/validation/v1.3.md`
 
@@ -9613,7 +10014,7 @@ B03-01〜06の初期実装受入は合格。今回の実装判断と未採用範
 
 ---
 
-<a id="section-76"></a>
+<a id="section-79"></a>
 
 収録元 `docs/validation/v1.4.md`
 
@@ -9660,9 +10061,64 @@ HTTP試験は所有するローカルサーバーで再現し、特定の公開W
 
 顧客MarkdownにText/Web・訂正・形式移行の2章と図15/16を追加し、v1.4候補と公開v1.2を区別した。27ページ・16図、元Markdown/PDF/HTML・参照メタデータ・全ページ抽出・A4・はみ出し検査に合格。27ページを画像で確認し、欠落・重なりを認めなかった。最小余白15px（必要10px以上）。Cognitionの「v1.3のみ」という旧表記は表示確認時に訂正した。コミット確定後のclean再生成とCI側の確認は後続に記録する。
 
+### 最終候補のCI・顧客資料確認
+
+対象6ace316f63232ec8e4649ac238b5edfda56b60bf / [PR #131](https://github.com/Tao-pyth/nymph-toolkit/pull/131)。[PR CI 45383038900](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45383038900)は8環境とCustomer Docsの9ジョブ成功、push run 45382898102も成功。各製品ジョブでソース全試験・12例・短い負荷・契約/API/64判断/Docs・通常配布検証を通過した。
+
+artifact 14914438438を取得し、clean対象SHA・132入力・Markdown/PDF/HTML一致と27ページ/16図を検査。Linux生成PDF全ページとHTMLを表示確認し、Windows生成も確認済み。HTMLのscript/外部取得/描画エラーはいずれも0。親#14・子#126〜#130・PR #131に証拠を記録しレビュー待ちとした。未マージ/未公開の状態とv1.5以降の全体目標は維持する。
+
 ---
 
-<a id="section-77"></a>
+<a id="section-80"></a>
+
+収録元 `docs/validation/v1.5.md`
+
+## v1.5 Agencyの検証記録
+
+対象はR37・ADR 0032（`docs/adr/0032-v1.5-agency-decisions.md`）、親#15・子#132〜#136。基点はv1.4の6ace316・PR #131（9ジョブCI成功）。v1.5候補の実装受入と、マージ/公開後確認を分ける。
+
+### 受入と証拠
+
+| 項目 | 対応する試験・証拠 | 状態 |
+|---|---|---|
+| B05-01 | test_agencyの入力/上限/スナップショット、test_agency_serviceの契約・公開import、check_api/check_contracts | ローカル全回帰・API検査合格 |
+| B05-02 | 手計算の800点/252秒、600点/204秒/40秒遅延、未知→既知、疲労/交流、同点/利用不能 | 合格 |
+| B05-03 | pending/running/paused/中間/終端、予定到達後504秒への変更案、根拠変更の別活動扱い | 合格 |
+| B05-04 | 再要求/変更入力競合、4096件上限、再起動、設定/形式/破損拒否、UPDATE障害のrollback | ローカル全回帰合格 |
+| B05-05 | 実Memory/Cognition、4配置と両経路、原本保持、学習後の選択変化、再起動、13番目の例 | 4配置/例合格 |
+| B05-06 | 容量、連携エラー、二重障害時の結果不明、入力/SQLite保存中の取消・停止、起動失敗・回収 | ローカル全回帰合格 |
+| B05-07 | 全回帰・通常wheel/13例/sdist・8環境CI・主要Docsの同期/全ページ表示 | 未完了。実行結果を後述/子#136へ追記する |
+
+実施環境はWindows / CPython 3.15.2。局所検証で、実行例をtestsからimportしたときのfactoryモジュール名と、DB破損注入用の試験側接続のclose不足を修正した。製品の判断責務・Core契約は維持した。
+
+ソース全431テストは216.770秒で成功（警告をエラー扱い、skipなし）。後続のMemory kind検査とbool出典件数の拒否・前後空白許容は判断モデル7テストで再確認し、最終製品コードの全体検証は通常配布とCIで追跡する。Core 15名・Contracts 98名、安定契約基準、64判断の証拠検査は成功した。
+
+さらに継続判断のレビューで、同じ条件でpendingを再観測したとき相対開始時刻を延ばし続ける問題を修正した。10秒後の再観測でも元の20秒後開始を保持する回帰を追加し、判断モデル8テストが成功した。候補全体は432テストとなり、最終コミットのソース/通常配布/CI結果を#136へ記録する。修正前の431件の結果で最終候補全体を合格とはしない。
+
+顧客Markdown/PDF/HTMLは28ページ・17図。Windows生成物の同期/タイトル/余白/全ページ表示とAgency図を確認した。最終コミットのclean生成・Linux CI artifact照合は後続確認として残す。ADR 0033は別途追加された入力前処理の提案を保持したもので、v1.5の実装契約には採用していない。
+
+### 再現手順
+
+```console
+python -W error -m unittest discover -s tests -t . -v
+python -I -W error examples/agency_demo.py
+python tools/check_api.py
+python tools/check_contracts.py
+python tools/check_completion.py
+python -m build --outdir .git/v15-dist
+python tools/check_dist.py --dist-dir .git/v15-dist
+python tools/check_docs.py
+```
+
+主要Docsは生成・全ページ確認手順（`docs/customer-guide-authoring.md`）に従う。最終コミット、CI、取得した顧客artifactは子#136とPRへ記録する。v1.4のCI合格を本候補の合格の代用にしない。
+
+### 制約と後続
+
+規則ベースの初期意思決定で、目標・活動カタログ・内部状態の観測値は入力する。実行への適用/継続循環は親#16のv1.6で検証する。人格・Sleep・音声は後続段階。公開版v1.2.0と開発候補を区別し、v1.5までの局所合格をv1.10全体の完了と扱わない。
+
+---
+
+<a id="section-81"></a>
 
 収録元 `docs/validation/windows-shutdown.md`
 
@@ -9737,13 +10193,13 @@ PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル�
 
 ---
 
-<a id="section-78"></a>
+<a id="section-82"></a>
 
 収録元 `docs/development.md`
 
 ## 開発準備とGit運用
 
-本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は通常導入（`docs/getting-started.md`）と実行例ガイド（`docs/tutorials.md`）を先に読む。現在の開発候補はv1.4.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は通常導入（`docs/getting-started.md`）と実行例ガイド（`docs/tutorials.md`）を先に読む。現在の開発候補はv1.5.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
 
 ### 公開準備時の環境
 
@@ -9799,7 +10255,7 @@ v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyt
 .venv/Scripts/python.exe tools/check_dist.py --dist-dir .git/v09-dist
 ```
 
-check_apiは公開14＋92件の一覧と実装を照合する。API変更時は--writeで一覧を更新する。core-coverage.jsonは64項目の採用文・実在テストID・実装・資料の対応を保持し、check_completion.py --writeで表示表を再生成する。両検査は全動作試験の代わりにはならない。変更後はbuild_handoff.pyで単一引継ぎ書を同期する。
+check_apiは公開Core 15＋Contracts 98件の一覧と実装を照合する。API変更時は--writeで一覧を更新する。core-coverage.jsonは64項目の採用文・実在テストID・実装・資料の対応を保持し、check_completion.py --writeで表示表を再生成する。両検査は全動作試験の代わりにはならない。変更後はbuild_handoff.pyで単一引継ぎ書を同期する。
 
 配布検査は新規環境へ通常wheelを導入し、作業ツリーのsrcを含めず全試験・6実行例・API照合・4配置短負荷を実行して、sdist同一wheel再ビルドを確認する。--dist-dirは旧版のビルド成果物と混在させないための任意引数。CIは従来どおり空のdistを使う。A09の公開前の証拠と公開後結果の参照先は検証記録（`docs/validation/v0.9.md`）に記録する。
 
@@ -9938,9 +10394,13 @@ v1.3当時の通常配布検査は`python -m build --outdir .git/v13-dist`、`py
 
 `python -m pip install -e .`後にimportlib.metadataで1.4.0を確認する。入力・訂正ガイド（`docs/interaction.md`）の例2件を含む12例、全回帰、`python tools/check_api.py`・`check_contracts.py`・`check_completion.py`を確認する。通常配布は`python -m build --outdir .git/v14-dist`、`python tools/check_dist.py --dist-dir .git/v14-dist`。顧客主要Docsは本文/図を実装へ照合して証跡を更新し、PDF/HTML生成・全ページ表示確認を行う。その後引継ぎ書を再生成し`python tools/check_docs.py`を通す。正確な結果と未完了はB04（`docs/validation/v1.4.md`）へ記録する。
 
+### v1.5 Agency候補
+
+`python -m pip install -e .`で1.5.0を導入し、`python examples/agency_demo.py`と全回帰を実行する。Agencyガイド（`docs/agency.md`）は初期判断と限界を説明する。通常配布は`python -m build --outdir .git/v15-dist`、`python tools/check_dist.py --dist-dir .git/v15-dist`で全テスト/13例とsdistを確認。既存Core API/契約/64判断、主要Docsと引継ぎ同期も必須。結果はB05（`docs/validation/v1.5.md`）。
+
 ---
 
-<a id="section-79"></a>
+<a id="section-83"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -10246,9 +10706,13 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親#14・同じマイルストーンv1.4.0へ、設計#126・訂正#127・対話#128・Web#129・統合/配布/資料#130を実際のsub-issueとして先行登録した。詳細はADR 0031。以後の親#15〜#20も、各段階の未決事項を判断し子Issueを先行登録してから着手する。基点の未マージPR #123と後続候補を区別し、実装・検証・Docsが揃うまで完了扱いにしない。
 
+### R37：v1.5 Agency
+
+親#15・同じマイルストーン15の実sub-issueとして、設計#132、判断モデル/契約#133、決定保存#134、接続/統合/例#135、配布/CI/主要Docs/生成#136をコード変更前に登録した。ADR 0032を実装前に記録し、詳細も#132へ記載した。基点PR #131（6ace316）は未マージで、9ジョブCI成功と資料照合を確認済み。v1.5はB05で実装受入を判定し、公開段階とv1.6以降を別に追跡する。
+
 ---
 
-<a id="section-80"></a>
+<a id="section-84"></a>
 
 収録元 `docs/release.md`
 
@@ -10501,13 +10965,23 @@ R35は子#119〜#122の実装・B03・配布候補・PRまで。公開時はB03�
 
 基点は未マージのv1.3 PR #123で、v1.4候補を積み重ねて開発する。今回の目標はv1.10までの実装・検証の反復であり、新規タグ/Release・過去公開物の差替えを自動実施しない。親#14・子#126〜#130、ADR 0031・B04（`docs/validation/v1.4.md`）の受入結果、形式1→2移行と旧バイナリ非互換、12例・通常配布・CI・主要Docs一式をレビュー可能に整える。公開を行う時点で専用の公開課題と取得/通常導入の確認を行う。
 
+### R37：v1.5候補
+
+v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・ADR 0032/B05で実装・全回帰・通常配布・13例・8環境CI・主要Docs全形式を確認する。リリース前は最終コミットの全検証と顧客生成物一致を必要とし、v1.4の成功を代用しない。マージ/タグ/Releaseと公開後確認は別工程で、公開版v1.2.0を維持する。
+
 ---
 
-<a id="section-81"></a>
+<a id="section-85"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
+
+### 未リリース — v1.5.0開発候補
+
+- Agency decisions/1：目標・内部状態・Memory/Cognition根拠から活動と変更案を決定し、専用SQLiteで履歴/再要求照会を保持。
+- 4配置・両経路・再起動・保存障害・取消/停止、13番目の実行例、ADR 0032とB05、顧客主要Docsを追加。TaskManagerへの適用循環はv1.6。
+- 基点v1.4のPR #131とv1.3のPR #123は未マージ。公開版v1.2.0と区別する。
 
 ### 未リリース — v1.4.0候補
 
@@ -10688,7 +11162,7 @@ R35は子#119〜#122の実装・B03・配布候補・PRまで。公開時はB03�
 
 ---
 
-<a id="section-82"></a>
+<a id="section-86"></a>
 
 収録元 `LICENSE`
 

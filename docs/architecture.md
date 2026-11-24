@@ -204,6 +204,7 @@ nymph-toolkit/
 │  ├─ contracts-v1.json              # レビュー済み安定API基準
 │  ├─ cognition.md                   # v1.3初期学習とMemory根拠
 │  ├─ interaction.md                 # v1.4入力・訂正・CLI・DB移行
+│  ├─ agency.md                     # v1.5判断・根拠・決定保存/照会
 │  ├─ implementation-progress.md     # v1.10までの実施状況
 │  ├─ validation/v1.4.md             # B04検証と未完了の受入
 │  ├─ document.md                    # v1.2文書入力とMemory連携
@@ -271,7 +272,8 @@ nymph-toolkit/
 │     ├─ adapters/web/               # 許可originのHTTP文章取得
 │     ├─ adapters/_interaction.py    # 新規入力Adapterの所有・接続補助
 │     ├─ subsystems/memory/           # 同梱する最小Memory
-│     └─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
+│     ├─ subsystems/cognition/        # 明示区切り/ラベルの初期学習
+│     └─ subsystems/agency/           # 根拠付き活動決定と専用履歴
 └─ tests/                            # subsystems/にMemory/Cognition単体・統合試験
    ├─ core/
    ├─ adapters/                     # Document単体・4配置・障害試験
@@ -333,3 +335,9 @@ Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contract
 ## R37：対話・Web入力と訂正
 
 [ADR 0031](adr/0031-v1.4-text-web-and-correction.md)に従い、Core既存APIを維持して業務契約3件を追加。TextはMemoryの原記録とCognitionの明示教師入力をつなぎ、WebはHTTP取得・本文抽出・出典保存を担う。Cognitionは専用DBの注釈と集計を訂正し、Memory原本を変更しない。入力の保存だけで学習や活動決定を始めない。構成・呼出図・配置・保存形式移行・取消/障害は[interaction](interaction.md)、全体の残作業は[進捗](implementation-progress.md)。docs/interaction.mdとvalidation/v1.4.md、examples/interaction_setup.py・text_interaction_demo.py・web_demo.py、tests/adapters/の単体・結合・CLI検証を追加した。
+
+## R37：Agencyの意思決定と実行の境界
+
+`src/nymph_toolkit/subsystems/agency/`（factory・判断モデル・専用保存）、`contracts/agency.py`（decisions/1）、`docs/agency.md`、ADR 0032、`validation/v1.5.md`、`examples/agency_demo.py`、`tests/subsystems/test_agency*.py`を追加した。単一配布に同梱する。Memory/Cognitionの公開契約で根拠を取得し、活動選択・時刻/期間/優先度/変更案をAgencyが決める。Coreの既存契約は維持する。
+
+決定履歴と活動の実行履歴は別。決定の保存・照会は実行開始や変更適用の証拠にならない。v1.6で実行側の状態/版と結び、v1.5では4配置・両経路で判断と根拠・再起動照会を検証する。人格/Sleepは後続。
