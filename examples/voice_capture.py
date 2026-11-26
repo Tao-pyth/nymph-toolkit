@@ -5,7 +5,9 @@ import argparse
 import asyncio
 from datetime import timedelta
 import json
+import os
 from pathlib import Path
+import re
 import tempfile
 from uuid import uuid4
 
@@ -24,7 +26,19 @@ class Requester:
 def requester(context, config): return Requester(context)
 
 
+def check_credential(config):
+    """Check local input without connecting or including a secret in errors."""
+    name = config.get("token_env") if isinstance(config, dict) else None
+    if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", name):
+        raise ValueError("token_env must be an environment-variable name, never a token")
+    token = os.environ.get(name)
+    if not token or len(token) > 4096:
+        raise ValueError("Set the Bot token in the configured token_env variable in this shell before running; "
+                         "the value must be nonempty and at most 4096 characters. Never share the token.")
+
+
 async def capture(config, consent, *, seconds, placement, via_core, show_text):
+    check_credential(config)
     with tempfile.TemporaryDirectory(prefix="ntk-voice-session-") as directory:
         root = Path(directory).resolve()
         group = HybridGroup(HybridSettings(60, 30, 60, 65536, 32, 4),
@@ -86,6 +100,10 @@ def main():
     args = parser.parse_args()
     if not 1 <= args.seconds <= 600: parser.error("--seconds must be 1..600")
     config, consent = (json.loads(path.read_text(encoding="utf-8")) for path in (args.config, args.consent))
+    try:
+        check_credential(config)
+    except ValueError as error:
+        parser.error(str(error))
     asyncio.run(capture(config, consent, seconds=args.seconds, placement=Placement(args.placement), via_core=args.via_core, show_text=args.show_text))
 
 

@@ -724,7 +724,7 @@ v1.5は親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.
 
 ## NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.10.0（開発候補） / 公開版 v1.2.0 / 2026-11-25**
+**Nymph Toolkit / 対象 v1.10.0（開発候補） / 公開版 v1.2.0 / 2026-11-27**
 
 ### この資料で分かること
 
@@ -1561,6 +1561,8 @@ flowchart LR
 図23：音声知覚を補助技術で行い、Cognitionの意味理解とは分けます。
 
 音声用の追加依存・日本語モデルを明示導入します。Coreの必須依存は増えません。Runtime起動だけでは接続せず、Bot tokenはローカル環境変数から渡します。モデルの内容は起動時に照合します。
+
+実行例は接続前にtokenの設定を検査します。起動失敗は資格情報不足・helper作成・開始情報送信・応答待ち超過を固定コードで区別し、秘密の値や例外本文を表示しません。実行・診断手順（`docs/voice.md#voice-startup-diagnostics`）
 
 接続時にBot以外の全参加者の同意を確認します。参加・離脱・Botの移動・撤回・接続エラーで止まり、自動再接続しません。開始途中の停止でも、その後の接続・受信を開始しません。取得・ASRへの同意は、学習や永続保存への同意を兼ねません。Memory/Cognitionへの自動投入も行いません。
 
@@ -3754,6 +3756,40 @@ python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_C
 最初は自作の合成トーンの特徴検証だけで、DiscordやASRモデルを使わない。2番目は明示指定したモデルで、許可された48kHz/16bit/stereo・最大5秒のWAVを認識する。3番目だけが実Discordへ接続する。実接続例は既定で件数・長さ等のみ表示し、文字起こしを端末へ出す場合は`--show-text`を明示する。`--via-core`と`--placement local`で経路/配置を変えられる。
 
 現行の音声受信APIは上流の変更の影響を受ける。利用前に、同意確認済みの管理下のチャンネルでDAVE音声受信・話者ID・参加者変化・撤回・切断・資源解放を実測する。B10（`docs/validation/v1.10.md`）の未検証を、補助プロセス/SDKの試験成功で置き換えない。
+
+<a id="voice-startup-diagnostics"></a>
+
+### Windowsでの実行と起動失敗の切り分け
+
+以下は`token_env`を`NTK_DISCORD_BOT_TOKEN`とした設定用。実際の設定・同意ファイルを指定し、本人が検証用音声チャンネルに参加してから実行する。PowerShellの**ブロック全体**を貼り付け、非表示入力へBot tokenを入力する。tokenはこのシェルと子プロセスで使用し、終了時に削除する。音声用依存を導入したPythonを使う。
+
+```powershell
+& {
+    $env:NTK_DISCORD_BOT_TOKEN = [System.Net.NetworkCredential]::new('', (Read-Host 'Bot token（表示しません）' -AsSecureString)).Password
+    try {
+        python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_CONSENT_JSON --seconds 30
+    } finally {
+        Remove-Item -LiteralPath Env:/NTK_DISCORD_BOT_TOKEN -ErrorAction SilentlyContinue
+    }
+}
+```
+
+実行例は接続前に環境変数名・tokenの存在/空/4096文字上限を検査する。この検査の成功はDiscordでの認証成功を意味しない。入力直後でも、別のシェルで実行した場合や、前回の`finally`で削除済みの場合は再入力が必要になる。値を確認するための表示・チャットへの貼付けは行わない。
+
+| `reason` | 失敗した段階と確認対象 |
+|---|---|
+| `credential_missing` | Adapterまたはhelperで資格情報を利用できない。Adapterでは未設定・空・4096文字超過を含む。設定名と実行シェルを確認 |
+| `helper_spawn_failed` | Node helperプロセスの作成に失敗。Nodeのパス・実行環境・環境変数の使用可否を確認 |
+| `helper_start_write_failed` | helperへの開始情報の書込み/排出に失敗。helperが早期終了していないか確認 |
+| `helper_ready_timeout` | Python側のReady待機25秒を超過。Node依存の読込みや起動応答の停止を切り分ける |
+| `startup_timeout` | Node側の接続準備20秒を超過。ネットワークと接続準備を確認 |
+| `invalid_input_or_dependencies` | helper入力またはNode依存の検査/読込みに失敗。固定依存の明示導入を確認 |
+| `connection_failed` | helperの接続処理で失敗。資格情報の有効性・接続環境を確認。理由だけから認証失敗とは断定しない |
+| `helper_start_failed` | 上記以外の起動例外。旧実装では複数の失敗段階がこの理由に集約されていた |
+
+固定コードはSDK/OS例外の本文・token・音声本文を含まない。最初の停止理由を保持し、後処理で上書きしない。診断追加は接続/回収期限や自動再試行の変更ではない。[#171](https://github.com/Tao-pyth/nymph-toolkit/issues/171)・ADR 0038 D6（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）を参照する。
+
+失敗時は対象コミット、配置、`reason`、`cleanup_confirmed`だけをまず記録する。成功時も、`Voice observation started`（開始）、`Received observations`の件数（観測）、`cleanup_confirmed`と最後のRuntime回収確認（終了）を分けて確認する。0件での正常終了は受信成功と扱わず、件数があっても認識精度の証拠にはしない。
 
 ---
 
@@ -9597,6 +9633,14 @@ Node helperの標準入出力は上限付きJSON Lines。資格情報/音声本�
 
 Bot自身のチャンネル移動/切断も停止対象とする。依存SDKではチャンネルIDの変更だけでは必ずしも通信のReady状態が変わらないため、voiceStateUpdateのBot自身の移動を別途確認する。指定チャンネルへの最初の参加と同チャンネル内の状態変更は許容し、それ以外への変更は既存のvoice_disconnectedとして停止する。#165へ事前記録し、Ready状態の変化なしで移動/nullを与える試験で再現・修正した。
 
+### D6 起動失敗の診断（2026-11-27採用）
+
+親#20・v1.10.0の子[#171](https://github.com/Tao-pyth/nymph-toolkit/issues/171)を実親子関係付きで登録し、変更範囲を記録してから着手した。実環境で`helper_start_failed`が報告された。token未設定でも同じ理由を再現したが、利用者は非表示入力済みと回答しており、元の原因は未確定である。「成功」はtoken入力までで、実音声受信の成功とは記録しない。
+
+実装判断として、既存の状態要約の`reason`を固定コードで具体化する。Adapterで資格情報が未設定/空/4096文字超過なら`credential_missing`、helper作成失敗は`helper_spawn_failed`、開始情報の書込み/排出失敗は`helper_start_write_failed`、Pythonの25秒Ready待機超過は`helper_ready_timeout`。予期しない残りの起動例外は`helper_start_failed`を維持し、既に確定した停止理由を後処理で上書きしない。Nodeの`startup_timeout`（20秒）とは区別する。SDK/OS例外本文を公開・保存する診断は追加しない。
+
+実行例は接続前に設定名・資格情報の存在/空/上限を確認し、値を含めない案内を返す。PowerShellは非表示入力から実行・finallyでの削除までを一つのブロックにする。公開操作/結果キー・Core契約・同意範囲・接続/回収期限・無自動再接続を維持する。診断の改善を元障害の解消や実Discord受入の完了とは扱わない。
+
 ### B10（採用した受入条件。実装受入は別途確認）
 
 | ID | 必須の証拠 |
@@ -11398,7 +11442,7 @@ R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/i
 
 ## v1.10 睡眠活動・音声観測の検証記録
 
-親#20・子#163〜#168、ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）。2026年11月24日から実施し、現在は2026年11月25日の作業途中。基点は未マージPR #162。実装受入・マージ/正式公開を区別する。
+親#20・子#163〜#168・#171、ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）。2026年11月24日から実施し、2026年11月27日に起動診断を追加。基点は未マージPR #162。実装受入・マージ/正式公開を区別する。
 
 ### 現在の証拠
 
@@ -11478,7 +11522,17 @@ pnpm --dir src/nymph_toolkit/adapters/discord_voice/node install --frozen-lockfi
 node --test tests/voice/test_bridge.mjs tests/voice/test_dependencies.mjs
 ```
 
-モデルと実接続は音声ガイド（`docs/voice.md`）の明示導入・告知/同意・ローカル資格情報の設定後に行う。実DiscordについてはBot/管理下の検証チャンネル/参加者の同意をまだ確認できていない。記録すべき項目は、実話者IDと観測、DAVE有効下の復号、参加/離脱・撤回・切断時の消去、停止後の所有資源、各配置/経路の結果である。
+モデルと実接続は音声ガイド（`docs/voice.md`）の明示導入・告知/同意・ローカル資格情報の設定後に行う。11月26日までにBot/検証用通常音声チャンネルを準備し、本人1名の30秒・本文非表示・保存/学習投入なしの告知/同意を確認した。実受信はまだ成功していない。記録すべき項目は、実話者IDと観測、DAVE有効下の復号、参加/離脱・撤回・切断時の消去、停止後の所有資源、各配置/経路の結果である。
+
+### #171：実音声起動の診断
+
+11月27日、利用者は旧実装で`helper_start_failed`、観測/参加者0件、`cleanup_confirmed=true`を報告した。非表示欄へtokenを入力したと確認している。token未設定のオフライン実行では同じ失敗を再現できたが、元の原因は未確定。Node helperの作成と不正入力後の終了は、偽の診断値・Discord接続なしで確認した。
+
+登録済みの子[#171](https://github.com/Tao-pyth/nymph-toolkit/issues/171)で失敗段階の固定コードと実行例の起動前検査を追加し、セッション試験（`tests/adapters/test_voice_session.py`）と実行例試験（`tests/adapters/test_voice_example.py`）で資格情報不足・helper作成/送信失敗・Ready期限超過、値の非開示・所有プロセス回収を検証する。期限や同意範囲は維持する。実環境の追加結果とB10-03は、診断試験の成功で代替しない。
+
+Windows/CPython3.15.2で、実行例・セッション・4配置/両経路の統合試験25件が27.077秒で成功（警告をエラー扱い）。新規7件を含む。起動診断の資格情報は偽値、helperはローカルfixtureであり、実Discordへ接続していない。
+
+主要Docsを同期し、API15名・Contracts98名・64判断の基準を維持した。11月27日のWindows/Chrome生成プレビューは36ページ/23図で全ページを表示確認済み。Markdown/PDF/HTML・ハッシュの一致、HTMLの外部取得/script/描画エラー0を確認した。配布用の確定コミットと全環境CIの結果は#171・PR #170で追跡する。起動前検査・診断の成功を実Discord接続成功とは扱わない。
 
 ### 先行段階の未解決確認
 
@@ -13132,6 +13186,7 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 - チャンネル取得待機中の停止後に接続処理へ進む競合を修正。開始途中の停止、64観測上限、600秒のセッション期限と消去を追加検証。
 - Bot自身のチャンネル移動/切断も検出し、通信Readyが変わらなくても受信を終了する。指定外チャンネルへ継続しないことを回帰検証。
 - 音声依存/モデル識別、19通常例と明示接続例、主要Docsを整備中。
+- #171：音声起動の資格情報不足・helper作成/送信失敗・Ready待機超過を固定コードで区別。実行例の資格情報検査とPowerShell手順を追加。実環境で報告された起動失敗の原因・実受信は引き続き確認する。
 - 先行v1.9のCognition終了確認失敗は#169で調査中。全受入・公開とは区別する。
 
 ---

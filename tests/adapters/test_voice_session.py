@@ -258,6 +258,58 @@ class VoiceSessionTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("NODE_OPTIONS", captured["env"])
         self.assertNotIn("NTK_TEST_TOKEN", captured["env"])
 
+    async def test_missing_credential_is_reported_without_spawning_or_exposing_values(self):
+        self.service.spawn = lambda: _Voice.spawn(self.service)
+        for index, value in enumerate((None, "", "private-credential" * 300)):
+            environment = {"OTHER_SECRET": "private-unrelated"}
+            if value is not None:
+                environment["NTK_TEST_TOKEN"] = value
+            with self.subTest(index=index), patch.dict("os.environ", environment, clear=True), \
+                    patch("asyncio.create_subprocess_exec") as create:
+                result = await self.service.start_session(str(index), permission())
+                create.assert_not_called()
+            self.assertEqual((result["state"], result["reason"], result["cleanup_confirmed"]),
+                             ("failed", "credential_missing", True))
+            self.assertNotIn("private", json.dumps(result))
+            self.assertIsNone(self.service.current.process)
+            self.assertEqual(self.service.current.permission, {})
+
+    async def test_spawn_failure_reports_stage_and_hides_exception_text(self):
+        self.service.spawn = lambda: _Voice.spawn(self.service)
+        with patch.dict("os.environ", {"NTK_TEST_TOKEN": "private-fixture"}), \
+                patch("asyncio.create_subprocess_exec", side_effect=OSError("private OS diagnostic")) as create:
+            result = await self.service.start_session("one", permission())
+            create.assert_awaited_once()
+        self.assertEqual((result["reason"], result["cleanup_confirmed"]), ("helper_spawn_failed", True))
+        self.assertNotIn("private", json.dumps(result))
+        self.assertEqual((await self.service.read("one"))["observations"], [])
+
+    async def test_start_write_failure_reaps_real_owned_process(self):
+        original = self.service.spawn
+        async def broken_spawn():
+            process = await original()
+            broken = patch.object(process.stdin, "write", side_effect=BrokenPipeError("private pipe diagnostic"))
+            broken.start()
+            self.addCleanup(broken.stop)
+            return process
+        self.service.spawn = broken_spawn
+        result = await self.service.start_session("one", permission())
+        self.assertEqual((result["reason"], result["cleanup_confirmed"]), ("helper_start_write_failed", True))
+        self.assertNotIn("private", json.dumps(result))
+        self.assertIsNotNone(self.processes[0].returncode)
+        self.assertEqual(self.service.current.permission, {})
+
+    async def test_ready_timeout_reaps_helper_without_retry_and_preserves_first_reason(self):
+        self.mode = "delayed"
+        timeout = asyncio.timeout
+        with patch("asyncio.timeout", side_effect=lambda seconds: timeout(.01 if seconds == 25 else seconds)):
+            result = await self.service.start_session("one", permission())
+        self.assertEqual((result["reason"], result["cleanup_confirmed"]), ("helper_ready_timeout", True))
+        self.assertEqual((await self.service.read("one"))["observations"], [])
+        self.assertEqual((await self.service.start_session("one", permission()))["reason"], "helper_ready_timeout")
+        self.assertEqual(len(self.processes), 1)
+        self.assertIsNotNone(self.processes[0].returncode)
+
 
 class VoiceInputTests(unittest.TestCase):
     def test_read_pages_respect_json_budget_without_losing_sequence(self):

@@ -13,7 +13,7 @@ from nymph_toolkit.contracts import ModuleContextProtocol, OperatingState, Opera
 from nymph_toolkit.contracts.voice import VOICE_KEY
 from ._audio import Processor
 from ._model import configuration, consent as validate_consent, fingerprint, integer, snapshot, text, user_id as validate_user_id
-from ._session import Session
+from ._session import Session, _CredentialUnavailable
 
 __all__ = ["factory"]
 
@@ -94,7 +94,7 @@ class _Voice:
                        if key.upper() in {"SYSTEMROOT", "WINDIR", "PATH", "TEMP", "TMP", "TMPDIR", "LANG", "LC_ALL"}}
         token = os.environ.get(self.config["token_env"])
         if not token or len(token) > 4096:
-            raise ValueError("The configured Bot credential is unavailable")
+            raise _CredentialUnavailable("The configured Bot credential is unavailable")
         environment["NTK_DISCORD_TOKEN"] = token
         return await asyncio.create_subprocess_exec(self.config["node_executable"], str(Path(__file__).with_name("bridge.mjs")),
             stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,

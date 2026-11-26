@@ -15,6 +15,10 @@ BRIDGE_STOPS = NORMAL_STOPS | {"output_capacity", "startup_timeout", "gateway_er
     "connection_failed", "finished", "invalid_input_or_dependencies"}
 
 
+class _CredentialUnavailable(ValueError):
+    """Local credential precondition failed; never carries the credential."""
+
+
 class Session:
     def __init__(self, owner, key, permission):
         self.owner, self.key, self.permission = owner, key, permission
@@ -78,12 +82,18 @@ class Session:
     async def launch(self):
         self.launch_task = asyncio.create_task(self._launch())
         await asyncio.shield(self.launch_task)
-        async with asyncio.timeout(25):
-            await self.ready.wait()
+        try:
+            async with asyncio.timeout(25):
+                await self.ready.wait()
+        except TimeoutError:
+            self.request_stop("helper_ready_timeout")
+            raise
 
     async def _launch(self):
+        failure_reason = "helper_spawn_failed"
         try:
             self.process = await self.owner.spawn()
+            failure_reason = "helper_start_failed"
             self.reader_task = asyncio.create_task(self._read())
             self.stderr_task = asyncio.create_task(self._stderr())
             if self.closing:
@@ -96,10 +106,14 @@ class Session:
             encoded = (dump(message) + "\n").encode("ascii")
             if len(encoded) > 8192:
                 raise ValueError("Helper configuration too large")
+            failure_reason = "helper_start_write_failed"
             self.process.stdin.write(encoded)
             await self.process.stdin.drain()
+        except _CredentialUnavailable:
+            self.request_stop("credential_missing")
+            raise
         except BaseException:
-            self.request_stop("helper_start_failed")
+            self.request_stop(failure_reason)
             raise
 
     async def _read(self):
