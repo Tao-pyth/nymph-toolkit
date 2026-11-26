@@ -188,3 +188,9 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## 開発候補v1.9：Sleep（17番目）
 
 `python examples/sleep_demo.py`。実Memory/Cognition/Personaから根拠を取得し、出典別の統合・減衰/忘却・夢の失効を照合する。人格案は利用側が明示適用し、原本/学習は維持する。2回の起動で状態/履歴を確認し、PASSを表示して後処理する。一時保存先は正常終了時に削除する。[契約](sleep.md)・[検証](validation/v1.9.md)。
+
+## v1.10候補の睡眠活動と音声
+
+通常の17例へ`python examples/sleep_activity_demo.py`と`python examples/voice_audio_demo.py`を加え、計19例。前者はAgencyの休息→実Sleep→Persona適用→次判断、後者は外部接続なしの合成PCM特徴を確認する。
+
+`voice_capture.py`は告知/同意・資格情報・任意依存を用意して明示実行する別の接続例で、通常19例の一括実行には含めない。[音声ガイド](voice.md)の設定に従う。実モデル/実サービスの確認状況は[B10](validation/v1.10.md)。

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nymph-toolkit"
-version = "1.9.0"
+version = "1.10.0"
 description = "A lightweight runtime foundation for the Nymph artificial personality project."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -19,6 +19,9 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3.15",
 ]
+
+[project.optional-dependencies]
+voice = ["vosk==0.3.45"]
 
 [project.urls]
 Repository = "https://github.com/Tao-pyth/nymph-toolkit"

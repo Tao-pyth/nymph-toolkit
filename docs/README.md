@@ -1,6 +1,6 @@
 # Docsの読み方と根拠
 
-初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.9.0のCognition・Text/Web・訂正・Agency判断/活動循環・Persona・Sleepと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。[機能・公開状態の一覧](../README.md)と[2026年11月23日の整合点検](validation/docs-current.md)を参照する。
+初稿の文書整備日は2026年11月19日。現在は最終ビジョン、Core・共通接続契約、公開v1.2.0までのMemory/Document、開発候補v1.10.0のCognition・Text/Web・訂正・Agency判断/活動循環・Persona・Sleepと後続ロードマップを扱う。版ごとの履歴と現在の実装を区別する。[機能・公開状態の一覧](../README.md)と[2026年11月23日の整合点検](validation/docs-current.md)を参照する。
 
 R31のv1.1 Memoryは[利用ガイド](memory.md)・[ADR 0027](adr/0027-v1.1-memory.md)・[B01結果](validation/v1.1.md)を参照する。v1.1.0の公開後確認は[#110](https://github.com/Tao-pyth/nymph-toolkit/issues/110)で追跡する。
 
@@ -21,7 +21,7 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | 問題を調べる | [トラブルシューティング](troubleshooting.md) → 対象機能のDocs・検証記録 |
 | 判断を追う | [ADR索引](adr/README.md) → [採用64項目](adr/0022-v0.7-v0.9-hybrid-and-completion.md) → [証拠対応表](validation/core-coverage.md) |
 
-導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.9候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
+導入・実行例はv1.2、Memoryはv1.1から維持し、Core接続契約はv1.0から維持し、顧客向けMarkdown/PDF/HTMLは対象コミットの最新版を説明する（現在はv1.10候補と公開v1.2を区別）。Runtime等の見出しにあるv0.2〜v0.7は主な導入時点を示す。各版のvalidationとR番号の説明は当時の検証・判断の記録であり、現在の未実装事項一覧ではない。後続の判断と公開結果を併せて読む。[Vision](vision.md)は長期目標、v1.xの名称・配分は[ロードマップ](roadmap.md)の採用状態に従う。
 
 ## 文書一覧と格納場所
 
@@ -41,6 +41,9 @@ v1.2のDocument Adapterは[利用ガイド](document.md)・[ADR 0028](adr/0028-v
 | [troubleshooting.md](troubleshooting.md) | 症状別の確認・対処・回復確認と報告方法 |
 | [validation/docs-onboarding.md](validation/docs-onboarding.md) | D01〜D04・D09の検証結果、対象版、確認範囲 |
 | [validation/docs-current.md](validation/docs-current.md) | v1.3候補までの実装・資料・公開状態の点検、訂正箇所と確認範囲 |
+| [sleep-activity.md](sleep-activity.md) | 睡眠活動・人格案適用・結果照合 |
+| [voice.md](voice.md) | 音声導入・同意・契約・保持/削除 |
+| [validation/v1.10.md](validation/v1.10.md) | B10の試験と未検証範囲 |
 | [sleep.md](sleep.md) | v1.9候補の統合根拠/忘却・夢・人格修正案と保存 |
 | [validation/v1.9.md](validation/v1.9.md) | B09の確認状況 |
 | [persona-agency.md](persona-agency.md) | v1.8候補の人格特性と活動選択・保存互換・再評価 |
@@ -275,3 +278,7 @@ v1.5は親#15・子#132〜#136を先行登録し、[ADR 0032](adr/0032-v1.5-agen
 ## R37のv1.9具体化
 
 親#19・子#157〜#161とADR 0037でSleep初期範囲/B09を具体化した。一般的な意味理解や全記憶の削除へ広げず、統合状態・夢・人格修正案を扱うCodex判断として記録する。[Sleepガイド](sleep.md)・[B09記録](validation/v1.9.md)を引継ぎ書へ全文収録する。
+
+## R37のv1.10具体化
+
+親#20・子#163〜#168をコード変更前に実親子関係付きで登録し、ADR 0038で睡眠活動・音声観測・依存/モデル識別・B10を具体化した。APIや数値はCodex判断として記録し、実装受入と個別ユーザー承認を区別する。実Discord受信、主要Docs全形式、先行#169を含む最終受入は継続中。睡眠活動と音声ガイドを引継ぎ書へ全文収録する。

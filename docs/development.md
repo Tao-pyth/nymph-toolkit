@@ -1,6 +1,6 @@
 # 開発準備とGit運用
 
-本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.9.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
+本書はコード・Docsを編集して検証する人向けの開発環境の手順である。公開v1.2.0を試す場合は[通常導入](getting-started.md)と[実行例ガイド](tutorials.md)を先に読む。現在の開発候補はv1.10.0。開発用editable環境と公開wheelの確認環境を分け、版とimport元を記録する。
 
 ## 公開準備時の環境
 
@@ -45,7 +45,7 @@ CIはWindowsとLinux、Python 3.12〜3.15で全テスト、Core/接続契約/Mem
 
 ## v0.9の完成監査（当時の手順）
 
-v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下のコマンド、14＋92件・6例という件数はv0.9.0のcheckoutで使った当時の手順である。現在のcheckoutでは上の環境構築と末尾のv1.9節を使い、Core 15件・Contracts 98件・17例を照合する。現行の意味と証拠は[Core API](core-api.md)・[証拠対応表](validation/core-coverage.md)を参照する。
+v0.9.0は公開済みで、[A09-04の公開後確認](https://github.com/Tao-pyth/nymph-toolkit/issues/88#issuecomment-7067230161)まで完了している。以下のコマンド、14＋92件・6例という件数はv0.9.0のcheckoutで使った当時の手順である。現在のcheckoutでは上の環境構築と末尾のv1.10節を使い、Core 15件・Contracts 98件・19例を照合する。現行の意味と証拠は[Core API](core-api.md)・[証拠対応表](validation/core-coverage.md)を参照する。
 
 ```powershell
 .venv/Scripts/python.exe tools/check_api.py
@@ -216,3 +216,9 @@ v1.7時点の手順では`python -m pip install -e .`後に配布版1.7.0を確�
 ## v1.9の開発候補
 
 親#19・子#157〜#161とADR 0037を確認し、`python -m pip install -e .`後に配布版1.9.0を照合する。局所は`python -W error -m unittest tests.subsystems.test_sleep tests.subsystems.test_sleep_service tests.subsystems.test_sleep_integration -v`、例は`python examples/sleep_demo.py`。通常配布は`python -m build --outdir .git/v19-dist`と`python tools/check_dist.py --dist-dir .git/v19-dist`。全17例・全回帰・8環境CIと主要Docs全形式をB09で追跡する。
+
+## v1.10候補の追加検証
+
+音声を使わない通常導入は必須依存なし。音声は`python -m pip install -e ".[voice]"`と[音声ガイド](voice.md)のNode依存/日本語モデルを明示導入する。通常19例に対し、実Discord接続例は同意確認後に個別実行する。
+
+`python -W error -m unittest tests.adapters.test_voice_audio tests.adapters.test_voice_session tests.adapters.test_voice_integration -v`、`node --test tests/voice/test_bridge.mjs tests/voice/test_dependencies.mjs`で局所検証。実Discordの受入とは別に記録し、主要Docsには非Pythonの音声ソース/依存manifestも同期する。

@@ -30,7 +30,9 @@ def inputs(root):
               if "validation" not in p.relative_to(root / "docs").parts
               and p.name != "NTK-Core-v0.1-Handoff-ja.md"]
     for folder in ("src", "examples"):
-        paths += list((root / folder).rglob("*.py"))
+        paths += [p for p in (root / folder).rglob("*")
+                  if p.is_file() and p.suffix in {".py", ".mjs", ".json", ".yaml"}
+                  and "node_modules" not in p.relative_to(root / folder).parts]
     paths += [root / "docs/contracts-v1.json"]
     return {p.relative_to(root).as_posix(): digest(p) for p in sorted(set(paths))}
 

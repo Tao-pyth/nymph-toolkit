@@ -22,6 +22,7 @@ htmlcov/
 
 # Customer-document build dependencies and generated deliverables
 tools/customer-docs/node_modules/
+src/nymph_toolkit/adapters/discord_voice/node/node_modules/
 output/pdf/
 
 # OS files

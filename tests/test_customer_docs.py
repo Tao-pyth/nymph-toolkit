@@ -58,6 +58,15 @@ class CustomerDocsChecks(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, '0030-test.md'):
             validate(self.root)
 
+    def test_voice_bridge_model_manifest_and_lock_require_review_but_installed_dependencies_do_not(self):
+        for name in ('bridge.mjs', 'model-files.json', 'node/package.json', 'node/pnpm-lock.yaml'):
+            path = self.put('src/voice/' + name, 'source')
+            with self.subTest(name=name), self.assertRaisesRegex(AssertionError, name):
+                validate(self.root)
+            path.unlink()
+        self.put('src/voice/node/node_modules/dependency/package.json', 'external dependency')
+        validate(self.root)
+
     def test_old_target_or_release_state_is_rejected(self):
         self.record['version'] = '1.2.0'; self.save()
         with self.assertRaisesRegex(AssertionError, 'target version'):
