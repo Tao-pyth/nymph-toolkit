@@ -138,6 +138,7 @@ def main() -> None:
         subprocess.run([str(python), "-I", str(work / "examples/sleep_activity_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/voice_audio_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/voice_capture.py"), "--help"], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "tools/validate_voice_live.py"), "--help"], cwd=work, env=env, check=True)
         subprocess.run(
             [str(python), "-I", "-W", "error", "-m", "unittest", "discover",
              "-s", str(work / "tests"), "-t", str(work), "-v"],
