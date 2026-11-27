@@ -1,6 +1,6 @@
 # Discord音声観測とローカルASR（v1.10開発候補）
 
-採用した方式と上限は[ADR 0038](adr/0038-v1.10-sleep-cycle-and-voice.md)。公開v1.2.0には含まれない。2026年11月28日の利用者提供ログで、**実Discordの観測10件・文字起こし結果あり7件・通常停止と後処理完了**を確認した。DAVE確認を必須とする現行実装による初回成功であり、ログだけでは話者照合や認識精度を証明しない。参加者変更・撤回・切断などの実機確認は残る。[検証状況](validation/v1.10.md#live-voice-first-success)
+採用した方式と上限は[ADR 0038](adr/0038-v1.10-sleep-cycle-and-voice.md)。公開v1.2.0には含まれない。2026年11月28日の利用者提供ログで、**実Discord受信・ASR・通常停止に加え、観測0件での参加者変更停止・Bot退出・後処理完了**を確認した。後者のログは受信済みデータの存在を示しておらず、その消去を証明しない。話者照合・認識精度、参加・撤回・切断・保持等の実機確認は残る。[各実行の結果と限界](validation/v1.10.md#live-voice-followup)
 
 ## できることと責務
 
@@ -150,11 +150,13 @@ python tools/validate_voice_live.py --config .local/voice-validation/config.json
 |---|---|
 | `speaker` | `--participant 1`等で指定した人だけが発話し、他の人は発話しない。全観測が指定ID・出典に合致することを確認。ID昇順の1始まり番号と実際の人は運用者がローカル設定で照合 |
 | `join` | 開始時の参加者がまず発話し、同意設定済みだが未参加の人が約10秒後に参加。`participants_changed`で停止・消去。参加後の新しい人の音声取得を続ける試験ではない |
-| `leave` | 開始後に短く発話し、約10秒後に同意済みの1名が退出。`participants_changed`で停止・消去 |
+| `leave` | 開始後に短く発話し、同意済みの1名が退出。終了結果のobservationsが1件以上で、`participants_changed`・消去を確認。観測0件での停止だけでは、受信後の消去を合格にしない |
 | `revoke` | 発話後、既定10秒で指定番号の人への`revoke`を明示発行し、`revoked`で全体停止・消去。事前にこの操作へ同意を確認 |
 | `disconnect` | 発話後、運用者がBotを切断または対象外チャンネルへ移動。`voice_disconnected`・failed・後処理完了を確認。Botの画面上の退出も確認 |
 | `retention` | 同意済み入力を別途用意し、例として保持5秒を明示。短く発話した後に無音とし、期限前に取得したsequenceが返らずexpired_countが進むことを確認。保持値＋5秒が観測枠未満でなければ接続前に拒否 |
 | `runtime-stop` | 発話後、既定10秒で個別stop_sessionなしにRuntimeを停止。所有機能の後処理を確認し、新Runtimeがinactive・観測0から始まることを照合。新起動はDiscordへ接続しない |
+
+補助ツールは観測件数を終了時の要約で返す。途中の観測到達を画面で確認しながら退出する場合は、元の`voice_capture.py`で1件以上の`sequence`行を確認してから退出する。その例のログでは、停止理由と件数を確認できるが、同じIDの非再接続までは直接検証しない。
 
 `--seconds`は1〜30秒の観測ループ、`--action-after`はrevoke/Runtime停止の発行時機（既定10秒）で、観測枠より短くする。接続準備と後処理は別に待つ。`--placement local`と`--via-core`で配置と経路を明示できる。既定はPROCESS・直接経路。既存の同意入力をツールが上書きすることはない。
 
