@@ -25,14 +25,14 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Agency | 根拠と内部状態からの決定・保存、Coreへの適用と活動循環 | v1.5/1.6開発候補。[判断](docs/agency.md)・[実行](docs/agency-execution.md) |
 | Persona | 長期特性の参照、外部差分、現在値/修正履歴の原子的保存 | v1.7開発候補。[Persona](docs/persona.md) |
 | 睡眠活動の実行側 | 周期・人格案適用・永続結果照合、協調中断/再開 | v1.10開発候補。[睡眠活動](docs/sleep-activity.md) |
-| Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。実受信・通常停止と観測0件の退出停止を確認、残る受入は検証中 | v1.10開発候補。[音声](docs/voice.md) |
+| Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。実受信・通常停止と受信後の退出停止を確認、残る受入は検証中 | v1.10開発候補。[音声](docs/voice.md) |
 | Sleep | 根拠の統合/減衰・現在夢の再結合/失効・人格修正案 | v1.9開発候補。[Sleep](docs/sleep.md) |
 
 Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。v1.10候補で睡眠活動の循環とDiscord Voice Adapterを追加し検証中です。実Discord受信の初回成功を確認しましたが、最終受入は未完了、Desktop Adapterは将来課題です。v1.5の実装受入は[B05記録](docs/validation/v1.5.md)、v1.10までの残作業は[進捗](docs/implementation-progress.md)へ記録します。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)にあります。
 
 ## v1.10.0開発候補 — 睡眠活動と音声観測
 
-Agencyの睡眠活動からSleep周期とPersona適用を接続し、結果不明を照会する実行側を追加しました。音声側は明示同意・期限付き観測・日本語ASR・所有helper/workerの後処理を実装しています。2026年11月28日の利用者提供ログで、実Discord受信と通常停止に加え、観測0件での参加者変更停止・Bot退出・後処理を確認しました。受信済みデータがある状態での退出・消去、話者照合・参加・撤回・切断などの実機確認は残ります。[各実行の結果と限界](docs/validation/v1.10.md#live-voice-followup)
+Agencyの睡眠活動からSleep周期とPersona適用を接続し、結果不明を照会する実行側を追加しました。音声側は明示同意・期限付き観測・日本語ASR・所有helper/workerの後処理を実装しています。2026年11月28日の利用者提供ログで、実Discord受信と通常停止に加え、2件受信後の参加者変更停止・停止後の観測0件・Bot退出・後処理を確認しました。停止後の再読出し・同一IDの非再接続、話者照合・参加・撤回・切断などの実機確認は残ります。[各実行の結果と限界](docs/validation/v1.10.md#live-voice-followup)
 
 [睡眠活動](docs/sleep-activity.md)・[音声導入/契約](docs/voice.md)・[ADR 0038](docs/adr/0038-v1.10-sleep-cycle-and-voice.md)・[B10記録](docs/validation/v1.10.md)。音声は任意依存です。v1.9のCIで見つかった終了確認失敗も[#169](https://github.com/Tao-pyth/nymph-toolkit/issues/169)で調査中であり、v1.10全体の完成とはしません。
 
