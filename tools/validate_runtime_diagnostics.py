@@ -1,4 +1,4 @@
-"""Compare opt-in diagnostics with the existing 4-placement hybrid workload."""
+"""Measure opt-in diagnostics for a placement or the four co-located placements."""
 
 # SPDX-License-Identifier: Apache-2.0
 import argparse
@@ -66,11 +66,11 @@ async def workload(group, seconds, *, collect):
     return {"rpc": measured, "elapsed_seconds": elapsed, "rpc_per_second": measured["count"] / elapsed}
 
 
-async def condition(tabs, warmup, duration):
+async def condition(tabs, warmup, duration, placements):
     async with AsyncExitStack() as stack:
         root = Path(stack.enter_context(TemporaryDirectory(prefix="ntk-diagnostics-load-")))
         cases, urls = [], []
-        for requester, provider in itertools.product(Placement, repeat=2):
+        for requester, provider in placements:
             group, runtime = make_group(root / f"{requester}-{provider}", requester, provider, measure=True,
                                         settings=HybridSettings(10, 3, 10, 65536, 32, 8))
             session = DiagnosticSession(group, runtime, slots={"weather": "weather"}) if tabs else None
@@ -104,7 +104,7 @@ async def condition(tabs, warmup, duration):
 
 def compare(observations):
     results = []
-    for index in range(4):
+    for index, first in enumerate(observations[0]["cases"]):
         def statistic(tabs, extract):
             return statistics.median(extract(run["cases"][index]) for run in observations if run["tabs"] == tabs)
 
@@ -113,7 +113,6 @@ def compare(observations):
         for tabs in (1, 3):
             latency = statistic(tabs, lambda case: case["rpc"]["window_p95_seconds"])
             rate = statistic(tabs, lambda case: case["rpc_per_second"])
-            first = observations[0]["cases"][index]
             latency_delta = latency - baseline_latency
             rate_drop = (baseline_rate - rate) / baseline_rate
             results.append({"requester": first["requester"], "provider": first["provider"], "tabs": tabs,
@@ -127,15 +126,17 @@ def compare(observations):
 async def main(args):
     repetitions = 1 if args.smoke else 3
     warmup, duration = (.4, 1.0) if args.smoke else (30, 300)
+    placements = [args.placement] if args.placement else list(itertools.product(Placement, repeat=2))
     output = {"format": "ntk.validation.diagnostics.v1", "source": source_identity(),
               "platform": platform.platform(), "python": platform.python_version(),
+              "placements": [[requester.value, provider.value] for requester, provider in placements],
               "warmup_seconds": warmup, "duration_seconds": duration, "smoke": args.smoke, "observations": []}
     order = (0, 1, 3)
     try:
         for attempt in range(repetitions):
             for tabs in order[attempt:] + order[:attempt]:
                 print(f"LD-09 iteration {attempt + 1}/{repetitions}, tabs={tabs}", flush=True)
-                result = await condition(tabs, warmup, duration)
+                result = await condition(tabs, warmup, duration, placements)
                 output["observations"].append(dict(result, iteration=attempt + 1))
         output["comparisons"] = compare(output["observations"])
         output["passed"] = all(case["passed"] for case in output["comparisons"])
@@ -149,4 +150,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--smoke", action="store_true")
+    parser.add_argument("--placement", metavar=("REQUESTER", "PROVIDER"), nargs=2, type=Placement,
+                        choices=tuple(Placement), help="Measure one placement with one Runtime")
     raise SystemExit(asyncio.run(main(parser.parse_args())))

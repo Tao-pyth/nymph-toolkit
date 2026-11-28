@@ -418,3 +418,5 @@ Discord Bot確認はスキップや回答待ちとせずクリアとして扱う
 LD-01〜07の製品試験で、LOCAL/PROCESSの報告、形式と境界、順序と旧起動、集約・間隔、期限/撤回、活動・接続・異常終了、許可済み照会を確認した。Windows/Python 3.12で1秒の送信下限を15 ms下回るケースを受けて、単調時計で期限を再確認するよう修正し、同環境で対象試験を20反復した。LD-07〜08のブラウザー試験はWindows/Linuxで通過した。サンプルの天気は固定データを使い、実サービスには接続しない。 [実装とワークフロー](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46144583542)
 
 LD-09の初回 `dbfef2b` はWindows Server 2025とLinux、CPython 3.15.2で条件別に30秒の準備、300秒の観測、3反復を完走した。3タブの処理件数低下は最大11.652%／8.714%（Windows／Linux）、p95の最大増加は1.83130 ms／0.98118 msで、両OSで基準超過があった。報告数の範囲は1・3タブで一致し、診断配信の最大保持は各配置1枠だった。画面が背面にある間の取得・描画、同じ差分の再生成、不要な行の再描画を抑え、同じ条件・基準で再測定する。 [Windows実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263462768) · [Linux実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263243288)
+
+初回は4配置を単一の親イベントループ上で同時実行し、3タブ条件では合計12ページを開いた。最適化後も同居ストレス測定を継続し、1つのRuntimeで各配置を運用する場合の測定も追加する。配置ごとに同じマシンで3反復し、測定時間・業務負荷・合格基準を共通にする。p95には各観測区間内の直近最大2048件を用いる。 [測定構成の記録](https://github.com/Tao-pyth/nymph-toolkit/issues/182#issuecomment-7239691578)
