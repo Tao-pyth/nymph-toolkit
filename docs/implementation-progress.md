@@ -19,6 +19,6 @@ v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で
 
 ## v1.11・v1.12の候補
 
-v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)、契約実装#177、B11・配布・主要Docsは[#178](https://github.com/Tao-pyth/nymph-toolkit/issues/178)で追跡する。v1.12の診断は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。標準は各版の公開後確認で発効する。
+v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)で追跡する。[B11](acceptance.md#b11-input-candidates)の候補は回帰・配布・主要Docsを確認済み。公開後確認と標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)で扱う。
 
-v1.12候補では任意報告とローカル画面を実装した。配布・受入は[#182](https://github.com/Tao-pyth/nymph-toolkit/issues/182)で報告し、LD-09の本測定と短い試験を区別する。
+v1.12の任意報告とローカル画面は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。[LD-09](acceptance.md#ld-runtime-diagnostics)の単独Runtime本測定は全16比較が基準内で、同居ストレスでは処理件数低下の上限を超えた。配布・受入の証拠は[#182](https://github.com/Tao-pyth/nymph-toolkit/issues/182)、公開後確認と標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。

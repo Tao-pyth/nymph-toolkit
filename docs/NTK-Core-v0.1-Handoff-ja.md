@@ -4545,9 +4545,9 @@ v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で
 
 ### v1.11・v1.12の候補
 
-v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)、契約実装#177、B11・配布・主要Docsは[#178](https://github.com/Tao-pyth/nymph-toolkit/issues/178)で追跡する。v1.12の診断は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。標準は各版の公開後確認で発効する。
+v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)で追跡する。B11（`docs/acceptance.md#b11-input-candidates`）の候補は回帰・配布・主要Docsを確認済み。公開後確認と標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)で扱う。
 
-v1.12候補では任意報告とローカル画面を実装した。配布・受入は[#182](https://github.com/Tao-pyth/nymph-toolkit/issues/182)で報告し、LD-09の本測定と短い試験を区別する。
+v1.12の任意報告とローカル画面は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。LD-09（`docs/acceptance.md#ld-runtime-diagnostics`）の単独Runtime本測定は全16比較が基準内で、同居ストレスでは処理件数低下の上限を超えた。配布・受入の証拠は[#182](https://github.com/Tao-pyth/nymph-toolkit/issues/182)、公開後確認と標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
 
 ---
 
@@ -9927,7 +9927,7 @@ Bot自身のチャンネル移動/切断も停止対象とする。依存SDKで�
 
 WindowsとLinuxで、同一マシン・Python・Core設定ごとに比較する。既存のハイブリッド負荷手順（`docs/validation/v0.8.md`）を基に、4配置を同じ業務RPC・活動・転送条件で動かし、30秒のウォームアップ後に5分測定する。各条件を3回実施して順番を入れ替え、反復ごとの値と3回の中央値、親RuntimeのCPU時間・RSS、報告数、キューの最大保持量を記録する。診断有効時には各配置で報告上限に合わせた変更を与える。業務RPCのp95は同じ測定区間と同じ集計方法で比較し、サンプリング窓を使った場合は窓長を記録する。
 
-受入では5分の測定内に完了した業務RPCすべてをp95の集計対象とする。末尾の2048件のp95も参考値として記録する。末尾窓の初回結果と測定構成の変更は受入記録（`docs/acceptance.md#ld-runtime-diagnostics`）に残す。
+受入では5分の測定内に完了した業務RPCすべてをp95の集計対象とする。末尾の2048件のp95も参考値として記録する。開発候補の単独RuntimeはWindows/Linuxの全16比較で基準内だった。4 Runtime同居のストレス測定では処理件数低下が基準を超過した。初回結果、配置別の測定値と公開条件は受入記録（`docs/acceptance.md#ld-runtime-diagnostics`）に残す。
 
 各配置の単独運用では1つのRuntimeを起動し、0・1・3タブの全反復を同じマシンで測る。4配置を1つの親イベントループで同時に動かす測定も、同居時のストレス結果として記録する。いずれも同じ業務周期・時間・合格基準を使う。 `tools/validate_runtime_diagnostics.py --placement local process --output ld09.json` は要求側LOCAL・提供側PROCESSを単独測定し、`--placement` を省略すると同居測定を行う。
 
@@ -10759,6 +10759,15 @@ LD-09の初回 `dbfef2b` はWindows Server 2025とLinux、CPython 3.15.2で条�
 初回は4配置を単一の親イベントループ上で同時実行し、3タブ条件では合計12ページを開いた。最適化後 `a805ed2` の同居ストレス測定も5%を超え、3タブの処理件数低下はWindows最大9.156%、Linux最大8.235%だった。p95の最大増加は1.29540 ms／0.23250 msで、両OSで報告の最大保持は各配置1枠だった。 [再測定](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46146084742)
 
 単独Runtimeを配置ごとに同じマシンで3反復した `68ae8fc` の測定で、処理件数は全16比較が基準内。末尾2048件によるp95は13比較が基準内だった。要求側LOCAL・提供側PROCESSでは、Windowsの1タブ・3タブで+0.29460 ms・+0.28090 ms、Linuxの3タブで+0.26634 msとなり、いずれも上限0.25 msを超えた。この配置では2048件が約8秒分だったため、受入では300秒区間の全完了RPCをp95の対象とし、末尾2048件も併記する。測定時間・業務負荷・合格基準は同じ条件で照合する。 [配置別初回実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46148069212) · [集計範囲の記録](https://github.com/Tao-pyth/nymph-toolkit/issues/182#issuecomment-7240399557)
+
+開発候補 `70a8594` の単独Runtimeの本測定は、Windows Server 2025とLinux、CPython 3.15.2の全8配置で完走した。観測は1回につき30,740〜87,604件。診断無効に対する1タブ・3タブの全16比較で、300秒間に完了した全RPCのp95と処理件数が基準内だった。各配置の報告保持は最大1枠で、1タブ・3タブの報告数はいずれもLinuxで300件、Windowsで298〜300件だった。4 Runtime同居時の処理件数低下は運用上の制約として上記に記録した。
+
+| OS | p95増加の最大 | 処理件数低下の最大 |
+|---|---:|---:|
+| Windows | 0.12570 ms（LOCAL/PROCESS・3タブ） | 2.475%（PROCESS/LOCAL・3タブ） |
+| Linux | 0.02682 ms（LOCAL/PROCESS・1タブ） | 0.984%（PROCESS/LOCAL・1タブ） |
+
+同じ候補で8環境のソース・通常wheelの各571回帰、sdist再構築、安定Core API 15件・Contracts 98件と採用64項目、音声依存2環境、Customer Docs CIを確認した。顧客Markdown/PDF/HTMLは38ページ・25図で照合した。 [受入CIと全配置の実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46152926552)
 
 ---
 
