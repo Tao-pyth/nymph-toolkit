@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-28",
-  "review_note": "入力候補B11の合格証拠と標準の適用範囲をADR・受入資料に追記。顧客ガイド11章の明示保存、模擬AI限定と公開未発効、および対象版の表記と照合した。",
+  "review_note": "B11の合格証拠と版未割当の課題・依存先を記録。顧客ガイドの入力候補、模擬AI限定、公開未発効、Discord Bot受入と整合することを確認した。",
   "sources": {
     "AGENTS.md": "7feab6b78eae2645346f26c265f9f977c12453c59f9c209885b9e03f7687eccd",
     "CHANGELOG.md": "1a05ef7cbc9039f34875d56d99358c6254512ae12b2d88eb807e8b1a1d35d191",
@@ -76,7 +76,7 @@
     "docs/README.md": "5b327769ad40817e88e7c72d87a9dc86fcb0fbfda99a075bb8f3bf0570fcb99c",
     "docs/registry.md": "e3f82c833922f869c07de3028038f228cc50c83adf53accada35a941f8565325",
     "docs/release.md": "6b6e426448b09324635590fdd9c7b345760a1d561819aea5a487fbfb4551fac9",
-    "docs/roadmap.md": "3c64b40a669d06d9db44fe874da97d0b212bdb31a23e75fd19bb61d3a4c5c298",
+    "docs/roadmap.md": "7ac423160efab74c537c96bad9cadd0cdfdd3b997d7e57b7dbdabc4d347e9101",
     "docs/runtime.md": "c90d3596d175178d55498972ee711691641ce9acafb48b88132c5ab8f2a7e51e",
     "docs/sleep-activity.md": "d7fd8810ccbd224ae4454d5854c3d4c5a5c22c0fdf469641c179fd24b2ac0db3",
     "docs/sleep.md": "3c4bc8419f4c44bb73a976dac4c3f65caf65eb76fca23d97bbe110f748272f97",
