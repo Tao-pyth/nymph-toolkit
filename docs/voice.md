@@ -1,6 +1,6 @@
 # Discord音声観測とローカルASR（v1.10開発候補）
 
-採用した方式と上限は[ADR 0038](adr/0038-v1.10-sleep-cycle-and-voice.md)。公開v1.2.0には含まれない。実装・ローカル試験は進行中で、**実DiscordのDAVE受信は未検証**。通常の試験用音声で成功したことと、実サービスでの動作を区別する。[検証状況](validation/v1.10.md)
+**Discord Bot確認はクリア。** 2026年11月28日のユーザー判断により、残る追加実機確認は不要とした。[ADR 0040](adr/0040-discord-bot-acceptance.md)。実Discord受信・ASR・通常停止と、2件受信後の参加者変更停止・停止後観測0件・Bot退出・後処理完了の実測履歴を保持し、未実施のケースを実測合格へ変更しない。[各実行の結果と限界](validation/v1.10.md#live-voice-followup)。方式・上限・同意・保持・停止の製品契約は[ADR 0038](adr/0038-v1.10-sleep-cycle-and-voice.md)を維持する。公開v1.2.0には含まれない。
 
 ## できることと責務
 
@@ -99,7 +99,7 @@ python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_C
 
 最初は自作の合成トーンの特徴検証だけで、DiscordやASRモデルを使わない。2番目は明示指定したモデルで、許可された48kHz/16bit/stereo・最大5秒のWAVを認識する。3番目だけが実Discordへ接続する。実接続例は既定で件数・長さ等のみ表示し、文字起こしを端末へ出す場合は`--show-text`を明示する。`--via-core`と`--placement local`で経路/配置を変えられる。
 
-現行の音声受信APIは上流の変更の影響を受ける。利用前に、同意確認済みの管理下のチャンネルでDAVE音声受信・話者ID・参加者変化・撤回・切断・資源解放を実測する。[B10](validation/v1.10.md)の未検証を、補助プロセス/SDKの試験成功で置き換えない。
+現行の音声受信APIは上流の変更の影響を受ける。将来の依存更新や不具合調査で実接続が必要になった場合は、対象と同意範囲を定めて検証する。v1.10の追加実機確認はADR 0040により不要であり、Bot確認を保留へ戻さない。実測履歴と補助プロセス/SDKの試験結果は[B10](validation/v1.10.md)で区別する。
 
 <a id="voice-startup-diagnostics"></a>
 
@@ -134,3 +134,32 @@ python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_C
 固定コードはSDK/OS例外の本文・token・音声本文を含まない。最初の停止理由を保持し、後処理で上書きしない。診断追加は接続/回収期限や自動再試行の変更ではない。[#171](https://github.com/Tao-pyth/nymph-toolkit/issues/171)・[ADR 0038 D6](adr/0038-v1.10-sleep-cycle-and-voice.md)を参照する。
 
 失敗時は対象コミット、配置、`reason`、`cleanup_confirmed`だけをまず記録する。成功時も、`Voice observation started`（開始）、`Received observations`の件数（観測）、`cleanup_confirmed`と最後のRuntime回収確認（終了）を分けて確認する。0件での正常終了は受信成功と扱わず、件数があっても認識精度の証拠にはしない。
+
+<a id="voice-live-acceptance"></a>
+## 任意の実機診断
+
+以下は将来必要になった際の診断手順であり、v1.10のために利用者へ求める追加作業ではない。Bot確認は[ADR 0040](adr/0040-discord-bot-acceptance.md)によりクリア済み。[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)・[ADR 0038 D7](adr/0038-v1.10-sleep-cycle-and-voice.md)で整備した[明示検証ツール](../tools/validate_voice_live.py)は、期待する停止理由、観測の消去、同じIDで再接続しないこと、Runtime停止と新起動を個別に判定する。新たに実行する場合は、参加者へ操作内容と取得/ASR・保持条件を説明し、その実行への同意を確認する。
+
+音声依存とモデルを導入した同じPythonを使い、対象checkoutのルートで実行する。資格情報の非表示入力とfinallyでの削除は上のPowerShell手順を使い、try内の実行行だけ次へ置き換える。ケースごとに1回だけ実行し、失敗しても自動再試行しない。
+
+```powershell
+python tools/validate_voice_live.py --config .local/voice-validation/config.json --consent .local/voice-validation/consent.json --case leave --seconds 30
+```
+
+| `--case` | 告知・同意後の操作と判定 |
+|---|---|
+| `speaker` | `--participant 1`等で指定した人だけが発話し、他の人は発話しない。全観測が指定ID・出典に合致することを確認。ID昇順の1始まり番号と実際の人は運用者がローカル設定で照合 |
+| `join` | 開始時の参加者がまず発話し、同意設定済みだが未参加の人が約10秒後に参加。`participants_changed`で停止・消去。参加後の新しい人の音声取得を続ける試験ではない |
+| `leave` | 開始後に短く発話し、同意済みの1名が退出。終了結果のobservationsが1件以上で、`participants_changed`・消去を確認。観測0件での停止だけでは、受信後の消去を合格にしない |
+| `revoke` | 発話後、既定10秒で指定番号の人への`revoke`を明示発行し、`revoked`で全体停止・消去。事前にこの操作へ同意を確認 |
+| `disconnect` | 発話後、運用者がBotを切断または対象外チャンネルへ移動。`voice_disconnected`・failed・後処理完了を確認。Botの画面上の退出も確認 |
+| `retention` | 同意済み入力を別途用意し、例として保持5秒を明示。短く発話した後に無音とし、期限前に取得したsequenceが返らずexpired_countが進むことを確認。保持値＋5秒が観測枠未満でなければ接続前に拒否 |
+| `runtime-stop` | 発話後、既定10秒で個別stop_sessionなしにRuntimeを停止。所有機能の後処理を確認し、新Runtimeがinactive・観測0から始まることを照合。新起動はDiscordへ接続しない |
+
+補助ツールは観測件数を終了時の要約で返す。途中の観測到達を画面で確認しながら退出する場合は、元の`voice_capture.py`で1件以上の`sequence`行を確認してから退出する。その例のログでは、停止理由と件数を確認できるが、同じIDの非再接続までは直接検証しない。
+
+`--seconds`は1〜30秒の観測ループ、`--action-after`はrevoke/Runtime停止の発行時機（既定10秒）で、観測枠より短くする。接続準備と後処理は別に待つ。`--placement local`と`--via-core`で配置と経路を明示できる。既定はPROCESS・直接経路。既存の同意入力をツールが上書きすることはない。
+
+出力は件数・参加者番号別件数・状態・理由・照合結果・版/checkout等だけで、個人ID・本文・同意参照・資格情報を含めない。`--output .local/voice-validation/leave-summary.json`を明示すると同じ要約を新規保存する。既存ファイルは置換しない。出力先へ保存できない場合も非ゼロで終了する。
+
+終了コード0と`passed=true`は、選んだケースの機械的検査の合格である。実際の話者・操作・告知/同意の確認を結果へ併記してB10の証拠にする。音声の認識精度や全B10合格を意味しない。観測0・話者不一致・想定外の理由・消去/回収未確認は合格にならない。未知の理由はother、例外は固定エラーへ丸めるため、値を露出させず該当時機を調査する。オフライン試験の結果と実機結果を混在させない。

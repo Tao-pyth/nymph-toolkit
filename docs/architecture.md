@@ -287,7 +287,8 @@ nymph-toolkit/
 │     ├─ 0035-v1.7-persona.md
 │     ├─ 0036-v1.8-persona-agency.md
 │     ├─ 0037-v1.9-sleep.md
-│     └─ 0038-v1.10-sleep-cycle-and-voice.md
+│     ├─ 0038-v1.10-sleep-cycle-and-voice.md
+│     └─ 0040-discord-bot-acceptance.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -349,7 +350,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。睡眠活動との循環、音声受信・ASRはADR 0038で初期範囲を具体化した。後続の学習・意思決定方式や未実装Adapterの形式・権限は未確定である。実Discord受信は未検証で、対象外の後続機能は追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。睡眠活動との循環、音声受信・ASRはADR 0038で初期範囲を具体化した。後続の学習・意思決定方式や未実装Adapterの形式・権限は未確定である。実Discord受信・通常停止・受信後の退出停止は確認済みで、Bot確認はADR 0040のユーザー判断によりクリアした。対象外の後続機能は追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ## R33：DocumentとMemoryの境界
 
@@ -394,3 +395,5 @@ Cognitionは`src/nymph_toolkit/subsystems/cognition/`、公開契約は`contract
 [睡眠活動](sleep-activity.md)はNymph側の実行機能で、Core管理の活動からSleep周期を呼び、指定された人格案をPersonaの公開契約へ渡す。意図/送信段階/確定結果を専用SQLiteへ保存し、再起動は照会のみ。
 
 [音声](voice.md)はAdapter所有のNode受信helperとPythonの認識workerを使う。CoreのLOCAL/PROCESS配置と管理IPCは維持する。明示同意・期限付きの観測に限定し、Memory/Cognitionへ自動投入しない。追加依存/モデルは任意導入。Desktopや分散実行、複製/移植は追加しない。
+
+2026年11月28日の[ADR 0040](adr/0040-discord-bot-acceptance.md)により、Discord Bot確認はクリア、追加実機確認は不要とした。受入判断の変更であり、上記の製品契約や実施済み試験の内容は変えない。
