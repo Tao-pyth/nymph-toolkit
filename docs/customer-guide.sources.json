@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-28",
-  "review_note": "B11結果と診断LD-01〜08の結果、適用範囲、送信間隔回帰の証拠をADR・受入資料に反映。顧客ガイド11・12章の契約、ローカル画面、制約と候補表記を照合した。",
+  "review_note": "診断LD-01〜08の確認結果とロードマップ上の版未割当課題・依存先を反映。顧客ガイド11〜12章の契約、診断のローカル提供、公開未発効と照合した。",
   "sources": {
     "AGENTS.md": "7feab6b78eae2645346f26c265f9f977c12453c59f9c209885b9e03f7687eccd",
     "CHANGELOG.md": "84c5b2440771b7768bab3a868818b85ff9b13cfe35b0c86be5351cf142d485a9",
@@ -76,7 +76,7 @@
     "docs/README.md": "5b327769ad40817e88e7c72d87a9dc86fcb0fbfda99a075bb8f3bf0570fcb99c",
     "docs/registry.md": "e3f82c833922f869c07de3028038f228cc50c83adf53accada35a941f8565325",
     "docs/release.md": "6b6e426448b09324635590fdd9c7b345760a1d561819aea5a487fbfb4551fac9",
-    "docs/roadmap.md": "3c64b40a669d06d9db44fe874da97d0b212bdb31a23e75fd19bb61d3a4c5c298",
+    "docs/roadmap.md": "7ac423160efab74c537c96bad9cadd0cdfdd3b997d7e57b7dbdabc4d347e9101",
     "docs/runtime.md": "c90d3596d175178d55498972ee711691641ce9acafb48b88132c5ab8f2a7e51e",
     "docs/sleep-activity.md": "d7fd8810ccbd224ae4454d5854c3d4c5a5c22c0fdf469641c179fd24b2ac0db3",
     "docs/sleep.md": "3c4bc8419f4c44bb73a976dac4c3f65caf65eb76fca23d97bbe110f748272f97",
