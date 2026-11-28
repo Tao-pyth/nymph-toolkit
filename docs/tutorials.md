@@ -194,3 +194,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 通常の17例へ`python examples/sleep_activity_demo.py`と`python examples/voice_audio_demo.py`を加え、計19例。前者はAgencyの休息→実Sleep→Persona適用→次判断、後者は外部接続なしの合成PCM特徴を確認する。
 
 `voice_capture.py`は告知/同意・資格情報・任意依存を用意して明示実行する別の接続例で、通常19例の一括実行には含めない。[音声ガイド](voice.md)の設定に従う。実モデル/実サービスの確認状況は[B10](validation/v1.10.md)。
+
+## 開発候補 v1.11 入力候補
+
+`python examples/input_candidate_demo.py` は、既定値補完型・模擬AI型でWeb・文書・対話由来の教材を準備し、候補の検証と実Memoryへの明示保存を実行する。呼出しと設定は[ADR 0033](adr/0033-input-candidate-contract.md)を参照する。

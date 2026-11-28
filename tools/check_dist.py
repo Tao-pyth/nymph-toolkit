@@ -52,11 +52,13 @@ def main() -> None:
                      "adapters/discord_voice/bridge.mjs", "adapters/discord_voice/node/package.json",
                      "adapters/discord_voice/node/pnpm-lock.yaml"):
             assert "nymph_toolkit/" + path in names
+        for path in ("contracts/input_candidate.py", "contracts/_memory_record.py", "adapters/input_candidate/__init__.py"):
+            assert "nymph_toolkit/" + path in names
         assert not any("node_modules/" in name for name in names)
         metadata_path = next(n for n in names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(package.read(metadata_path))
         assert metadata["Name"] == "nymph-toolkit"
-        assert metadata["Version"] == "1.10.0"
+        assert metadata["Version"] == "1.11.0"
         assert metadata["Requires-Python"] == ">=3.12"
         assert metadata["License-Expression"] == "Apache-2.0"
         requirements = metadata.get_all("Requires-Dist", [])
@@ -87,7 +89,7 @@ def main() -> None:
             "import nymph_toolkit.subsystems.sleep as sleep; from nymph_toolkit.contracts.sleep import SLEEP_CONTRACT; "
             "assert Path(sleep.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); "
             "from importlib.metadata import version; import sys; "
-            "assert version('nymph-toolkit') == '1.10.0'; "
+            "assert version('nymph-toolkit') == '1.11.0'; "
             "import importlib.util; assert importlib.util.find_spec('vosk') is None; "
             "import nymph_toolkit.adapters.discord_voice as voice; import nymph_toolkit.subsystems.sleep_activity as sleep_activity; "
             "from nymph_toolkit.contracts.voice import VOICE_CONTRACT; from nymph_toolkit.contracts.sleep_activity import SLEEP_ACTIVITY_CONTRACT; "
@@ -137,6 +139,7 @@ def main() -> None:
         subprocess.run([str(python), "-I", str(work / "examples/sleep_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/sleep_activity_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/voice_audio_demo.py")], cwd=work, env=env, check=True)
+        subprocess.run([str(python), "-I", str(work / "examples/input_candidate_demo.py")], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "examples/voice_capture.py"), "--help"], cwd=work, env=env, check=True)
         subprocess.run([str(python), "-I", str(work / "tools/validate_voice_live.py"), "--help"], cwd=work, env=env, check=True)
         subprocess.run(

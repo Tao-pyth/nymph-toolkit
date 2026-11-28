@@ -400,3 +400,15 @@ R37・ADR 0038、子#163〜#168。実装受入と公開を分ける。[検証記
 | B10-06 | 全回帰/通常wheel/sdist/CI、安定Core/Contractsと64判断、主要Docs/顧客全形式/全ページ、v1.10までの要求監査 |
 
 Discord Bot確認はスキップや回答待ちとせずクリアとして扱う。未実施のケースを実測合格とせず、受入判断と実施履歴を区別する。先行v1.9の#169、音声以外の受入、主要Docs/CI、レビューと公開は別途確認する。
+
+<a id="b11-input-candidates"></a>
+
+## v1.11 入力候補（B11）
+
+[B11の採用条件](adr/0033-input-candidate-contract.md)を、取得教材3種、既定値補完型・模擬AI型、4配置・両経路、実Memoryへの明示保存と旧入口の回帰で照合する。公開後の標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)に記録する。
+
+実装 `e00fa3c` の[CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46140221447)で、Windows/Linux × CPython 3.12〜3.15の全8環境、音声依存2環境、Customer Docsが成功した。Windowsローカルでソースと通常wheelを各565テスト、20実行例、sdistからの同一wheel再生成で確認した。B11の出典・明示値・時刻不足、模擬APIの許可・期限・不正応答、正規化後の4096バイト境界、実MemoryのID競合と旧入口の回帰結果を[受入Issue #178](https://github.com/Tao-pyth/nymph-toolkit/issues/178#issuecomment-7239023240)に記録した。方式は起動時に選び、採用記録の保存と学習は呼び出し側の別操作とする。実AIサービス接続とDiscord音声の候補化は後続課題とする。
+
+## v1.12 Runtimeライブ診断（LD）
+
+[LD-01〜09](adr/0039-runtime-live-diagnostics-adapter-contract.md)を実Runtime・ローカルブラウザーとWindows/Linuxの負荷実測で照合する。公開後の標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。

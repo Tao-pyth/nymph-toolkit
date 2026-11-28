@@ -185,7 +185,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在使える機能と公開状態
 
-2026年11月25日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.10.0開発候補** です。未マージのv1.3〜v1.9候補（PR #123 / #131 / #137 / #143 / #149 / #156 / #162）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
+2026年11月28日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.11.0開発候補** です。未マージのv1.3〜v1.9候補（PR #123 / #131 / #137 / #143 / #149 / #156 / #162）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
 
 | 機能 | 実装した範囲・操作 | 利用できる版・資料 |
 |---|---|---|
@@ -200,6 +200,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | 睡眠活動の実行側 | 周期・人格案適用・永続結果照合、協調中断/再開 | v1.10開発候補。睡眠活動（`docs/sleep-activity.md`） |
 | Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。既存実測とユーザー判断によりBot確認はクリア | v1.10開発候補。音声（`docs/voice.md`）・受入判断（`docs/adr/0040-discord-bot-acceptance.md`） |
 | Sleep | 根拠の統合/減衰・現在夢の再結合/失効・人格修正案 | v1.9開発候補。Sleep（`docs/sleep.md`） |
+| 入力候補 | Web・文書・テキスト対話の共通準備、既定値補完・模擬AI、明示保存 | v1.11開発候補。ADR 0033（`docs/adr/0033-input-candidate-contract.md`） |
 
 Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。v1.10候補で睡眠活動の循環とDiscord Voice Adapterを追加し検証中です。Discord Bot確認はADR 0040によりクリアしました。先行#169と全体の最終確認は別途残り、Desktop Adapterは将来課題です。v1.5の実装受入はB05記録（`docs/validation/v1.5.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）にあります。
 
@@ -732,7 +733,7 @@ v1.5は親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.
 
 ## NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.10.0（開発候補） / 公開版 v1.2.0 / 2026-11-28**
+**Nymph Toolkit / 対象 v1.11.0（開発候補） / 公開版 v1.2.0 / 2026-11-28**
 
 ### この資料で分かること
 
@@ -745,11 +746,11 @@ NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入
 | Coreの構成・配置・起動停止 | 01〜03 |
 | 登録・接続・操作・ストリーム | 04〜07 |
 | 活動・失敗・保存・再起動・設定 | 08〜13 |
-| 6区分の接続契約・実機能・睡眠活動・音声 | 14〜18J |
+| 6区分の接続契約・実機能・音声・入力候補 | 14〜18K |
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.10.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携・Sleepを含みます。前段PR #123/#131/#137/#143/#149/#156/#162は未マージです。**Discord Bot確認はクリア**。実受信・通常停止・受信後の退出停止の実測と、追加確認を不要とするユーザー判断に基づきます。先行#169と全体の最終確認は別です。候補の機能には、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.11.0**は、従来の開発候補に入力候補の共通準備を追加します。前段PR #123/#131/#137/#143/#149/#156/#162は未マージです。**Discord Bot確認はクリア**。実受信・通常停止・受信後の退出停止の実測と、追加確認を不要とするユーザー判断に基づきます。先行#169と全体の最終確認は別です。候補の機能には、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名はAPI一覧（`docs/api-reference.md`）、意味はCore API（`docs/core-api.md`）と各機能ガイドを参照してください。
 
@@ -1608,6 +1609,28 @@ flowchart LR
 
 <!-- pagebreak -->
 
+### 18K 入力候補：準備・保存・学習
+
+v1.11開発候補では、取得済みのWeb・文書・テキスト対話を `ntk.input.prepare/1` に渡せます。共通入口 `prepare` は記録ID、本文、出典、取得処理、要求側の明示項目を受け取ります。候補を確認した要求側が、既存のMemory契約で明示保存します。
+
+```mermaid
+flowchart LR
+  A["取得済みの本文と出典"] --> B["前処理 prepare"]
+  B --> C["候補と項目の由来"]
+  C --> D["要求側が採用"]
+  D --> E["Memoryへ明示保存"]
+```
+
+| 応答 | 要求側の対応 |
+|---|---|
+| ready | 6項目の候補と由来を確認し、採用する場合に保存 |
+| needs_input | 不足項目を補い、新しい準備要求を作成 |
+| failed | 入力・許可・処理・上限の失敗段階とコードを確認 |
+
+既定値補完型は未指定の区分だけを補います。AI型は送信を明示した本文を模擬APIへ渡し、推定区分は確認用に返します。初版は実AIサービスに接続しません。Web・文書の既存取込と対話の既存操作も使えます。ADR 0033と設定（`docs/adr/0033-input-candidate-contract.md`）
+
+<!-- pagebreak -->
+
 ### 19 使い始める：公開版で動きを確認する
 
 CPython 3.12以上を用意します。現行版で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
@@ -1636,7 +1659,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 
 ### 19A 開発候補の機能を試す
 
-このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の10例を加え、v1.10候補では19例です。
+このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の11例を加え、v1.11候補では20例です。
 
 | 実行例 | 確認できること |
 |---|---|
@@ -1650,6 +1673,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 | sleep_demo.py | 根拠統合・夢失効・人格案の明示適用・再起動 |
 | sleep_activity_demo.py | 休息活動から周期/人格適用・次判断まで |
 | voice_audio_demo.py | 外部接続なしの合成PCM特徴検証 |
+| input_candidate_demo.py | 2方式の準備・実Memoryへの明示保存 |
 
 例は説明用の明示教材・観測・特性を使います。自由会話や一般的意味理解の完成を示すものではありません。通常の例は後処理を終えて終了し、一時保存先も削除します。Textの対話モードは明示JSON指示を受け付けます。
 
@@ -1690,7 +1714,7 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-公開版は9例、候補は19例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
+公開版は9例、候補は20例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
@@ -1765,7 +1789,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ### 24 適用範囲・検証状況・参照先
 
-Coreと各機能、睡眠活動・音声観測を検証しています。公開版は9例、候補は19例。新たな実音声接続は同意確認後に個別実行します。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。Discord Bot確認はクリア。実測履歴と追加確認不要の判断、別途残る先行#169と全体の最終確認はB09（`docs/validation/v1.9.md`）・B10（`docs/validation/v1.10.md`）で追跡します。
+Coreと各機能、睡眠活動・音声観測を検証しています。公開版は9例、候補は20例。新たな実音声接続は同意確認後に個別実行します。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。Discord Bot確認はクリア。実測履歴と追加確認不要の判断、別途残る先行#169と全体の最終確認はB09（`docs/validation/v1.9.md`）・B10（`docs/validation/v1.10.md`）で追跡します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -1797,7 +1821,7 @@ Coreと各機能、睡眠活動・音声観測を検証しています。公開�
 
 ## 顧客向け主要Docsの更新・同期・配布
 
-R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、customer-guide.md（`docs/customer-guide.md`）・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.10.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
+R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、customer-guide.md（`docs/customer-guide.md`）・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。対象の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
 
 ### 正本と同期対象
 
@@ -2176,6 +2200,10 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 通常の17例へ`python examples/sleep_activity_demo.py`と`python examples/voice_audio_demo.py`を加え、計19例。前者はAgencyの休息→実Sleep→Persona適用→次判断、後者は外部接続なしの合成PCM特徴を確認する。
 
 `voice_capture.py`は告知/同意・資格情報・任意依存を用意して明示実行する別の接続例で、通常19例の一括実行には含めない。音声ガイド（`docs/voice.md`）の設定に従う。実モデル/実サービスの確認状況はB10（`docs/validation/v1.10.md`）。
+
+### 開発候補 v1.11 入力候補
+
+`python examples/input_candidate_demo.py` は、既定値補完型・模擬AI型でWeb・文書・対話由来の教材を準備し、候補の検証と実Memoryへの明示保存を実行する。呼出しと設定はADR 0033（`docs/adr/0033-input-candidate-contract.md`）を参照する。
 
 ---
 
@@ -4487,6 +4515,10 @@ R37（2026年11月24日）の目標は、既存ロードマップに沿ってv1.
 各段階で正常系だけでなく失敗・取消・停止・保存/再起動・契約互換性を確認する。顧客Markdown/PDF/HTMLと引継ぎ書も同時に更新する。テストや代替入力だけを、外部サービスで未確認の動作の証明に使わない。
 
 v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で、実音声確認の補助ツールとケース別手順（`docs/voice.md#voice-live-acceptance`）を整備した。ADR 0040以降は任意の診断用とし、利用者への追加試験依頼は不要。721bcddの[実装検証](https://github.com/Tao-pyth/nymph-toolkit/issues/172#issuecomment-7223476441)と9a779c0の[文書更新後CI](https://github.com/Tao-pyth/nymph-toolkit/issues/172#issuecomment-7225680762)を区別する。退出停止は観測0件の実行と、後続の2件受信した実行を別々に記録した。現在利用中の受信環境と未採用ADR 0039の変更を保護するため、cf9e39dを基点とする隔離checkoutで作業する。
+
+### v1.11・v1.12の候補
+
+v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)、契約実装#177、B11・配布・主要Docsは[#178](https://github.com/Tao-pyth/nymph-toolkit/issues/178)で追跡する。v1.12の診断は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。標準は各版の公開後確認で発効する。
 
 ---
 
@@ -9312,6 +9344,14 @@ Memoryと同じ検証規則をContracts内部で共有し、候補が通るか�
 
 B11は3種の教材の方式差し替え、出典・明示値・項目の由来、時刻不足、明示許可なしのAI非呼出し、期限・不正応答、4096 bytes境界、保存前の取得失敗と実Memoryでの明示保存/競合、4配置と両経路、旧入口の回帰、通常配布および主要Docsを確認する。標準の発効は公開後確認[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)で記録する。
 
+`ntk.input.prepare/1` の開発候補のB11結果は受入記録（`docs/acceptance.md#b11-input-candidates`）を参照する。新しい候補生成・利用と関連改修で本契約を適用し、現行入口の移行時は関連Issueで互換性と適用範囲を確認する。実AIサービス接続とDiscord音声の候補化は後続の判断とする。
+
+#### v1.11の追加インターフェイス
+
+方式の構成は `method`（`defaults` または `mock_ai`）と正の整数 `configuration_version` を共通とする。前者は入力種別別の区分設定、後者は模擬応答、モデルID、処理種別 `summarize` または `extract`、0秒超60秒以下の有限秒の期限を要求する。AI型の要求には `permission={"destination":"mock","fields":["content"]}` を明示する。模擬APIの呼出し引数は本文と処理種別に限定する。必須の取得情報・時刻が不足した場合は先に補完を求める。
+
+`ready` の `record` は既存の6項目、`provenance` は各項目の由来、`acquisition` は入力の取得処理である。`needs_input` は `missing`、`reason` と存在する場合のみ `proposals` を返す。`failed` は `stage`・`code` を返す。各応答で `method_id`・`configuration_version`、AI型では `model_id` も返す。設定・要求・応答の誤りを別に扱い、例外本文は外部応答失敗に含めない。
+
 ---
 
 <a id="section-67"></a>
@@ -10658,6 +10698,18 @@ R37・ADR 0038、子#163〜#168。実装受入と公開を分ける。検証記�
 | B10-06 | 全回帰/通常wheel/sdist/CI、安定Core/Contractsと64判断、主要Docs/顧客全形式/全ページ、v1.10までの要求監査 |
 
 Discord Bot確認はスキップや回答待ちとせずクリアとして扱う。未実施のケースを実測合格とせず、受入判断と実施履歴を区別する。先行v1.9の#169、音声以外の受入、主要Docs/CI、レビューと公開は別途確認する。
+
+<a id="b11-input-candidates"></a>
+
+### v1.11 入力候補（B11）
+
+B11の採用条件（`docs/adr/0033-input-candidate-contract.md`）を、取得教材3種、既定値補完型・模擬AI型、4配置・両経路、実Memoryへの明示保存と旧入口の回帰で照合する。公開後の標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)に記録する。
+
+実装 `e00fa3c` の[CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46140221447)で、Windows/Linux × CPython 3.12〜3.15の全8環境、音声依存2環境、Customer Docsが成功した。Windowsローカルでソースと通常wheelを各565テスト、20実行例、sdistからの同一wheel再生成で確認した。B11の出典・明示値・時刻不足、模擬APIの許可・期限・不正応答、正規化後の4096バイト境界、実MemoryのID競合と旧入口の回帰結果を[受入Issue #178](https://github.com/Tao-pyth/nymph-toolkit/issues/178#issuecomment-7239023240)に記録した。方式は起動時に選び、採用記録の保存と学習は呼び出し側の別操作とする。実AIサービス接続とDiscord音声の候補化は後続課題とする。
+
+### v1.12 Runtimeライブ診断（LD）
+
+LD-01〜09（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）を実Runtime・ローカルブラウザーとWindows/Linuxの負荷実測で照合する。公開後の標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
 
 ---
 
@@ -13335,6 +13387,11 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
+
+### 未リリース — v1.11.0開発候補
+
+- 入力候補の共通 `prepare` と既定値補完型・模擬AI型。候補の由来を応答し、保存は要求側が既存Memory契約で明示実行する。
+- Web・文書・テキスト対話の教材、入力境界と4配置・両経路の実Memory統合。実AI接続と標準の発効は後続。
 
 ### 未リリース — v1.5.0開発候補
 

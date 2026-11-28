@@ -1,6 +1,6 @@
 # 顧客向け主要Docsの更新・同期・配布
 
-R36・[ADR 0030](adr/0030-customer-docs-as-primary.md)により、[customer-guide.md](customer-guide.md)・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。現在は対象v1.10.0の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
+R36・[ADR 0030](adr/0030-customer-docs-as-primary.md)により、[customer-guide.md](customer-guide.md)・PDF・HTMLは主要Docsである。対象ブランチ/コミットの実装と同時に更新する。対象の開発候補と公開v1.2.0を区別して説明する。読者は導入担当者・開発担当者の両方。
 
 ## 正本と同期対象
 

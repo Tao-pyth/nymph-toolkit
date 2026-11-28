@@ -87,3 +87,11 @@ Webと文書は取得元ごとに本文と出典を組み立て、対話の観�
 Memoryと同じ検証規則をContracts内部で共有し、候補が通るかを既存の正規化・4096 bytes判定で検査する。応答は明示時刻の表記を保ち、永続記録のUTC正規化はMemoryで行う。同じ接続を処理中に切り替えない。
 
 B11は3種の教材の方式差し替え、出典・明示値・項目の由来、時刻不足、明示許可なしのAI非呼出し、期限・不正応答、4096 bytes境界、保存前の取得失敗と実Memoryでの明示保存/競合、4配置と両経路、旧入口の回帰、通常配布および主要Docsを確認する。標準の発効は公開後確認[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)で記録する。
+
+`ntk.input.prepare/1` の開発候補のB11結果は[受入記録](../acceptance.md#b11-input-candidates)を参照する。新しい候補生成・利用と関連改修で本契約を適用し、現行入口の移行時は関連Issueで互換性と適用範囲を確認する。実AIサービス接続とDiscord音声の候補化は後続の判断とする。
+
+### v1.11の追加インターフェイス
+
+方式の構成は `method`（`defaults` または `mock_ai`）と正の整数 `configuration_version` を共通とする。前者は入力種別別の区分設定、後者は模擬応答、モデルID、処理種別 `summarize` または `extract`、0秒超60秒以下の有限秒の期限を要求する。AI型の要求には `permission={"destination":"mock","fields":["content"]}` を明示する。模擬APIの呼出し引数は本文と処理種別に限定する。必須の取得情報・時刻が不足した場合は先に補完を求める。
+
+`ready` の `record` は既存の6項目、`provenance` は各項目の由来、`acquisition` は入力の取得処理である。`needs_input` は `missing`、`reason` と存在する場合のみ `proposals` を返す。`failed` は `stage`・`code` を返す。各応答で `method_id`・`configuration_version`、AI型では `model_id` も返す。設定・要求・応答の誤りを別に扱い、例外本文は外部応答失敗に含めない。
