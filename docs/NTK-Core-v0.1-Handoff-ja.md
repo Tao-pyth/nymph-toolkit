@@ -9344,6 +9344,8 @@ Memoryと同じ検証規則をContracts内部で共有し、候補が通るか�
 
 B11は3種の教材の方式差し替え、出典・明示値・項目の由来、時刻不足、明示許可なしのAI非呼出し、期限・不正応答、4096 bytes境界、保存前の取得失敗と実Memoryでの明示保存/競合、4配置と両経路、旧入口の回帰、通常配布および主要Docsを確認する。標準の発効は公開後確認[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)で記録する。
 
+`ntk.input.prepare/1` の開発候補のB11結果は受入記録（`docs/acceptance.md#b11-input-candidates`）を参照する。新しい候補生成・利用と関連改修で本契約を適用し、現行入口の移行時は関連Issueで互換性と適用範囲を確認する。実AIサービス接続とDiscord音声の候補化は後続の判断とする。
+
 #### v1.11の追加インターフェイス
 
 方式の構成は `method`（`defaults` または `mock_ai`）と正の整数 `configuration_version` を共通とする。前者は入力種別別の区分設定、後者は模擬応答、モデルID、処理種別 `summarize` または `extract`、0秒超60秒以下の有限秒の期限を要求する。AI型の要求には `permission={"destination":"mock","fields":["content"]}` を明示する。模擬APIの呼出し引数は本文と処理種別に限定する。必須の取得情報・時刻が不足した場合は先に補完を求める。
@@ -10697,9 +10699,13 @@ R37・ADR 0038、子#163〜#168。実装受入と公開を分ける。検証記�
 
 Discord Bot確認はスキップや回答待ちとせずクリアとして扱う。未実施のケースを実測合格とせず、受入判断と実施履歴を区別する。先行v1.9の#169、音声以外の受入、主要Docs/CI、レビューと公開は別途確認する。
 
+<a id="b11-input-candidates"></a>
+
 ### v1.11 入力候補（B11）
 
 B11の採用条件（`docs/adr/0033-input-candidate-contract.md`）を、取得教材3種、既定値補完型・模擬AI型、4配置・両経路、実Memoryへの明示保存と旧入口の回帰で照合する。公開後の標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)に記録する。
+
+実装 `e00fa3c` の[CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46140221447)で、Windows/Linux × CPython 3.12〜3.15の全8環境、音声依存2環境、Customer Docsが成功した。Windowsローカルでソースと通常wheelを各565テスト、20実行例、sdistからの同一wheel再生成で確認した。B11の出典・明示値・時刻不足、模擬APIの許可・期限・不正応答、正規化後の4096バイト境界、実MemoryのID競合と旧入口の回帰結果を[受入Issue #178](https://github.com/Tao-pyth/nymph-toolkit/issues/178#issuecomment-7239023240)に記録した。方式は起動時に選び、採用記録の保存と学習は呼び出し側の別操作とする。実AIサービス接続とDiscord音声の候補化は後続課題とする。
 
 ### v1.12 Runtimeライブ診断（LD）
 
