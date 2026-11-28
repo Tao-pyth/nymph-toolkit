@@ -136,11 +136,19 @@ function renderReports() {
 }
 function renderEvents() {
   const target = byId("events");
-  target.replaceChildren();
+  const previous = new Map(Array.from(target.children, (row) => [row.dataset.sequence, row]));
   const filter = byId("event-filter").value;
+  const rows = [];
   for (const entry of [...latest.events].reverse().filter((event) => event.kind.includes(filter))) {
-    add(target, "li", timeText(entry.at) + " · " + entry.kind + " · " + entry.subject);
+    const sequence = String(entry.sequence);
+    const row = previous.get(sequence) ?? document.createElement("li");
+    if (!previous.has(sequence)) {
+      row.dataset.sequence = sequence;
+      row.textContent = timeText(entry.at) + " · " + entry.kind + " · " + entry.subject;
+    }
+    rows.push(row);
   }
+  target.replaceChildren(...rows);
 }
 function renderQueries(queries) {
   const signature = JSON.stringify(queries);
@@ -194,6 +202,11 @@ function merge(update) {
     }
   }
 }
+function renderSnapshot() {
+  if (!latest) return;
+  renderModules(); renderEvents(); renderActivities(); renderReports(); renderQueries(latest.queries);
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) renderSnapshot(); });
 byId("adapter").addEventListener("change", renderReports);
 byId("event-filter").addEventListener("change", () => { if (latest) renderEvents(); });
 async function tick() {
@@ -201,14 +214,17 @@ async function tick() {
     const response = await fetch("/api/snapshot" + (since === null ? "" : "?since=" + since),
                                  {signal:AbortSignal.timeout(2000)});
     const update = await response.json();
-    const changed = since !== update.revision || update.reset;
-    latest = update;
+    const previousEvents = update.reset ? [] : latest?.events ?? [];
+    latest = {...update, events:[...previousEvents, ...update.events].slice(-200)};
     merge(update);
     since = update.revision;
     const state = update.stalled ? "観測更新停止" : stateName(update.state);
     if (byId("runtime").textContent !== state) byId("runtime").textContent = state;
-    if (changed) { renderModules(); renderEvents(); }
-    renderActivities(); renderReports(); renderQueries(update.queries);
+    if (!document.hidden) {
+      if (update.reset || update.changes.modules || update.changes.connections || update.changes.usage) renderModules();
+      if (update.reset || update.events.length) renderEvents();
+      renderActivities(); renderReports(); renderQueries(update.queries);
+    }
   } catch {
     if (latest?.state !== "failed" && latest?.state !== "stopped") byId("runtime").textContent = "観測更新停止";
   } finally {

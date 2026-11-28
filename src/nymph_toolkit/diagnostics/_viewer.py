@@ -54,9 +54,10 @@ class View:
                 self.state, self.terminal = message["state"], message["terminal"]
                 changes = message["changes"]
                 _merge(self.current, changes)
-                self.history.extend(message["events"])
+                events = list(message["events"])
+                self.history.extend(events)
                 self.revision += 1
-                self.deltas.append((self.revision, changes))
+                self.deltas.append((self.revision, changes, events))
             elif kind == "reply" and self.active is not None:
                 identifier, event, replies = self.active
                 if identifier == message["id"]:
@@ -67,10 +68,12 @@ class View:
         with self.lock:
             reset = since is None or not self.deltas or not self.deltas[0][0] - 1 <= since <= self.revision
             delta = self.current if reset else {}
+            events = deque(self.history if reset else (), maxlen=200)
             if not reset:
-                for revision, changes in self.deltas:
+                for revision, changes, additions in self.deltas:
                     if revision > since:
                         _merge(delta, changes)
+                        events.extend(additions)
             # Activities are bounded on the viewer as well as at the Runtime. Send
             # their current collection so a long-lived browser trims the same entries.
             activity_delta = self.current["activities"] if "activities" in delta else None
@@ -79,7 +82,7 @@ class View:
             stalled = self.state not in ("stopped", "failed") and time.monotonic() - self.last_pulse >= 3
             return json.dumps({"run_id": self.run_id, "revision": self.revision,
                                "reset": reset, "state": self.state, "stalled": stalled,
-                               "changes": delta, "events": list(self.history), "terminal": self.terminal,
+                               "changes": delta, "events": list(events), "terminal": self.terminal,
                                "queries": self.queries}, ensure_ascii=False, allow_nan=False).encode()
 
     def query(self, operation, arguments):

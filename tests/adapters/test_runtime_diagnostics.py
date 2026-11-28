@@ -52,6 +52,7 @@ class ContractTests(unittest.TestCase):
         read = json.loads(view.snapshot(None))
         self.assertTrue(read["stalled"])
         self.assertEqual(read["events"], list(range(1, 201)))
+        self.assertEqual(json.loads(view.snapshot(read["revision"]))["events"], [])
         view.apply({"type": "update", "state": "failed", "changes": {}, "events": [], "terminal": {"x": {"state": "failed"}}})
         view.last_pulse -= 3.1
         read = json.loads(view.snapshot(None))

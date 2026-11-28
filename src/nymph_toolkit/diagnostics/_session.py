@@ -165,7 +165,8 @@ class DiagnosticSession:
                     self._checking.pop(binding, None)
                 self._change(label, binding, {"state": state})
             if not values:
-                self._events.append({"at": event["at"], "kind": kind, "subject": "connections"})
+                self._events.append({"sequence": event["sequence"], "at": event["at"],
+                                     "kind": kind, "subject": "connections"})
         elif kind.startswith(("activity_v06_", "activity_v07_")) and "request" in data:
             label = "activities"
             request = data["request"]
@@ -174,7 +175,8 @@ class DiagnosticSession:
         if value is not None:
             self._change(label, key, value)
         if label is not None and kind != "usage":
-            self._events.append({"at": event["at"], "kind": kind, "subject": key or label})
+            self._events.append({"sequence": event["sequence"], "at": event["at"],
+                                 "kind": kind, "subject": key or label})
 
     @staticmethod
     def _binding_key(data):

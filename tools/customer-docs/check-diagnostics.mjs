@@ -12,9 +12,10 @@ try {
   if (args[0] === "--tabs") {
     const count = Number(args[1]);
     if (![1, 3].includes(count) || args.length !== 6) throw new Error("Expected tab count and four Runtime URLs");
+    const context = await browser.newContext();
     const pages = await Promise.all(args.slice(2).flatMap((url) =>
       Array.from({length:count}, async () => {
-        const page = await browser.newPage();
+        const page = await context.newPage();
         await page.goto(url);
         await page.waitForFunction(() => document.getElementById("runtime").textContent === "稼働中");
         return page;
