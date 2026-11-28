@@ -115,6 +115,7 @@ class ViewerTests(unittest.IsolatedAsyncioTestCase):
                     view = await fetch(url + "api/snapshot")
                     self.assertEqual(view["changes"]["reports"]["weather"]["sequence"], 4)
                     self.assertEqual(view["changes"]["modules"]["weather"]["placement"], placement.value)
+                    self.assertNotIn("weather", view["terminal"])
                     again = await fetch(url + "api/snapshot?since=" + str(view["revision"]))
                     self.assertFalse(again["reset"])
                     if placement is Placement.PROCESS:

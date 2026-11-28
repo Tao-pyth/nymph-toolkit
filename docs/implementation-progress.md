@@ -20,3 +20,5 @@ v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で
 ## v1.11・v1.12の候補
 
 v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)、契約実装#177、B11・配布・主要Docsは[#178](https://github.com/Tao-pyth/nymph-toolkit/issues/178)で追跡する。v1.12の診断は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。標準は各版の公開後確認で発効する。
+
+v1.12候補では任意報告とローカル画面を実装した。配布・受入は[#182](https://github.com/Tao-pyth/nymph-toolkit/issues/182)で報告し、LD-09の本測定と短い試験を区別する。

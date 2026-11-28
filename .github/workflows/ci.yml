@@ -62,6 +62,7 @@ jobs:
       - run: python examples/sleep_activity_demo.py
       - run: python examples/voice_audio_demo.py
       - run: python examples/input_candidate_demo.py
+      - run: python examples/runtime_diagnostics_demo.py --seconds 2
       - run: python -W error tools/validate_hybrid_load.py --duration 1 --requests 8 --chunks 4 --cycle-requests 4 --cycle-chunks 2 --sample-interval 1 --output .git/v09-load-smoke.json
       - run: python tools/check_docs.py
       - run: python tools/check_api.py
@@ -126,3 +127,38 @@ jobs:
           path: output/pdf/
           if-no-files-found: error
           retention-days: 90
+
+  diagnostics-acceptance:
+    name: Runtime diagnostics (${{ matrix.os }})
+    if: github.event_name == 'pull_request' && github.head_ref == 'codex/181-runtime-diagnostics'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.15"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: "24"
+      - run: npm install --global pnpm@11.25.0
+      - run: pnpm --dir tools/customer-docs install --frozen-lockfile
+      - if: runner.os == 'Linux'
+        run: pnpm --dir tools/customer-docs exec playwright install --with-deps chromium
+      - if: runner.os == 'Windows'
+        run: pnpm --dir tools/customer-docs exec playwright install chromium
+      - run: python -m pip install -e .
+      - run: node tools/customer-docs/check-diagnostics.mjs
+      - run: python -W error tools/validate_runtime_diagnostics.py --output output/diagnostics/ld09.json
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: runtime-diagnostics-${{ matrix.os }}-${{ github.event.pull_request.head.sha }}
+          path: output/diagnostics/
+          if-no-files-found: warn

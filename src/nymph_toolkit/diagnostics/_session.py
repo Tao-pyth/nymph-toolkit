@@ -134,7 +134,8 @@ class DiagnosticSession:
             label, key = "modules", data["module_id"]
             value = _project(data, ("state", "pid", "returncode", "cleanup_confirmed"))
             value["placement"] = self.group.process(key).placement.value
-            if data["state"] in ("failed", "forcing") or data["cleanup_confirmed"] is False:
+            if (data["state"] in ("failed", "forcing")
+                    or (data["state"] == "stopped" and data["cleanup_confirmed"] is False)):
                 self._terminal[key] = dict(value)
         elif kind == "usage" and data["module_id"] != _RECEIVER:
             label, key = "usage", data["module_id"]

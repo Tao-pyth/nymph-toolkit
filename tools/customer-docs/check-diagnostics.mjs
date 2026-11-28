@@ -41,6 +41,7 @@ try {
       await page.goto(line[0]);
       await page.getByText("天気情報", {exact:true}).waitFor();
       assert.equal(await page.locator("#adapter option").count(), 1);
+      assert.equal(await page.getByText(/異常の記録/).count(), 0);
       assert.ok(await page.getByText("地域 東京").isVisible());
       const action = page.getByRole("button", {name:"天気サンプルの状態を照会"});
       await action.focus();

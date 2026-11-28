@@ -198,3 +198,7 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## 開発候補 v1.11 入力候補
 
 `python examples/input_candidate_demo.py` は、既定値補完型・模擬AI型でWeb・文書・対話由来の教材を準備し、候補の検証と実Memoryへの明示保存を実行する。呼出しと設定は[ADR 0033](adr/0033-input-candidate-contract.md)を参照する。
+
+## 開発候補 v1.12 Runtimeライブ診断
+
+`python examples/runtime_diagnostics_demo.py --seconds 60` でローカル画面のURLを表示する。画面で固定天気、使用量、許可済みの状態照会を確認できる。通常導入にブラウザー自動化のツールは不要。報告設定とLD-01〜09は[ADR 0039](adr/0039-runtime-live-diagnostics-adapter-contract.md)を参照する。
