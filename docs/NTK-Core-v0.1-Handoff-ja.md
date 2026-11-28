@@ -131,37 +131,38 @@ R37でv1.10まで実装・検証を反復する目標が指示された。v1.4�
 69. [ADR 0036 v1.8 Personaを根拠にしたAgencyの選択](#section-69)
 70. [ADR 0037 v1.9 Sleepの初期統合・忘却・夢・人格修正案](#section-70)
 71. [ADR 0038 v1.10 睡眠活動循環と音声観測](#section-71)
-72. [NTK開発ロードマップ](#section-72)
-73. [受入基準・検討案と検証記録](#section-73)
-74. [Core採用事項と検証証拠の対応](#section-74)
-75. [顧客向け契約・利用ガイドの検証記録](#section-75)
-76. [v1.3候補までの実装機能と資料の整合点検](#section-76)
-77. [v0.9.0利用者向けDocsの検証記録](#section-77)
-78. [v0.2 Runtime受入記録](#section-78)
-79. [v0.3受入記録](#section-79)
-80. [v0.4の受入記録](#section-80)
-81. [v0.5の受入確認と検証経過](#section-81)
-82. [v0.6の受入確認と検証経過](#section-82)
-83. [v0.7の受入確認と検証経過](#section-83)
-84. [v0.8 統合・障害・負荷検証記録](#section-84)
-85. [v0.9 Core機能完成の検証記録](#section-85)
-86. [v1.0 Core接続契約の検証](#section-86)
-87. [v1.1 Memoryの受入記録](#section-87)
-88. [v1.10 睡眠活動・音声観測の検証記録](#section-88)
-89. [v1.2 Document Adapterの受入・検証記録](#section-89)
-90. [v1.3 Cognitionの受入・検証記録](#section-90)
-91. [v1.4 B04実装・検証記録](#section-91)
-92. [v1.5 Agencyの検証記録](#section-92)
-93. [v1.6 Agency活動循環の検証記録](#section-93)
-94. [v1.7 Personaの検証記録](#section-94)
-95. [v1.8 Persona連携の検証記録](#section-95)
-96. [v1.9 Sleep初期機能の検証記録](#section-96)
-97. [WindowsのTCP終了処理の修正・検証（#94）](#section-97)
-98. [開発準備とGit運用](#section-98)
-99. [マイルストーンと親子Issueの運用](#section-99)
-100. [公開準備とリリース手順](#section-100)
-101. [変更履歴](#section-101)
-102. [Apache License 2.0（原文）](#section-102)
+72. [ADR 0040 Discord Bot確認の受入クリア](#section-72)
+73. [NTK開発ロードマップ](#section-73)
+74. [受入基準・検討案と検証記録](#section-74)
+75. [Core採用事項と検証証拠の対応](#section-75)
+76. [顧客向け契約・利用ガイドの検証記録](#section-76)
+77. [v1.3候補までの実装機能と資料の整合点検](#section-77)
+78. [v0.9.0利用者向けDocsの検証記録](#section-78)
+79. [v0.2 Runtime受入記録](#section-79)
+80. [v0.3受入記録](#section-80)
+81. [v0.4の受入記録](#section-81)
+82. [v0.5の受入確認と検証経過](#section-82)
+83. [v0.6の受入確認と検証経過](#section-83)
+84. [v0.7の受入確認と検証経過](#section-84)
+85. [v0.8 統合・障害・負荷検証記録](#section-85)
+86. [v0.9 Core機能完成の検証記録](#section-86)
+87. [v1.0 Core接続契約の検証](#section-87)
+88. [v1.1 Memoryの受入記録](#section-88)
+89. [v1.10 睡眠活動・音声観測の検証記録](#section-89)
+90. [v1.2 Document Adapterの受入・検証記録](#section-90)
+91. [v1.3 Cognitionの受入・検証記録](#section-91)
+92. [v1.4 B04実装・検証記録](#section-92)
+93. [v1.5 Agencyの検証記録](#section-93)
+94. [v1.6 Agency活動循環の検証記録](#section-94)
+95. [v1.7 Personaの検証記録](#section-95)
+96. [v1.8 Persona連携の検証記録](#section-96)
+97. [v1.9 Sleep初期機能の検証記録](#section-97)
+98. [WindowsのTCP終了処理の修正・検証（#94）](#section-98)
+99. [開発準備とGit運用](#section-99)
+100. [マイルストーンと親子Issueの運用](#section-100)
+101. [公開準備とリリース手順](#section-101)
+102. [変更履歴](#section-102)
+103. [Apache License 2.0（原文）](#section-103)
 
 ---
 
@@ -196,18 +197,18 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Agency | 根拠と内部状態からの決定・保存、Coreへの適用と活動循環 | v1.5/1.6開発候補。判断（`docs/agency.md`）・実行（`docs/agency-execution.md`） |
 | Persona | 長期特性の参照、外部差分、現在値/修正履歴の原子的保存 | v1.7開発候補。Persona（`docs/persona.md`） |
 | 睡眠活動の実行側 | 周期・人格案適用・永続結果照合、協調中断/再開 | v1.10開発候補。睡眠活動（`docs/sleep-activity.md`） |
-| Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。実受信・通常停止と受信後の退出停止を確認、残る受入は検証中 | v1.10開発候補。音声（`docs/voice.md`） |
+| Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。既存実測とユーザー判断によりBot確認はクリア | v1.10開発候補。音声（`docs/voice.md`）・受入判断（`docs/adr/0040-discord-bot-acceptance.md`） |
 | Sleep | 根拠の統合/減衰・現在夢の再結合/失効・人格修正案 | v1.9開発候補。Sleep（`docs/sleep.md`） |
 
-Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。v1.10候補で睡眠活動の循環とDiscord Voice Adapterを追加し検証中です。実Discord受信の初回成功を確認しましたが、最終受入は未完了、Desktop Adapterは将来課題です。v1.5の実装受入はB05記録（`docs/validation/v1.5.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）にあります。
+Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。v1.10候補で睡眠活動の循環とDiscord Voice Adapterを追加し検証中です。Discord Bot確認はADR 0040によりクリアしました。先行#169と全体の最終確認は別途残り、Desktop Adapterは将来課題です。v1.5の実装受入はB05記録（`docs/validation/v1.5.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）にあります。
 
 ### v1.10.0開発候補 — 睡眠活動と音声観測
 
-Agencyの睡眠活動からSleep周期とPersona適用を接続し、結果不明を照会する実行側を追加しました。音声側は明示同意・期限付き観測・日本語ASR・所有helper/workerの後処理を実装しています。2026年11月28日の利用者提供ログで、実Discord受信と通常停止に加え、2件受信後の参加者変更停止・停止後の観測0件・Bot退出・後処理を確認しました。停止後の再読出し・同一IDの非再接続、話者照合・参加・撤回・切断などの実機確認は残ります。各実行の結果と限界（`docs/validation/v1.10.md#live-voice-followup`）
+Agencyの睡眠活動からSleep周期とPersona適用を接続し、結果不明を照会する実行側を追加しました。音声側は明示同意・期限付き観測・日本語ASR・所有helper/workerの後処理を実装しています。2026年11月28日の利用者提供ログで、実Discord受信と通常停止に加え、2件受信後の参加者変更停止・停止後の観測0件・Bot退出・後処理を確認しました。追加の実機確認は不要とするユーザー判断により、Discord Bot確認をクリアとしました。実測結果と受入判断は区別します。各実行の結果と限界（`docs/validation/v1.10.md#live-voice-followup`）
 
 睡眠活動（`docs/sleep-activity.md`）・音声導入/契約（`docs/voice.md`）・ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）・B10記録（`docs/validation/v1.10.md`）。音声は任意依存です。v1.9のCIで見つかった終了確認失敗も[#169](https://github.com/Tao-pyth/nymph-toolkit/issues/169)で調査中であり、v1.10全体の完成とはしません。
 
-実音声の残る受入には、本文や個人IDを出さないケース別検証ツール（`docs/voice.md#voice-live-acceptance`）を用意しています。各ケースへの同意と手動操作を確認して明示実行し、合成音声によるツール試験と実Discordの結果を区別します。
+2026年11月28日の明示指示をADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）へ記録し、**Discord Bot確認はクリア**としました。追加の話者照合等を利用者へ依頼する必要はありません。ケース別検証ツール（`docs/voice.md#voice-live-acceptance`）は任意の診断用として保持します。未実施の試験を実行済みとせず、製品の同意・保持・停止契約を維持します。
 
 ### v1.9で追加したSleepの初期統合
 
@@ -271,7 +272,7 @@ CoreとSubsystem・Adapterをつなぐ6区分の接続契約（`docs/module-cont
 
 配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.10.0はCognition・Text/Web・訂正・Agencyの判断/活動循環・Persona連携・Sleepと睡眠活動・音声を含み、通常の実行例は19例です。音声依存と実Discord接続は音声ガイド（`docs/voice.md`）の明示手順を使い、初回成功と未確認の受入項目を区別します。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.10.0はCognition・Text/Web・訂正・Agencyの判断/活動循環・Persona連携・Sleepと睡眠活動・音声を含み、通常の実行例は19例です。音声依存と実Discord接続は音声ガイド（`docs/voice.md`）の明示手順を使います。Bot確認はクリア済みで、実測履歴と追加確認不要の受入判断を区別します。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -425,7 +426,7 @@ v1.8のPersona/Agency連携はADR 0036（`docs/adr/0036-v1.8-persona-agency.md`�
 
 v1.9 SleepはADR 0037（`docs/adr/0037-v1.9-sleep.md`）に従う。初期の忘却はSleep現在統合状態の寄与に限定し、Memory原本/Cognition既存学習を削除しない。夢は次の成功周期で失効し、人格根拠にしない。observedの初回評価だけから修正案を生成し、案と適用成功を分ける。Sleep自身のPersona.apply・睡眠活動循環はv1.10の別判断へ残す。
 
-v1.10はADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）。睡眠実行側の意図/送信/確定を分け、結果照会を自動再送へ変えない。音声は明示告知/同意・期限付き観測とし、保存/学習へ自動投入しない。native ASRの排出と結果破棄、helper回収を確認する。実Discord未検証をfixture成功で完了扱いにしない。主要Docs同期にはbridge/モデルmanifest/Node manifest/lockも含める。
+v1.10はADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）。睡眠実行側の意図/送信/確定を分け、結果照会を自動再送へ変えない。音声は明示告知/同意・期限付き観測とし、保存/学習へ自動投入しない。native ASRの排出と結果破棄、helper回収を確認する。実Discordの実測履歴をfixture成功で書き換えない。2026年11月28日のユーザー指示・ADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）により、追加実機確認は不要、Discord Bot確認はクリアである。スキップや回答待ちへ戻さず、同じ確認を再依頼しない。製品の同意/保持/停止契約と#169等の別課題は維持する。主要Docs同期にはbridge/モデルmanifest/Node manifest/lockも含める。
 
 ---
 
@@ -716,7 +717,7 @@ v1.5は親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.
 
 ### R37のv1.10具体化
 
-親#20・子#163〜#168をコード変更前に実親子関係付きで登録し、ADR 0038で睡眠活動・音声観測・依存/モデル識別・B10を具体化した。APIや数値はCodex判断として記録し、実装受入と個別ユーザー承認を区別する。実Discord受信、主要Docs全形式、先行#169を含む最終受入は継続中。睡眠活動と音声ガイドを引継ぎ書へ全文収録する。
+親#20・子#163〜#168をコード変更前に実親子関係付きで登録し、ADR 0038で睡眠活動・音声観測・依存/モデル識別・B10を具体化した。APIや数値はCodex判断として記録し、実装受入と個別ユーザー承認を区別する。2026年11月28日のユーザー指示をADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）へ記録し、Discord Bot確認はクリア、追加実機確認は不要とした。実測履歴とこの受入判断を分け、先行#169と全体の最終確認は別途残す。睡眠活動・音声ガイド・新ADRを引継ぎ書へ全文収録する。
 
 ---
 
@@ -743,7 +744,7 @@ NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.10.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携・Sleepを含みます。前段PR #123/#131/#137/#143/#149/#156/#162は未マージです。実Discord受信・通常停止と、2件受信後の退出停止・停止後観測0件を確認しました。話者・撤回等の実機検証と先行#169が残ります。候補の機能には、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.10.0**はCognition・Text/Web・注釈訂正・Agency・Persona連携・Sleepを含みます。前段PR #123/#131/#137/#143/#149/#156/#162は未マージです。**Discord Bot確認はクリア**。実受信・通常停止・受信後の退出停止の実測と、追加確認を不要とするユーザー判断に基づきます。先行#169と全体の最終確認は別です。候補の機能には、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名はAPI一覧（`docs/api-reference.md`）、意味はCore API（`docs/core-api.md`）と各機能ガイドを参照してください。
 
@@ -1548,7 +1549,7 @@ flowchart LR
 
 ### 18I 音声観測：同意と期限を伴う外部入力
 
-Discord Voice Adapterは、告知と本人の同意を確認した音声を一時的に観測する開発候補です。**2件受信後の参加者変更停止・停止後観測0件・Bot退出を確認**しました。停止後の再読出し・同じIDの非再接続、話者・撤回等は未確認です。各実行の結果と限界（`docs/validation/v1.10.md#live-voice-followup`）
+Discord Voice Adapterは、告知と本人の同意を確認した音声を一時的に観測する開発候補です。**Discord Bot確認はクリア**。既存の実受信・退出停止等の実測と、追加確認を不要とするユーザー判断に基づきます。未実施のケースを実測合格とはしません。受入判断（`docs/adr/0040-discord-bot-acceptance.md`）・実測履歴（`docs/validation/v1.10.md#live-voice-followup`）
 
 ```mermaid
 flowchart LR
@@ -1570,7 +1571,7 @@ flowchart LR
 
 文字起こしは推定です。区間長・音量の指標・ゼロ交差率から、感情や人格を断定しません。導入・同意・現時点の制約（`docs/voice.md`）
 
-実機受入用ツールは話者・退出・撤回・期限・Runtime停止を個別確認し、本文や個人IDを出さず件数と判定を返します。各試行への同意と実際の操作の確認を伴わせます。ケース別の手順（`docs/voice.md#voice-live-acceptance`）
+ケース別ツールは将来必要な際の任意の診断用です。v1.10の追加確認は不要で、利用者へ再試験を求めません。新たな実受信には、その操作への告知・同意が必要です。診断手順（`docs/voice.md#voice-live-acceptance`）
 
 <!-- pagebreak -->
 
@@ -1759,7 +1760,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ### 24 適用範囲・検証状況・参照先
 
-Coreと各機能、睡眠活動・音声観測を検証しています。公開版は9例、候補は19例。実音声接続は同意確認後に個別実行します。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。実受信後の退出停止・停止後観測0件の結果、残る話者・撤回等の実機検証と先行#169はB09（`docs/validation/v1.9.md`）・B10（`docs/validation/v1.10.md`）で追跡します。
+Coreと各機能、睡眠活動・音声観測を検証しています。公開版は9例、候補は19例。新たな実音声接続は同意確認後に個別実行します。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。Discord Bot確認はクリア。実測履歴と追加確認不要の判断、別途残る先行#169と全体の最終確認はB09（`docs/validation/v1.9.md`）・B10（`docs/validation/v1.10.md`）で追跡します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -2951,7 +2952,8 @@ nymph-toolkit/
 │     ├─ 0035-v1.7-persona.md
 │     ├─ 0036-v1.8-persona-agency.md
 │     ├─ 0037-v1.9-sleep.md
-│     └─ 0038-v1.10-sleep-cycle-and-voice.md
+│     ├─ 0038-v1.10-sleep-cycle-and-voice.md
+│     └─ 0040-discord-bot-acceptance.md
 ├─ src/
 │  └─ nymph_toolkit/
 │     ├─ core/
@@ -3013,7 +3015,7 @@ R10・ADR 0013（`docs/adr/0013-milestone-issue-workflow.md`）により、コ�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。睡眠活動との循環、音声受信・ASRはADR 0038で初期範囲を具体化した。後続の学習・意思決定方式や未実装Adapterの形式・権限は未確定である。実Discord受信は未検証で、対象外の後続機能は追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。睡眠活動との循環、音声受信・ASRはADR 0038で初期範囲を具体化した。後続の学習・意思決定方式や未実装Adapterの形式・権限は未確定である。実Discord受信・通常停止・受信後の退出停止は確認済みで、Bot確認はADR 0040のユーザー判断によりクリアした。対象外の後続機能は追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ### R33：DocumentとMemoryの境界
 
@@ -3058,6 +3060,8 @@ ADR 0037（`docs/adr/0037-v1.9-sleep.md`）により`contracts/sleep.py`と`subs
 睡眠活動（`docs/sleep-activity.md`）はNymph側の実行機能で、Core管理の活動からSleep周期を呼び、指定された人格案をPersonaの公開契約へ渡す。意図/送信段階/確定結果を専用SQLiteへ保存し、再起動は照会のみ。
 
 音声（`docs/voice.md`）はAdapter所有のNode受信helperとPythonの認識workerを使う。CoreのLOCAL/PROCESS配置と管理IPCは維持する。明示同意・期限付きの観測に限定し、Memory/Cognitionへ自動投入しない。追加依存/モデルは任意導入。Desktopや分散実行、複製/移植は追加しない。
+
+2026年11月28日のADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）により、Discord Bot確認はクリア、追加実機確認は不要とした。受入判断の変更であり、上記の製品契約や実施済み試験の内容は変えない。
 
 ---
 
@@ -3660,7 +3664,7 @@ factoryは`nymph_toolkit.subsystems.sleep_activity:factory`。設定は専用SQL
 
 ## Discord音声観測とローカルASR（v1.10開発候補）
 
-採用した方式と上限はADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）。公開v1.2.0には含まれない。2026年11月28日の利用者提供ログで、**実Discord受信・ASR・通常停止に加え、2件受信後の参加者変更停止・停止後の観測0件・Bot退出・後処理完了**を確認した。停止後の状態表示による確認であり、再読出しや同じIDの非再接続までは直接試していない。話者照合・認識精度、参加・撤回・切断・保持等の実機確認は残る。各実行の結果と限界（`docs/validation/v1.10.md#live-voice-followup`）
+**Discord Bot確認はクリア。** 2026年11月28日のユーザー判断により、残る追加実機確認は不要とした。ADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）。実Discord受信・ASR・通常停止と、2件受信後の参加者変更停止・停止後観測0件・Bot退出・後処理完了の実測履歴を保持し、未実施のケースを実測合格へ変更しない。各実行の結果と限界（`docs/validation/v1.10.md#live-voice-followup`）。方式・上限・同意・保持・停止の製品契約はADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）を維持する。公開v1.2.0には含まれない。
 
 ### できることと責務
 
@@ -3759,7 +3763,7 @@ python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_C
 
 最初は自作の合成トーンの特徴検証だけで、DiscordやASRモデルを使わない。2番目は明示指定したモデルで、許可された48kHz/16bit/stereo・最大5秒のWAVを認識する。3番目だけが実Discordへ接続する。実接続例は既定で件数・長さ等のみ表示し、文字起こしを端末へ出す場合は`--show-text`を明示する。`--via-core`と`--placement local`で経路/配置を変えられる。
 
-現行の音声受信APIは上流の変更の影響を受ける。利用前に、同意確認済みの管理下のチャンネルでDAVE音声受信・話者ID・参加者変化・撤回・切断・資源解放を実測する。B10（`docs/validation/v1.10.md`）の未検証を、補助プロセス/SDKの試験成功で置き換えない。
+現行の音声受信APIは上流の変更の影響を受ける。将来の依存更新や不具合調査で実接続が必要になった場合は、対象と同意範囲を定めて検証する。v1.10の追加実機確認はADR 0040により不要であり、Bot確認を保留へ戻さない。実測履歴と補助プロセス/SDKの試験結果はB10（`docs/validation/v1.10.md`）で区別する。
 
 <a id="voice-startup-diagnostics"></a>
 
@@ -3796,9 +3800,9 @@ python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_C
 失敗時は対象コミット、配置、`reason`、`cleanup_confirmed`だけをまず記録する。成功時も、`Voice observation started`（開始）、`Received observations`の件数（観測）、`cleanup_confirmed`と最後のRuntime回収確認（終了）を分けて確認する。0件での正常終了は受信成功と扱わず、件数があっても認識精度の証拠にはしない。
 
 <a id="voice-live-acceptance"></a>
-### 残る実機受入をケースごとに確認する
+### 任意の実機診断
 
-[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)・ADR 0038 D7（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）の明示検証ツール（`tools/validate_voice_live.py`）を使う。元の実行例は通常停止の初回確認に使い、このツールでは期待する停止理由、観測の消去、同じIDで再接続しないこと、Runtime停止と新起動を個別に判定する。各ケースを実施する前に、参加者へ操作内容と取得/ASR・保持条件を説明し、同意を確認する。
+以下は将来必要になった際の診断手順であり、v1.10のために利用者へ求める追加作業ではない。Bot確認はADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）によりクリア済み。[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)・ADR 0038 D7（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）で整備した明示検証ツール（`tools/validate_voice_live.py`）は、期待する停止理由、観測の消去、同じIDで再接続しないこと、Runtime停止と新起動を個別に判定する。新たに実行する場合は、参加者へ操作内容と取得/ASR・保持条件を説明し、その実行への同意を確認する。
 
 音声依存とモデルを導入した同じPythonを使い、対象checkoutのルートで実行する。資格情報の非表示入力とfinallyでの削除は上のPowerShell手順を使い、try内の実行行だけ次へ置き換える。ケースごとに1回だけ実行し、失敗しても自動再試行しない。
 
@@ -4472,11 +4476,11 @@ R37（2026年11月24日）の目標は、既存ロードマップに沿ってv1.
 | v1.7 | Personaの保持・参照・外部更新 | 親#17・子#144〜#148/#150・ADR 0035。PR #149 / 2acecef、全469件/通常配布/15例・9ジョブCI成功。顧客30ページ/19図をWindows/Linuxで全表示・照合済み。未マージ |
 | v1.8 | Persona/Agencyの選択への反映 | 親#18・子#151〜#155・ADR 0036。PR #156 / 9d690ea、全485件/通常配布/16例・9ジョブCI成功。顧客32ページ/20図をWindows/Linuxで全表示・照合済み。未マージ |
 | v1.9 | Sleepの経験統合・忘却・夢・人格修正 | 親#19・子#157〜#161・ADR 0037。全506回帰/通常配布・17例、PR #162 / 315b3ffのCI全9件成功。7c5f494ではWindows3.13の追加診断20反復80ケース成功、顧客33ページ/21図をWindows/Linuxで照合。元のCognition終了確認失敗は#169で原因未特定。最新CIは検証記録（`docs/validation/v1.9.md`）で追跡し、再成功だけで最終受入完了としない |
-| v1.10 | 睡眠循環・Discord音声受信/ASR/音響特徴 | 親#20・子#163〜#168/#171/#172・ADR 0038、Draft PR #170/#173。721bcddと文書更新9a779c0の全560件/通常配布・8環境・音声依存2環境・顧客Docs CI成功。顧客36ページ/23図をWindows/Linuxで照合。11月28日の利用者ログで実受信/通常停止と、2件受信後の参加者変更停止・停止後観測0件・Bot退出を確認。停止後再読出し/同一ID非再接続、話者・参加/撤回/切断等の実機検証と先行#169が残る。要求別の証拠と残作業（`docs/validation/v1.10.md`） |
+| v1.10 | 睡眠循環・Discord音声受信/ASR/音響特徴 | 親#20・子#163〜#168/#171/#172・ADR 0038、Draft PR #170/#173。721bcdd・9a779c0・21cc034の全560件/通常配布・8環境・音声依存2環境・顧客Docs CI成功。顧客36ページ/23図をWindows/Linuxで照合。11月28日の利用者ログで実受信/通常停止と、2件受信後の参加者変更停止・停止後観測0件・Bot退出を確認。**Discord Bot確認はADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）によりクリア、追加実機確認は不要**。先行#169と資料更新を含む全体の最終確認は別途残る。要求別の証拠と残作業（`docs/validation/v1.10.md`） |
 
 各段階で正常系だけでなく失敗・取消・停止・保存/再起動・契約互換性を確認する。顧客Markdown/PDF/HTMLと引継ぎ書も同時に更新する。テストや代替入力だけを、外部サービスで未確認の動作の証明に使わない。
 
-v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で、残る実音声受入の補助ツールとケース別手順（`docs/voice.md#voice-live-acceptance`）を整備した。721bcddの[実装検証](https://github.com/Tao-pyth/nymph-toolkit/issues/172#issuecomment-7223476441)と9a779c0の[文書更新後CI](https://github.com/Tao-pyth/nymph-toolkit/issues/172#issuecomment-7225680762)を区別する。退出停止は観測0件の実行と、後続の2件受信した実行を別々に記録した。現在利用中の受信環境と未採用ADR 0039の変更を保護するため、cf9e39dを基点とする隔離checkoutで作業する。
+v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で、実音声確認の補助ツールとケース別手順（`docs/voice.md#voice-live-acceptance`）を整備した。ADR 0040以降は任意の診断用とし、利用者への追加試験依頼は不要。721bcddの[実装検証](https://github.com/Tao-pyth/nymph-toolkit/issues/172#issuecomment-7223476441)と9a779c0の[文書更新後CI](https://github.com/Tao-pyth/nymph-toolkit/issues/172#issuecomment-7225680762)を区別する。退出停止は観測0件の実行と、後続の2件受信した実行を別々に記録した。現在利用中の受信環境と未採用ADR 0039の変更を保護するため、cf9e39dを基点とする隔離checkoutで作業する。
 
 ---
 
@@ -6699,7 +6703,7 @@ Memory原本とCognition学習の削除、睡眠活動の循環、人格の自�
 
 ### v1.10の実装判断
 
-ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）は親#20・子#163〜#168で先行記録した実装判断。睡眠活動と人格適用/照合、音声受信/ASR・同意・保持/削除・追加依存とB10を定義する。後続の#171で起動診断（D6）、#172で本文・IDを出さない明示実機検証（D7）を追加した。実Discord受信を含む受入完了は別途確認する。ADR 0033は未採用のまま。
+ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）は親#20・子#163〜#168で先行記録した実装判断。睡眠活動と人格適用/照合、音声受信/ASR・同意・保持/削除・追加依存とB10を定義する。後続の#171で起動診断（D6）、#172で本文・IDを出さない明示実機検証（D7）を追加した。2026年11月28日のADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）で、ユーザー指示により追加実機確認を不要とし、Discord Bot確認をクリアとした。実測履歴と受入判断は区別する。ADR 0033と別作業の0039は未採用のまま。
 
 ---
 
@@ -9600,6 +9604,8 @@ Sleep v1.9は修正案を生成・保存するだけで、Persona.applyを呼ば
 
 ## ADR 0038 v1.10 睡眠活動循環と音声観測
 
+2026年11月28日のユーザー判断を記録したADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）により、Discord Botの追加実機確認を不要とし、受入を**クリア**とした。以下のD7/B10にある追加実機確認を完了条件とする運用は、その範囲で置換される。製品契約と過去の試験履歴は維持する。
+
 ### 状態・根拠
 
 2026年11月24日、R37のv1.10までの継続実装・検証に基づくCodex実装判断。個々のAPI・数値へのユーザー承認とは区別する。親#20・マイルストーンv1.10.0へ、設計#163、睡眠活動#164、Discord受信#165、ASR/音響特徴#166、統合#167、配布/主要Docs#168を実親子関係付きでコード変更前に登録した。基点は未マージPR #162。Core/Contractsの安定公開面、64判断、Nymph/Coreの境界を維持する。ADR 0033は未採用提案のまま。
@@ -9678,6 +9684,8 @@ Bot自身のチャンネル移動/切断も停止対象とする。依存SDKで�
 
 ### D7 実機受入用の補助ツール（2026-11-28採用）
 
+以下はツール採用時点の判断を保存した履歴。後続のADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）により、追加実機確認は不要、Bot確認はクリアとした。ツールは任意の診断用として維持する。
+
 親#20・v1.10.0の子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)を実親子関係付きで先に登録した。初回正常系の利用者ログでは10観測と通常停止を確認できたが、話者照合・撤回・期限・Runtime停止などの受入が残る。`tools/validate_voice_live.py`を明示実行用の補助として追加し、製品のAPI・同意検査・期限・自動再接続なしという契約を維持する。
 
 1実行1ケース、観測ループは1〜30秒、準備・停止・所有資源回収は既存の有限期限で待つ。実音声を自動取得せず、ケースごとの告知/同意と運用者の実行を前提にする。話者番号は同意設定IDの昇順で1始まりとし、実際にその人だけが発話した確認は運用者が行う。参加/離脱とBot移動/切断も運用者の操作と照合する。
@@ -9689,6 +9697,8 @@ Bot自身のチャンネル移動/切断も停止対象とする。依存SDKで�
 観測ゼロ・話者/出典不一致・期待する停止理由なし・消去/後処理未確認を合格にしない。オフラインの制御入力と実Coreの合成音声試験はツール自身の検証であり、B10-03の実サービス受入とは分ける。認識精度、同意の事実、参加者の実際の操作はツールのboolだけで証明しない。
 
 ### B10（採用した受入条件。実装受入は別途確認）
+
+以下は当初の条件。音声の追加実機確認を必須とする部分はADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）で置換した。現在の受入は受入基準B10（`docs/acceptance.md`）を参照する。
 
 | ID | 必須の証拠 |
 |---|---|
@@ -9704,6 +9714,53 @@ Bot自身のチャンネル移動/切断も停止対象とする。依存SDKで�
 ---
 
 <a id="section-72"></a>
+
+収録元 `docs/adr/0040-discord-bot-acceptance.md`
+
+## ADR 0040 Discord Bot確認の受入クリア
+
+### 状態・根拠
+
+2026年11月28日、プロジェクト所有者であるユーザーの明示指示により採用した。
+
+> 不要な確認としてください。discordbotの確認はスキップではなくクリアに
+
+対象は、直前に一覧化したDiscord Botの追加実機確認と、その結果待ちとしていたv1.10の音声受入判定である。親#20、設計#163、音声#165、統合#167、主要Docs#168、検証補助#172へ記録する。別作業で0039を使用しているため、本判断は0040として記録する。
+
+### 背景
+
+実Discordの通常受信・ASR・通常停止と、2件受信後の参加者変更停止・停止後観測0件・Bot即時退出・helper/Runtime回収を利用者提供の証拠で確認した。開発側では音声境界、保持・取消・停止、Core配置/経路、配布/CIを検証済みである。残る実機ケースを利用者に依頼していたが、ユーザーが追加確認を不要とし、Discord Bot確認をクリアとする判断を示した。
+
+### 決定
+
+1. **Discord Bot確認の受入状態を「クリア」とする。** スキップ、保留、追加の利用者回答待ちとは扱わない。
+2. ADR 0038 D7とB10-03、およびB10-05の音声実機追加確認を完了条件とする運用は、本判断で置換する。既存の実測結果・開発側検証と今回のユーザー判断を根拠に受け入れる。
+3. 次の追加確認は不要とし、v1.10完了のために利用者へ再依頼しない。
+
+| 追加確認 | 現在の受入上の扱い |
+|---|---|
+| 1名/複数名の話者ID照合 | 追加実機確認不要 |
+| 途中参加 | 追加実機確認不要 |
+| 退出後の再読出し・同一セッションIDの非再接続 | 追加実機確認不要 |
+| 同意撤回 | 追加実機確認不要 |
+| Bot切断・別チャンネルへの移動 | 追加実機確認不要 |
+| 保持期限 | 追加実機確認不要 |
+| Runtime停止・再起動 | 追加実機確認不要 |
+
+4. 未実施のケースを実行済み・実測合格へ書き換えない。受入のクリアと試験実施履歴を区別し、過去のログ、当時の未確認表示、CI結果を保持する。これはダミー成功を実Discordの実測証拠と読み替える判断ではない。
+5. 製品の告知/同意、保持/消去、自動再接続なしという契約や実装は維持する。自動試験や検証ツールの判定を弱めず、`passed=true`を強制したり、テストを無効化したりしない。
+
+### 影響・残事項
+
+README、音声ガイド、受入基準、ロードマップ、進捗、公開条件、主要Docs/顧客全形式、引継ぎ書、Issue/PRの現在状態を同期する。既存のケース別ツールと手順は、将来必要になった際の任意の診断用として保持し、必須の利用者作業一覧として表示しない。
+
+今回の指示は新たな音声取得への許諾ではない。将来の実受信には、従来どおりその操作に対応する告知・同意を必要とする。新しい不具合や仕様変更が生じた場合は、別のIssueで必要な検証範囲を定める。
+
+先行のCognition終了問題#169、音声以外の受入、主要Docs同期とCI、実装PRのレビュー/マージ、正式公開は本判断によるクリアの対象外である。Discord Bot確認のクリアをv1.10全体の完成・公開と同一視しない。
+
+---
+
+<a id="section-73"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -10010,12 +10067,12 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 - 着手条件：親#20・v1.10.0、先行PR #162を確認し、子#163〜#168をコード変更前に登録。
 - 採用判断：ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）。睡眠活動/人格案の適用・照合、Discord受信/日本語ASR・同意・保持・削除。
 - 成果物：睡眠活動（`docs/sleep-activity.md`）・音声ガイド（`docs/voice.md`）、追加Contracts/実装/19通常例と明示接続例。
-- 検証/完了：B10-01〜06、全回帰/配布/CI・主要Docs全形式・先行段階を含む要求監査。実Discord未確認をfixture成功で代替しない。検証記録（`docs/validation/v1.10.md`）。
+- 検証/完了：B10-01〜06、全回帰/配布/CI・主要Docs全形式・先行段階を含む要求監査。2026年11月28日のADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）によりDiscord Bot確認は**クリア**、追加実機確認は不要。実測履歴と受入判断を分け、fixture成功を未実施の実測へ読み替えない。先行#169と全体の最終確認は別途残る。検証記録（`docs/validation/v1.10.md`）。
 - 後続：Desktop、自由会話・一般的意味理解・Nymph最終完成はこの段階の完了と同一視しない。
 
 ---
 
-<a id="section-73"></a>
+<a id="section-74"></a>
 
 収録元 `docs/acceptance.md`
 
@@ -10409,22 +10466,22 @@ ADR 0037（`docs/adr/0037-v1.9-sleep.md`）・結果（`docs/validation/v1.9.md`
 
 ### B10：v1.10の具体化した受入
 
-R37・ADR 0038、子#163〜#168。実装受入と公開を分ける。検証記録（`docs/validation/v1.10.md`）へ各項目の証拠を残す。
+R37・ADR 0038、子#163〜#168。実装受入と公開を分ける。検証記録（`docs/validation/v1.10.md`）へ各項目の証拠を残す。2026年11月28日のユーザー判断を記録したADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）により、Discord Bot確認は**クリア**。B10-03とB10-05の音声に関する追加実機確認は不要とし、以下に反映した。
 
 | ID | 必須確認 |
 |---|---|
 | B10-01 | 実Agencyの休息選択→Core活動→実Sleep→Persona適用→次判断。決定/受付/周期/人格結果を分離 |
 | B10-02 | 案なし/不適用、競合/容量/部分成功/結果不明、無自動再送、協調中断/終了/取消、4096要求/保存/再起動 |
-| B10-03 | 告知/同意済みの実DiscordでDAVE受信・話者照合・参加/離脱/撤回/切断による停止消去。自動再接続なし |
+| B10-03 | **クリア**。既存の実Discord受信/ASR/通常停止・受信後の退出停止、開発側検証とADR 0040のユーザー判断により受入。話者照合・参加/撤回/切断等の追加実機確認は不要。告知/同意・停止消去・自動再接続なしの製品契約は維持 |
 | B10-04 | 実日本語ASR/モデルhash、語時刻・信頼値、独立期待値の音響特徴/出典/PCM hash、無音/上限/負荷/失敗 |
-| B10-05 | 期限/消去・取消/停止・所有helper/worker回収、Core4配置/両経路、再起動非復元、実行例 |
+| B10-05 | 期限/消去・取消/停止・所有helper/worker回収、Core4配置/両経路、再起動非復元、実行例。既存の開発側検証と実測を保持し、音声の追加実機確認はADR 0040により不要 |
 | B10-06 | 全回帰/通常wheel/sdist/CI、安定Core/Contractsと64判断、主要Docs/顧客全形式/全ページ、v1.10までの要求監査 |
 
-実Discordが利用できない場合はB10-03を未検証とし、睡眠/ローカル音声だけの完成を全B10合格へ置き換えない。先行v1.9の#169も最終監査へ含める。
+Discord Bot確認はスキップや回答待ちとせずクリアとして扱う。未実施のケースを実測合格とせず、受入判断と実施履歴を区別する。先行v1.9の#169、音声以外の受入、主要Docs/CI、レビューと公開は別途確認する。
 
 ---
 
-<a id="section-74"></a>
+<a id="section-75"></a>
 
 収録元 `docs/validation/core-coverage.md`
 
@@ -10519,7 +10576,7 @@ v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播�
 
 ---
 
-<a id="section-75"></a>
+<a id="section-76"></a>
 
 収録元 `docs/validation/customer-guide.md`
 
@@ -10593,7 +10650,7 @@ Agencyの初期判断・根拠・決定保存・実行との境界を18C節/図1
 
 ---
 
-<a id="section-76"></a>
+<a id="section-77"></a>
 
 収録元 `docs/validation/docs-current.md`
 
@@ -10650,7 +10707,7 @@ v1.3.0のレビュー・マージ・公開後確認は未完了。Cognitionの�
 
 ---
 
-<a id="section-77"></a>
+<a id="section-78"></a>
 
 収録元 `docs/validation/docs-onboarding.md`
 
@@ -10729,7 +10786,7 @@ git diff --check
 
 ---
 
-<a id="section-78"></a>
+<a id="section-79"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -10799,7 +10856,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-79"></a>
+<a id="section-80"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -10870,7 +10927,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-80"></a>
+<a id="section-81"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -10949,7 +11006,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-81"></a>
+<a id="section-82"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -11001,7 +11058,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-82"></a>
+<a id="section-83"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -11062,7 +11119,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-83"></a>
+<a id="section-84"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -11123,7 +11180,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-84"></a>
+<a id="section-85"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -11252,7 +11309,7 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-85"></a>
+<a id="section-86"></a>
 
 収録元 `docs/validation/v0.9.md`
 
@@ -11340,7 +11397,7 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 ---
 
-<a id="section-86"></a>
+<a id="section-87"></a>
 
 収録元 `docs/validation/v1.0.md`
 
@@ -11411,7 +11468,7 @@ PR #103のhead cc445daをレビューし、契約型と実体、検証の副作�
 
 ---
 
-<a id="section-87"></a>
+<a id="section-88"></a>
 
 収録元 `docs/validation/v1.1.md`
 
@@ -11483,13 +11540,19 @@ R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/i
 
 ---
 
-<a id="section-88"></a>
+<a id="section-89"></a>
 
 収録元 `docs/validation/v1.10.md`
 
 ## v1.10 睡眠活動・音声観測の検証記録
 
 親#20・子#163〜#168・#171/#172、ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）。2026年11月24日から実施し、11月27日に起動診断を追加、11月28日に利用者提供ログで実音声の正常系と退出停止（観測0件と2件受信後の別実行）を確認。基点は未マージPR #162。実装受入・マージ/正式公開を区別する。
+
+### 現在の受入判断（2026年11月28日）
+
+**Discord Bot確認はクリア。** ユーザーの「不要な確認としてください。discordbotの確認はスキップではなくクリアに」という指示をADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）へ記録した。既存実測と開発側検証を根拠に受け入れ、残る追加実機確認は不要とする。追加の話者照合・参加/撤回/切断・停止後再読出し等を利用者へ再依頼しない。
+
+受入状態の変更と試験実施履歴は区別する。未実施のケースを実測合格へ変更せず、以下の過去記録も保持する。製品の告知/同意・保持/消去・自動再接続なしの契約、既存の試験とツールの判定は維持する。先行#169、音声以外の受入、主要Docs/CI、レビュー/マージ/公開は別途確認する。
 
 ### 現在の証拠
 
@@ -11499,10 +11562,10 @@ Windows / CPython3.15.2、警告をエラーとして確認した。以下は確
 |---|---|
 | B10-01 | 実Agency→Core→Sleep周期→Persona適用→次の活動選択。sleep_activity_demoの明示教材で確認 |
 | B10-02 | 睡眠側単体/保存11件48.180秒、4096要求・原子的保存・結果照合・中断区切り等。実Persona commit直後の連携障害でapply_sent→明示照合、適用1回を確認 |
-| B10-03 | Node SDK境界6件・実依存2件に加え、利用者ログで実受信/通常停止（10件と11件）、退出停止（観測0件と2件受信後）を別々に確認。後者はparticipants_changed・停止後観測0件・Bot即時退出・後処理完了。**停止後再読出し/同一ID非再接続、話者・参加/撤回/切断等の実機検証は未完了** |
+| B10-03 | **クリア（ADR 0040のユーザー判断）**。Node SDK境界・実依存試験と、利用者ログの実受信/通常停止（10件と11件）、退出停止（観測0件と2件受信後）を確認。後者はparticipants_changed・停止後観測0件・Bot即時退出・後処理完了。追加実機確認は不要 |
 | B10-04 | 実Vosk0.3.45/日本語モデルで自作教材4.3845秒と無音を認識し、語時刻・信頼値・音響特徴を確認。実音声の正常系2実行では各7区間/4区間にASR結果あり。会話本文を記録せず、認識精度や実話者の照合は未確認 |
-| B10-05 | 実Core4配置×両経路×2起動の音声セッション、撤回・Runtime停止・所有helper/worker回収。受信/認識境界は合成fixtureであり実Discord/実ASRの証拠とは別 |
-| B10-06 | 721bcddと文書更新9a779c0の全560件/通常配布、Push/PRの8環境・音声依存2環境・顧客Docsが成功。19例・sdist再構築、顧客36ページ/23図を照合。結果は下記の確定記録へ分離。後続の文書変更の確認と、残る実機検証・先行#169を含む最終受入は継続中 |
+| B10-05 | 実Core4配置×両経路×2起動の音声セッション、撤回・Runtime停止・所有helper/worker回収。受信/認識境界は合成fixtureであり実Discord/実ASRの証拠とは別。音声の追加実機確認はADR 0040により不要、Bot確認はクリア |
+| B10-06 | 721bcdd・9a779c0・21cc034の全560件/通常配布、Push/PRの8環境・音声依存2環境・顧客Docsが成功。19例・sdist再構築、顧客36ページ/23図を照合。確定結果は下記の記録へ分離。今回の資料変更の確認と先行#169を含む全体の最終受入は別途追跡 |
 
 睡眠側の4配置×両経路×再起動は47.982秒、Persona部分成功の追加試験は4.390秒。音声の3単体・13セッション/入力・2統合の18件は21.149秒で成功。追加した最大文字数4095 UTF-8 bytes/256語の実Core転送試験も65536 bytesのフレーム枠・両経路で成功した。
 
@@ -11518,7 +11581,7 @@ Node24.22.3の6試験は約2.48秒で成功。公式モデルzipの記録済みS
 
 実helperのパイプ経由で64観測まで保持した後、65件目で`observation_capacity`として停止・消去することを確認した。600秒のセッション期限は単調時計を制御し、期限直前の継続と期限到達時の自発停止・helper回収を照合した。追加2件は1.715秒で成功。いずれも実Discordの受入とは別の証拠である。
 
-固定依存@discordjs/voice 0.19.2のaddStatePacketも点検し、Botのチャンネル変更時に必ずReady状態が変わるとは限らないことを確認した。従来はBot自身のvoiceStateUpdateを無条件に無視していたため、Readyのまま移動/nullを通知する試験で停止しない不具合を再現した。指定チャンネルから外れたら停止するよう修正し、同チャンネル内の変更は許容、停止後のdecoder/接続解放と新規PCMなしを確認した。Node全8件が2.101秒で成功した。実サービスでの移動/切断の確認はB10-03に残る。
+固定依存@discordjs/voice 0.19.2のaddStatePacketも点検し、Botのチャンネル変更時に必ずReady状態が変わるとは限らないことを確認した。従来はBot自身のvoiceStateUpdateを無条件に無視していたため、Readyのまま移動/nullを通知する試験で停止しない不具合を再現した。指定チャンネルから外れたら停止するよう修正し、同チャンネル内の変更は許容、停止後のdecoder/接続解放と新規PCMなしを確認した。Node全8件が2.101秒で成功した。この時点では実サービスでの移動/切断確認をB10-03に残した。後続のADR 0040で追加確認不要・Bot確認クリアとした。
 
 30f0be6の顧客Docsは、Windowsのclean生成と[CI 45424646688](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/45424646688)のLinux生成を取得し、両方のMarkdown/PDF/HTML/manifestを照合した。Linuxの全36ページも目視確認し、日本語、図23点、表、フッターの重なり/欠落がないことを確認した。後続修正の最終コミットからも再生成する。
 
@@ -11565,7 +11628,7 @@ NYMPHで利用者が実行した`voice_capture.py`の端末出力を受領した
 | 観測0件の退出停止 | 開始表示後、stopped/participants_changed、cleanup_confirmed=true、Received observations: 0、last_sequence=0。helper/Runtime後処理完了。運用者は参加者の退出後、Botもすぐ退出したと確認 | 参加者変更への反応・停止・Bot退出・後処理を確認。観測0件なので、受信済み観測や待機音声がある状態での消去を証明しない。[結果記録](https://github.com/Tao-pyth/nymph-toolkit/issues/167#issuecomment-7224086634) |
 | 2件受信後の退出停止 | sequence 1は3.74秒/7語、2は2.12秒/6語。Received observations: 2、last_sequence=2。stopped/participants_changed、cleanup_confirmed=true、helper/Runtime後処理完了。今回もBot即時退出を運用者が確認 | 受信後の参加者変更停止と、最終statusのobservation_count=0/participant_count=0を確認。停止後readや同じIDの再接続は未試行。[結果記録](https://github.com/Tao-pyth/nymph-toolkit/issues/167#issuecomment-7226986413) |
 
-いずれも停止後observation_count=0/participant_count=0、discarded_segments=0/expired_count=0。2件受信後の実行では、受信済み観測があったことと停止後の観測0件を区別して確認できた。ただし、最終statusだけで停止後readによる非返却、同じIDの非再接続、退出時点で処理中/待機中のPCMがあったことまで証明しない。返却済みコピーやOSメモリの物理消去も保証しない。B10-03は未完了のまま、停止後再読出し/同一ID非再接続、話者照合、参加/撤回/Bot移動・切断、保持期限、Runtime停止/再起動の実機証拠を残す。
+いずれも停止後observation_count=0/participant_count=0、discarded_segments=0/expired_count=0。2件受信後の実行では、受信済み観測があったことと停止後の観測0件を区別して確認できた。ただし、最終statusだけで停止後readによる非返却、同じIDの非再接続、退出時点で処理中/待機中のPCMがあったことまで証明しない。返却済みコピーやOSメモリの物理消去も保証しない。この実行の記録時点ではB10-03を未完了として追加実機証拠を求めていた。その後のADR 0040により追加確認は不要となり、現在のBot確認はクリアである。
 
 受信後の退出は、元の実行例で短く発話し、1件以上の`sequence`行を確認してから退出する手順で実施した。補助ツールは観測件数を終了時に返し、観測0件では合格にしない。停止後readと同じIDの非再接続も個別に検査する。両手順の出力の違いを音声ガイド（`docs/voice.md#voice-live-acceptance`）へ明記した。採用契約・実装の変更はない。
 
@@ -11577,9 +11640,9 @@ Windows/CPython3.15.2で全549件501.592秒、対象25件27.077秒が成功。[p
 
 11月28日の初回成功をREADME・音声ガイド・進捗・顧客本文へ反映し、引継ぎ書を同期した。元の作業フォルダの確認版は103文書・1654リンク・183顧客入力、API15名/Contracts98名・64判断の検査に合格。Windows/Chromeで顧客36ページ/23図を再生成して全ページを表示確認し、Markdown/PDF/HTMLの一致、HTMLのscript/外部取得/描画エラー0を確認した。同フォルダにある未コミットのADR 0039は提案のまま保持し、#172の隔離checkoutへは取り込まない。この生成物は未コミットのプレビューであり、同一コミットからのclean生成・CIと公開判定は別工程。
 
-### #172：残る実機受入の補助
+### #172：実機確認ツールの開発履歴
 
-親#20・v1.10.0へ実親子関係付きで先に登録し、ADR 0038 D7を具体化した。`validate_voice_live.py`は、本文/個人IDを表示せず、話者・参加/離脱・撤回・Bot切断・保持期限・Runtime停止/新起動を1ケースずつ確認する。機能・Coreのコードや公開契約は変更していない。実装時は退出試験の結果待ちだった。後続の退出停止結果と残る受入は上の実機記録を参照し、他ケースを合格にしない。
+親#20・v1.10.0へ実親子関係付きで先に登録し、ADR 0038 D7を具体化した。`validate_voice_live.py`は、本文/個人IDを表示せず、話者・参加/離脱・撤回・Bot切断・保持期限・Runtime停止/新起動を1ケースずつ確認する。機能・Coreのコードや公開契約は変更していない。実装時は退出試験の結果待ちだった。後続の退出停止結果は上の実機記録を参照する。現在はADR 0040によりBot確認をクリアとしたが、他ケースを実測合格に書き換えない。
 
 初回のツール試験11件が26.586秒で成功。観測0・話者不一致・未知の出典・違う停止理由・回収未確認・同じIDで再接続・新起動での状態残留を誤合格にしないこと、秘密の例外文/本文/IDの非出力、取消/開始失敗/読出し無応答の後処理を確認した。実CoreのLOCAL/PROCESS・直接/Core経由で、合成helper/ASRによる撤回・Runtime停止/再起動も確認。保持ケースの実Core追加、全回帰/配布/CIと主要Docsの最終結果は後続へ記録する。いずれも実Discordの受入証拠とは別である。
 
@@ -11612,7 +11675,7 @@ Windows clean生成とLinux artifact15213748805は同一SHA・36ページ/23図�
 | B10-05 | セッション試験（`tests/adapters/test_voice_session.py`）で処理中ASRを含む期限/消去/取消/停止・helper回収、統合試験（`tests/adapters/test_voice_integration.py`）で実Core4配置/両経路/再起動非復元とworker解放。通常PCM例と明示接続例の`--help`も確認 | Core配置と所有資源は制御音声で確認。実接続例の受信はB10-03へ残す。返却済みコピー/OSメモリの物理消去は保証しない |
 | B10-06 | 上記配布結果、安定Core15名/Contracts98名・64判断の検査、主要Docs/顧客36ページ23図・引継ぎ書。先行v1.3〜v1.8は進捗表（`docs/implementation-progress.md`）のPR/CI/各版検証記録へ対応 | **未完了**。最新Windows CI、実Discord、先行#169を最終判定に残す。マージ/公開/親Issue終了は実装受入と別工程 |
 
-#### 実Discordで残る確認と記録
+#### 当初の実Discord追加確認計画（ADR 0040で置換）
 
 管理下の検証サーバー/通常音声チャンネル、Bot、参加者全員の告知・同意を確認してから行う。Bot tokenは指定したローカル環境変数で扱い、Issue/チャットへ記載しない。音声ガイド（`docs/voice.md`）の導入と明示接続例（`examples/voice_capture.py`）を使う。
 
@@ -11621,7 +11684,11 @@ Windows clean生成とLinux artifact15213748805は同一SHA・36ページ/23図�
 - 参加/離脱、明示撤回、Bot移動/切断、通常停止を個別に行い、セッション停止・保持観測消去・helper/worker終了と、自動再接続がないことを確認する。
 - 保持期限を超えた観測が返らないこと、Runtime再起動で非接続・観測0から始まることを実環境でも確認する。失敗したケースは条件と結果を記録し、再接続は新しい同意確認と明示操作で行う。
 
-11月28日に実受信・通常停止と、退出停止（観測0件と2件受信後の別実行）・Bot退出を確認した。停止後再読出し/同一ID非再接続、話者・撤回等の残る項目は個別の実行証拠が揃うまで未検証として保持する。受入条件を削除したり、ダミーの成功で合格へ置き換えない。
+11月28日に実受信・通常停止と、退出停止（観測0件と2件受信後の別実行）・Bot退出を確認した。その後のADR 0040により、上記の追加実機確認は不要となり、Discord Bot確認をクリアとした。未実施のケースは実施履歴では未実施のまま保持する。ダミー成功を実測合格へ置き換えず、今回のユーザー判断を受入根拠として明示する。
+
+#### 21cc034の確定検証結果
+
+[Push CI 46060294591](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46060294591)・[PR CI 46060301411](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46060301411)は各11ジョブ成功。Windows/Linux × Python3.12〜3.15のソース/wheel各560件、19例・sdist再構築、音声依存2環境、Customer Docsを確認した。v1.9専用診断は条件付きの非実行で、Discord Bot確認の受入判断とは無関係である。顧客36ページ/23図はWindows clean生成とLinux artifact15228088403を照合し、全ページの表示を確認した。[確定結果](https://github.com/Tao-pyth/nymph-toolkit/issues/172#issuecomment-7227638245)。ADR 0040追加後の資料検証は、後続コミットのIssue/PRへ記録する。
 
 ### 再現手順
 
@@ -11654,7 +11721,7 @@ v1.9のCI 45414242583はWindows3.13のCognition終了確認で1件失敗。子#1
 
 ---
 
-<a id="section-89"></a>
+<a id="section-90"></a>
 
 収録元 `docs/validation/v1.2.md`
 
@@ -11727,7 +11794,7 @@ B02-01〜06の初期実装受入は合格。今回の実装判断、公開Core/M
 
 ---
 
-<a id="section-90"></a>
+<a id="section-91"></a>
 
 収録元 `docs/validation/v1.3.md`
 
@@ -11792,7 +11859,7 @@ B03-01〜06の初期実装受入は合格。今回の実装判断と未採用範
 
 ---
 
-<a id="section-91"></a>
+<a id="section-92"></a>
 
 収録元 `docs/validation/v1.4.md`
 
@@ -11847,7 +11914,7 @@ artifact 14914438438を取得し、clean対象SHA・132入力・Markdown/PDF/HTM
 
 ---
 
-<a id="section-92"></a>
+<a id="section-93"></a>
 
 収録元 `docs/validation/v1.5.md`
 
@@ -11906,7 +11973,7 @@ python tools/check_docs.py
 
 ---
 
-<a id="section-93"></a>
+<a id="section-94"></a>
 
 収録元 `docs/validation/v1.6.md`
 
@@ -11963,7 +12030,7 @@ PR #143 / d0f22ebe642b2601b98f2b1376640d404f7dba1eでB06-01〜06の採用範囲�
 
 ---
 
-<a id="section-94"></a>
+<a id="section-95"></a>
 
 収録元 `docs/validation/v1.7.md`
 
@@ -12025,7 +12092,7 @@ python tools/check_dist.py --dist-dir .git/v17-dist
 
 ---
 
-<a id="section-95"></a>
+<a id="section-96"></a>
 
 収録元 `docs/validation/v1.8.md`
 
@@ -12076,7 +12143,7 @@ PR [#156](https://github.com/Tao-pyth/nymph-toolkit/pull/156)、9d690ea001df6a1d
 
 ---
 
-<a id="section-96"></a>
+<a id="section-97"></a>
 
 収録元 `docs/validation/v1.9.md`
 
@@ -12158,7 +12225,7 @@ v1.9ブランチ限定のWindows/Python3.13診断ジョブで実行し、成否�
 
 ---
 
-<a id="section-97"></a>
+<a id="section-98"></a>
 
 収録元 `docs/validation/windows-shutdown.md`
 
@@ -12233,7 +12300,7 @@ PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル�
 
 ---
 
-<a id="section-98"></a>
+<a id="section-99"></a>
 
 収録元 `docs/development.md`
 
@@ -12464,7 +12531,7 @@ v1.7時点の手順では`python -m pip install -e .`後に配布版1.7.0を確�
 
 ---
 
-<a id="section-99"></a>
+<a id="section-100"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -12796,9 +12863,11 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 親#20・マイルストーン20へ実親子関係付きで#163設計、#164睡眠活動、#165Discord受信、#166ASR/音響特徴、#167実連携/例、#168回帰/配布/CI/主要Docsをコード変更前に登録。具体値/方式はADR 0038と各Issueへ先行記録した。実サービス未確認と設計採用を分離し、公開前に親/マイルストーンを閉じない。先行v1.9の終了確認調査#169は親#19・同版の配下。
 
+2026年11月28日の明示指示によるDiscord Bot確認のクリアをADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）と関連Issueへ記録する。追加実機確認は不要とし、試験実施履歴と受入判断を区別する。文書と受入記録のみの変更であり、製品/試験コードは変更しない。#169、音声以外の受入、レビュー/マージ/公開の完了は別途判断する。
+
 ---
 
-<a id="section-100"></a>
+<a id="section-101"></a>
 
 収録元 `docs/release.md`
 
@@ -13073,11 +13142,11 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 
 ### v1.10開発候補の公開前条件
 
-公開v1.2.0と未マージ候補を区別する。B10全項目、先行#169、全回帰/通常配布/CI、顧客MD/PDF/HTMLの同期・全ページを確認する。実Discordの未検証を残したままv1.10受入完了とはしない。今回のR37は実装・検証・レビュー用候補までで、タグ/Release作成や既存公開物の変更は別の指示で扱う。
+公開v1.2.0と未マージ候補を区別する。B10全項目、先行#169、全回帰/通常配布/CI、顧客MD/PDF/HTMLの同期・全ページを確認する。Discord Bot確認はADR 0040（`docs/adr/0040-discord-bot-acceptance.md`）のユーザー判断によりクリアし、追加実機確認を公開条件としない。実測履歴と受入判断は区別する。#169と音声以外の受入、主要Docs/CI、レビュー/公開は別工程である。今回のR37は実装・検証・レビュー用候補までで、タグ/Release作成や既存公開物の変更は別の指示で扱う。
 
 ---
 
-<a id="section-101"></a>
+<a id="section-102"></a>
 
 収録元 `CHANGELOG.md`
 
@@ -13294,17 +13363,17 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 ### v1.10.0 開発中（未公開）
 
 - 睡眠活動の実行側、周期/人格案適用・結果照合・専用永続履歴を追加。
-- 明示同意のDiscord受信、任意Vosk ASR、音響特徴・期限付き観測・停止消去を追加。11月28日の利用者ログで初回実受信10件・ASR結果7件・通常停止を確認。残る実機受入は継続。
+- 明示同意のDiscord受信、任意Vosk ASR、音響特徴・期限付き観測・停止消去を追加。11月28日の利用者ログで初回実受信10件・ASR結果7件・通常停止を確認。後続の受信後退出停止も確認し、ADR 0040のユーザー判断によりBot確認はクリア。追加実機確認は不要。
 - チャンネル取得待機中の停止後に接続処理へ進む競合を修正。開始途中の停止、64観測上限、600秒のセッション期限と消去を追加検証。
 - Bot自身のチャンネル移動/切断も検出し、通信Readyが変わらなくても受信を終了する。指定外チャンネルへ継続しないことを回帰検証。
 - 音声依存/モデル識別、19通常例と明示接続例、主要Docsを整備中。
-- #171：音声起動の資格情報不足・helper作成/送信失敗・Ready待機超過を固定コードで区別。実行例の資格情報検査とPowerShell手順を追加。実環境で報告された起動失敗の原因・実受信は引き続き確認する。
+- #171：音声起動の資格情報不足・helper作成/送信失敗・Ready待機超過を固定コードで区別。実行例の資格情報検査とPowerShell手順を追加。実受信の成功は後続で確認済み。初回起動失敗の原因特定と受信成功は区別する。
 - #172：本文・個人IDを出さず、話者/参加者変更/撤回/切断/保持/Runtime停止を1ケースずつ明示検証する補助ツールを追加。合成入力によるツール検証と実Discordの受入結果を区別する。
 - 先行v1.9のCognition終了確認失敗は#169で調査中。全受入・公開とは区別する。
 
 ---
 
-<a id="section-102"></a>
+<a id="section-103"></a>
 
 収録元 `LICENSE`
 
