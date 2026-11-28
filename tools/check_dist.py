@@ -55,7 +55,7 @@ def main() -> None:
         for path in ("contracts/input_candidate.py", "contracts/_memory_record.py", "adapters/input_candidate/__init__.py"):
             assert "nymph_toolkit/" + path in names
         for path in ("contracts/diagnostics.py", "diagnostics/__init__.py", "diagnostics/_session.py",
-                     "diagnostics/_viewer.py", "diagnostics/_publisher.py",
+                     "diagnostics/_viewer.py", "diagnostics/_publisher.py", "diagnostics/_launcher.py",
                      "diagnostics/viewer.css", "diagnostics/viewer.html", "diagnostics/viewer.js"):
             assert "nymph_toolkit/" + path in names
         assert not any("node_modules/" in name for name in names)

@@ -9,11 +9,11 @@ import sys
 from tempfile import TemporaryDirectory
 
 from nymph_toolkit.contracts import (
-    ContractKey, ContractSpec, HybridSettings, ModuleAdvertisement, ModuleKind, ModuleSpec,
-    OperatingState, OperationMode, OperationSpec, Placement, Usage,
+    ActivityKey, ActivityRequest, ContractKey, ContractSpec, HybridSettings, ModuleAdvertisement,
+    ModuleKind, ModuleSpec, OperatingState, OperationMode, OperationSpec, Placement, RuntimeState, Usage,
 )
 from nymph_toolkit.core import FileStore, HybridGroup, Runtime
-from nymph_toolkit.diagnostics import ConsoleQuery, DiagnosticSession, ReportPublisher
+from nymph_toolkit.diagnostics import BrowserLauncher, ConsoleQuery, DiagnosticSession, ReportPublisher
 
 WEATHER = ContractSpec(ContractKey("example.diagnostics.weather", "1"), (OperationSpec("status", OperationMode.ASYNC),))
 
@@ -75,9 +75,13 @@ def add_weather(group, settings=None, *, placement=Placement.LOCAL, repeat=False
                           {"report": settings, "repeat": repeat}, placement)
 
 
-def configure(root, *, placement=Placement.LOCAL):
+def demo_group(root):
     store = FileStore(root / "history", root / "archive", retention=timedelta(days=1), batch_size=16, flush_interval=.05)
-    group = HybridGroup(HybridSettings(10, 3, 5, 65536, 16, 4), store)
+    return HybridGroup(HybridSettings(10, 3, 5, 65536, 16, 4), store)
+
+
+def configure(root, *, placement=Placement.LOCAL):
+    group = demo_group(root)
     runtime = Runtime(group)
     query = ConsoleQuery("天気サンプルの状態を照会", "weather", WEATHER.key, "status", ("observations",))
     session = DiagnosticSession(group, runtime, slots={"weather": "weather"}, queries={"status": query})
@@ -106,15 +110,79 @@ async def demo(seconds, external_browser):
                 await session.close()
 
 
+class SampleModule:
+    def __init__(self, context, config):
+        if config["worker"]:
+            context.provide_executor("batches", self.batches, supports_pause=True)
+
+    async def start(self):
+        pass
+
+    async def run(self):
+        await asyncio.Event().wait()
+
+    async def stop(self):
+        pass
+
+    async def batches(self, activity, arguments):
+        count = checksum = 0
+        while await activity.checkpoint() is None:
+            first = count * 1000
+            checksum ^= sum(value * value for value in range(first, first + 1000))
+            count += 1
+            await asyncio.sleep(.25)
+        return {"batches": count, "checksum": checksum}
+
+
+def sample_factory(context, config):
+    return SampleModule(context, config)
+
+
+async def launcher_demo(seconds, external_browser):
+    with TemporaryDirectory(prefix="ntk-browser-launcher-") as work:
+        group = demo_group(Path(work))
+        for name, placement in (("nymph", Placement.LOCAL), ("worker", Placement.PROCESS)):
+            group.register_module(ModuleSpec(name, ModuleKind.SUBSYSTEM), ModuleAdvertisement(name, "demo-1", ()),
+                                  "examples.runtime_diagnostics_demo:sample_factory", {"worker": name == "worker"},
+                                  placement)
+        manager = group.enable_activities(clock_check_interval=.1, max_running=1)
+        launcher = BrowserLauncher(group, owner_id="nymph")
+        try:
+            url = await launcher.open()
+            if url is None:
+                raise RuntimeError("The local launcher could not start")
+            print(url, flush=True)
+            if external_browser:
+                import webbrowser
+                await asyncio.to_thread(webbrowser.open, url)
+            async with asyncio.timeout(seconds):
+                while launcher.runtime.state in (RuntimeState.NEW, RuntimeState.STARTING):
+                    await asyncio.sleep(.05)
+                if launcher.runtime.state != RuntimeState.RUNNING:
+                    await launcher.runtime.wait()
+                    return
+                key = ActivityKey("nymph", "sample-batches")
+                start = datetime.now(timezone.utc) + timedelta(seconds=3)
+                manager.submit_remote(ActivityRequest(key, "Generated batches", start, timedelta(minutes=2)),
+                                      "worker", "batches")
+                await launcher.runtime.wait()
+        except TimeoutError:
+            pass
+        finally:
+            await launcher.close()
+
+
 def main():
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seconds", type=float, default=30)
     parser.add_argument("--open", action="store_true", help="Open the system browser")
+    parser.add_argument("--launcher", action="store_true", help="Include explicit browser Runtime and activity controls")
     args = parser.parse_args()
     if not 0 <= args.seconds <= 3600:
         parser.error("--seconds must be between 0 and 3600")
-    asyncio.run(demo(args.seconds, args.open))
+    run = launcher_demo if args.launcher else demo
+    asyncio.run(run(args.seconds, args.open))
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="ntk-console" content="__NTK_CONSOLE_TOKEN__">
+<meta name="ntk-launcher" content="__NTK_LAUNCHER_TOKEN__">
 <title>NTK Runtime ライブ診断</title>
 <link rel="stylesheet" href="/viewer.css">
 <script defer src="/viewer.js"></script>
@@ -11,6 +12,11 @@
   <span id="runtime" role="status">接続中</span>
 </header>
 <main>
+  <section id="launcher" hidden aria-labelledby="launcher-title">
+    <h2 id="launcher-title">Runtime ランチャー</h2>
+    <button id="start-runtime" type="button" disabled>Runtimeを起動</button>
+    <p id="launcher-result" role="status"></p>
+  </section>
   <section aria-labelledby="configuration-title">
     <h2 id="configuration-title">実行構成</h2>
     <div id="modules" class="grid"></div>

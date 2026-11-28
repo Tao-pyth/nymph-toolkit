@@ -22,3 +22,5 @@ v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で
 v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)で追跡する。[B11](acceptance.md#b11-input-candidates)の候補は回帰・配布・主要Docsを確認済み。公開後確認と標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)で扱う。
 
 v1.12の任意報告とローカル画面は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。[LD-09](acceptance.md#ld-runtime-diagnostics)の単独Runtime本測定は全16比較が基準内で、同居ストレスでは処理件数低下の上限を超えた。配布・受入の証拠は[#182](https://github.com/Tao-pyth/nymph-toolkit/issues/182)、公開後確認と標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
+
+同一タブのRuntime起動と既存活動の中断・再開・終了は[ADR 0041](adr/0041-browser-runtime-launcher.md)で追加した。実装・受入の対象と現行CIは[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)で追跡する。

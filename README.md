@@ -28,7 +28,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。既存実測とユーザー判断によりBot確認はクリア | v1.10開発候補。[音声](docs/voice.md)・[受入判断](docs/adr/0040-discord-bot-acceptance.md) |
 | Sleep | 根拠の統合/減衰・現在夢の再結合/失効・人格修正案 | v1.9開発候補。[Sleep](docs/sleep.md) |
 | 入力候補 | Web・文書・テキスト対話の共通準備、既定値補完・模擬AI、明示保存 | v1.11開発候補。[ADR 0033](docs/adr/0033-input-candidate-contract.md) |
-| Runtimeライブ診断 | ローカル画面、実行状態、任意報告、許可済みの状態照会 | v1.12開発候補。[ADR 0039](docs/adr/0039-runtime-live-diagnostics-adapter-contract.md) |
+| Runtimeライブ診断 | 実行状態、任意報告、状態照会。同じローカル画面からRuntime起動と既存活動の中断・再開・終了 | v1.12開発候補。[診断](docs/adr/0039-runtime-live-diagnostics-adapter-contract.md)・[ランチャー](docs/adr/0041-browser-runtime-launcher.md) |
 
 Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。v1.10候補で睡眠活動の循環とDiscord Voice Adapterを追加し検証中です。Discord Bot確認はADR 0040によりクリアしました。先行#169と全体の最終確認は別途残り、Desktop Adapterは将来課題です。v1.5の実装受入は[B05記録](docs/validation/v1.5.md)、v1.10までの残作業は[進捗](docs/implementation-progress.md)へ記録します。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)にあります。
 

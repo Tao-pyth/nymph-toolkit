@@ -42,6 +42,7 @@ class View:
         self.current = {name: {} for name in _GROUPS}
         self.history, self.deltas = deque(maxlen=200), deque(maxlen=16)
         self.terminal, self.queries = {}, {}
+        self.launcher = False
         self.snapshots = {}
         self.last_pulse = time.monotonic()
         self.active = None
@@ -51,6 +52,7 @@ class View:
             kind = message["type"]
             if kind == "setup":
                 self.run_id, self.queries = message["run_id"], message["queries"]
+                self.launcher = message.get("launcher") is True
                 self.snapshots.clear()
             elif kind == "update":
                 self.last_pulse = time.monotonic()
@@ -86,24 +88,33 @@ class View:
                 # The time line shows 12 entries; the event history keeps its own 200-entry window.
                 activities = dict(list(self.current["activities"].items())[-12:])
                 delta = dict(delta, activities=activities)
-            encoded = json.dumps({"run_id": self.run_id, "revision": self.revision,
-                                  "reset": reset, "state": self.state, "stalled": stalled,
-                                  "changes": delta, "events": list(events), "terminal": self.terminal,
-                                  "queries": self.queries}, ensure_ascii=False, allow_nan=False).encode()
+            snapshot = {"run_id": self.run_id, "revision": self.revision,
+                        "reset": reset, "state": self.state, "stalled": stalled,
+                        "changes": delta, "events": list(events), "terminal": self.terminal,
+                        "queries": self.queries}
+            if self.launcher:
+                snapshot["launcher"] = True
+            encoded = json.dumps(snapshot, ensure_ascii=False, allow_nan=False).encode()
             self.snapshots[key] = encoded
             return encoded
 
-    def query(self, operation, arguments):
+    def request(self, operation, arguments, *, launcher=False):
         with self.lock:
-            if type(operation) is not str or operation not in self.queries or type(arguments) is not dict:
+            allowed = ("start_runtime", "pause", "resume", "finish") if launcher else self.queries
+            if type(operation) is not str or operation not in allowed or type(arguments) is not dict:
                 return {"status": "invalid"}
+            if launcher and not self.launcher:
+                return {"status": "not_available"}
             if self.active is not None:
                 return {"status": "busy"}
             self.command_id += 1
             identifier, event, replies = self.command_id, threading.Event(), []
             self.active = identifier, event, replies
         try:
-            self.send({"id": identifier, "operation": operation, "arguments": arguments})
+            command = {"id": identifier, "operation": operation, "arguments": arguments}
+            if launcher:
+                command["launcher"] = True
+            self.send(command)
             event.wait(3)
             return replies[0] if replies else {"status": "outcome_unknown"}
         except (OSError, ValueError):
@@ -118,6 +129,7 @@ class Server(ThreadingHTTPServer):
         super().__init__(("127.0.0.1", 0), Handler)
         self.view = view
         self.token = secrets.token_urlsafe(24)
+        self.launcher_token = secrets.token_urlsafe(24)
         self.workers = threading.BoundedSemaphore(16)
 
     @property
@@ -177,31 +189,41 @@ class Handler(BaseHTTPRequestHandler):
             page = Path(__file__).with_name(name).read_bytes()
             if url.path == "/":
                 page = page.replace(b"__NTK_CONSOLE_TOKEN__", self.server.token.encode())
+                page = page.replace(b"__NTK_LAUNCHER_TOKEN__", self.server.launcher_token.encode())
             self.respond(200, page, mime)
         else:
             self.respond(404)
 
     def do_POST(self):
         allowed_origin = "http://" + self.server.host
-        if (self.path != "/api/console" or self.headers.get("Host") != self.server.host
+        launcher = self.path == "/api/launcher"
+        header = "X-NTK-Launcher" if launcher else "X-NTK-Console"
+        expected = self.server.launcher_token if launcher else self.server.token
+        provided = self.headers.get(header, "")
+        if ((not launcher and self.path != "/api/console")
+                or (launcher and not self.server.view.launcher)
+                or self.headers.get("Host") != self.server.host
                 or self.headers.get("Origin") != allowed_origin
-                or self.headers.get("X-NTK-Console") != self.server.token):
+                or not provided.isascii() or not secrets.compare_digest(provided, expected)):
+            self.close_connection = True
             self.respond(403)
             return
         if self.headers.get_content_type() != "application/json":
+            self.close_connection = True
             self.respond(415)
             return
         try:
             length = int(self.headers.get("Content-Length", "0"))
-            if not 0 < length <= 8192:
+            if not 0 < length <= 8192 or self.headers.get("Transfer-Encoding") is not None:
                 raise ValueError
             payload = json.loads(self.rfile.read(length))
             if type(payload) is not dict or set(payload) != {"operation", "arguments"}:
                 raise ValueError
         except (ValueError, OverflowError, RecursionError):
+            self.close_connection = True
             self.respond(400)
             return
-        result = self.server.view.query(payload["operation"], payload["arguments"])
+        result = self.server.view.request(payload["operation"], payload["arguments"], launcher=launcher)
         self.respond(200, json.dumps(result, ensure_ascii=False).encode(), "application/json")
 
 

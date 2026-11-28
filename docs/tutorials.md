@@ -202,3 +202,5 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ## 開発候補 v1.12 Runtimeライブ診断
 
 `python examples/runtime_diagnostics_demo.py --seconds 60` でローカル画面のURLを表示する。画面で固定天気、使用量、許可済みの状態照会を確認できる。通常導入にブラウザー自動化のツールは不要。報告設定とLD-01〜09は[ADR 0039](adr/0039-runtime-live-diagnostics-adapter-contract.md)を参照する。
+
+`python examples/runtime_diagnostics_demo.py --launcher --seconds 300 --open` で起動前の画面を開く。**Runtimeを起動**を押すと、サンプルのNymphが活動を登録する。「活動の予定と実績」で対象カードの**中断**、**再開**、**活動を終了**を使う。運用では `BrowserLauncher` に操作を許す要求元を設定し、既存の要求側APIで活動を登録する。 [ADR 0041](adr/0041-browser-runtime-launcher.md)

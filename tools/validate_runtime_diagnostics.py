@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from examples.runtime_diagnostics_demo import add_weather
 from nymph_toolkit.contracts import HybridSettings, Placement
-from nymph_toolkit.diagnostics import DiagnosticSession
+from nymph_toolkit.diagnostics import BrowserLauncher, DiagnosticSession
 from tests.doubles.measurement import memory
 from tests.doubles.scenario import invoke, make_group
 from validate_hybrid_load import Samples, source_identity
@@ -70,24 +70,32 @@ async def workload(group, seconds, *, collect):
     return {"rpc": measured, "elapsed_seconds": elapsed, "rpc_per_second": measured["count"] / elapsed}
 
 
-async def condition(tabs, warmup, duration, placements):
+async def condition(tabs, warmup, duration, placements, *, launcher=False):
     async with AsyncExitStack() as stack:
         root = Path(stack.enter_context(TemporaryDirectory(prefix="ntk-diagnostics-load-")))
         cases, urls = [], []
         for requester, provider in placements:
             group, runtime = make_group(root / f"{requester}-{provider}", requester, provider, measure=True,
                                         settings=HybridSettings(10, 3, 10, 65536, 32, 8))
-            session = DiagnosticSession(group, runtime, slots={"weather": "weather"}) if tabs else None
-            if session is not None:
-                stack.push_async_callback(session.close)
-                address = await session.start()
+            session = controller = None
+            if tabs:
+                if launcher:
+                    controller = BrowserLauncher(group, owner_id="requester", slots={"weather": "weather"})
+                    runtime, session = controller.runtime, controller.diagnostics
+                    stack.push_async_callback(controller.close)
+                    address = await controller.open()
+                else:
+                    session = DiagnosticSession(group, runtime, slots={"weather": "weather"})
+                    stack.push_async_callback(session.close)
+                    address = await session.start()
                 if address is None:
                     raise RuntimeError("Diagnostic server unavailable")
                 urls.append(address)
             config = None if session is None else session.report_settings("weather")
             add_weather(group, config, placement=provider, repeat=True)
             await runtime.start()
-            stack.push_async_callback(runtime.stop)
+            if controller is None:
+                stack.push_async_callback(runtime.stop)
             await invoke(group, "requester", "connect", "provider")
             cases.append((requester, provider, group, session))
         worker = await browser(stack, tabs, urls) if tabs else None
@@ -134,6 +142,7 @@ async def main(args):
     output = {"format": "ntk.validation.diagnostics.v1", "source": source_identity(),
               "platform": platform.platform(), "python": platform.python_version(),
               "placements": [[requester.value, provider.value] for requester, provider in placements],
+              "launcher": args.launcher,
               "p95_scope": "all_completed_rpc_in_measurement",
               "warmup_seconds": warmup, "duration_seconds": duration, "smoke": args.smoke, "observations": []}
     order = (0, 1, 3)
@@ -141,7 +150,7 @@ async def main(args):
         for attempt in range(repetitions):
             for tabs in order[attempt:] + order[:attempt]:
                 print(f"LD-09 iteration {attempt + 1}/{repetitions}, tabs={tabs}", flush=True)
-                result = await condition(tabs, warmup, duration, placements)
+                result = await condition(tabs, warmup, duration, placements, launcher=args.launcher)
                 output["observations"].append(dict(result, iteration=attempt + 1))
         output["comparisons"] = compare(output["observations"])
         output["passed"] = all(case["passed"] for case in output["comparisons"])
@@ -155,6 +164,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--smoke", action="store_true")
+    parser.add_argument("--launcher", action="store_true", help="Enable browser launcher controls in diagnostic runs")
     parser.add_argument("--placement", metavar=("REQUESTER", "PROVIDER"), nargs=2, type=Placement,
                         choices=tuple(Placement), help="Measure one placement with one Runtime")
     raise SystemExit(asyncio.run(main(parser.parse_args())))

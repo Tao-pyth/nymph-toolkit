@@ -9,14 +9,53 @@ import unittest
 from urllib.request import Request, urlopen
 
 from examples.runtime_diagnostics_demo import configure
-from nymph_toolkit.contracts import ActivityKey, ActivityRequest, BindingKey, Placement, RuntimeFailure
+from nymph_toolkit.contracts import ActivityKey, ActivityRequest, ActivityState, BindingKey, Placement, RuntimeFailure
 from nymph_toolkit.contracts.diagnostics import validate_report
-from nymph_toolkit.diagnostics import DiagnosticSession, ReportPublisher
+from nymph_toolkit.diagnostics import BrowserLauncher, DiagnosticSession, ReportPublisher
 from nymph_toolkit.diagnostics._viewer import View
 from tests.doubles.integration import KEY
 from tests.doubles.scenario import invoke, make_group, until
 
 STAMP = datetime(2026, 11, 28, tzinfo=timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+
+
+class BrowserLauncherTests(unittest.IsolatedAsyncioTestCase):
+    async def test_owner_revision_and_cooperative_commands(self):
+        with TemporaryDirectory() as directory:
+            group, _ = make_group(Path(directory), Placement.LOCAL, Placement.PROCESS)
+            launcher = BrowserLauncher(group, owner_id="requester")
+            try:
+                await launcher.open()
+                self.assertEqual(launcher.runtime.state.value, "new")
+                self.assertEqual(launcher._command("start_runtime", {}), {"status": "accepted"})
+                self.assertEqual(launcher._command("start_runtime", {}), {"status": "not_available"})
+                await asyncio.wait_for(launcher._start, 10)
+                manager = group.activities
+                key = ActivityKey("requester", "target")
+                outside = ActivityKey("provider", "outside")
+                manager.submit_remote(ActivityRequest(key, "target", None, timedelta(seconds=30)), "provider", "work")
+                manager.submit_remote(ActivityRequest(outside, "outside", None, timedelta(seconds=30)), "provider", "work")
+                await until(lambda: manager.snapshot(key).state == ActivityState.RUNNING)
+                before = manager.snapshot(key)
+                self.assertEqual(launcher._command("finish", {"activity_id": outside.activity_id,
+                                                              "expected_revision": manager.snapshot(outside).revision}),
+                                 {"status": "not_available"})
+                self.assertEqual(launcher._command("pause", {"activity_id": "target",
+                                                             "expected_revision": before.revision + 1}),
+                                 {"status": "conflict"})
+                for command, state in (("pause", ActivityState.PAUSED), ("resume", ActivityState.RUNNING),
+                                       ("finish", ActivityState.STOPPED)):
+                    args = {"activity_id": "target", "expected_revision": manager.snapshot(key).revision}
+                    self.assertEqual(launcher._command(command, args), {"status": "accepted"})
+                    await until(lambda: manager.snapshot(key).state == state)
+                    self.assertEqual(launcher._command(command, args), {"status": "conflict"})
+                    self.assertEqual(manager.snapshot(key).started_at, before.started_at)
+                self.assertTrue(manager.snapshot(key).cleanup_confirmed)
+                self.assertIsNone(manager.snapshot(outside).finish_requested_at)
+            finally:
+                await launcher.close()
+            self.assertEqual(launcher.runtime.state.value, "stopped")
+            self.assertTrue(group.process("provider").cleanup_confirmed)
 
 
 def report(run_id="a" * 32, sequence=1, **extra):

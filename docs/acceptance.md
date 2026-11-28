@@ -431,3 +431,5 @@ LD-09の初回 `dbfef2b` はWindows Server 2025とLinux、CPython 3.15.2で条�
 | Linux | 0.02682 ms（LOCAL/PROCESS・1タブ） | 0.984%（PROCESS/LOCAL・1タブ） |
 
 同じ候補で8環境のソース・通常wheelの各571回帰、sdist再構築、安定Core API 15件・Contracts 98件と採用64項目、音声依存2環境、Customer Docs CIを確認した。顧客Markdown/PDF/HTMLは38ページ・25図で照合した。 [受入CIと全配置の実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46152926552)
+
+[ADR 0041](adr/0041-browser-runtime-launcher.md)の追加受入は、起動前から同じタブでRuntime起動、活動の中断・再開・終了、再読み込み時の指示回数、対象外と旧revisionの拒否、所有プロセスの回収を照合する。LD-09の診断有効条件には `--launcher` を付けて操作欄を表示し、同じ業務負荷・時間・閾値で測る。通常回帰と配置別負荷実測の結果は[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)で追跡する。

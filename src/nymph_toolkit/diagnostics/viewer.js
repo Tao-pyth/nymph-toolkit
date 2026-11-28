@@ -5,14 +5,71 @@ let since = null;
 let latest = null;
 let querySignature = "";
 let reportExpiry = Infinity;
+let launcherBusy = false;
+let startAccepted = false;
 let polling = false;
 let pollTimer;
 const dateTime = new Intl.DateTimeFormat(undefined, {
   year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric", second:"numeric"
 });
 const stateNames = {new:"開始前", starting:"開始中", running:"稼働中", ready:"準備済み",
-  checking:"確認中", invalid:"失効", failed:"異常終了", stopped:"停止済み", stopping:"停止中"};
+  checking:"確認中", invalid:"失効", failed:"異常終了", stopped:"停止済み", stopping:"停止中",
+  pending:"開始待ち", pausing:"中断処理中", paused:"中断中", resume_pending:"再開待ち",
+  finishing:"後処理中", completed:"完了"};
 const stateName = (value) => stateNames[value] ?? value ?? "未報告";
+
+function renderLauncher() {
+  byId("launcher").hidden = !latest?.launcher;
+  byId("start-runtime").disabled = !latest?.launcher || latest.stalled ||
+    latest.state !== "new" || startAccepted || launcherBusy;
+}
+
+async function launcherCommand(button, operation, args) {
+  if (launcherBusy || latest?.stalled) return;
+  launcherBusy = true;
+  button.disabled = true;
+  const result = byId("launcher-result");
+  result.textContent = "操作を送信中";
+  try {
+    const response = await fetch("/api/launcher", {
+      method:"POST", signal:AbortSignal.timeout(4000),
+      headers:{"Content-Type":"application/json",
+        "X-NTK-Launcher":document.querySelector('meta[name="ntk-launcher"]').content},
+      body:JSON.stringify({operation, arguments:args})
+    });
+    if (!response.ok) throw new Error("Launcher response unavailable");
+    const {status} = await response.json();
+    if (operation === "start_runtime" && status === "accepted") startAccepted = true;
+    result.textContent = ({
+      accepted:"指示を受け付けました。実行状態は画面で確認できます。",
+      applied:"指示を適用しました。", no_change:"活動はすでにその状態です。",
+      conflict:"活動の状態が更新されました。表示を確認して操作してください。",
+      outcome_unknown:"結果が不明です。画面で状態を確認してください。"
+    })[status] ?? "現在の状態では操作を受け付けられません。";
+  } catch {
+    result.textContent = "結果が不明です。画面で状態を確認してください。";
+  } finally {
+    launcherBusy = false;
+    button.disabled = false;
+    renderLauncher();
+  }
+}
+
+function activityControls(card, value) {
+  if (!Number.isSafeInteger(value.launcher_revision)) return;
+  if (["finishing", "completed", "failed", "stopped"].includes(value.state)) return;
+  const controls = add(card, "div", undefined, "activity-controls");
+  const actions = [["finish", "活動を終了"]];
+  if (value.state === "running") actions.unshift(["pause", "中断"]);
+  if (value.state === "paused") actions.unshift(["resume", "再開"]);
+  for (const [operation, label] of actions) {
+    const button = add(controls, "button", label);
+    button.type = "button";
+    button.addEventListener("click", () => launcherCommand(button, operation, {
+      activity_id:value.activity_id, expected_revision:value.launcher_revision
+    }));
+  }
+}
 
 function add(parent, tag, value, className) {
   const element = document.createElement(tag);
@@ -85,7 +142,7 @@ function renderActivities() {
       card.className = "card";
       card.dataset.activity = id;
       card.dataset.signature = signature;
-      add(card, "strong", id + " · " + stateName(value.state));
+      add(card, "strong", (value.label ?? id) + " · " + stateName(value.state));
       add(card, "span", "予定 " + timeText(value.planned_start_at) + " – " + timeText(value.planned_end_at));
       add(card, "span", "実績 " + timeText(value.started_at) + " – " + timeText(value.ended_at));
       if (value.planned_end_notified) add(card, "small", "予定到達を通知済み");
@@ -100,6 +157,7 @@ function renderActivities() {
           bar.dataset.started = Date.parse(value.started_at);
         }
       }
+      if (latest.launcher) activityControls(card, value);
     }
     cards.push(card);
   }
@@ -250,6 +308,7 @@ function merge(update) {
 }
 function renderSnapshot() {
   if (!latest) return;
+  renderLauncher();
   renderModules(); renderEvents(); renderActivities(); renderReports(); renderQueries(latest.queries);
 }
 document.addEventListener("visibilitychange", () => {
@@ -261,6 +320,7 @@ document.addEventListener("visibilitychange", () => {
 });
 byId("adapter").addEventListener("change", renderReports);
 byId("event-filter").addEventListener("change", () => { if (latest) renderEvents(); });
+byId("start-runtime").addEventListener("click", event => launcherCommand(event.currentTarget, "start_runtime", {}));
 async function tick() {
   if (polling || (document.hidden && latest)) return;
   polling = true;
@@ -275,6 +335,7 @@ async function tick() {
     const state = update.stalled ? "観測更新停止" : stateName(update.state);
     if (byId("runtime").textContent !== state) byId("runtime").textContent = state;
     if (!document.hidden) {
+      if (update.launcher) renderLauncher();
       if (update.reset || update.changes.modules || update.changes.connections || update.changes.usage) renderModules();
       if (update.reset || update.events.length) renderEvents();
       if (update.reset || update.changes.activities || byId("activities").querySelector("progress[data-started]")) {

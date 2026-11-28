@@ -10,12 +10,16 @@ h3 { font-size: 1rem; }
 #runtime { border: 1px solid #6a92a4; border-radius: 20rem; padding: .4rem .8rem; }
 main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; padding-bottom: 2rem; }
 section { min-width: 0; padding: 1rem; border: 1px solid #304458; border-radius: 1rem; background: #132031; overflow-wrap: anywhere; }
+#launcher { grid-column: 1 / -1; }
+#launcher-result:not(:empty) { margin: .5rem 0 0; }
+.activity-controls { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .5rem; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: .6rem; margin: .8rem 0; }
 .card { padding: .65rem; margin: .4rem 0; background: #1a2b40; border-radius: .55rem; }
 .card strong, .card span { display: block; }
 small { color: #c1d4e4; }
 select, input, button { color: inherit; border: 1px solid #67839c; background: #18283a; border-radius: .35rem; padding: .4rem; max-width: 100%; font: inherit; }
 button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .55; }
 :focus-visible { outline: 3px solid #f6cb81; outline-offset: 2px; }
 ol { margin: .5rem 0; padding-left: 1.3rem; max-height: 20rem; overflow: auto; }
 meter, progress { width: 100%; }

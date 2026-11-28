@@ -76,3 +76,5 @@ Memory原本とCognition学習の削除、睡眠活動の循環、人格の自�
 ## v1.11・v1.12の標準化
 
 [ADR 0033](0033-input-candidate-contract.md)と[ADR 0039](0039-runtime-live-diagnostics-adapter-contract.md)の段階・適用範囲を[ロードマップ](../roadmap.md)へ反映した。標準はその対象機能の新設・関連改修に適用する。設計採用、実装受入、公開後の発効は別の記録とする。
+
+[ADR 0041](0041-browser-runtime-launcher.md)は、v1.12の同一画面にRuntime起動と既存活動への明示操作を追加する判断。実装・受入を[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)で追跡する。

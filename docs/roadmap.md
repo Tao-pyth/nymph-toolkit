@@ -311,7 +311,7 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 | 段階 | 採用範囲と受入 | 追跡 |
 |---|---|---|
 | v1.11.0 | 取得済み入力の共通準備、既定値補完型と模擬APIのAI型、Memoryへの明示保存、既存入口の回帰 | [ADR 0033](adr/0033-input-candidate-contract.md)・[親 #174](https://github.com/Tao-pyth/nymph-toolkit/issues/174) |
-| v1.12.0 | 任意の診断報告、既存情報の基本表示、許可済み状態照会、実Runtimeでの表示と負荷実測 LD-01〜09 | [ADR 0039](adr/0039-runtime-live-diagnostics-adapter-contract.md)・[親 #175](https://github.com/Tao-pyth/nymph-toolkit/issues/175) |
+| v1.12.0 | 任意の診断報告、基本表示と状態照会、同一画面のRuntime起動と既存活動の中断・再開・終了、実Runtimeでの表示と負荷実測 LD-01〜09 | [ADR 0039](adr/0039-runtime-live-diagnostics-adapter-contract.md)・[ADR 0041](adr/0041-browser-runtime-launcher.md)・[親 #175](https://github.com/Tao-pyth/nymph-toolkit/issues/175) |
 
 [11月22日の未確定事項一覧](https://chatgpt.com/space/page_40fc20a69a7c819188f5e2132e6d25d5)との照合では、次の初期範囲に後続判断がある。受入と公開状態は[実装進捗](implementation-progress.md)で追う。
 

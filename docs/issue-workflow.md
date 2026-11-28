@@ -331,3 +331,5 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 ## v1.11・v1.12の標準化
 
 [v1.11.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/21)の親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)に#176（設計）・#177（実装）・#178（受入・配布）・#179（公開）、[v1.12.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/22)の親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)に#180（設計）・#181（実装）・#182（実測・受入・配布）・#183（公開）を実sub-issueとして先行登録した。同じマイルストーンへの所属を確認済み。標準の発効は各版の検証・公開後確認で記録する。
+
+同一ブラウザー画面のランチャー操作は[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)をv1.12.0・親#175配下へ先行登録し、[ADR 0041](adr/0041-browser-runtime-launcher.md)で範囲を採用した。

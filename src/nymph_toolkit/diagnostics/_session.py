@@ -115,6 +115,7 @@ class DiagnosticSession:
         self._bound = set()
         self._checking = Counter()
         self._closing = False
+        self._launcher = None
         contracts = tuple(report_contract(slot) for slot in self.slots)
         group.register_module(ModuleSpec(_RECEIVER, ModuleKind.ADAPTER, ()),
                               ModuleAdvertisement(_RECEIVER, "1.12.0", contracts),
@@ -130,7 +131,7 @@ class DiagnosticSession:
 
     def _observe(self, event):
         kind, data = event["kind"], event["data"]
-        value = label = key = None
+        value = label = key = subject = None
         if kind == "hybrid_process" and data["module_id"] != _RECEIVER:
             label, key = "modules", data["module_id"]
             value = _project(data, ("state", "pid", "returncode", "cleanup_confirmed"))
@@ -171,13 +172,19 @@ class DiagnosticSession:
         elif kind.startswith(("activity_v06_", "activity_v07_")) and "request" in data:
             label = "activities"
             request = data["request"]
-            key = "/".join(str(request.get(part, "")) for part in ("requester_id", "activity_id"))
+            owner, activity = (str(request.get(part, "")) for part in ("requester_id", "activity_id"))
+            key = subject = f"{owner}/{activity}"
             value = _project(data, _ACTIVITY_FIELDS)
+            if self._launcher is not None:
+                key = json.dumps((owner, activity), ensure_ascii=False, separators=(",", ":"))
+                value.update(label=subject, activity_id=activity)
+                if owner == self._launcher._owner and "revision" in data:
+                    value["launcher_revision"] = data["revision"]
         if value is not None:
             self._change(label, key, value)
         if label is not None and kind != "usage":
             self._events.append({"sequence": event["sequence"], "at": event["at"],
-                                 "kind": kind, "subject": key or label})
+                                 "kind": kind, "subject": subject or key or label})
 
     @staticmethod
     def _binding_key(data):
@@ -239,9 +246,12 @@ class DiagnosticSession:
 
     async def _publish(self):
         try:
-            await self._send({"type": "setup", "run_id": self.run_id, "queries": {
+            setup = {"type": "setup", "run_id": self.run_id, "queries": {
                 name: {"label": query.label, "inputs": query.inputs} for name, query in self.queries.items()
-            }})
+            }}
+            if self._launcher is not None:
+                setup["launcher"] = True
+            await self._send(setup)
             while True:
                 changes, self._changes = self._changes, {}
                 events = list(self._events)
@@ -257,7 +267,12 @@ class DiagnosticSession:
         try:
             while raw := await self._process.stdout.readline():
                 command = json.loads(raw)
-                result = await self._query(command.get("operation"), command.get("arguments"))
+                operation, arguments = command.get("operation"), command.get("arguments")
+                if command.get("launcher") is True:
+                    result = ({"status": "not_available"} if self._launcher is None
+                              else self._launcher._command(operation, arguments))
+                else:
+                    result = await self._query(operation, arguments)
                 await self._send({"type": "reply", "id": command["id"], "result": result})
         except (OSError, TimeoutError, ValueError, RuntimeError, KeyError):
             pass
