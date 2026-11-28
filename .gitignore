@@ -31,3 +31,6 @@ Thumbs.db
 
 # Explicit local example sessions
 .local/
+
+# Runtime diagnostics acceptance artifacts
+/output/diagnostics/

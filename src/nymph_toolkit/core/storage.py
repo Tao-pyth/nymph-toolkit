@@ -38,6 +38,7 @@ class FileStore:
         self._state = RuntimeState.NEW
         self._buffer: deque[dict] = deque()
         self._sequence = 0
+        self._diagnostic_observer = None
         self._run_id = uuid4().hex
         self._due = None
         self._io_lock = asyncio.Lock()
@@ -119,9 +120,17 @@ class FileStore:
         if now.tzinfo is None:
             raise ValueError("History clock must return an aware datetime")
         self._sequence += 1
-        self._buffer.append({"format": "ntk.history.v1", "run_id": self._run_id,
-                             "sequence": self._sequence, "at": now.astimezone(timezone.utc).isoformat(),
-                             "kind": kind, "data": copied})
+        record = {"format": "ntk.history.v1", "run_id": self._run_id,
+                  "sequence": self._sequence, "at": now.astimezone(timezone.utc).isoformat(),
+                  "kind": kind, "data": copied}
+        self._buffer.append(record)
+        observer = self._diagnostic_observer
+        if observer is not None:
+            try:
+                observer(record)
+            except Exception:
+                # Optional diagnostics cannot affect ordinary history admission.
+                self._diagnostic_observer = None
         if self._due is None and self._loop is not None:
             self._due = self._loop.time() + self._interval
         if self._failure is not None:
