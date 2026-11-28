@@ -4,7 +4,7 @@
   "status": "development",
   "published_version": "1.2.0",
   "reviewed_on": "2026-11-28",
-  "review_note": "ローカル診断の運用・画面資材・公開状態と、ADR 0040の音声受入判断を顧客本文/図・実装へ照合。",
+  "review_note": "送信間隔のタイマー早期復帰を修正し、1秒規定・表示・手順と顧客本文/図を照合。",
   "sources": {
     "AGENTS.md": "7feab6b78eae2645346f26c265f9f977c12453c59f9c209885b9e03f7687eccd",
     "CHANGELOG.md": "84c5b2440771b7768bab3a868818b85ff9b13cfe35b0c86be5351cf142d485a9",
@@ -177,7 +177,7 @@
     "src/nymph_toolkit/core/storage.py": "fe338174eeca6125e5ca64ebda0a378e54a3d306c41d39438f4b3222730ea81e",
     "src/nymph_toolkit/core/task_manager.py": "f7e98e64f2b417665b52fa852c195dedabcc6513fbfc2306605463326fddbc5c",
     "src/nymph_toolkit/diagnostics/__init__.py": "362a0659c06d2c99e61d7c1f4d77ba56bc30e8188eabd1823530f2c2d03a56ec",
-    "src/nymph_toolkit/diagnostics/_publisher.py": "5789d6b5685b5200db5b661f6cf7d4c9ae92ef7a38fb9e3e937690efe89e72e8",
+    "src/nymph_toolkit/diagnostics/_publisher.py": "7c3abbf31ed43d2cb8207bb89d0d0be833465f06bd9e3ab54061fd6ffded1516",
     "src/nymph_toolkit/diagnostics/_session.py": "66290517ee365fdcb4c3cf6812f84a7e059d95407f501b7c106f114173468d45",
     "src/nymph_toolkit/diagnostics/_viewer.py": "94ea57d80f8a93568258713cf2c934c987e37075a742a8f0da4d5da749eb5ba3",
     "src/nymph_toolkit/diagnostics/viewer.css": "5c96218f0c08397f154458ceb6e08f9d62553439206ddde9b630216971e0559c",

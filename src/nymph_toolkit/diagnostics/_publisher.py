@@ -46,7 +46,8 @@ class ReportPublisher:
         next_at, bound = 0.0, False
         while True:
             await self._wake.wait()
-            await asyncio.sleep(max(0.0, next_at - loop.time()))
+            while (remaining := next_at - loop.time()) > 0:
+                await asyncio.sleep(remaining)
             item, self._pending = self._pending, None
             self._wake.clear()
             self._number += 1
@@ -56,10 +57,9 @@ class ReportPublisher:
                     await self._core.bind(self._key, self._receiver_id, timeout=.5)
                     bound = True
                 # Include the bind duration before computing the next send boundary.
+                report = dict(item, **self._identity, sequence=self._number, reported_at=utcstamp())
                 next_at = loop.time() + 1
-                await self._core.invoke(self._key, "publish",
-                                        dict(item, **self._identity, sequence=self._number, reported_at=utcstamp()),
-                                        timeout=.5)
+                await self._core.invoke(self._key, "publish", report, timeout=.5)
             except Exception:
                 # Only a subsequent changed observation can cause a new publish.
                 continue
