@@ -133,4 +133,6 @@ WindowsとLinuxで、同一マシン・Python・Core設定ごとに比較する�
 
 `ntk.diagnostics.report.<slot>/1` の開発候補の適合結果は[受入記録](../acceptance.md#ld-runtime-diagnostics)を参照する。画面の履歴はRuntimeから投影した項目に限る。天気例は固定データ、簡易コンソールの操作は明示登録した状態照会に限る。
 
+診断プロセスは同じ版のスナップショット・差分をタブ間で再利用する。ブラウザーは表示中に更新を取得し、背面から戻った時に差分を取得する。活動欄は直近12件、診断イベント履歴は別に直近200件を表示する。対応するOSではランチャー所有の診断プロセスを低いCPU優先度で実行する。親Runtimeの報告間隔、収集頻度と業務設定を維持する。
+
 アダプタは起動時に `DiagnosticSession.report_settings(slot)` の設定を受け取り、開始後に `ReportPublisher` を作成する。変更時に `update`、停止時に `close` を呼ぶ。ランチャーは `DiagnosticSession.start()` のURLを利用し、Runtimeの終了結果を表示後に `close()` で診断プロセスを回収する。診断スロットは最大64。初回と以降の差分をブラウザーから取得し、タブ数はRuntime側の収集頻度に影響しない。簡易コンソールは `ConsoleQuery` で副作用のない既存操作・引数型・表示項目を固定する。

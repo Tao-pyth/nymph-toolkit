@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from functools import partial
 import json
 import math
+import subprocess
 import sys
 from uuid import uuid4
 from weakref import WeakValueDictionary
@@ -213,7 +214,8 @@ class DiagnosticSession:
             self._process = await asyncio.create_subprocess_exec(
                 sys.executable, "-m", "nymph_toolkit.diagnostics._viewer",
                 stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.DEVNULL)
+                stderr=asyncio.subprocess.DEVNULL,
+                creationflags=getattr(subprocess, "BELOW_NORMAL_PRIORITY_CLASS", 0))
             async with asyncio.timeout(5):
                 ready = json.loads(await self._process.stdout.readline())
             self.url = f"http://127.0.0.1:{int(ready['port'])}/"

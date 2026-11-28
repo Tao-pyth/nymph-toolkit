@@ -57,6 +57,9 @@ class ContractTests(unittest.TestCase):
     def test_stall_terminal_and_history(self):
         view = View(lambda _: None)
         view.apply({"type": "update", "state": "running", "changes": {}, "events": range(201), "terminal": {}})
+        before_stall = view.snapshot(None)
+        self.assertIs(view.snapshot(None), before_stall)
+        self.assertFalse(json.loads(before_stall)["stalled"])
         view.last_pulse -= 3.1
         read = json.loads(view.snapshot(None))
         self.assertTrue(read["stalled"])

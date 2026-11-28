@@ -4,6 +4,12 @@ const groups = {};
 let since = null;
 let latest = null;
 let querySignature = "";
+let reportExpiry = Infinity;
+let polling = false;
+let pollTimer;
+const dateTime = new Intl.DateTimeFormat(undefined, {
+  year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric", second:"numeric"
+});
 const stateNames = {new:"開始前", starting:"開始中", running:"稼働中", ready:"準備済み",
   checking:"確認中", invalid:"失効", failed:"異常終了", stopped:"停止済み", stopping:"停止中"};
 const stateName = (value) => stateNames[value] ?? value ?? "未報告";
@@ -16,7 +22,20 @@ function add(parent, tag, value, className) {
   return element;
 }
 function timeText(time) {
-  return time ? new Date(time).toLocaleString() : "—";
+  const milliseconds = Date.parse(time);
+  return Number.isFinite(milliseconds) ? dateTime.format(milliseconds) : "—";
+}
+function orderRows(root, rows) {
+  let next = root.firstElementChild;
+  for (const row of rows) {
+    if (row === next) next = next.nextElementSibling;
+    else root.insertBefore(row, next);
+  }
+  while (next) {
+    const stale = next;
+    next = next.nextElementSibling;
+    stale.remove();
+  }
 }
 function usageText(usage) {
   if (!usage) return "稼働情報は未報告";
@@ -48,23 +67,46 @@ function renderModules() {
 }
 function renderActivities() {
   const panel = byId("activities");
-  panel.replaceChildren();
   const rows = Object.entries(groups.activities ?? {}).slice(-12).reverse();
-  if (!rows.length) add(panel, "p", "活動情報は未報告");
-  for (const [id, value] of rows) {
-    const card = add(panel, "article", undefined, "card");
-    add(card, "strong", id + " · " + stateName(value.state));
-    add(card, "span", "予定 " + timeText(value.planned_start_at) + " – " + timeText(value.planned_end_at));
-    add(card, "span", "実績 " + timeText(value.started_at) + " – " + timeText(value.ended_at));
-    if (value.planned_end_notified) add(card, "small", "予定到達を通知済み");
-    const duration = Date.parse(value.planned_end_at) - Date.parse(value.planned_start_at);
-    if (duration > 0 && value.started_at) {
-      const elapsed = (value.ended_at ? Date.parse(value.ended_at) : Date.now()) - Date.parse(value.started_at);
-      const bar = add(card, "progress");
-      bar.max = duration;
-      bar.value = Math.min(duration, Math.max(0, elapsed));
-      bar.setAttribute("aria-label", "予定時間に対する実績の割合");
+  if (!rows.length) {
+    if (!panel.querySelector("p")) {
+      panel.replaceChildren();
+      add(panel, "p", "活動情報は未報告");
     }
+    return;
+  }
+  const previous = new Map(Array.from(panel.children, (card) => [card.dataset.activity, card]));
+  const cards = [];
+  for (const [id, value] of rows) {
+    const signature = JSON.stringify(value);
+    let card = previous.get(id);
+    if (card?.dataset.signature !== signature) {
+      card = document.createElement("article");
+      card.className = "card";
+      card.dataset.activity = id;
+      card.dataset.signature = signature;
+      add(card, "strong", id + " · " + stateName(value.state));
+      add(card, "span", "予定 " + timeText(value.planned_start_at) + " – " + timeText(value.planned_end_at));
+      add(card, "span", "実績 " + timeText(value.started_at) + " – " + timeText(value.ended_at));
+      if (value.planned_end_notified) add(card, "small", "予定到達を通知済み");
+      const duration = Date.parse(value.planned_end_at) - Date.parse(value.planned_start_at);
+      if (duration > 0 && value.started_at) {
+        const bar = add(card, "progress");
+        bar.max = duration;
+        bar.setAttribute("aria-label", "予定時間に対する実績の割合");
+        if (value.ended_at) {
+          bar.value = Date.parse(value.ended_at) - Date.parse(value.started_at);
+        } else {
+          bar.dataset.started = Date.parse(value.started_at);
+        }
+      }
+    }
+    cards.push(card);
+  }
+  orderRows(panel, cards);
+  const now = Date.now();
+  for (const bar of panel.querySelectorAll("progress[data-started]")) {
+    bar.value = now - Number(bar.dataset.started);
   }
 }
 function drawSeries(card, series) {
@@ -89,6 +131,7 @@ function drawSeries(card, series) {
   ctx.stroke();
 }
 function renderReports() {
+  reportExpiry = Infinity;
   const select = byId("adapter");
   const modules = Object.keys(groups.modules ?? {});
   const key = JSON.stringify(modules);
@@ -119,11 +162,14 @@ function renderReports() {
       if (resource.used > resource.limit) add(card, "p", "上限を超過");
     }
   }
+  const now = Date.now();
   for (const output of report.outputs) {
     const card = add(target, "article", undefined, "card");
     add(card, "strong", output.label);
     if (output.source) add(card, "small", output.source + " · " + timeText(output.observed_at));
-    if (output.expires_at && Date.now() >= Date.parse(output.expires_at)) {
+    const expiry = output.expires_at ? Date.parse(output.expires_at) : Infinity;
+    if (expiry > now) reportExpiry = Math.min(reportExpiry, expiry);
+    if (now >= expiry) {
       add(card, "p", "期限切れ");
     } else if (output.kind === "text") {
       add(card, "p", output.content);
@@ -148,7 +194,7 @@ function renderEvents() {
     }
     rows.push(row);
   }
-  target.replaceChildren(...rows);
+  orderRows(target, rows);
 }
 function renderQueries(queries) {
   const signature = JSON.stringify(queries);
@@ -206,10 +252,18 @@ function renderSnapshot() {
   if (!latest) return;
   renderModules(); renderEvents(); renderActivities(); renderReports(); renderQueries(latest.queries);
 }
-document.addEventListener("visibilitychange", () => { if (!document.hidden) renderSnapshot(); });
+document.addEventListener("visibilitychange", () => {
+  clearTimeout(pollTimer);
+  if (!document.hidden) {
+    renderSnapshot();
+    void tick();
+  }
+});
 byId("adapter").addEventListener("change", renderReports);
 byId("event-filter").addEventListener("change", () => { if (latest) renderEvents(); });
 async function tick() {
+  if (polling || (document.hidden && latest)) return;
+  polling = true;
   try {
     const response = await fetch("/api/snapshot" + (since === null ? "" : "?since=" + since),
                                  {signal:AbortSignal.timeout(2000)});
@@ -223,12 +277,18 @@ async function tick() {
     if (!document.hidden) {
       if (update.reset || update.changes.modules || update.changes.connections || update.changes.usage) renderModules();
       if (update.reset || update.events.length) renderEvents();
-      renderActivities(); renderReports(); renderQueries(update.queries);
+      if (update.reset || update.changes.activities || byId("activities").querySelector("progress[data-started]")) {
+        renderActivities();
+      }
+      if (update.reset || update.changes.reports || update.changes.modules || update.changes.usage
+          || Date.now() >= reportExpiry) renderReports();
+      renderQueries(update.queries);
     }
   } catch {
     if (latest?.state !== "failed" && latest?.state !== "stopped") byId("runtime").textContent = "観測更新停止";
   } finally {
-    setTimeout(tick, 1000);
+    polling = false;
+    if (!document.hidden || !latest) pollTimer = setTimeout(tick, 1000);
   }
 }
 tick();

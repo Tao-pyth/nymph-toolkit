@@ -9939,6 +9939,8 @@ WindowsとLinuxで、同一マシン・Python・Core設定ごとに比較する�
 
 `ntk.diagnostics.report.<slot>/1` の開発候補の適合結果は受入記録（`docs/acceptance.md#ld-runtime-diagnostics`）を参照する。画面の履歴はRuntimeから投影した項目に限る。天気例は固定データ、簡易コンソールの操作は明示登録した状態照会に限る。
 
+診断プロセスは同じ版のスナップショット・差分をタブ間で再利用する。ブラウザーは表示中に更新を取得し、背面から戻った時に差分を取得する。活動欄は直近12件、診断イベント履歴は別に直近200件を表示する。対応するOSではランチャー所有の診断プロセスを低いCPU優先度で実行する。親Runtimeの報告間隔、収集頻度と業務設定を維持する。
+
 アダプタは起動時に `DiagnosticSession.report_settings(slot)` の設定を受け取り、開始後に `ReportPublisher` を作成する。変更時に `update`、停止時に `close` を呼ぶ。ランチャーは `DiagnosticSession.start()` のURLを利用し、Runtimeの終了結果を表示後に `close()` で診断プロセスを回収する。診断スロットは最大64。初回と以降の差分をブラウザーから取得し、タブ数はRuntime側の収集頻度に影響しない。簡易コンソールは `ConsoleQuery` で副作用のない既存操作・引数型・表示項目を固定する。
 
 ---
@@ -10747,6 +10749,8 @@ B11の採用条件（`docs/adr/0033-input-candidate-contract.md`）を、取得�
 LD-01〜09（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）を実Runtime・ローカルブラウザーとWindows/Linuxの負荷実測で照合する。公開後の標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
 
 LD-01〜07の製品試験で、LOCAL/PROCESSの報告、形式と境界、順序と旧起動、集約・間隔、期限/撤回、活動・接続・異常終了、許可済み照会を確認した。Windows/Python 3.12で1秒の送信下限を15 ms下回るケースを受けて、単調時計で期限を再確認するよう修正し、同環境で対象試験を20反復した。LD-07〜08のブラウザー試験はWindows/Linuxで通過した。サンプルの天気は固定データを使い、実サービスには接続しない。 [実装とワークフロー](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46144583542)
+
+LD-09の初回 `dbfef2b` はWindows Server 2025とLinux、CPython 3.15.2で条件別に30秒の準備、300秒の観測、3反復を完走した。3タブの処理件数低下は最大11.652%／8.714%（Windows／Linux）、p95の最大増加は1.83130 ms／0.98118 msで、両OSで基準超過があった。報告数の範囲は1・3タブで一致し、診断配信の最大保持は各配置1枠だった。画面が背面にある間の取得・描画、同じ差分の再生成、不要な行の再描画を抑え、同じ条件・基準で再測定する。 [Windows実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263462768) · [Linux実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263243288)
 
 ---
 

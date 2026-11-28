@@ -4,6 +4,7 @@
 from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 import secrets
 import sys
@@ -41,6 +42,7 @@ class View:
         self.current = {name: {} for name in _GROUPS}
         self.history, self.deltas = deque(maxlen=200), deque(maxlen=16)
         self.terminal, self.queries = {}, {}
+        self.snapshots = {}
         self.last_pulse = time.monotonic()
         self.active = None
 
@@ -49,6 +51,7 @@ class View:
             kind = message["type"]
             if kind == "setup":
                 self.run_id, self.queries = message["run_id"], message["queries"]
+                self.snapshots.clear()
             elif kind == "update":
                 self.last_pulse = time.monotonic()
                 self.state, self.terminal = message["state"], message["terminal"]
@@ -58,6 +61,7 @@ class View:
                 self.history.extend(events)
                 self.revision += 1
                 self.deltas.append((self.revision, changes, events))
+                self.snapshots.clear()
             elif kind == "reply" and self.active is not None:
                 identifier, event, replies = self.active
                 if identifier == message["id"]:
@@ -67,6 +71,10 @@ class View:
     def snapshot(self, since):
         with self.lock:
             reset = since is None or not self.deltas or not self.deltas[0][0] - 1 <= since <= self.revision
+            stalled = self.state not in ("stopped", "failed") and time.monotonic() - self.last_pulse >= 3
+            key = (None if reset else since, stalled)
+            if key in self.snapshots:
+                return self.snapshots[key]
             delta = self.current if reset else {}
             events = deque(self.history if reset else (), maxlen=200)
             if not reset:
@@ -74,16 +82,16 @@ class View:
                     if revision > since:
                         _merge(delta, changes)
                         events.extend(additions)
-            # Activities are bounded on the viewer as well as at the Runtime. Send
-            # their current collection so a long-lived browser trims the same entries.
-            activity_delta = self.current["activities"] if "activities" in delta else None
-            if activity_delta is not None and not reset:
-                delta["activities"] = activity_delta
-            stalled = self.state not in ("stopped", "failed") and time.monotonic() - self.last_pulse >= 3
-            return json.dumps({"run_id": self.run_id, "revision": self.revision,
-                               "reset": reset, "state": self.state, "stalled": stalled,
-                               "changes": delta, "events": list(events), "terminal": self.terminal,
-                               "queries": self.queries}, ensure_ascii=False, allow_nan=False).encode()
+            if "activities" in delta:
+                # The time line shows 12 entries; the event history keeps its own 200-entry window.
+                activities = dict(list(self.current["activities"].items())[-12:])
+                delta = dict(delta, activities=activities)
+            encoded = json.dumps({"run_id": self.run_id, "revision": self.revision,
+                                  "reset": reset, "state": self.state, "stalled": stalled,
+                                  "changes": delta, "events": list(events), "terminal": self.terminal,
+                                  "queries": self.queries}, ensure_ascii=False, allow_nan=False).encode()
+            self.snapshots[key] = encoded
+            return encoded
 
     def query(self, operation, arguments):
         with self.lock:
@@ -134,6 +142,8 @@ class Server(ThreadingHTTPServer):
 
 
 class Handler(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
     def setup(self):
         self.request.settimeout(4)
         super().setup()
@@ -196,6 +206,12 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    if hasattr(os, "nice"):
+        try:
+            os.nice(5)
+        except OSError:
+            pass
+
     def send(value):
         print(json.dumps(value, ensure_ascii=True, allow_nan=False), flush=True)
 
