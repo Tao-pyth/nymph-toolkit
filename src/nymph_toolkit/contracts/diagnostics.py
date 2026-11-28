@@ -40,6 +40,11 @@ def _text(value, maximum=80):
         raise ValueError("Invalid diagnostics text")
 
 
+def _content(value):
+    if type(value) is not str or len(value) > 1024:
+        raise ValueError("Invalid diagnostics text output")
+
+
 def _integer(value, minimum=0):
     if type(value) is not int or not minimum <= value <= _MAX_INT:
         raise ValueError("Invalid diagnostics integer")
@@ -74,17 +79,16 @@ def _output(value, used):
     _identifier(value["id"], used)
     _text(value["label"])
     _timestamp(value["observed_at"])
-    if ("source" in value) != ("expires_at" in value):
-        raise ValueError("External diagnostic output requires source and expiry together")
     if "source" in value:
         _text(value["source"])
+    if "expires_at" in value:
         _timestamp(value["expires_at"])
         if value["expires_at"] <= value["observed_at"]:
             raise ValueError("Expiry must follow observation")
     kind, content = value["kind"], value["content"]
     _choice(kind, ("text", "items", "series"))
     if kind == "text":
-        _text(content, 1024)
+        _content(content)
     elif kind == "items":
         for item in _array(content, 1, 32):
             _object(item, ("label", "value"), ("unit",))
@@ -92,7 +96,7 @@ def _output(value, used):
             if "unit" in item:
                 _text(item["unit"])
             if type(item["value"]) is str:
-                _text(item["value"], 1024)
+                _content(item["value"])
             elif type(item["value"]) is not bool:
                 _number(item["value"])
     else:
@@ -114,7 +118,8 @@ def validate_report(report: dict) -> dict:
             ("condition", "processing"))
     if type(report["version"]) is not int or report["version"] != 1:
         raise ValueError("Unsupported diagnostics version")
-    _text(report["module_id"], 256)
+    if type(report["module_id"]) is not str or not report["module_id"]:
+        raise ValueError("Invalid diagnostics module ID")
     if type(report["run_id"]) is not str or not _RUN.fullmatch(report["run_id"]):
         raise ValueError("Invalid diagnostics run ID")
     _integer(report["sequence"], 1)

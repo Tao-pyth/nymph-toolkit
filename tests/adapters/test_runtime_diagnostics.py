@@ -45,6 +45,15 @@ class ContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 validate_report(bad)
 
+    def test_internal_output_can_have_an_expiry_without_external_source(self):
+        value = report()
+        value["outputs"] = [{"id": "notice", "label": "表示", "kind": "text", "content": "",
+                             "observed_at": STAMP, "expires_at": "2026-11-28T00:00:01.000Z"}]
+        self.assertEqual(validate_report(value), value)
+        value["outputs"][0]["expires_at"] = STAMP
+        with self.assertRaises(ValueError):
+            validate_report(value)
+
     def test_stall_terminal_and_history(self):
         view = View(lambda _: None)
         view.apply({"type": "update", "state": "running", "changes": {}, "events": range(201), "terminal": {}})

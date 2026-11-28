@@ -42,7 +42,7 @@
 
 ### 出力
 
-`outputs[]` の共通キーは `id`、`label`、`kind`、`observed_at`、`content`。任意キーは `source` と `expires_at`。外部取得情報では両方を指定し、`expires_at` は `observed_at` より後とする。アダプタが外部データから表示項目を選び、`source` に出典名を設定する。有効期限を過ぎた出力は、次の報告を待たず期限切れと表示する。
+`outputs[]` の共通キーは `id`、`label`、`kind`、`observed_at`、`content`。任意キーは `source` と `expires_at`。外部取得情報では提供側が両方を指定し、`expires_at` を指定する場合は `observed_at` より後とする。受け口は取得種別を推測せず、指定された項目を検証する。アダプタが外部データから表示項目を選び、`source` に出典名を設定する。有効期限を過ぎた出力は、次の報告を待たず期限切れと表示する。
 
 | `kind` | `content` の形式 | 画面での扱い |
 |---|---|---|
