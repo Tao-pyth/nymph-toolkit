@@ -288,6 +288,7 @@ nymph-toolkit/
 │     ├─ 0036-v1.8-persona-agency.md
 │     ├─ 0037-v1.9-sleep.md
 │     ├─ 0038-v1.10-sleep-cycle-and-voice.md
+│     ├─ 0039-runtime-live-diagnostics-adapter-contract.md
 │     └─ 0040-discord-bot-acceptance.md
 ├─ src/
 │  └─ nymph_toolkit/
