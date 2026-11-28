@@ -131,4 +131,6 @@ WindowsとLinuxで、同一マシン・Python・Core設定ごとに比較する�
 
 対象機能の新設・関連改修に契約を適用し、現行アダプタには基本表示の経路がある。標準の発効と適合結果は公開後確認[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)で記録する。
 
+`ntk.diagnostics.report.<slot>/1` の開発候補の適合結果は[受入記録](../acceptance.md#ld-runtime-diagnostics)を参照する。画面の履歴はRuntimeから投影した項目に限る。天気例は固定データ、簡易コンソールの操作は明示登録した状態照会に限る。
+
 アダプタは起動時に `DiagnosticSession.report_settings(slot)` の設定を受け取り、開始後に `ReportPublisher` を作成する。変更時に `update`、停止時に `close` を呼ぶ。ランチャーは `DiagnosticSession.start()` のURLを利用し、Runtimeの終了結果を表示後に `close()` で診断プロセスを回収する。診断スロットは最大64。初回と以降の差分をブラウザーから取得し、タブ数はRuntime側の収集頻度に影響しない。簡易コンソールは `ConsoleQuery` で副作用のない既存操作・引数型・表示項目を固定する。
