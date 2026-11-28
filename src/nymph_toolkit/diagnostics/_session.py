@@ -166,7 +166,7 @@ class DiagnosticSession:
                 self._change(label, binding, {"state": state})
             if not values:
                 self._events.append({"at": event["at"], "kind": kind, "subject": "connections"})
-        elif kind.startswith("activity_v06_") and "request" in data:
+        elif kind.startswith(("activity_v06_", "activity_v07_")) and "request" in data:
             label = "activities"
             request = data["request"]
             key = "/".join(str(request.get(part, "")) for part in ("requester_id", "activity_id"))
