@@ -45,7 +45,7 @@ async def browser(stack, tabs, urls):
 
 
 async def workload(group, seconds, *, collect):
-    results = Samples()
+    results = Samples(window_limit=None)
     sequence = itertools.count()
     start = time.perf_counter()
     deadline = start + seconds
@@ -63,6 +63,10 @@ async def workload(group, seconds, *, collect):
         await asyncio.sleep(.01)
     elapsed = time.perf_counter() - start
     measured = results.result()
+    tail = Samples()
+    tail.add(results.values[-tail.window_limit:])
+    measured["tail_window_size"] = tail.count
+    measured["tail_window_p95_seconds"] = tail.result()["window_p95_seconds"]
     return {"rpc": measured, "elapsed_seconds": elapsed, "rpc_per_second": measured["count"] / elapsed}
 
 
@@ -130,6 +134,7 @@ async def main(args):
     output = {"format": "ntk.validation.diagnostics.v1", "source": source_identity(),
               "platform": platform.platform(), "python": platform.python_version(),
               "placements": [[requester.value, provider.value] for requester, provider in placements],
+              "p95_scope": "all_completed_rpc_in_measurement",
               "warmup_seconds": warmup, "duration_seconds": duration, "smoke": args.smoke, "observations": []}
     order = (0, 1, 3)
     try:

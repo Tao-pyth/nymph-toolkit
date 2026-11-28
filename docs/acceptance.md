@@ -419,4 +419,6 @@ LD-01〜07の製品試験で、LOCAL/PROCESSの報告、形式と境界、順序
 
 LD-09の初回 `dbfef2b` はWindows Server 2025とLinux、CPython 3.15.2で条件別に30秒の準備、300秒の観測、3反復を完走した。3タブの処理件数低下は最大11.652%／8.714%（Windows／Linux）、p95の最大増加は1.83130 ms／0.98118 msで、両OSで基準超過があった。報告数の範囲は1・3タブで一致し、診断配信の最大保持は各配置1枠だった。画面が背面にある間の取得・描画、同じ差分の再生成、不要な行の再描画を抑え、同じ条件・基準で再測定する。 [Windows実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263462768) · [Linux実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263243288)
 
-初回は4配置を単一の親イベントループ上で同時実行し、3タブ条件では合計12ページを開いた。最適化後も同居ストレス測定を継続し、1つのRuntimeで各配置を運用する場合の測定も追加する。配置ごとに同じマシンで3反復し、測定時間・業務負荷・合格基準を共通にする。p95には各観測区間内の直近最大2048件を用いる。 [測定構成の記録](https://github.com/Tao-pyth/nymph-toolkit/issues/182#issuecomment-7239691578)
+初回は4配置を単一の親イベントループ上で同時実行し、3タブ条件では合計12ページを開いた。最適化後 `a805ed2` の同居ストレス測定も5%を超え、3タブの処理件数低下はWindows最大9.156%、Linux最大8.235%だった。p95の最大増加は1.29540 ms／0.23250 msで、両OSで報告の最大保持は各配置1枠だった。 [再測定](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46146084742)
+
+単独Runtimeを配置ごとに同じマシンで3反復した `68ae8fc` の測定で、処理件数は全16比較が基準内。末尾2048件によるp95は13比較が基準内だった。要求側LOCAL・提供側PROCESSでは、Windowsの1タブ・3タブで+0.29460 ms・+0.28090 ms、Linuxの3タブで+0.26634 msとなり、いずれも上限0.25 msを超えた。この配置では2048件が約8秒分だったため、受入では300秒区間の全完了RPCをp95の対象とし、末尾2048件も併記する。測定時間・業務負荷・合格基準は同じ条件で照合する。 [配置別初回実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46148069212) · [集計範囲の記録](https://github.com/Tao-pyth/nymph-toolkit/issues/182#issuecomment-7240399557)
