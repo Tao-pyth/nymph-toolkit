@@ -1,0 +1,124 @@
+// SPDX-License-Identifier: Apache-2.0
+import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+import { once } from "node:events";
+import { mkdir } from "node:fs/promises";
+import { createInterface } from "node:readline";
+import { chromium } from "playwright";
+
+const args = process.argv.slice(2);
+const browser = await chromium.launch({executablePath:process.env.NTK_DIAGNOSTICS_BROWSER || undefined});
+try {
+  if (args[0] === "--tabs") {
+    const count = Number(args[1]);
+    const urls = args.slice(2);
+    if (![1, 3].includes(count) || ![1, 4].includes(urls.length)) {
+      throw new Error("Expected tab count and one or four Runtime URLs");
+    }
+    const context = await browser.newContext();
+    const pages = await Promise.all(urls.flatMap((url) =>
+      Array.from({length:count}, async () => {
+        const page = await context.newPage();
+        await page.goto(url);
+        await page.waitForFunction(() => document.getElementById("runtime").textContent === "稼働中");
+        return page;
+      })));
+    assert.equal(pages.length, count * urls.length);
+    process.stdout.write("ready\n");
+    process.stdin.resume();
+    await once(process.stdin, "end");
+  } else if (args[0] === "--launcher") {
+    const child = spawn(args[1] || "python", ["examples/runtime_diagnostics_demo.py", "--launcher", "--seconds", "28"],
+                        {stdio:["ignore", "pipe", "inherit"]});
+    const done = once(child, "exit");
+    const lines = createInterface({input:child.stdout});
+    const [url] = await Promise.race([once(lines,"line"), done]);
+    assert.match(String(url), /^http:\/\/127\.0\.0\.1:\d+\/$/);
+    try {
+      const page = await browser.newPage({viewport:{width:390,height:820}});
+      const errors = [];
+      page.on("pageerror", error => errors.push(error.message));
+      let commands = 0;
+      page.on("request", request => { if (request.url().endsWith("/api/launcher")) commands++; });
+      await page.goto(url);
+      const start = page.getByRole("button", {name:"Runtimeを起動"});
+      await start.waitFor();
+      assert.equal(await page.locator("#runtime").textContent(), "開始前");
+      const token = await page.locator('meta[name="ntk-launcher"]').getAttribute("content");
+      const denied = await page.request.post(url + "api/launcher", {
+        headers:{"Origin":"http://example.invalid","X-NTK-Launcher":token},
+        data:{operation:"start_runtime", arguments:{}}
+      });
+      assert.equal(denied.status(), 403);
+      await start.focus();
+      await page.keyboard.press("Enter");
+      const card = page.locator("#activities article").filter({hasText:"nymph/sample-batches"});
+      await card.getByRole("button", {name:"中断", exact:true}).click();
+      await card.locator("strong").filter({hasText:/中断中$/}).waitFor();
+      await page.reload();
+      assert.equal(commands, 2);
+      await card.getByRole("button", {name:"再開", exact:true}).click();
+      await card.getByRole("button", {name:"中断", exact:true}).waitFor();
+      await card.getByRole("button", {name:"活動を終了", exact:true}).click();
+      await card.locator("strong").filter({hasText:/停止済み$/}).waitFor();
+      assert.equal(page.url(), url);
+      assert.equal(commands, 4);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 390);
+      assert.deepEqual(errors, []);
+      await mkdir("output/diagnostics", {recursive:true});
+      await page.screenshot({path:"output/diagnostics/browser-launcher.png", fullPage:true});
+      console.log("PASS: same-tab Runtime launch, scoped activity controls, no reload replay, mobile");
+    } finally {
+      const [exitCode] = await done;
+      assert.equal(exitCode, 0);
+    }
+  } else {
+    const child = spawn(args[0] || "python", ["examples/runtime_diagnostics_demo.py", "--seconds", "16"],
+                        {stdio:["ignore", "pipe", "inherit"]});
+    const done = once(child, "exit");
+    const lines = createInterface({input:child.stdout});
+    const line = await Promise.race([once(lines,"line"), done]);
+    assert.match(String(line[0]), /^http:\/\/127\.0\.0\.1:\d+\/$/);
+    try {
+      const page = await browser.newPage({viewport:{width:390,height:820}});
+      const errors = [];
+      page.on("pageerror", (error) => errors.push(error.message));
+      let invocations = 0;
+      page.on("request", (request) => {
+        if (request.url().endsWith("/api/console")) invocations++;
+      });
+      await page.goto(line[0]);
+      await page.getByText("天気情報", {exact:true}).waitFor();
+      assert.equal(await page.locator("#launcher").isVisible(), false);
+      assert.equal(await page.locator("#adapter option").count(), 1);
+      assert.equal(await page.getByText(/異常の記録/).count(), 0);
+      assert.ok(await page.getByText("地域 東京").isVisible());
+      const action = page.getByRole("button", {name:"天気サンプルの状態を照会"});
+      await action.focus();
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => document.querySelector("#result").textContent.includes('"observations": 1'));
+      assert.equal(invocations, 1);
+      assert.ok(!(await page.locator("#result").textContent()).includes("provider"));
+      await page.locator("#event-filter").focus();
+      await page.keyboard.press("ArrowDown");
+      assert.equal(await page.locator("#event-filter").inputValue(), "activity");
+      await page.reload();
+      await page.getByText("天気情報", {exact:true}).waitFor();
+      assert.equal(invocations, 1);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 390);
+      await mkdir("output/diagnostics", {recursive:true});
+      await page.screenshot({path:"output/diagnostics/mobile.png", fullPage:true});
+      await page.setViewportSize({width:1280,height:900});
+      await page.screenshot({path:"output/diagnostics/desktop.png", fullPage:true});
+      await page.clock.setFixedTime(new Date(Date.now() + 45_000));
+      await page.getByText("期限切れ", {exact:true}).waitFor();
+      assert.deepEqual(errors, []);
+      console.log("PASS: local browser, keyboard, status query, no reload side effect, expiry, mobile");
+    } finally {
+      const [exitCode] = await done;
+      assert.equal(exitCode, 0);
+    }
+  }
+} finally {
+  await browser.close();
+}

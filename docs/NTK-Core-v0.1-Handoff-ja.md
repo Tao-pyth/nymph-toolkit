@@ -133,37 +133,38 @@ R37でv1.10まで実装・検証を反復する目標が指示された。v1.4�
 71. [ADR 0038 v1.10 睡眠活動循環と音声観測](#section-71)
 72. [ADR 0039 NTK Runtime ライブ診断画面のアダプタ契約](#section-72)
 73. [ADR 0040 Discord Bot確認の受入クリア](#section-73)
-74. [NTK開発ロードマップ](#section-74)
-75. [受入基準・検討案と検証記録](#section-75)
-76. [Core採用事項と検証証拠の対応](#section-76)
-77. [顧客向け契約・利用ガイドの検証記録](#section-77)
-78. [v1.3候補までの実装機能と資料の整合点検](#section-78)
-79. [v0.9.0利用者向けDocsの検証記録](#section-79)
-80. [v0.2 Runtime受入記録](#section-80)
-81. [v0.3受入記録](#section-81)
-82. [v0.4の受入記録](#section-82)
-83. [v0.5の受入確認と検証経過](#section-83)
-84. [v0.6の受入確認と検証経過](#section-84)
-85. [v0.7の受入確認と検証経過](#section-85)
-86. [v0.8 統合・障害・負荷検証記録](#section-86)
-87. [v0.9 Core機能完成の検証記録](#section-87)
-88. [v1.0 Core接続契約の検証](#section-88)
-89. [v1.1 Memoryの受入記録](#section-89)
-90. [v1.10 睡眠活動・音声観測の検証記録](#section-90)
-91. [v1.2 Document Adapterの受入・検証記録](#section-91)
-92. [v1.3 Cognitionの受入・検証記録](#section-92)
-93. [v1.4 B04実装・検証記録](#section-93)
-94. [v1.5 Agencyの検証記録](#section-94)
-95. [v1.6 Agency活動循環の検証記録](#section-95)
-96. [v1.7 Personaの検証記録](#section-96)
-97. [v1.8 Persona連携の検証記録](#section-97)
-98. [v1.9 Sleep初期機能の検証記録](#section-98)
-99. [WindowsのTCP終了処理の修正・検証（#94）](#section-99)
-100. [開発準備とGit運用](#section-100)
-101. [マイルストーンと親子Issueの運用](#section-101)
-102. [公開準備とリリース手順](#section-102)
-103. [変更履歴](#section-103)
-104. [Apache License 2.0（原文）](#section-104)
+74. [ADR 0041 v1.12のブラウザーランチャー](#section-74)
+75. [NTK開発ロードマップ](#section-75)
+76. [受入基準・検討案と検証記録](#section-76)
+77. [Core採用事項と検証証拠の対応](#section-77)
+78. [顧客向け契約・利用ガイドの検証記録](#section-78)
+79. [v1.3候補までの実装機能と資料の整合点検](#section-79)
+80. [v0.9.0利用者向けDocsの検証記録](#section-80)
+81. [v0.2 Runtime受入記録](#section-81)
+82. [v0.3受入記録](#section-82)
+83. [v0.4の受入記録](#section-83)
+84. [v0.5の受入確認と検証経過](#section-84)
+85. [v0.6の受入確認と検証経過](#section-85)
+86. [v0.7の受入確認と検証経過](#section-86)
+87. [v0.8 統合・障害・負荷検証記録](#section-87)
+88. [v0.9 Core機能完成の検証記録](#section-88)
+89. [v1.0 Core接続契約の検証](#section-89)
+90. [v1.1 Memoryの受入記録](#section-90)
+91. [v1.10 睡眠活動・音声観測の検証記録](#section-91)
+92. [v1.2 Document Adapterの受入・検証記録](#section-92)
+93. [v1.3 Cognitionの受入・検証記録](#section-93)
+94. [v1.4 B04実装・検証記録](#section-94)
+95. [v1.5 Agencyの検証記録](#section-95)
+96. [v1.6 Agency活動循環の検証記録](#section-96)
+97. [v1.7 Personaの検証記録](#section-97)
+98. [v1.8 Persona連携の検証記録](#section-98)
+99. [v1.9 Sleep初期機能の検証記録](#section-99)
+100. [WindowsのTCP終了処理の修正・検証（#94）](#section-100)
+101. [開発準備とGit運用](#section-101)
+102. [マイルストーンと親子Issueの運用](#section-102)
+103. [公開準備とリリース手順](#section-103)
+104. [変更履歴](#section-104)
+105. [Apache License 2.0（原文）](#section-105)
 
 ---
 
@@ -185,7 +186,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ### 現在使える機能と公開状態
 
-2026年11月28日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.11.0開発候補** です。未マージのv1.3〜v1.9候補（PR #123 / #131 / #137 / #143 / #149 / #156 / #162）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
+2026年11月28日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.12.0開発候補** です。未マージのv1.3〜v1.9候補（PR #123 / #131 / #137 / #143 / #149 / #156 / #162）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
 
 | 機能 | 実装した範囲・操作 | 利用できる版・資料 |
 |---|---|---|
@@ -201,6 +202,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。既存実測とユーザー判断によりBot確認はクリア | v1.10開発候補。音声（`docs/voice.md`）・受入判断（`docs/adr/0040-discord-bot-acceptance.md`） |
 | Sleep | 根拠の統合/減衰・現在夢の再結合/失効・人格修正案 | v1.9開発候補。Sleep（`docs/sleep.md`） |
 | 入力候補 | Web・文書・テキスト対話の共通準備、既定値補完・模擬AI、明示保存 | v1.11開発候補。ADR 0033（`docs/adr/0033-input-candidate-contract.md`） |
+| Runtimeライブ診断 | 実行状態、任意報告、状態照会。同じローカル画面からRuntime起動と既存活動の中断・再開・終了 | v1.12開発候補。診断（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）・ランチャー（`docs/adr/0041-browser-runtime-launcher.md`） |
 
 Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。v1.10候補で睡眠活動の循環とDiscord Voice Adapterを追加し検証中です。Discord Bot確認はADR 0040によりクリアしました。先行#169と全体の最終確認は別途残り、Desktop Adapterは将来課題です。v1.5の実装受入はB05記録（`docs/validation/v1.5.md`）、v1.10までの残作業は進捗（`docs/implementation-progress.md`）へ記録します。将来案と各段階の採用範囲はロードマップ（`docs/roadmap.md`）にあります。
 
@@ -274,7 +276,7 @@ CoreとSubsystem・Adapterをつなぐ6区分の接続契約（`docs/module-cont
 
 配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.10.0はCognition・Text/Web・訂正・Agencyの判断/活動循環・Persona連携・Sleepと睡眠活動・音声を含み、通常の実行例は19例です。音声依存と実Discord接続は音声ガイド（`docs/voice.md`）の明示手順を使います。Bot確認はクリア済みで、実測履歴と追加確認不要の受入判断を区別します。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.10.0はCognition・Text/Web・訂正・Agencyの判断/活動循環・Persona連携・Sleepと睡眠活動・音声を含み、通常の実行例は19例です。音声依存と実Discord接続は音声ガイド（`docs/voice.md`）の明示手順を使います。Bot確認はクリア済みで、実測履歴と追加確認不要の受入判断を区別します。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymphと常駐アプリは未実装です。v1.12候補の診断画面は明示起動できます。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|
@@ -733,7 +735,7 @@ v1.5は親#15・子#132〜#136を先行登録し、ADR 0032（`docs/adr/0032-v1.
 
 ## NTK 契約・利用ガイド
 
-**Nymph Toolkit / 対象 v1.11.0（開発候補） / 公開版 v1.2.0 / 2026-11-28**
+**Nymph Toolkit / 対象 v1.12.0（開発候補） / 公開版 v1.2.0 / 2026-11-29**
 
 ### この資料で分かること
 
@@ -746,11 +748,11 @@ NTKは人工人格Nymphの成長を支えるPython基盤です。本書は導入
 | Coreの構成・配置・起動停止 | 01〜03 |
 | 登録・接続・操作・ストリーム | 04〜07 |
 | 活動・失敗・保存・再起動・設定 | 08〜13 |
-| 6区分の接続契約・実機能・音声・入力候補 | 14〜18K |
+| 6区分の接続契約・実機能・音声・入力候補・診断 | 14〜18L |
 | 導入・実行例・開発者向けAPI | 19〜23 |
 | 適用範囲・検証・参照先 | 24 |
 
-**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.11.0**は、従来の開発候補に入力候補の共通準備を追加します。前段PR #123/#131/#137/#143/#149/#156/#162は未マージです。**Discord Bot確認はクリア**。実受信・通常停止・受信後の退出停止の実測と、追加確認を不要とするユーザー判断に基づきます。先行#169と全体の最終確認は別です。候補の機能には、そのcheckoutの開発用導入が必要です。
+**公開版v1.2.0**はCore・Memory・Documentを含みます。**開発候補v1.12.0**は、入力候補の共通準備にローカルのRuntimeライブ診断を追加します。前段PR #123/#131/#137/#143/#149/#156/#162は未マージです。**Discord Bot確認はクリア**。実受信・通常停止・受信後の退出停止の実測と、追加確認を不要とするユーザー判断に基づきます。先行#169と全体の最終確認は別です。候補の機能には、そのcheckoutの開発用導入が必要です。
 
 本書の「契約」はAPIの入力・結果・状態・失敗・責任分担を指します。v1.0で確立した6区分の共通契約を維持し、業務ごとの契約を追加しています。正確な署名はAPI一覧（`docs/api-reference.md`）、意味はCore API（`docs/core-api.md`）と各機能ガイドを参照してください。
 
@@ -1631,6 +1633,29 @@ flowchart LR
 
 <!-- pagebreak -->
 
+### 18L Runtimeライブ診断とブラウザーランチャー
+
+v1.12開発候補では、ローカル画面で実行構成、活動の予定と実績、接続、アダプタの状態を確認できます。任意報告がないアダプタにも、Coreから得た基本状態を表示します。ブラウザーランチャーを明示設定すると、同じ画面で起動前から操作できます。
+
+```mermaid
+flowchart LR
+  A["親Runtimeとアダプタ"] --> B["診断を配信"]
+  B --> C["ローカルブラウザー"]
+  C --> D["ランチャー"]
+  D --> A
+```
+
+| 機能 | 扱い |
+|---|---|
+| 状態と結果 | 確認中、失効、観測更新停止、異常終了を区別 |
+| 任意の報告 | 表示用の項目、使用量、期限付き出力。未報告と0を区別 |
+| 簡易コンソール | 設定で許可した状態照会を利用者が明示実行 |
+| ランチャー | Runtimeを起動。指定した要求元の活動カードから中断・再開・終了 |
+
+受付後の実行状態は活動カードで確認します。処理と後処理はRuntimeが担い、画面の再読み込みで操作は再送されません。診断配信の終了後も業務とCore履歴は継続します。 ランチャーの実行例（`docs/tutorials.md`） · 診断契約（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`） · 操作契約（`docs/adr/0041-browser-runtime-launcher.md`）
+
+<!-- pagebreak -->
+
 ### 19 使い始める：公開版で動きを確認する
 
 CPython 3.12以上を用意します。現行版で検証済みなのはWindows／Linux × CPython 3.12〜3.15です。実行時の外部Python依存はありません。導入するwheelと実行例の版を揃えます。
@@ -1659,7 +1684,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 
 ### 19A 開発候補の機能を試す
 
-このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の11例を加え、v1.11候補では20例です。
+このページの例は公開v1.2.0には含まれません。対象候補のcheckoutと同じ版の環境を用意します。公開版9例に次の12例を加え、v1.12候補では21例です。
 
 | 実行例 | 確認できること |
 |---|---|
@@ -1674,6 +1699,7 @@ CPython 3.12以上を用意します。現行版で検証済みなのはWindows�
 | sleep_activity_demo.py | 休息活動から周期/人格適用・次判断まで |
 | voice_audio_demo.py | 外部接続なしの合成PCM特徴検証 |
 | input_candidate_demo.py | 2方式の準備・実Memoryへの明示保存 |
+| runtime_diagnostics_demo.py | 状態照会と固定天気。同じ画面でRuntime起動・活動操作 |
 
 例は説明用の明示教材・観測・特性を使います。自由会話や一般的意味理解の完成を示すものではありません。通常の例は後処理を終えて終了し、一時保存先も削除します。Textの対話モードは明示JSON指示を受け付けます。
 
@@ -1714,7 +1740,7 @@ asyncio.run(main())
 
 この例はイベントループをasyncio.runで作ります。既存のasyncioアプリに組み込む場合は、そのループ内からstart・wait・stopをawaitします。ブロッキングI/Oや長いCPU処理をそのままループへ置くと、他の処理の進行にも影響します。
 
-公開版は9例、候補は20例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
+公開版は9例、候補は21例です。通常例は後処理後に終了します。Text例の対話モードは明示コマンドを受け付けますが、常駐する自律Nymphアプリではありません。機能を増やす段階ではRegistry（`docs/registry.md`）でGroupの構成を、Connections（`docs/connections.md`）で契約宣言と接続を確認します。別プロセス化する場合はHybridGroup（`docs/hybrid.md`）のfactoryと共有環境を使います。
 
 <!-- pagebreak -->
 
@@ -1789,7 +1815,7 @@ Registryの`available`、稼働報告の`state`、受付の`accepting`、接続�
 
 ### 24 適用範囲・検証状況・参照先
 
-Coreと各機能、睡眠活動・音声観測を検証しています。公開版は9例、候補は20例。新たな実音声接続は同意確認後に個別実行します。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。Discord Bot確認はクリア。実測履歴と追加確認不要の判断、別途残る先行#169と全体の最終確認はB09（`docs/validation/v1.9.md`）・B10（`docs/validation/v1.10.md`）で追跡します。
+Coreと各機能、睡眠活動・音声観測を検証しています。公開版は9例、候補は21例。新たな実音声接続は同意確認後に個別実行します。v1.4〜v1.8は各版の全回帰・通常配布・CI・顧客資料を確認済みです。Discord Bot確認はクリア。実測履歴と追加確認不要の判断、別途残る先行#169と全体の最終確認はB09（`docs/validation/v1.9.md`）・B10（`docs/validation/v1.10.md`）で追跡します。
 
 | 導入時に確認する点 | 現在の扱い |
 |---|---|
@@ -1827,7 +1853,7 @@ R36・ADR 0030（`docs/adr/0030-customer-docs-as-primary.md`）により、custo
 
 Markdownを本文・表・Mermaid図の正本とし、`<!-- pagebreak -->`でA4のページを区切る。PDF/HTMLを直接編集しない。対象版・公開状態・公開版・確認日は確認証跡（`docs/customer-guide.sources.json`）と表紙へ記録する。生成側は証跡から版と日付を読み、pyprojectの対象版と一致させる。
 
-check_customer_docs.pyはpyproject、全src/examplesのPython・音声bridge/モデルmanifest・Node manifest/lock（node_modulesを除く）、ルートMarkdown、Docs（validationと生成引継ぎ書を除く）、contracts-v1.jsonをハッシュで照合する。追加・削除も検出する。検証記録と生成引継ぎ書は循環更新を避けて除外し、通常のcheck_docsで検査する。機能/文書の差分を本文・図へ反映、または説明に変更不要と判断した理由を記録してから証跡を更新する。CIは自動承認・自動更新しない。
+check_customer_docs.pyはpyproject、全src/examplesのPython・音声bridge/モデルmanifest・Node manifest/lock・診断画面のHTML/CSS/JS（node_modulesを除く）、ルートMarkdown、Docs（validationと生成引継ぎ書を除く）、contracts-v1.jsonをハッシュで照合する。追加・削除も検出する。検証記録と生成引継ぎ書は循環更新を避けて除外し、通常のcheck_docsで検査する。機能/文書の差分を本文・図へ反映、または説明に変更不要と判断した理由を記録してから証跡を更新する。CIは自動承認・自動更新しない。
 
 ### 更新手順
 
@@ -2204,6 +2230,12 @@ PASS: Memory persistence, provenance, direct/Core RPC, restart, cleanup
 ### 開発候補 v1.11 入力候補
 
 `python examples/input_candidate_demo.py` は、既定値補完型・模擬AI型でWeb・文書・対話由来の教材を準備し、候補の検証と実Memoryへの明示保存を実行する。呼出しと設定はADR 0033（`docs/adr/0033-input-candidate-contract.md`）を参照する。
+
+### 開発候補 v1.12 Runtimeライブ診断
+
+`python examples/runtime_diagnostics_demo.py --seconds 60` でローカル画面のURLを表示する。画面で固定天気、使用量、許可済みの状態照会を確認できる。通常導入にブラウザー自動化のツールは不要。報告設定とLD-01〜09はADR 0039（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）を参照する。
+
+`python examples/runtime_diagnostics_demo.py --launcher --seconds 300 --open` で起動前の画面を開く。**Runtimeを起動**を押すと、サンプルのNymphが活動を登録する。「活動の予定と実績」で対象カードの**中断**、**再開**、**活動を終了**を使う。運用では `BrowserLauncher` に操作を許す要求元を設定し、既存の要求側APIで活動を登録する。 ADR 0041（`docs/adr/0041-browser-runtime-launcher.md`）
 
 ---
 
@@ -4518,7 +4550,11 @@ v1.10の追加子[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)で
 
 ### v1.11・v1.12の候補
 
-v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)、契約実装#177、B11・配布・主要Docsは[#178](https://github.com/Tao-pyth/nymph-toolkit/issues/178)で追跡する。v1.12の診断は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。標準は各版の公開後確認で発効する。
+v1.11の入力候補は親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)で追跡する。B11（`docs/acceptance.md#b11-input-candidates`）の候補は回帰・配布・主要Docsを確認済み。公開後確認と標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)で扱う。
+
+v1.12の任意報告とローカル画面は親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)で追跡する。LD-09（`docs/acceptance.md#ld-runtime-diagnostics`）の単独Runtime本測定は全16比較が基準内で、同居ストレスでは処理件数低下の上限を超えた。配布・受入の証拠は[#182](https://github.com/Tao-pyth/nymph-toolkit/issues/182)、公開後確認と標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
+
+同一タブのRuntime起動と既存活動の中断・再開・終了はADR 0041（`docs/adr/0041-browser-runtime-launcher.md`）で追加した。実装・受入の対象と現行CIは[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)で追跡する。
 
 ---
 
@@ -6746,6 +6782,8 @@ ADR 0038（`docs/adr/0038-v1.10-sleep-cycle-and-voice.md`）は親#20・子#163�
 ### v1.11・v1.12の標準化
 
 ADR 0033（`docs/adr/0033-input-candidate-contract.md`）とADR 0039（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）の段階・適用範囲をロードマップ（`docs/roadmap.md`）へ反映した。標準はその対象機能の新設・関連改修に適用する。設計採用、実装受入、公開後の発効は別の記録とする。
+
+ADR 0041（`docs/adr/0041-browser-runtime-launcher.md`）は、v1.12の同一画面にRuntime起動と既存活動への明示操作を追加する判断。実装・受入を[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)で追跡する。
 
 ---
 
@@ -9819,7 +9857,7 @@ Bot自身のチャンネル移動/切断も停止対象とする。依存SDKで�
 
 #### 出力
 
-`outputs[]` の共通キーは `id`、`label`、`kind`、`observed_at`、`content`。任意キーは `source` と `expires_at`。外部取得情報では両方を指定し、`expires_at` は `observed_at` より後とする。アダプタが外部データから表示項目を選び、`source` に出典名を設定する。有効期限を過ぎた出力は、次の報告を待たず期限切れと表示する。
+`outputs[]` の共通キーは `id`、`label`、`kind`、`observed_at`、`content`。任意キーは `source` と `expires_at`。外部取得情報では提供側が両方を指定し、`expires_at` を指定する場合は `observed_at` より後とする。受け口は取得種別を推測せず、指定された項目を検証する。アダプタが外部データから表示項目を選び、`source` に出典名を設定する。有効期限を過ぎた出力は、次の報告を待たず期限切れと表示する。
 
 | `kind` | `content` の形式 | 画面での扱い |
 |---|---|---|
@@ -9898,6 +9936,10 @@ Bot自身のチャンネル移動/切断も停止対象とする。依存SDKで�
 
 WindowsとLinuxで、同一マシン・Python・Core設定ごとに比較する。既存のハイブリッド負荷手順（`docs/validation/v0.8.md`）を基に、4配置を同じ業務RPC・活動・転送条件で動かし、30秒のウォームアップ後に5分測定する。各条件を3回実施して順番を入れ替え、反復ごとの値と3回の中央値、親RuntimeのCPU時間・RSS、報告数、キューの最大保持量を記録する。診断有効時には各配置で報告上限に合わせた変更を与える。業務RPCのp95は同じ測定区間と同じ集計方法で比較し、サンプリング窓を使った場合は窓長を記録する。
 
+受入では5分の測定内に完了した業務RPCすべてをp95の集計対象とする。末尾の2048件のp95も参考値として記録する。開発候補の単独RuntimeはWindows/Linuxの全16比較で基準内だった。4 Runtime同居のストレス測定では処理件数低下が基準を超過した。初回結果、配置別の測定値と公開条件は受入記録（`docs/acceptance.md#ld-runtime-diagnostics`）に残す。
+
+各配置の単独運用では1つのRuntimeを起動し、0・1・3タブの全反復を同じマシンで測る。4配置を1つの親イベントループで同時に動かす測定も、同居時のストレス結果として記録する。いずれも同じ業務周期・時間・合格基準を使う。 `tools/validate_runtime_diagnostics.py --placement local process --output ld09.json` は要求側LOCAL・提供側PROCESSを単独測定し、`--placement` を省略すると同居測定を行う。
+
 受入の初期基準は、診断無効を基準として、各配置の業務RPCのp95増加が `max(基準値の5%, 0.25 ms)` 以内、業務RPCの完了件数毎秒の低下が5%以内。診断有効の1タブと3タブの両条件で満たす。診断プロセスを終了させても業務が継続し、通常のCore履歴受付と保存の契約を維持する。短いCIの統合試験はこの比較測定と別に記録する。
 
 実装着手前に、適用マイルストーン、親Issue、対応単位の子Issueを確定し、採用した版・具体値を記録する。適合結果にはケースID、対象コミット、OS・Python・配置、使用したデータ、実測値、未検証範囲を残す。 Issue運用（`docs/issue-workflow.md`）
@@ -9907,6 +9949,14 @@ WindowsとLinuxで、同一マシン・Python・Core設定ごとに比較する�
 起動時に明示有効化し、診断配信はローカルループバックに限定する。親Runtime内の報告受信モジュールから、ランチャー所有の別プロセスへ表示用スナップショットと差分を渡す。既存の履歴イベントから許可した項目のみ投影し、履歴受付と保存、通常の通知キュー、機能用子の監視を維持する。許可済みで副作用のない状態照会を簡易コンソールの初版の対象とする。
 
 対象機能の新設・関連改修に契約を適用し、現行アダプタには基本表示の経路がある。標準の発効と適合結果は公開後確認[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)で記録する。
+
+`ntk.diagnostics.report.<slot>/1` の開発候補の適合結果は受入記録（`docs/acceptance.md#ld-runtime-diagnostics`）を参照する。画面の履歴はRuntimeから投影した項目に限る。天気例は固定データ、簡易コンソールの操作は明示登録した状態照会に限る。
+
+診断プロセスは同じ版のスナップショット・差分をタブ間で再利用する。ブラウザーは表示中に更新を取得し、背面から戻った時に差分を取得する。活動欄は直近12件、診断イベント履歴は別に直近200件を表示する。対応するOSではランチャー所有の診断プロセスを低いCPU優先度で実行する。親Runtimeの報告間隔、収集頻度と業務設定を維持する。
+
+アダプタは起動時に `DiagnosticSession.report_settings(slot)` の設定を受け取り、開始後に `ReportPublisher` を作成する。変更時に `update`、停止時に `close` を呼ぶ。ランチャーは `DiagnosticSession.start()` のURLを利用し、Runtimeの終了結果を表示後に `close()` で診断プロセスを回収する。診断スロットは最大64。初回と以降の差分をブラウザーから取得し、タブ数はRuntime側の収集頻度に影響しない。簡易コンソールは `ConsoleQuery` で副作用のない既存操作・引数型・表示項目を固定する。
+
+同一画面のブラウザーランチャーと活動への明示操作は、ADR 0041（`docs/adr/0041-browser-runtime-launcher.md`）で採用した。診断報告と簡易コンソールには引き続き本ADRを適用する。
 
 ---
 
@@ -9958,6 +10008,24 @@ README、音声ガイド、受入基準、ロードマップ、進捗、公開�
 ---
 
 <a id="section-74"></a>
+
+収録元 `docs/adr/0041-browser-runtime-launcher.md`
+
+## ADR 0041 v1.12のブラウザーランチャー
+
+状態は2026年11月29日のユーザー指示に基づく採用。[実装・受入 #187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)
+
+### 判断
+
+- `BrowserLauncher(group, owner_id=..., slots=..., queries=...)` を明示して使う。構成済みのHybridGroup、活動管理、登録済みの要求元を渡す。ランチャーがRuntimeを1台所有し、`open()` で起動前からローカル画面を開ける。`runtime` は利用側が状態と終了を確認する入口、`diagnostics` は報告設定の入口、`close()` は所有Runtimeと画面の終了を待つ入口とする。
+- ライブ診断と同じタブの操作欄からRuntimeを一度起動する。活動カードに中断・再開・終了を出す範囲は、構成した単一要求元の既存活動に限る。ブラウザーは活動IDと表示時のrevisionを送り、親側が固定要求元でキーを作り直して現在値を照合する。起動・中断・再開・終了は利用者の明示指示で、実行と後処理は既存のRuntimeとTaskManagerが担う。活動登録の入口は既存のNymph側APIを使う。
+- 操作は固定の別経路、ループバック・Host・Origin・画面固有の別トークンで受け付ける。応答は受付または拒否を表し、実行状態はライブ診断から読む。結果不明では画面で確認し、再読込・通信エラーからの自動再送は行わない。診断だけを開く場合は従来の状態照会を使う。状態照会の公開契約と診断報告の版はADR 0039（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）を維持する。
+
+同一タブで起動前・実行中・中断・再開・終了を検証し、要求元の範囲外、古いrevision、重複、再読込、終了回収を確認する。標準の発効はv1.12の公開後確認で記録する。
+
+---
+
+<a id="section-75"></a>
 
 収録元 `docs/roadmap.md`
 
@@ -10274,7 +10342,7 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 | 段階 | 採用範囲と受入 | 追跡 |
 |---|---|---|
 | v1.11.0 | 取得済み入力の共通準備、既定値補完型と模擬APIのAI型、Memoryへの明示保存、既存入口の回帰 | ADR 0033（`docs/adr/0033-input-candidate-contract.md`）・[親 #174](https://github.com/Tao-pyth/nymph-toolkit/issues/174) |
-| v1.12.0 | 任意の診断報告、既存情報の基本表示、許可済み状態照会、実Runtimeでの表示と負荷実測 LD-01〜09 | ADR 0039（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）・[親 #175](https://github.com/Tao-pyth/nymph-toolkit/issues/175) |
+| v1.12.0 | 任意の診断報告、基本表示と状態照会、同一画面のRuntime起動と既存活動の中断・再開・終了、実Runtimeでの表示と負荷実測 LD-01〜09 | ADR 0039（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）・ADR 0041（`docs/adr/0041-browser-runtime-launcher.md`）・[親 #175](https://github.com/Tao-pyth/nymph-toolkit/issues/175) |
 
 [11月22日の未確定事項一覧](https://chatgpt.com/space/page_40fc20a69a7c819188f5e2132e6d25d5)との照合では、次の初期範囲に後続判断がある。受入と公開状態は実装進捗（`docs/implementation-progress.md`）で追う。
 
@@ -10292,7 +10360,7 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 
 ---
 
-<a id="section-75"></a>
+<a id="section-76"></a>
 
 収録元 `docs/acceptance.md`
 
@@ -10707,13 +10775,34 @@ B11の採用条件（`docs/adr/0033-input-candidate-contract.md`）を、取得�
 
 実装 `e00fa3c` の[CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46140221447)で、Windows/Linux × CPython 3.12〜3.15の全8環境、音声依存2環境、Customer Docsが成功した。Windowsローカルでソースと通常wheelを各565テスト、20実行例、sdistからの同一wheel再生成で確認した。B11の出典・明示値・時刻不足、模擬APIの許可・期限・不正応答、正規化後の4096バイト境界、実MemoryのID競合と旧入口の回帰結果を[受入Issue #178](https://github.com/Tao-pyth/nymph-toolkit/issues/178#issuecomment-7239023240)に記録した。方式は起動時に選び、採用記録の保存と学習は呼び出し側の別操作とする。実AIサービス接続とDiscord音声の候補化は後続課題とする。
 
+<a id="ld-runtime-diagnostics"></a>
+
 ### v1.12 Runtimeライブ診断（LD）
 
 LD-01〜09（`docs/adr/0039-runtime-live-diagnostics-adapter-contract.md`）を実Runtime・ローカルブラウザーとWindows/Linuxの負荷実測で照合する。公開後の標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
 
+LD-01〜07の製品試験で、LOCAL/PROCESSの報告、形式と境界、順序と旧起動、集約・間隔、期限/撤回、活動・接続・異常終了、許可済み照会を確認した。Windows/Python 3.12で1秒の送信下限を15 ms下回るケースを受けて、単調時計で期限を再確認するよう修正し、同環境で対象試験を20反復した。LD-07〜08のブラウザー試験はWindows/Linuxで通過した。サンプルの天気は固定データを使い、実サービスには接続しない。 [実装とワークフロー](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46144583542)
+
+LD-09の初回 `dbfef2b` はWindows Server 2025とLinux、CPython 3.15.2で条件別に30秒の準備、300秒の観測、3反復を完走した。3タブの処理件数低下は最大11.652%／8.714%（Windows／Linux）、p95の最大増加は1.83130 ms／0.98118 msで、両OSで基準超過があった。報告数の範囲は1・3タブで一致し、診断配信の最大保持は各配置1枠だった。画面が背面にある間の取得・描画、同じ差分の再生成、不要な行の再描画を抑え、同じ条件・基準で再測定する。 [Windows実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263462768) · [Linux実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263243288)
+
+初回は4配置を単一の親イベントループ上で同時実行し、3タブ条件では合計12ページを開いた。最適化後 `a805ed2` の同居ストレス測定も5%を超え、3タブの処理件数低下はWindows最大9.156%、Linux最大8.235%だった。p95の最大増加は1.29540 ms／0.23250 msで、両OSで報告の最大保持は各配置1枠だった。 [再測定](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46146084742)
+
+単独Runtimeを配置ごとに同じマシンで3反復した `68ae8fc` の測定で、処理件数は全16比較が基準内。末尾2048件によるp95は13比較が基準内だった。要求側LOCAL・提供側PROCESSでは、Windowsの1タブ・3タブで+0.29460 ms・+0.28090 ms、Linuxの3タブで+0.26634 msとなり、いずれも上限0.25 msを超えた。この配置では2048件が約8秒分だったため、受入では300秒区間の全完了RPCをp95の対象とし、末尾2048件も併記する。測定時間・業務負荷・合格基準は同じ条件で照合する。 [配置別初回実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46148069212) · [集計範囲の記録](https://github.com/Tao-pyth/nymph-toolkit/issues/182#issuecomment-7240399557)
+
+開発候補 `70a8594` の単独Runtimeの本測定は、Windows Server 2025とLinux、CPython 3.15.2の全8配置で完走した。観測は1回につき30,740〜87,604件。診断無効に対する1タブ・3タブの全16比較で、300秒間に完了した全RPCのp95と処理件数が基準内だった。各配置の報告保持は最大1枠で、1タブ・3タブの報告数はいずれもLinuxで300件、Windowsで298〜300件だった。4 Runtime同居時の処理件数低下は運用上の制約として上記に記録した。
+
+| OS | p95増加の最大 | 処理件数低下の最大 |
+|---|---:|---:|
+| Windows | 0.12570 ms（LOCAL/PROCESS・3タブ） | 2.475%（PROCESS/LOCAL・3タブ） |
+| Linux | 0.02682 ms（LOCAL/PROCESS・1タブ） | 0.984%（PROCESS/LOCAL・1タブ） |
+
+同じ候補で8環境のソース・通常wheelの各571回帰、sdist再構築、安定Core API 15件・Contracts 98件と採用64項目、音声依存2環境、Customer Docs CIを確認した。顧客Markdown/PDF/HTMLは38ページ・25図で照合した。 [受入CIと全配置の実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46152926552)
+
+ADR 0041（`docs/adr/0041-browser-runtime-launcher.md`）の追加受入は、起動前から同じタブでRuntime起動、活動の中断・再開・終了、再読み込み時の指示回数、対象外と旧revisionの拒否、所有プロセスの回収を照合する。LD-09の診断有効条件には `--launcher` を付けて操作欄を表示し、同じ業務負荷・時間・閾値で測る。通常回帰と配置別負荷実測の結果は[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)で追跡する。
+
 ---
 
-<a id="section-76"></a>
+<a id="section-77"></a>
 
 収録元 `docs/validation/core-coverage.md`
 
@@ -10808,7 +10897,7 @@ v1.xの案、本番Subsystem/Adapter、分散実行や複製・移植・伝播�
 
 ---
 
-<a id="section-77"></a>
+<a id="section-78"></a>
 
 収録元 `docs/validation/customer-guide.md`
 
@@ -10882,7 +10971,7 @@ Agencyの初期判断・根拠・決定保存・実行との境界を18C節/図1
 
 ---
 
-<a id="section-78"></a>
+<a id="section-79"></a>
 
 収録元 `docs/validation/docs-current.md`
 
@@ -10939,7 +11028,7 @@ v1.3.0のレビュー・マージ・公開後確認は未完了。Cognitionの�
 
 ---
 
-<a id="section-79"></a>
+<a id="section-80"></a>
 
 収録元 `docs/validation/docs-onboarding.md`
 
@@ -11018,7 +11107,7 @@ git diff --check
 
 ---
 
-<a id="section-80"></a>
+<a id="section-81"></a>
 
 収録元 `docs/validation/v0.2.md`
 
@@ -11088,7 +11177,7 @@ Windows・Linuxの上記Python版以外、macOS、別Python実装、別プロセ
 
 ---
 
-<a id="section-81"></a>
+<a id="section-82"></a>
 
 収録元 `docs/validation/v0.3.md`
 
@@ -11159,7 +11248,7 @@ CIではWindows/Linux × CPython 3.12・3.13・3.14・3.15で同じ確認を行�
 
 ---
 
-<a id="section-82"></a>
+<a id="section-83"></a>
 
 収録元 `docs/validation/v0.4.md`
 
@@ -11238,7 +11327,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-83"></a>
+<a id="section-84"></a>
 
 収録元 `docs/validation/v0.5.md`
 
@@ -11290,7 +11379,7 @@ Windows 11（10.0.26200）・CPython 3.15.2、同一プロセスのechoダミー
 
 ---
 
-<a id="section-84"></a>
+<a id="section-85"></a>
 
 収録元 `docs/validation/v0.6.md`
 
@@ -11351,7 +11440,7 @@ IPC、本番Subsystem/Adapter、稼働中の実体着脱、プロセスを越え
 
 ---
 
-<a id="section-85"></a>
+<a id="section-86"></a>
 
 収録元 `docs/validation/v0.7.md`
 
@@ -11412,7 +11501,7 @@ v0.8のA08（網羅的な障害の組合せ、性能・メモリ測定、長時�
 
 ---
 
-<a id="section-86"></a>
+<a id="section-87"></a>
 
 収録元 `docs/validation/v0.8.md`
 
@@ -11541,7 +11630,7 @@ R22時点ではv0.8.0タグ・Releaseを作成していなかった。後続R23�
 
 ---
 
-<a id="section-87"></a>
+<a id="section-88"></a>
 
 収録元 `docs/validation/v0.9.md`
 
@@ -11629,7 +11718,7 @@ Windows/Linux × CPython 3.12〜3.15の全8環境で、ソース・通常wheel�
 
 ---
 
-<a id="section-88"></a>
+<a id="section-89"></a>
 
 収録元 `docs/validation/v1.0.md`
 
@@ -11700,7 +11789,7 @@ PR #103のhead cc445daをレビューし、契約型と実体、検証の副作�
 
 ---
 
-<a id="section-89"></a>
+<a id="section-90"></a>
 
 収録元 `docs/validation/v1.1.md`
 
@@ -11772,7 +11861,7 @@ R32の公開指示により、[#110](https://github.com/Tao-pyth/nymph-toolkit/i
 
 ---
 
-<a id="section-90"></a>
+<a id="section-91"></a>
 
 収録元 `docs/validation/v1.10.md`
 
@@ -11953,7 +12042,7 @@ v1.9のCI 45414242583はWindows3.13のCognition終了確認で1件失敗。子#1
 
 ---
 
-<a id="section-91"></a>
+<a id="section-92"></a>
 
 収録元 `docs/validation/v1.2.md`
 
@@ -12026,7 +12115,7 @@ B02-01〜06の初期実装受入は合格。今回の実装判断、公開Core/M
 
 ---
 
-<a id="section-92"></a>
+<a id="section-93"></a>
 
 収録元 `docs/validation/v1.3.md`
 
@@ -12091,7 +12180,7 @@ B03-01〜06の初期実装受入は合格。今回の実装判断と未採用範
 
 ---
 
-<a id="section-93"></a>
+<a id="section-94"></a>
 
 収録元 `docs/validation/v1.4.md`
 
@@ -12146,7 +12235,7 @@ artifact 14914438438を取得し、clean対象SHA・132入力・Markdown/PDF/HTM
 
 ---
 
-<a id="section-94"></a>
+<a id="section-95"></a>
 
 収録元 `docs/validation/v1.5.md`
 
@@ -12205,7 +12294,7 @@ python tools/check_docs.py
 
 ---
 
-<a id="section-95"></a>
+<a id="section-96"></a>
 
 収録元 `docs/validation/v1.6.md`
 
@@ -12262,7 +12351,7 @@ PR #143 / d0f22ebe642b2601b98f2b1376640d404f7dba1eでB06-01〜06の採用範囲�
 
 ---
 
-<a id="section-96"></a>
+<a id="section-97"></a>
 
 収録元 `docs/validation/v1.7.md`
 
@@ -12324,7 +12413,7 @@ python tools/check_dist.py --dist-dir .git/v17-dist
 
 ---
 
-<a id="section-97"></a>
+<a id="section-98"></a>
 
 収録元 `docs/validation/v1.8.md`
 
@@ -12375,7 +12464,7 @@ PR [#156](https://github.com/Tao-pyth/nymph-toolkit/pull/156)、9d690ea001df6a1d
 
 ---
 
-<a id="section-98"></a>
+<a id="section-99"></a>
 
 収録元 `docs/validation/v1.9.md`
 
@@ -12457,7 +12546,7 @@ v1.9ブランチ限定のWindows/Python3.13診断ジョブで実行し、成否�
 
 ---
 
-<a id="section-99"></a>
+<a id="section-100"></a>
 
 収録元 `docs/validation/windows-shutdown.md`
 
@@ -12532,7 +12621,7 @@ PR初回pushで結果追記後の引継ぎ書生成が一時的なファイル�
 
 ---
 
-<a id="section-100"></a>
+<a id="section-101"></a>
 
 収録元 `docs/development.md`
 
@@ -12763,7 +12852,7 @@ v1.7時点の手順では`python -m pip install -e .`後に配布版1.7.0を確�
 
 ---
 
-<a id="section-101"></a>
+<a id="section-102"></a>
 
 収録元 `docs/issue-workflow.md`
 
@@ -13101,9 +13190,11 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 
 [v1.11.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/21)の親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)に#176（設計）・#177（実装）・#178（受入・配布）・#179（公開）、[v1.12.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/22)の親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)に#180（設計）・#181（実装）・#182（実測・受入・配布）・#183（公開）を実sub-issueとして先行登録した。同じマイルストーンへの所属を確認済み。標準の発効は各版の検証・公開後確認で記録する。
 
+同一ブラウザー画面のランチャー操作は[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)をv1.12.0・親#175配下へ先行登録し、ADR 0041（`docs/adr/0041-browser-runtime-launcher.md`）で範囲を採用した。
+
 ---
 
-<a id="section-102"></a>
+<a id="section-103"></a>
 
 収録元 `docs/release.md`
 
@@ -13382,11 +13473,17 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 
 ---
 
-<a id="section-103"></a>
+<a id="section-104"></a>
 
 収録元 `CHANGELOG.md`
 
 ## 変更履歴
+
+### 未リリース — v1.12.0開発候補
+
+- Runtimeライブ診断に任意報告、基本状態、アダプタ出力、許可済み状態照会を追加。業務処理とローカル画面を別プロセスに分離。
+- 明示構成したブラウザーランチャーから、同じ画面でRuntime起動と既存活動の中断・再開・終了を指示できる。
+- LD-01〜09をADR 0039で追跡。標準発効は公開後確認に記録する。
 
 ### 未リリース — v1.11.0開発候補
 
@@ -13614,7 +13711,7 @@ v1.4 PR #131へ積み重ねたAgencyの開発候補。親#15・子#132〜#136・
 
 ---
 
-<a id="section-104"></a>
+<a id="section-105"></a>
 
 収録元 `LICENSE`
 

@@ -25,22 +25,23 @@ from tests.doubles.scenario import invoke, make_group, owned_state
 
 
 class Samples:
-    """Bounded measurement reservoir, distinct from NTK's retained activity/history."""
-    def __init__(self):
+    """Measurement samples, distinct from NTK's retained activity/history."""
+    def __init__(self, *, window_limit=2048):
         self.count = 0
         self.total = self.maximum = 0.0
         self.values = []
+        self.window_limit = window_limit
 
     def add(self, values):
         for value in values:
             self.count += 1
             self.total += value
             self.maximum = max(self.maximum, value)
-            if len(self.values) < 2048:
+            if self.window_limit is None or len(self.values) < self.window_limit:
                 self.values.append(value)
             else:
                 # A bounded, reproducible rolling window; not a global percentile.
-                self.values[(self.count - 1) % 2048] = value
+                self.values[(self.count - 1) % self.window_limit] = value
 
     def result(self):
         ordered = sorted(self.values)

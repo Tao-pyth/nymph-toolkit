@@ -12,7 +12,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 
 ## 現在使える機能と公開状態
 
-2026年11月28日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.11.0開発候補** です。未マージのv1.3〜v1.9候補（PR #123 / #131 / #137 / #143 / #149 / #156 / #162）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
+2026年11月28日の作業時点で、公開版は **v1.2.0**、このブランチは **v1.12.0開発候補** です。未マージのv1.3〜v1.9候補（PR #123 / #131 / #137 / #143 / #149 / #156 / #162）へ積み重ねて実装・検証しています。機能実装版、接続契約の版、配布パッケージの版を区別します。
 
 | 機能 | 実装した範囲・操作 | 利用できる版・資料 |
 |---|---|---|
@@ -28,6 +28,7 @@ Nymph Toolkit（NTK）は、人間との継続的な交流や外部環境での�
 | Discord Voice | 明示同意の受信・ASR・音響特徴・期限付き観測。既存実測とユーザー判断によりBot確認はクリア | v1.10開発候補。[音声](docs/voice.md)・[受入判断](docs/adr/0040-discord-bot-acceptance.md) |
 | Sleep | 根拠の統合/減衰・現在夢の再結合/失効・人格修正案 | v1.9開発候補。[Sleep](docs/sleep.md) |
 | 入力候補 | Web・文書・テキスト対話の共通準備、既定値補完・模擬AI、明示保存 | v1.11開発候補。[ADR 0033](docs/adr/0033-input-candidate-contract.md) |
+| Runtimeライブ診断 | 実行状態、任意報告、状態照会。同じローカル画面からRuntime起動と既存活動の中断・再開・終了 | v1.12開発候補。[診断](docs/adr/0039-runtime-live-diagnostics-adapter-contract.md)・[ランチャー](docs/adr/0041-browser-runtime-launcher.md) |
 
 Agencyの初期決定・保存・照会に加え、v1.6候補で活動登録・変更・中断再開・結果を使う継続判断を実装しています。Personaの保持・参照・外部修正をv1.7候補で追加しました。v1.8候補でPersonaの特性をAgencyの選択へ反映します。v1.9候補でSleepの統合根拠/忘却・夢/人格修正案を追加しました。v1.10候補で睡眠活動の循環とDiscord Voice Adapterを追加し検証中です。Discord Bot確認はADR 0040によりクリアしました。先行#169と全体の最終確認は別途残り、Desktop Adapterは将来課題です。v1.5の実装受入は[B05記録](docs/validation/v1.5.md)、v1.10までの残作業は[進捗](docs/implementation-progress.md)へ記録します。将来案と各段階の採用範囲は[ロードマップ](docs/roadmap.md)にあります。
 
@@ -101,7 +102,7 @@ CoreとSubsystem・Adapterをつなぐ6区分の[接続契約](docs/module-contr
 
 配布先は[v1.2.0 Release](https://github.com/Tao-pyth/nymph-toolkit/releases/tag/v1.2.0)。wheel・sdist・引継ぎ書・SHA256SUMSを公開しています。CPython 3.12以上、実行時の外部Python依存はありません。Windows／Linux × CPython 3.12〜3.15で検証しています。公開後の取得確認と完了結果は[公開課題 #117](https://github.com/Tao-pyth/nymph-toolkit/issues/117)に記録済みです。
 
-公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.10.0はCognition・Text/Web・訂正・Agencyの判断/活動循環・Persona連携・Sleepと睡眠活動・音声を含み、通常の実行例は19例です。音声依存と実Discord接続は[音声ガイド](docs/voice.md)の明示手順を使います。Bot確認はクリア済みで、実測履歴と追加確認不要の受入判断を区別します。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymph、常駐アプリ、GUIは未実装です。
+公開v1.2.0の成果物はCore・Contracts、最小MemoryとDocument Adapterのライブラリです。9つの実行例で起動・接続・活動・別プロセス実行・文書取込を試せます。開発候補v1.10.0はCognition・Text/Web・訂正・Agencyの判断/活動循環・Persona連携・Sleepと睡眠活動・音声を含み、通常の実行例は19例です。音声依存と実Discord接続は[音声ガイド](docs/voice.md)の明示手順を使います。Bot確認はクリア済みで、実測履歴と追加確認不要の受入判断を区別します。Text例には明示指示を受けるJSON-linesモードもあります。各例は後処理を終えると終了します。会話相手としてのNymphと常駐アプリは未実装です。v1.12候補の診断画面は明示起動できます。
 
 | 実装済みの責務 | 主な機能 |
 |---|---|

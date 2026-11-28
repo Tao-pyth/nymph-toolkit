@@ -409,6 +409,27 @@ Discord Bot確認はスキップや回答待ちとせずクリアとして扱う
 
 実装 `e00fa3c` の[CI](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46140221447)で、Windows/Linux × CPython 3.12〜3.15の全8環境、音声依存2環境、Customer Docsが成功した。Windowsローカルでソースと通常wheelを各565テスト、20実行例、sdistからの同一wheel再生成で確認した。B11の出典・明示値・時刻不足、模擬APIの許可・期限・不正応答、正規化後の4096バイト境界、実MemoryのID競合と旧入口の回帰結果を[受入Issue #178](https://github.com/Tao-pyth/nymph-toolkit/issues/178#issuecomment-7239023240)に記録した。方式は起動時に選び、採用記録の保存と学習は呼び出し側の別操作とする。実AIサービス接続とDiscord音声の候補化は後続課題とする。
 
+<a id="ld-runtime-diagnostics"></a>
+
 ## v1.12 Runtimeライブ診断（LD）
 
 [LD-01〜09](adr/0039-runtime-live-diagnostics-adapter-contract.md)を実Runtime・ローカルブラウザーとWindows/Linuxの負荷実測で照合する。公開後の標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
+
+LD-01〜07の製品試験で、LOCAL/PROCESSの報告、形式と境界、順序と旧起動、集約・間隔、期限/撤回、活動・接続・異常終了、許可済み照会を確認した。Windows/Python 3.12で1秒の送信下限を15 ms下回るケースを受けて、単調時計で期限を再確認するよう修正し、同環境で対象試験を20反復した。LD-07〜08のブラウザー試験はWindows/Linuxで通過した。サンプルの天気は固定データを使い、実サービスには接続しない。 [実装とワークフロー](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46144583542)
+
+LD-09の初回 `dbfef2b` はWindows Server 2025とLinux、CPython 3.15.2で条件別に30秒の準備、300秒の観測、3反復を完走した。3タブの処理件数低下は最大11.652%／8.714%（Windows／Linux）、p95の最大増加は1.83130 ms／0.98118 msで、両OSで基準超過があった。報告数の範囲は1・3タブで一致し、診断配信の最大保持は各配置1枠だった。画面が背面にある間の取得・描画、同じ差分の再生成、不要な行の再描画を抑え、同じ条件・基準で再測定する。 [Windows実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263462768) · [Linux実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46141503024/artifacts/15263243288)
+
+初回は4配置を単一の親イベントループ上で同時実行し、3タブ条件では合計12ページを開いた。最適化後 `a805ed2` の同居ストレス測定も5%を超え、3タブの処理件数低下はWindows最大9.156%、Linux最大8.235%だった。p95の最大増加は1.29540 ms／0.23250 msで、両OSで報告の最大保持は各配置1枠だった。 [再測定](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46146084742)
+
+単独Runtimeを配置ごとに同じマシンで3反復した `68ae8fc` の測定で、処理件数は全16比較が基準内。末尾2048件によるp95は13比較が基準内だった。要求側LOCAL・提供側PROCESSでは、Windowsの1タブ・3タブで+0.29460 ms・+0.28090 ms、Linuxの3タブで+0.26634 msとなり、いずれも上限0.25 msを超えた。この配置では2048件が約8秒分だったため、受入では300秒区間の全完了RPCをp95の対象とし、末尾2048件も併記する。測定時間・業務負荷・合格基準は同じ条件で照合する。 [配置別初回実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46148069212) · [集計範囲の記録](https://github.com/Tao-pyth/nymph-toolkit/issues/182#issuecomment-7240399557)
+
+開発候補 `70a8594` の単独Runtimeの本測定は、Windows Server 2025とLinux、CPython 3.15.2の全8配置で完走した。観測は1回につき30,740〜87,604件。診断無効に対する1タブ・3タブの全16比較で、300秒間に完了した全RPCのp95と処理件数が基準内だった。各配置の報告保持は最大1枠で、1タブ・3タブの報告数はいずれもLinuxで300件、Windowsで298〜300件だった。4 Runtime同居時の処理件数低下は運用上の制約として上記に記録した。
+
+| OS | p95増加の最大 | 処理件数低下の最大 |
+|---|---:|---:|
+| Windows | 0.12570 ms（LOCAL/PROCESS・3タブ） | 2.475%（PROCESS/LOCAL・3タブ） |
+| Linux | 0.02682 ms（LOCAL/PROCESS・1タブ） | 0.984%（PROCESS/LOCAL・1タブ） |
+
+同じ候補で8環境のソース・通常wheelの各571回帰、sdist再構築、安定Core API 15件・Contracts 98件と採用64項目、音声依存2環境、Customer Docs CIを確認した。顧客Markdown/PDF/HTMLは38ページ・25図で照合した。 [受入CIと全配置の実測](https://github.com/Tao-pyth/nymph-toolkit/actions/runs/46152926552)
+
+[ADR 0041](adr/0041-browser-runtime-launcher.md)の追加受入は、起動前から同じタブでRuntime起動、活動の中断・再開・終了、再読み込み時の指示回数、対象外と旧revisionの拒否、所有プロセスの回収を照合する。LD-09の診断有効条件には `--launcher` を付けて操作欄を表示し、同じ業務負荷・時間・閾値で測る。通常回帰と配置別負荷実測の結果は[#187](https://github.com/Tao-pyth/nymph-toolkit/issues/187)で追跡する。
