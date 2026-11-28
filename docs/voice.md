@@ -1,6 +1,6 @@
 # Discord音声観測とローカルASR（v1.10開発候補）
 
-採用した方式と上限は[ADR 0038](adr/0038-v1.10-sleep-cycle-and-voice.md)。公開v1.2.0には含まれない。2026年11月28日の利用者提供ログで、**実Discord受信・ASR・通常停止に加え、2件受信後の参加者変更停止・停止後の観測0件・Bot退出・後処理完了**を確認した。停止後の状態表示による確認であり、再読出しや同じIDの非再接続までは直接試していない。話者照合・認識精度、参加・撤回・切断・保持等の実機確認は残る。[各実行の結果と限界](validation/v1.10.md#live-voice-followup)
+**Discord Bot確認はクリア。** 2026年11月28日のユーザー判断により、残る追加実機確認は不要とした。[ADR 0040](adr/0040-discord-bot-acceptance.md)。実Discord受信・ASR・通常停止と、2件受信後の参加者変更停止・停止後観測0件・Bot退出・後処理完了の実測履歴を保持し、未実施のケースを実測合格へ変更しない。[各実行の結果と限界](validation/v1.10.md#live-voice-followup)。方式・上限・同意・保持・停止の製品契約は[ADR 0038](adr/0038-v1.10-sleep-cycle-and-voice.md)を維持する。公開v1.2.0には含まれない。
 
 ## できることと責務
 
@@ -99,7 +99,7 @@ python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_C
 
 最初は自作の合成トーンの特徴検証だけで、DiscordやASRモデルを使わない。2番目は明示指定したモデルで、許可された48kHz/16bit/stereo・最大5秒のWAVを認識する。3番目だけが実Discordへ接続する。実接続例は既定で件数・長さ等のみ表示し、文字起こしを端末へ出す場合は`--show-text`を明示する。`--via-core`と`--placement local`で経路/配置を変えられる。
 
-現行の音声受信APIは上流の変更の影響を受ける。利用前に、同意確認済みの管理下のチャンネルでDAVE音声受信・話者ID・参加者変化・撤回・切断・資源解放を実測する。[B10](validation/v1.10.md)の未検証を、補助プロセス/SDKの試験成功で置き換えない。
+現行の音声受信APIは上流の変更の影響を受ける。将来の依存更新や不具合調査で実接続が必要になった場合は、対象と同意範囲を定めて検証する。v1.10の追加実機確認はADR 0040により不要であり、Bot確認を保留へ戻さない。実測履歴と補助プロセス/SDKの試験結果は[B10](validation/v1.10.md)で区別する。
 
 <a id="voice-startup-diagnostics"></a>
 
@@ -136,9 +136,9 @@ python examples/voice_capture.py --config LOCAL_CONFIG_JSON --consent VERIFIED_C
 失敗時は対象コミット、配置、`reason`、`cleanup_confirmed`だけをまず記録する。成功時も、`Voice observation started`（開始）、`Received observations`の件数（観測）、`cleanup_confirmed`と最後のRuntime回収確認（終了）を分けて確認する。0件での正常終了は受信成功と扱わず、件数があっても認識精度の証拠にはしない。
 
 <a id="voice-live-acceptance"></a>
-## 残る実機受入をケースごとに確認する
+## 任意の実機診断
 
-[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)・[ADR 0038 D7](adr/0038-v1.10-sleep-cycle-and-voice.md)の[明示検証ツール](../tools/validate_voice_live.py)を使う。元の実行例は通常停止の初回確認に使い、このツールでは期待する停止理由、観測の消去、同じIDで再接続しないこと、Runtime停止と新起動を個別に判定する。各ケースを実施する前に、参加者へ操作内容と取得/ASR・保持条件を説明し、同意を確認する。
+以下は将来必要になった際の診断手順であり、v1.10のために利用者へ求める追加作業ではない。Bot確認は[ADR 0040](adr/0040-discord-bot-acceptance.md)によりクリア済み。[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)・[ADR 0038 D7](adr/0038-v1.10-sleep-cycle-and-voice.md)で整備した[明示検証ツール](../tools/validate_voice_live.py)は、期待する停止理由、観測の消去、同じIDで再接続しないこと、Runtime停止と新起動を個別に判定する。新たに実行する場合は、参加者へ操作内容と取得/ASR・保持条件を説明し、その実行への同意を確認する。
 
 音声依存とモデルを導入した同じPythonを使い、対象checkoutのルートで実行する。資格情報の非表示入力とfinallyでの削除は上のPowerShell手順を使い、try内の実行行だけ次へ置き換える。ケースごとに1回だけ実行し、失敗しても自動再試行しない。
 

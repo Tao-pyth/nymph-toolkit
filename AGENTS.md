@@ -59,4 +59,4 @@ v1.8のPersona/Agency連携は[ADR 0036](docs/adr/0036-v1.8-persona-agency.md)�
 
 v1.9 Sleepは[ADR 0037](docs/adr/0037-v1.9-sleep.md)に従う。初期の忘却はSleep現在統合状態の寄与に限定し、Memory原本/Cognition既存学習を削除しない。夢は次の成功周期で失効し、人格根拠にしない。observedの初回評価だけから修正案を生成し、案と適用成功を分ける。Sleep自身のPersona.apply・睡眠活動循環はv1.10の別判断へ残す。
 
-v1.10は[ADR 0038](docs/adr/0038-v1.10-sleep-cycle-and-voice.md)。睡眠実行側の意図/送信/確定を分け、結果照会を自動再送へ変えない。音声は明示告知/同意・期限付き観測とし、保存/学習へ自動投入しない。native ASRの排出と結果破棄、helper回収を確認する。実Discord未検証をfixture成功で完了扱いにしない。主要Docs同期にはbridge/モデルmanifest/Node manifest/lockも含める。
+v1.10は[ADR 0038](docs/adr/0038-v1.10-sleep-cycle-and-voice.md)。睡眠実行側の意図/送信/確定を分け、結果照会を自動再送へ変えない。音声は明示告知/同意・期限付き観測とし、保存/学習へ自動投入しない。native ASRの排出と結果破棄、helper回収を確認する。実Discordの実測履歴をfixture成功で書き換えない。2026年11月28日のユーザー指示・[ADR 0040](docs/adr/0040-discord-bot-acceptance.md)により、追加実機確認は不要、Discord Bot確認はクリアである。スキップや回答待ちへ戻さず、同じ確認を再依頼しない。製品の同意/保持/停止契約と#169等の別課題は維持する。主要Docs同期にはbridge/モデルmanifest/Node manifest/lockも含める。
