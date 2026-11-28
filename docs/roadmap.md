@@ -303,3 +303,26 @@ R33の開発に続き、PR #116のレビュー・マージ・公開が指示さ�
 - 成果物：[睡眠活動](sleep-activity.md)・[音声ガイド](voice.md)、追加Contracts/実装/19通常例と明示接続例。
 - 検証/完了：B10-01〜06、全回帰/配布/CI・主要Docs全形式・先行段階を含む要求監査。実Discord未確認をfixture成功で代替しない。[検証記録](validation/v1.10.md)。
 - 後続：Desktop、自由会話・一般的意味理解・Nymph最終完成はこの段階の完了と同一視しない。
+
+## v1.11以降の標準化と未決課題
+
+2026年11月28日の指示により、v1.11に入力候補の共通契約、v1.12にRuntimeライブ診断画面を配分した。設計は並行できる。各版の受入と公開後確認が揃った時点で、検証済みの契約を、その対象機能の新設・関連改修から標準として適用する。v1.9の[#169](https://github.com/Tao-pyth/nymph-toolkit/issues/169)とv1.10の[#172](https://github.com/Tao-pyth/nymph-toolkit/issues/172)は元の段階で追跡する。
+
+| 段階 | 採用範囲と受入 | 追跡 |
+|---|---|---|
+| v1.11.0 | 取得済み入力の共通準備、既定値補完型と模擬APIのAI型、Memoryへの明示保存、既存入口の回帰 | [ADR 0033](adr/0033-input-candidate-contract.md)・[親 #174](https://github.com/Tao-pyth/nymph-toolkit/issues/174) |
+| v1.12.0 | 任意の診断報告、既存情報の基本表示、許可済み状態照会、実Runtimeでの表示と負荷実測 LD-01〜09 | [ADR 0039](adr/0039-runtime-live-diagnostics-adapter-contract.md)・[親 #175](https://github.com/Tao-pyth/nymph-toolkit/issues/175) |
+
+[11月22日の未確定事項一覧](https://chatgpt.com/space/page_40fc20a69a7c819188f5e2132e6d25d5)との照合では、次の初期範囲に後続判断がある。受入と公開状態は[実装進捗](implementation-progress.md)で追う。
+
+| 領域 | 後続判断で具体化した初期範囲 | 次に判断すること |
+|---|---|---|
+| 接続・配布 | 公開接続契約と互換性、単一配布と任意依存 | 個別分割の必要性と版の対応。独立導入が必要な対象から判断 |
+| Memory・Document | 出典付きSQLite記録、UTF-8 txt/mdの明示取込 | 意味検索の評価と原本の編集・忘却の整合性。PDF・Office等の対応は出典とサイズ・失敗条件から判断 |
+| Cognition・Text・Web | 教師付き学習、注釈訂正、明示観測とWeb本文取込 | 未分割文からの学習・自由会話の評価教材と観測方法。実外部AI前処理はv1.11の契約受入後に提供元と送信条件を判断 |
+| Agency・Persona | 規則ベース判断、実行循環、外部差分適用、人格を使う判断 | 動機・情動・Self-Modelの状態表現と観測方法。Agencyの価値判断とCoreの実行管理の境界を維持 |
+| Sleep・Discord Voice | Sleep内の統合・忘却・夢・人格案、睡眠活動、同意付き期限内観測 | 個体全体の発達状態の継続性、音声候補化の同意・保持・削除。実Discordの残る受入は既存B10 |
+| Desktop | 版未割当 | 対象OSと観測範囲を先に定め、操作権限・承認・失敗時の動作と受入条件を設計 |
+| 個体データ | 版未割当 | 記憶・発達状態の復元と、複製・移植・伝播に必要な同一性・由来・責務を決定 |
+
+版未割当の課題は、先行契約・検証法を具体化してから配分する。配分の変更は理由、依存関係、受入への影響をIssue・ADR・ロードマップへ記録する。

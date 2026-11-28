@@ -325,3 +325,7 @@ v0.4着手指示に基づき、以下をすべて親Issue #4・マイルスト�
 ## R37：v1.10の対応単位
 
 親#20・マイルストーン20へ実親子関係付きで#163設計、#164睡眠活動、#165Discord受信、#166ASR/音響特徴、#167実連携/例、#168回帰/配布/CI/主要Docsをコード変更前に登録。具体値/方式はADR 0038と各Issueへ先行記録した。実サービス未確認と設計採用を分離し、公開前に親/マイルストーンを閉じない。先行v1.9の終了確認調査#169は親#19・同版の配下。
+
+## v1.11・v1.12の標準化
+
+[v1.11.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/21)の親[#174](https://github.com/Tao-pyth/nymph-toolkit/issues/174)に#176（設計）・#177（実装）・#178（受入・配布）・#179（公開）、[v1.12.0](https://github.com/Tao-pyth/nymph-toolkit/milestone/22)の親[#175](https://github.com/Tao-pyth/nymph-toolkit/issues/175)に#180（設計）・#181（実装）・#182（実測・受入・配布）・#183（公開）を実sub-issueとして先行登録した。同じマイルストーンへの所属を確認済み。標準の発効は各版の検証・公開後確認で記録する。

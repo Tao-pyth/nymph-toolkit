@@ -349,7 +349,7 @@ R10・[ADR 0013](adr/0013-milestone-issue-workflow.md)により、コード変�
 
 未決項目は担当する段階で具体化する。決定記録には採用内容、理由、適用範囲と検証への影響を残す。
 
-v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。睡眠活動との循環、音声受信・ASRはADR 0038で初期範囲を具体化した。後続の学習・意思決定方式や未実装Adapterの形式・権限は未確定である。実Discord受信は未検証で、対象外の後続機能は追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
+v1.0の共通Contract公開範囲・互換性はADR 0026、Memory/Document/Cognitionの初期業務契約はADR 0027〜0029で具体化した。Cognitionの区切り/概念ラベル付き入力はユーザー採用済み。Agency・Persona・その連携はADR 0032/0034〜0036、Sleepの初期統合/人格修正案はADR 0037で具体化した。睡眠活動との循環、音声受信・ASRはADR 0038で初期範囲を具体化した。後続の学習・意思決定方式や未実装Adapterの形式・権限は未確定である。実Discord受信は利用者ログで部分確認済みで、残る受入は[検証記録](validation/v1.10.md)で追跡する。対象外の後続機能は追加の判断対象とする。roadmapとADR 0007〜0008に従い、必要な後続ADRへ記録する。
 
 ## R33：DocumentとMemoryの境界
 
