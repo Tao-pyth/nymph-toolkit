@@ -400,3 +400,11 @@ R37・ADR 0038、子#163〜#168。実装受入と公開を分ける。[検証記
 | B10-06 | 全回帰/通常wheel/sdist/CI、安定Core/Contractsと64判断、主要Docs/顧客全形式/全ページ、v1.10までの要求監査 |
 
 実Discordが利用できない場合はB10-03を未検証とし、睡眠/ローカル音声だけの完成を全B10合格へ置き換えない。先行v1.9の#169も最終監査へ含める。
+
+## v1.11 入力候補（B11）
+
+[B11の採用条件](adr/0033-input-candidate-contract.md)を、取得教材3種、既定値補完型・模擬AI型、4配置・両経路、実Memoryへの明示保存と旧入口の回帰で照合する。公開後の標準発効は[#179](https://github.com/Tao-pyth/nymph-toolkit/issues/179)に記録する。
+
+## v1.12 Runtimeライブ診断（LD）
+
+[LD-01〜09](adr/0039-runtime-live-diagnostics-adapter-contract.md)を実Runtime・ローカルブラウザーとWindows/Linuxの負荷実測で照合する。公開後の標準発効は[#183](https://github.com/Tao-pyth/nymph-toolkit/issues/183)に記録する。
